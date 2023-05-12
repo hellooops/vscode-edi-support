@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Electronic Data Interchange (EDIFACT)",
+  "patterns": [
+    {
+      "include": "#segments"
+    }
+  ],
+  "repository": {
+    "segments": {
+      "name": "meta.edifact.segment.edi",
+      "begin": "",
+      "end": "\\~",
+      "patterns": [
+        {
+          "name": "meta.edifact.segment.data-element.edi",
+          "match": "(\\+)([\\w\\(\\)\\~&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<>#$]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.segment.data-element.separator.edi"
+            },
+            "2": {
+              "name": "string.segment.data-element.edi"
+            }
+          }
+        },
+        {
+          "name": "meta.edifact.segment.component.edi",
+          "match": "(:)([\\w\\(\\)\\~&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<>#$]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.edifact.segment.component.separator.edi"
+            },
+            "2": {
+              "name": "string.edifact.segment.component.edi"
+            }
+          }
+        },
+        {
+          "name": "keyword.operator.edifact.segment.separator.edi",
+          "match": "\\'"
+        },
+        {
+          "name": "storage.type.segment.id.edi",
+          "match": "[\\w\\d]{3}"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.edi"
+}
