@@ -5,8 +5,8 @@
   "version": "0.0.1",
   "publisher": "Kasoftware",
   "author": {
-      "email": "dericl@Kasoftware.cn",
-      "name": "Deric Lee"
+    "email": "dericl@Kasoftware.cn",
+    "name": "Deric Lee"
   },
   "engines": {
     "vscode": "^1.78.0"
@@ -21,32 +21,32 @@
   "main": "./out/extension.js",
   "contributes": {
     "languages": [
-        {
-            "id": "edifact",
-            "aliases": [
-                "Electronic Data Interchange (EDIFACT)",
-                "edifact",
-                "EDIFACT"
-            ],
-            "extensions": [
-                ".edi",
-                ".edifact"
-            ],
-            "configuration": "./language-configuration.json"
-        }
+      {
+        "id": "edifact",
+        "aliases": [
+          "Electronic Data Interchange (EDIFACT)",
+          "edifact",
+          "EDIFACT"
+        ],
+        "extensions": [
+          ".edi",
+          ".edifact"
+        ],
+        "configuration": "./language-configuration.json"
+      }
     ],
     "grammars": [
-        {
-            "language": "edifact",
-            "scopeName": "source.edi",
-            "path": "./syntaxes/edifact.tmLanguage.json"
-        }
+      {
+        "language": "edifact",
+        "scopeName": "source.edi",
+        "path": "./syntaxes/edifact.tmLanguage.json"
+      }
     ],
     "commands": [
       {
-          "command": "edi-edifact-support.prettify",
-          "title": "Prettify (format using new lines)",
-          "category": "EDI EDIFACT Support"
+        "command": "edi-edifact-support.prettify",
+        "title": "Prettify (format using new lines)",
+        "category": "EDI EDIFACT Support"
       }
     ]
   },
