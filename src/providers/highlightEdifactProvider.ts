@@ -16,14 +16,26 @@ export class HighlightEdifactProvider implements vscode.DocumentHighlightProvide
     }
 
     const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
-    const elementStartPosition = document.positionAt(selectedSegment.startIndex + selectedElement.startIndex);
-    const elementEndPosition = document.positionAt(selectedSegment.startIndex + selectedElement.endIndex + 1);
+    let highlightStartPosition: vscode.Position;
+    let highlightEndPosition: vscode.Position;
+    if (selectedElement) {
+      highlightStartPosition = document.positionAt(selectedSegment.startIndex + selectedElement.startIndex);
+      highlightEndPosition = document.positionAt(selectedSegment.startIndex + selectedElement.endIndex + 1);
+    } else {
+      if (!selectedSegment?.elements || selectedSegment?.elements.length <= 0) {
+        return null;
+      }
+
+      const firstElement = selectedSegment.elements[0];
+      highlightStartPosition = document.positionAt(selectedSegment.startIndex);
+      highlightEndPosition = document.positionAt(selectedSegment.startIndex + firstElement.startIndex);
+    }
 
     return [
       new vscode.DocumentHighlight(
         new vscode.Range(
-          elementStartPosition,
-          elementEndPosition
+          highlightStartPosition,
+          highlightEndPosition
         ),
         vscode.DocumentHighlightKind.Read
       )
