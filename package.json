@@ -38,7 +38,7 @@
     "grammars": [
       {
         "language": "edifact",
-        "scopeName": "source.edi",
+        "scopeName": "source.edifact",
         "path": "./syntaxes/edifact.tmLanguage.json"
       }
     ],

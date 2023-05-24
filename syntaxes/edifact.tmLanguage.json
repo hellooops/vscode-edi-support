@@ -8,44 +8,58 @@
   ],
   "repository": {
     "segments": {
-      "name": "meta.edifact.segment.edi",
+      "name": "meta.segment.edifact",
       "begin": "",
       "end": "\\~",
       "patterns": [
         {
-          "name": "meta.edifact.segment.data-element.edi",
+          "name": "meta.segment.invalid-id.edifact",
+          "match": "^([A-Z0-9]{1,2}|[A-Z0-9]{4,})\\+",
+          "captures": {
+            "1": {
+              "name": "invalid.segment.invalid-id.edifact"
+            }
+          }
+        },
+        {
+          "name": "meta.segment.id.edifact",
+          "match": "([A-Z0-9]{3})(?=\\+)",
+          "captures": {
+            "1": {
+              "name": "storage.type.segment.id.edifact"
+            }
+          }
+        },
+        {
+          "name": "meta.segment.data-element.edifact",
           "match": "(\\+)([\\w\\(\\)\\~&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<>#$]*)",
           "captures": {
             "1": {
-              "name": "keyword.operator.segment.data-element.separator.edi"
+              "name": "meta.operator.segment.data-element.separator.edifact"
             },
             "2": {
-              "name": "string.segment.data-element.edi"
+              "name": "string.other.segment.data-element.edifact"
             }
           }
         },
         {
-          "name": "meta.edifact.segment.component.edi",
+          "name": "meta.segment.component-element.edifact",
           "match": "(:)([\\w\\(\\)\\~&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<>#$]*)",
           "captures": {
             "1": {
-              "name": "keyword.operator.edifact.segment.component.separator.edi"
+              "name": "meta.operator.segment.component-element.separator.edifact"
             },
             "2": {
-              "name": "string.edifact.segment.component.edi"
+              "name": "string.other.segment.component-element.edifact"
             }
           }
         },
         {
-          "name": "keyword.operator.edifact.segment.separator.edi",
+          "name": "meta.operator.segment.separator.edifact",
           "match": "\\'"
-        },
-        {
-          "name": "storage.type.segment.id.edi",
-          "match": "[\\w\\d]{3}"
         }
       ]
     }
   },
-  "scopeName": "source.edi"
+  "scopeName": "source.edifact"
 }
