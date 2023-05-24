@@ -3,14 +3,11 @@ import { IProvidable } from "../interfaces/providable";
 import { EdifactParser } from "../parser";
 
 export class HighlightEdifactProvider implements vscode.DocumentHighlightProvider, IProvidable {
-  provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentHighlight[]> {
+  async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[]> {
     vscode.window.showInformationMessage("Method not implemented.");
-    const parser = new EdifactParser();
-    
-
     const text = document.getText();
-
-    const segments = parser.parseSegments(text);
+    const parser = new EdifactParser(text);
+    const segments = await parser.parseSegments();
     const realPosition = document.offsetAt(new vscode.Position(position.line, position.character));
 
     const selectedSegment = segments.find(x => realPosition >= x.startIndex && realPosition <= (x.endIndex + 1));

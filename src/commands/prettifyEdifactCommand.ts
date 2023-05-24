@@ -5,14 +5,14 @@ import { EdifactParser } from "../parser";
 export class PrettifyEdifactCommand implements ICommandable {
   public name: string = "edi-edifact-support.prettify";
 
-  public command(...args: any[]) {
-    const parser = new EdifactParser();
+  public async command(...args: any[]) {
     if (!vscode.window.activeTextEditor) {
       return;
     }
 
     let document = vscode.window.activeTextEditor.document.getText();
-    let segments = parser.parseSegments(document);
+    const parser = new EdifactParser(document);
+    let segments = await parser.parseSegments();
     let text = segments.join("\n");
 
     vscode.window.activeTextEditor.edit((builder) => {

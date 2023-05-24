@@ -1,13 +1,14 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser } from "../parser";
+import { EdiElement, EdiSegment, EdiVersion, EdifactParser } from "../parser";
+import { SchemaViewerUtils } from "../utils/utils";
 
 export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
-  provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
-    const parser = new EdifactParser();
+  async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover> {
     let text = document.getText();
-
-    let segments = parser.parseSegments(text);
+    const parser = new EdifactParser(text);
+    let ediVersion: EdiVersion = parser.parseReleaseAndVersion();
+    let segments = await parser.parseSegments();
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)
     );
@@ -18,28 +19,63 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
     }
 
     const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
-    const elementStartPosition = document.positionAt(selectedSegment.startIndex + selectedElement.startIndex);
-    const elementEndPosition = document.positionAt(selectedSegment.startIndex + selectedElement.endIndex + 1);
+    let selectedComponentElement: EdiElement = null;
+    if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
+      selectedComponentElement = selectedElement?.components.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
+    }
 
     if (!selectedElement) {
       return null;
     }
 
-    // let context = "";
-    // for (let i = 0, len = selectedSegment.elements.length; i < len; i++) {
-    //   let el = selectedSegment.elements[i];
-    //   let element = el.separator + el.value;
-    //   context += element;
-    // }
-    // context += selectedSegment.endingDelimiter;
+    if (selectedSegment.ediReleaseSchemaSegment) {
+      if (selectedComponentElement) {
+        return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedComponentElement));
+      } else {
+        return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedElement));
+      }
+    } else {
+      return new vscode.Hover(
+        `**${selectedSegment.id}**${selectedElement.designatorIndex} (_${selectedElement.type}_)\n\n` +
+          "```edi\n" +
+          `${selectedSegment}\n` +
+          "```"
+      );
+    }
 
-    return new vscode.Hover(
-      `**${selectedSegment.id}**${selectedElement.name} (_${selectedElement.type}_)\n\n` +
-        "```edi\n" +
-        `${selectedSegment}\n` +
+
+  }
+
+  private buildElementMarkdownString(ediVersion: EdiVersion, segment: EdiSegment, element: EdiElement) : vscode.MarkdownString[] {
+    const mdStrings = [
+      new vscode.MarkdownString(
+        `**${segment.id}**${element.designatorIndex}\n` +
+        `\`Id ${element.ediReleaseSchemaElement.id}\`\n` +
+        `\`Type ${element.ediReleaseSchemaElement.dataType}\`\n` +
+        `\`Min ${element.ediReleaseSchemaElement.minLength} / Max ${element.ediReleaseSchemaElement.maxLength}\``
+      ),
+      new vscode.MarkdownString(
+        `**${element.ediReleaseSchemaElement.desc}**\n` +
+        `\n` +
+        `${element.ediReleaseSchemaElement.definition}\n` +
+        "```edifact\n" +
+        `${segment}\n` +
         "```"
-    );
-
+      )
+    ];
+    const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediVersion.release, segment.id, element.getDesignator());
+    if (element?.ediReleaseSchemaElement?.qualifierRef) {
+      const codes = element?.ediReleaseSchemaElement?.getCodes();
+      if (codes?.length > 0) {
+        mdStrings.push(new vscode.MarkdownString(
+          `*Codes*: ${codes.map(code => `[\`${code.value}\`](${elementSchemaViewerUrl} "${code.desc}")`).join(" ")}`
+        ));
+      }
+    }
+    mdStrings.push(new vscode.MarkdownString(
+      `[EDI Schema Reference](${elementSchemaViewerUrl})\n`
+    ));
+    return mdStrings;
   }
 
   public registerFunction(): vscode.Disposable {

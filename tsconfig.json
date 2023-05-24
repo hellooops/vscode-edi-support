@@ -8,5 +8,6 @@
 		],
 		"sourceMap": true,
 		"rootDir": "src",
+		"resolveJsonModule": true,
 	}
 }
