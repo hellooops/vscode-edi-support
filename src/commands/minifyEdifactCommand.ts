@@ -2,8 +2,8 @@ import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
 import { EdifactParser } from "../parser";
 
-export class PrettifyEdifactCommand implements ICommandable {
-  public name: string = "edi-edifact-support.prettify";
+export class MinifyEdifactCommand implements ICommandable {
+  public name: string = "edi-edifact-support.minify";
 
   public async command(...args: any[]) {
     if (!vscode.window.activeTextEditor) {
@@ -13,7 +13,7 @@ export class PrettifyEdifactCommand implements ICommandable {
     let document = vscode.window.activeTextEditor.document.getText();
     const parser = new EdifactParser(document);
     let segments = await parser.parseSegments();
-    let text = segments.join("\n");
+    let text = segments.join("");
 
     vscode.window.activeTextEditor.edit((builder) => {
       if (!vscode.window.activeTextEditor) {
@@ -31,12 +31,4 @@ export class PrettifyEdifactCommand implements ICommandable {
       "edifact"
     );
   }
-}
-
-
-export class EdifactDocumentConfiguration {
-  public subElementDelimiter: string = ":";
-  public dataElementDelimiter: string = "+";
-  public decimalPointIndicator: string = ".";
-  public segmentTerminator: string = "'";
 }

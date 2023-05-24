@@ -47,6 +47,11 @@
         "command": "edi-edifact-support.prettify",
         "title": "Prettify (format using new lines)",
         "category": "EDI EDIFACT Support"
+      },
+      {
+        "command": "edi-edifact-support.minify",
+        "title": "Minify (format without new lines)",
+        "category": "EDI EDIFACT Support"
       }
     ]
   },
