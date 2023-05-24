@@ -5,12 +5,14 @@ import { MinifyEdifactCommand } from "./commands/minifyEdifactCommand";
 import { IProvidable } from "./interfaces/providable";
 import { HighlightEdifactProvider } from "./providers/highlightEdifactProvider";
 import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
+import { DocumentFormattingEditEdifactProvider } from "./providers/documentFormattingEdifactProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyEdifactCommand());
   registerCommand(context, new MinifyEdifactCommand());
   registerProvider(context, new HighlightEdifactProvider());
   registerProvider(context, new HoverEdifactProvider());
+  registerProvider(context, new DocumentFormattingEditEdifactProvider());
   console.log('Extension "edi-edifact-support" is now active!');
 }
 

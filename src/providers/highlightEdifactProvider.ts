@@ -37,7 +37,4 @@ export class HighlightEdifactProvider implements vscode.DocumentHighlightProvide
       this
     );
   }
-
 }
-
-
