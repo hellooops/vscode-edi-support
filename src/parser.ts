@@ -88,7 +88,7 @@ export class EdifactParser {
     segment.id = segmentStr.substring(0, 3);
     segment.elements = [];
 
-    segment.ediReleaseSchemaSegment = this._schema.ediReleaseSchema.getSegment(segment.id);
+    segment.ediReleaseSchemaSegment = this._schema?.ediReleaseSchema?.getSegment(segment.id);
 
     let element: EdiElement = null;
     let subElement: EdiElement = null;
@@ -174,8 +174,12 @@ export class EdifactParser {
       if (!ediVersion || !ediVersion.release || !ediVersion.version) {
         return;
       }
-
-      const releaseSchema = await import(`./schemas/edifact/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
+      let releaseSchema = null;
+      try {
+        releaseSchema = await import(`./schemas/edifact/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
+      } catch (ex) {
+        return null;
+      }
 
       const ediSchema = new EdiSchema(releaseSchema);
       this._schema = ediSchema;

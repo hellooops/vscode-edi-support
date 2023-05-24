@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiElement, EdiSegment, EdiVersion, EdifactParser } from "../parser";
-import { SchemaViewerUtils } from "../utils/utils";
+import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
 
 export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
   async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover> {
@@ -19,6 +19,9 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
     }
 
     const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
+    if (!selectedElement) {
+      return new vscode.Hover(this.buildSegmentMarkdownString(ediVersion, selectedSegment));
+    }
     let selectedComponentElement: EdiElement = null;
     if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
       selectedComponentElement = selectedElement?.components.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
@@ -28,41 +31,54 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
       return null;
     }
 
-    if (selectedSegment.ediReleaseSchemaSegment) {
-      if (selectedComponentElement) {
-        return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedComponentElement));
-      } else {
-        return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedElement));
-      }
+    if (selectedComponentElement) {
+      return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedComponentElement));
     } else {
-      return new vscode.Hover(
-        `**${selectedSegment.id}**${selectedElement.designatorIndex} (_${selectedElement.type}_)\n\n` +
-          "```edi\n" +
-          `${selectedSegment}\n` +
-          "```"
-      );
+      return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedElement));
     }
+  }
 
-
+  private buildSegmentMarkdownString(ediVersion: EdiVersion, segment: EdiSegment) : vscode.MarkdownString[] {
+    const part2MdSb = new StringBuilder();
+    if (segment?.ediReleaseSchemaSegment?.desc) {
+      part2MdSb.append(`**${segment.ediReleaseSchemaSegment.desc}**\n\n`);
+    }
+    if (segment?.ediReleaseSchemaSegment?.purpose) {
+      part2MdSb.append(`${segment.ediReleaseSchemaSegment.purpose}\n\n`);
+    }
+    part2MdSb.append(`\`\`\`edifact\n${segment}\n\`\`\``);
+    const segmentSchemaViewerUrl: string = SchemaViewerUtils.getSegmentUrl(ediVersion.release, segment.id);
+    const mdStrings: vscode.MarkdownString[] = [
+      new vscode.MarkdownString(
+        `**${segment.id}** (Segment)`
+      ),
+      new vscode.MarkdownString(part2MdSb.toString()),
+      new vscode.MarkdownString(`[EDI Schema Reference](${segmentSchemaViewerUrl})\n`)
+    ];
+    return mdStrings;
   }
 
   private buildElementMarkdownString(ediVersion: EdiVersion, segment: EdiSegment, element: EdiElement) : vscode.MarkdownString[] {
-    const mdStrings = [
-      new vscode.MarkdownString(
-        `**${segment.id}**${element.designatorIndex}\n` +
-        `\`Id ${element.ediReleaseSchemaElement.id}\`\n` +
-        `\`Type ${element.ediReleaseSchemaElement.dataType}\`\n` +
-        `\`Min ${element.ediReleaseSchemaElement.minLength} / Max ${element.ediReleaseSchemaElement.maxLength}\``
-      ),
-      new vscode.MarkdownString(
-        `**${element.ediReleaseSchemaElement.desc}**\n` +
-        `\n` +
-        `${element.ediReleaseSchemaElement.definition}\n` +
-        "```edifact\n" +
-        `${segment}\n` +
-        "```"
-      )
+    const part1MdSb = new StringBuilder();
+    part1MdSb.append(`**${segment.id}**${element.designatorIndex} (Element)`);
+    if (element?.ediReleaseSchemaElement) {
+      part1MdSb.append(`\n\n\`Id ${element.ediReleaseSchemaElement.id}\``);
+      part1MdSb.append(` \`Type ${element.ediReleaseSchemaElement.dataType}\``);
+      part1MdSb.append(` \`Min ${element.ediReleaseSchemaElement.minLength} / Max ${element.ediReleaseSchemaElement.maxLength}\``);
+    }
+
+    const part2MdSb = new StringBuilder();
+    if (element?.ediReleaseSchemaElement) {
+      part2MdSb.append(`**${element.ediReleaseSchemaElement.desc}**\n\n`);
+      part2MdSb.append(`${element.ediReleaseSchemaElement.definition}\n`);
+    }
+    part2MdSb.append(`\`\`\`edifact\n${segment}\n\`\`\``);
+
+    const mdStrings: vscode.MarkdownString[] = [
+      new vscode.MarkdownString(part1MdSb.toString()),
+      new vscode.MarkdownString(part2MdSb.toString()),
     ];
+
     const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediVersion.release, segment.id, element.getDesignator());
     if (element?.ediReleaseSchemaElement?.qualifierRef) {
       const codes = element?.ediReleaseSchemaElement?.getCodes();
@@ -72,6 +88,7 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
         ));
       }
     }
+
     mdStrings.push(new vscode.MarkdownString(
       `[EDI Schema Reference](${elementSchemaViewerUrl})\n`
     ));
