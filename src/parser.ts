@@ -50,12 +50,15 @@ export class EdifactParser {
     // await this.loadSchema();
     // TODO
     const segments = await this.parseSegments();
-    const ediMessage: EdiMessage = new EdiMessage();
     const unb = segments.find(segment => segment.id === "UNB");
-    if (unb) {
-      ediMessage.sender = unb.getElement(2, 1)?.value;
-    }
     const unh = segments.find(segment => segment.id === "UNH");
+    if (!unb || !unh) {
+      return null;
+    }
+
+    const ediMessage: EdiMessage = new EdiMessage();
+    ediMessage.sender = unb.getElement(2, 1)?.value;
+    ediMessage.segments = segments;
     return ediMessage;
   }
 
@@ -211,6 +214,7 @@ export class EdiMessage {
   public referenceNumber?: string; // UNB01
   public type?: string; // UNB02-01
   public release?: string; // UNB02-02 + UNB02-03
+  public segments: EdiSegment[];
 }
 
 export class EdiVersion {
