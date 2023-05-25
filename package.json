@@ -3,7 +3,7 @@
   "displayName": "edi-edifact-support",
   "description": "Provides basic support for the EDI EDIFACT format and highlighting.",
   "version": "0.0.1",
-  "publisher": "Kasoftware",
+  "publisher": "Deric Lee",
   "author": {
     "email": "dericl@Kasoftware.cn",
     "name": "Deric Lee"
@@ -12,11 +12,17 @@
     "vscode": "^1.78.0"
   },
   "license": "MIT",
+  "homepage": "https://github.com/hellooops/vscode-edi-edifact-support/blob/main//README.md",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/hellooops/vscode-edi-edifact-support.git"
+  },
   "categories": [
     "Programming Languages",
     "Formatters",
     "Other"
   ],
+  "icon": "docs/images/icon-128x128.png",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
