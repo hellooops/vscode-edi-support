@@ -1,41 +1,51 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiMessage, EdiSegment, EdifactParser } from "../parser";
+import { EdiSegment, EdifactParser } from "../parser";
 
 export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvidable {
-  private ediMessage?: EdiMessage;
+  private parser?: EdifactParser;
   onDidChangeCodeLenses?: vscode.Event<void>;
   async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[]> {
     const codeLenses: vscode.CodeLens[] = [];
     const text = document.getText();
-    const parser = new EdifactParser(text);
-    this.ediMessage = await parser.parseMessage();
-    if (!this.ediMessage) {
-      return [];
+    this.parser = new EdifactParser(text);
+    const segments = await this.parser.parseSegments();
+    const ediMessage = await this.parser.parseMessage();
+
+    const unb: EdiSegment = segments.find(segment => segment.id === "UNB");
+    if (unb) {
+      const description = ediMessage?.buildUNBDescription();
+      codeLenses.push(new vscode.CodeLens(
+        new vscode.Range(
+          document.positionAt(unb.startIndex),
+          document.positionAt(unb.endIndex),
+        ),
+        {
+          title: description,
+          tooltip: description,
+          command: null,
+          arguments: []
+        }
+      ));
     }
-    const unb: EdiSegment = this.ediMessage.segments.find(segment => segment.id === "UNB");
-    codeLenses.push(new vscode.CodeLens(
-      new vscode.Range(
-        document.positionAt(unb.startIndex),
-        document.positionAt(unb.endIndex),
-      )
-    ));
-    return codeLenses;
-  }
-
-  public resolveCodeLens(codeLens: vscode.CodeLens, token: vscode.CancellationToken) {
     
-    codeLens.command = {
-      title: `EDIFACT document ${this?.ediMessage?.release} ${this?.ediMessage?.type}`,
-      tooltip: "Tooltip provided by1\n2 sample extension",
-      command: null,
-      arguments: []
-    };
-    return codeLens;
-  }
-
-  private buildMessageDescription(ediMessage: EdiMessage): string {
-    return null;
+    const unh: EdiSegment = segments.find(segment => segment.id === "UNH");
+    if (unh) {
+      const description = ediMessage?.buildUNHDescription();
+      codeLenses.push(new vscode.CodeLens(
+        new vscode.Range(
+          document.positionAt(unh.startIndex),
+          document.positionAt(unh.endIndex),
+        ),
+        {
+          title: description,
+          tooltip: description,
+          command: null,
+          arguments: []
+        }
+      ));
+    }
+    return codeLenses;
   }
 
   public registerFunction(): vscode.Disposable {

@@ -7,17 +7,18 @@ export class EdifactParser {
   private _document: string;
   private _segments: EdiSegment[];
   private _ediMessage: EdiMessage;
+  private _ediVersion: EdiVersion;
   private _schema: EdiSchema;
   public constructor(document: string) {
     this._document = document;
   }
 
   public parseReleaseAndVersion(): EdiVersion {
-    if (!this._ediMessage) {
-      this._ediMessage = this.parseReleaseAndVersionInternal();
+    if (!this._ediVersion) {
+      this._ediVersion = this.parseReleaseAndVersionInternal();
     }
 
-    return this._ediMessage;
+    return this._ediVersion;
   }
 
   public parseReleaseAndVersionInternal(): EdiVersion {
@@ -57,8 +58,27 @@ export class EdifactParser {
     }
 
     const ediMessage: EdiMessage = new EdiMessage();
-    ediMessage.sender = unb.getElement(2, 1)?.value;
     ediMessage.segments = segments;
+
+    ediMessage.sender = unb.getElement(2, 1)?.value;
+    ediMessage.senderQualifier = unb.getElement(2, 2)?.value;
+
+    ediMessage.recipient = unb.getElement(3, 1)?.value;
+    ediMessage.recipientQualifier = unb.getElement(3, 2)?.value;
+
+    const date = unb.getElement(4, 1)?.value;
+    const time = unb.getElement(4, 2)?.value;
+    if (date && time) {
+      ediMessage.datetime = `${Utils.yyMMddFormat(date)} ${Utils.HHmmFormat(time)}`;
+    }
+
+    ediMessage.communicationsAgreementID = unb.getElement(10)?.value;
+    ediMessage.testIndicator = unb.getElement(11)?.value;
+
+    ediMessage.referenceNumber = unh.getElement(1)?.value;
+    ediMessage.type = unh.getElement(2, 1)?.value;
+    ediMessage.release = `${unh.getElement(2, 2)?.value}${unh.getElement(2, 3)?.value}`;
+
     return ediMessage;
   }
 
@@ -211,10 +231,27 @@ export class EdiMessage {
   public communicationsAgreementID?: string; // UNB10
   public testIndicator?: string; // UNB11
 
-  public referenceNumber?: string; // UNB01
-  public type?: string; // UNB02-01
-  public release?: string; // UNB02-02 + UNB02-03
+  public referenceNumber?: string; // UNH01
+  public type?: string; // UNH02-01
+  public release?: string; // UNH02-02 + UNH02-03
   public segments: EdiSegment[];
+
+  public buildUNBDescription(): string {
+    return `From ${this.sender}(${this.senderQualifier}) to ${this.recipient}(${this.recipientQualifier}) at ${this.datetime}`;
+  }
+
+  public buildUNHDescription(): string {
+    if (!this.release || !this.type) {
+      return "";
+    }
+
+    const messageInfo = Utils.getMessageInfoByDocumentType(this.type);
+    if (!messageInfo) {
+      return `${this.release}-${this.type}`;
+    }
+
+    return `${this.release}-${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
+  }
 }
 
 export class EdiVersion {
@@ -235,24 +272,25 @@ export class EdiSegment {
     return `${this.id}${this.elements.join("")}${this.endingDelimiter}`;
   }
 
-  public getElement(elementIndex: number, componentIndex: number | undefined): EdiElement | null {
-    let thisElementIndex = -1, thisComponentIndex = -1;
-    for (let ele of this.elements) {
-      if (ele.type === ElementType.dataElement) {
-        thisElementIndex++;
-        thisComponentIndex = -1;
-      } else if (ele.type === ElementType.componentElement) {
-        thisComponentIndex++;
-      }
-
-      if (elementIndex === thisElementIndex && Utils.isNullOrUndefined(componentIndex)) {
-        return ele;
-      } else if (elementIndex === thisElementIndex && thisComponentIndex === componentIndex) {
-        return ele;
-      }
+  public getElement(elementIndex: number, componentIndex: number | undefined = undefined): EdiElement | null {
+    if (!this.elements || this.elements.length <= 0) {
+      return null;
     }
-
-    return null;
+    const element = this.elements[elementIndex - 1];
+    if (!element) {
+      return null;
+    }
+    if (componentIndex === undefined) {
+      return element;
+    }
+    if (!element.components || element.components.length <= 0) {
+      return null;
+    }
+    const component = element.components[componentIndex - 1];
+    if (!component) {
+      return null;
+    }
+    return component;
   }
 }
 

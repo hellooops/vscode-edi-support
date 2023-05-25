@@ -88,6 +88,20 @@ export class EdiReleaseSchemaElement {
 
     return this._schema.qualifiers[this.qualifierRef];
   }
+
+  public getQualifierDesc(code: string) : string | null {
+    const codes = this.getCodes();
+    if (!codes) {
+      return null;
+    }
+
+    const qualifier = codes.find(c => c.value === code);
+    if (!qualifier) {
+      return null;
+    }
+
+    return qualifier.desc;
+  }
 }
 
 export class EdiReleaseSchemaSegment {
