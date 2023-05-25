@@ -4,7 +4,7 @@ This extension provides basic support for the EDI EDIFACT document.
 
 # About
 
-GitHub: https://github.com/ZainChen/vscode-json
+GitHub: https://github.com/hellooops/vscode-edi-edifact-support
 
 ![Project Icon](https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/icon-128x128.png)
 
