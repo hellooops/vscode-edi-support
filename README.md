@@ -18,6 +18,23 @@ GitHub: https://github.com/hellooops/vscode-edi-edifact-support
 - Segment hover description.
 - Element hover description.
 
+
+## Document prettify.
+
+<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/document-prettify.gif" alt="Document prettify"/></p>
+
+## Document minify.
+
+<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/document-minify.gif" alt="Document prettify"/></p>
+
+## Segment hover description.
+
+<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/segment-hover.png" alt="Segment hover description"/></p>
+
+## Element hover description.
+
+<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/element-hover.png" alt="Element hover description"/></p>
+
 # Reference
 [知行软件 - kasoftware](https://www.kasoftware.com)
 
