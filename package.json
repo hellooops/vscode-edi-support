@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "edi-edifact-support",
   "description": "Provides basic support for the EDI EDIFACT format and highlighting.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
@@ -59,7 +59,22 @@
         "title": "Minify (format without new lines)",
         "category": "EDI EDIFACT Support"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "EDI EDIFACT Support",
+      "properties": {
+        "ediEdifactSupport.enableCodelens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable codelens for EDI EDIFACT messages."
+        },
+        "ediEdifactSupport.enableHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable hover for EDI EDIFACT messages."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

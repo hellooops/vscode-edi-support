@@ -44,7 +44,9 @@ export class EdiReleaseSchema {
   }
 
   public getSegment(name: string) : EdiReleaseSchemaSegment | undefined {
-    if (name === "UNB") {
+    if (name === "UNA") {
+      return EdiReleaseSchemaSegment.UNA;
+    } else if (name === "UNB") {
       return EdiReleaseSchemaSegment.UNB;
     }
 
@@ -109,6 +111,18 @@ export class EdiReleaseSchemaSegment {
   public desc: string;
   public purpose: string;
   public elements: EdiReleaseSchemaElement[];
+  public static UNA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Delimiter String Advice",
+    Elements: [
+      { Id: "UNA01", Required: true, MinLength: 1, MaxLength: 1, Desc: "Sub-element delimiter" },
+      { Id: "UNA02", Required: true, MinLength: 1, MaxLength: 1, Desc: "Data element delimiter" },
+      { Id: "UNA03", Required: true, MinLength: 1, MaxLength: 1, Desc: "Decimal point indicator" },
+      { Id: "UNA04", Required: true, MinLength: 1, MaxLength: 1, Desc: "Release character" },
+      { Id: "UNA05", Required: true, MinLength: 1, MaxLength: 1, Desc: "Space" },
+      { Id: "UNA06", Required: true, MinLength: 1, MaxLength: 1, Desc: "Segment terminator" },
+    ],
+    Purpose: "To start, identify and specify an interchange."
+  }, null);
   public static UNB: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange header",
     Elements: [

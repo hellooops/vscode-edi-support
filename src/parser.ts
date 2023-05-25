@@ -1,12 +1,10 @@
 import path = require("path");
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment, EdiSchema } from "./schemas/schemas";
 import Utils from "./utils/utils";
-import * as vscode from "vscode";
 
 export class EdifactParser {
   private _document: string;
   private _segments: EdiSegment[];
-  private _ediMessage: EdiMessage;
   private _ediVersion: EdiVersion;
   private _schema: EdiSchema;
   public constructor(document: string) {
@@ -102,6 +100,7 @@ export class EdifactParser {
 
   public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
     await this.loadSchema();
+
     const segment = new EdiSegment();
     segment.endingDelimiter = endingDelimiter;
     segment.startIndex = startIndex;
@@ -112,6 +111,14 @@ export class EdifactParser {
     segment.elements = [];
 
     segment.ediReleaseSchemaSegment = this._schema?.ediReleaseSchema?.getSegment(segment.id);
+
+    if (segment.id === "UNA") {
+      if (segmentStr.length !== 9) {
+        return segment;
+      }
+
+      return await this.parseSegmentUNA(segment, segmentStr);
+    }
 
     let element: EdiElement = null;
     let subElement: EdiElement = null;
@@ -182,6 +189,24 @@ export class EdifactParser {
     return segment;
   }
 
+  private async parseSegmentUNA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
+    await this.loadSchema();
+    segment.elements = [];
+    for (let i = 0; i < 6; i++) {
+      const element = new EdiElement();
+      element.value = segmentStr[i + 3];
+      element.ediReleaseSchemaElement = this._schema?.ediReleaseSchema?.getSegment("UNA")?.elements[i];
+      element.type = ElementType.dataElement;
+      element.startIndex = i + 3;
+      element.endIndex = i + 3;
+      element.designatorIndex = this.pad(i + 1, 2, "0");
+      element.separator = "";
+      segment.elements.push(element);
+    }
+
+    return segment;
+  }
+
   private async parseRegex<T>(exp: RegExp, str: string, selector: (match: RegExpExecArray) => Promise<T>): Promise<Array<T>> {
     let results: Array<T> = [];
     let match: RegExpExecArray;
@@ -237,7 +262,25 @@ export class EdiMessage {
   public segments: EdiSegment[];
 
   public buildUNBDescription(): string {
-    return `From ${this.sender}(${this.senderQualifier}) to ${this.recipient}(${this.recipientQualifier}) at ${this.datetime}`;
+    let sender: string = this.sender?.trim(), recipient: string = this.recipient?.trim();
+
+    if (sender) {
+      if (this.senderQualifier) {
+        sender += `(${this.senderQualifier})`;
+      }
+    } else {
+      sender = "Unknown";
+    }
+
+    if (recipient) {
+      if (this.recipientQualifier) {
+        recipient += `(${this.recipientQualifier})`;
+      }
+    } else {
+      recipient = "Unknown";
+    }
+
+    return `From ${sender} to ${recipient} at ${this.datetime}`;
   }
 
   public buildUNHDescription(): string {

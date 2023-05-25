@@ -13,6 +13,15 @@
       "end": "\\~",
       "patterns": [
         {
+          "name": "meta.segment.id.una.edifact",
+          "match": "(UNA):\\+[\\.|,]\\?.'",
+          "captures": {
+            "1": {
+              "name": "storage.type.segment.id.una.edifact"
+            }
+          }
+        },
+        {
           "name": "meta.segment.invalid-id.edifact",
           "match": "^([A-Z0-9]{1,2}|[A-Z0-9]{4,})\\+",
           "captures": {

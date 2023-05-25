@@ -1,14 +1,21 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "ES2020",
-		"outDir": "out",
-		"lib": [
-			"ES2020"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"resolveJsonModule": true,
-		"allowJs": true
-	}
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2020",
+    "outDir": "out",
+    "lib": [
+      "ES2020"
+    ],
+    "sourceMap": true,
+    "rootDir": "src",
+    "resolveJsonModule": true,
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*",
+    "src/schemas/**/*.json"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -5,6 +5,9 @@ import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
 
 export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
   async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover> {
+    if (vscode.workspace.getConfiguration("ediEdifactSupport").get("enableHover") !== true) {
+      return null;
+    }
     let text = document.getText();
     const parser = new EdifactParser(text);
     let ediVersion: EdiVersion = parser.parseReleaseAndVersion();
@@ -62,15 +65,25 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
     const part1MdSb = new StringBuilder();
     part1MdSb.append(`**${segment.id}**${element.designatorIndex} (Element)`);
     if (element?.ediReleaseSchemaElement) {
-      part1MdSb.append(`\n\n\`Id ${element.ediReleaseSchemaElement.id}\``);
-      part1MdSb.append(` \`Type ${element.ediReleaseSchemaElement.dataType}\``);
-      part1MdSb.append(` \`Min ${element.ediReleaseSchemaElement.minLength} / Max ${element.ediReleaseSchemaElement.maxLength}\``);
+      if (element.ediReleaseSchemaElement.id !== undefined) {
+        part1MdSb.append(`\n\n\`Id ${element.ediReleaseSchemaElement.id}\``);
+      }
+      if (element.ediReleaseSchemaElement.dataType !== undefined) {
+        part1MdSb.append(` \`Type ${element.ediReleaseSchemaElement.dataType}\``);
+      }
+      if (element.ediReleaseSchemaElement.minLength !== undefined && element.ediReleaseSchemaElement.maxLength !== undefined) {
+        part1MdSb.append(` \`Min ${element.ediReleaseSchemaElement.minLength} / Max ${element.ediReleaseSchemaElement.maxLength}\``);
+      }
     }
 
     const part2MdSb = new StringBuilder();
     if (element?.ediReleaseSchemaElement) {
-      part2MdSb.append(`**${element.ediReleaseSchemaElement.desc}**\n\n`);
-      part2MdSb.append(`${element.ediReleaseSchemaElement.definition}\n`);
+      if (element.ediReleaseSchemaElement.desc) {
+        part2MdSb.append(`**${element.ediReleaseSchemaElement.desc}**\n\n`);
+      }
+      if (element.ediReleaseSchemaElement.definition) {
+        part2MdSb.append(`${element.ediReleaseSchemaElement.definition}\n\n`);
+      }
     }
     part2MdSb.append(`\`\`\`edifact\n${segment}\n\`\`\``);
 

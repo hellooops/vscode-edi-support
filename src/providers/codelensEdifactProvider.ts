@@ -6,11 +6,26 @@ export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvid
   private parser?: EdifactParser;
   onDidChangeCodeLenses?: vscode.Event<void>;
   async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[]> {
+    if (vscode.workspace.getConfiguration("ediEdifactSupport").get("enableCodelens") !== true) {
+      return [];
+    }
     const codeLenses: vscode.CodeLens[] = [];
     const text = document.getText();
     this.parser = new EdifactParser(text);
     const segments = await this.parser.parseSegments();
     const ediMessage = await this.parser.parseMessage();
+    
+
+    const una: EdiSegment = segments.find(segment => segment.id === "UNA");
+    if (una) {
+      for (let element of una.elements) {
+        const elementDesc = `${element.ediReleaseSchemaElement.desc}: ${element.value}`;
+        codeLenses.push(new vscode.CodeLens(
+          new vscode.Range(document.positionAt(una.startIndex), document.positionAt(una.endIndex)),
+          { title: elementDesc, tooltip: elementDesc, command: null, arguments: [] }
+        ));
+      }
+    }
 
     const unb: EdiSegment = segments.find(segment => segment.id === "UNB");
     if (unb) {
