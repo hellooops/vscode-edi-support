@@ -6,7 +6,7 @@ This extension provides basic support for the EDI EDIFACT document.
 
 GitHub: https://github.com/hellooops/vscode-edi-edifact-support
 
-![Project Icon](https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/icon-128x128.png)
+![Project Icon](./docs/images/icon-128x128.png)
 
 # Features
 
@@ -21,19 +21,19 @@ GitHub: https://github.com/hellooops/vscode-edi-edifact-support
 
 ## Document prettify.
 
-<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/document-prettify.gif" alt="Document prettify"/></p>
+<p><img src="./docs/images/document-prettify.gif" alt="Document prettify"/></p>
 
 ## Document minify.
 
-<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/document-minify.gif" alt="Document prettify"/></p>
+<p><img src="./docs/images/document-minify.gif" alt="Document prettify"/></p>
 
 ## Segment hover description.
 
-<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/segment-hover.png" alt="Segment hover description"/></p>
+<p><img src="./docs/images/segment-hover.png" alt="Segment hover description"/></p>
 
 ## Element hover description.
 
-<p><img src="https://github.com/hellooops/vscode-edi-edifact-support/blob/main/docs/images/element-hover.png" alt="Element hover description"/></p>
+<p><img src="./docs/images/element-hover.png" alt="Element hover description"/></p>
 
 # Reference
 [知行软件 - kasoftware](https://www.kasoftware.com)

@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "edi-edifact-support",
   "description": "Provides basic support for the EDI EDIFACT format and highlighting.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
