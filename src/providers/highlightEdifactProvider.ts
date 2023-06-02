@@ -4,7 +4,6 @@ import { EdifactParser } from "../parser";
 
 export class HighlightEdifactProvider implements vscode.DocumentHighlightProvider, IProvidable {
   async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[]> {
-    vscode.window.showInformationMessage("Method not implemented.");
     const text = document.getText();
     const parser = new EdifactParser(text);
     const segments = await parser.parseSegments();
