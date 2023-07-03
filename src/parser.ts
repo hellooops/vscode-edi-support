@@ -1,4 +1,3 @@
-import path = require("path");
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment, EdiSchema } from "./schemas/schemas";
 import Utils from "./utils/utils";
 
@@ -23,8 +22,8 @@ export class EdifactParser {
     const ediVersion = new EdiVersion();
     let separater = this.escapeCharRegex("'");
     let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
-    let unhStr: string = null;
-    let match: RegExpExecArray;
+    let unhStr: string | undefined = undefined;
+    let match: RegExpExecArray | null;
     while ((match = regex.exec(this._document)) !== null) {
       if (match[0].startsWith("UNH")) {
         unhStr = match[0];
@@ -49,14 +48,14 @@ export class EdifactParser {
     return ediVersion;
   }
 
-  public async parseMessage(): Promise<EdiMessage> {
+  public async parseMessage(): Promise<EdiMessage | undefined> {
     // await this.loadSchema();
     // TODO
     const segments = await this.parseSegments();
     const unb = segments.find(segment => segment.id === "UNB");
     const unh = segments.find(segment => segment.id === "UNH");
     if (!unb || !unh) {
-      return null;
+      return undefined;
     }
 
     const ediMessage: EdiMessage = new EdiMessage();
@@ -124,24 +123,24 @@ export class EdifactParser {
       return await this.parseSegmentUNA(segment, segmentStr);
     }
 
-    let element: EdiElement = null;
-    let subElement: EdiElement = null;
+    let element: EdiElement | undefined = undefined;
+    let subElement: EdiElement | undefined = undefined;
     let elementIndex = 0;
     let subElementIndex = 0;
-    let elementDesignator = null;
+    let elementDesignator: string | undefined = undefined;
     for (let i = 3; i < segmentStr.length; i++) {
       const c: string = segmentStr[i];
       if (c === "+" || c === "'") {
         if (element) {
           element.endIndex = i - 1;
           element.value = segmentStr.substring(element.startIndex + 1, element.endIndex + 1);
-          element = null;
+          element = undefined;
         }
 
         if (subElement) {
           subElement.endIndex = i - 1;
           subElement.value = segmentStr.substring(subElement.startIndex + 1, subElement.endIndex + 1);
-          subElement = null;
+          subElement = undefined;
         }
 
         subElementIndex = 0;
@@ -149,7 +148,7 @@ export class EdifactParser {
         if (subElement) {
           subElement.endIndex = i - 1;
           subElement.value = segmentStr.substring(subElement.startIndex + 1, subElement.endIndex + 1);
-          subElement = null;
+          subElement = undefined;
         }
       }
 
@@ -186,8 +185,8 @@ export class EdifactParser {
         subElement.segmentName = segment.id;
         subElement.separator = ":";
         subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
-        element.components = element.components || [];
-        element.components.push(subElement);
+        element!.components = element!.components || [];
+        element!.components.push(subElement);
       }
     }
 
@@ -214,31 +213,31 @@ export class EdifactParser {
 
   private async parseRegex<T>(exp: RegExp, str: string, selector: (match: RegExpExecArray) => Promise<T>): Promise<Array<T>> {
     let results: Array<T> = [];
-    let match: RegExpExecArray;
+    let match: RegExpExecArray | null;
     while ((match = exp.exec(str)) !== null) {
       results.push(await selector(match));
     }
     return results;
   }
 
-  private async loadSchema(): Promise<EdiSchema> {
-    if (!this._schema) {
-      const ediVersion = this.parseReleaseAndVersion();
-      if (!ediVersion || !ediVersion.release || !ediVersion.version) {
-        return;
-      }
-      let releaseSchema = null;
-      try {
-        releaseSchema = await import(`./schemas/edifact/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
-      } catch (ex) {
-        return null;
-      }
-
-      const ediSchema = new EdiSchema(releaseSchema);
-      this._schema = ediSchema;
+  private async loadSchema(): Promise<void> {
+    if (this._schema) {
+      return;
     }
 
-    return this._schema;
+    const ediVersion = this.parseReleaseAndVersion();
+    if (!ediVersion || !ediVersion.release || !ediVersion.version) {
+      return;
+    }
+    let releaseSchema = null;
+    try {
+      releaseSchema = await import(`./schemas/edifact/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
+    } catch (ex) {
+      return;
+    }
+
+    const ediSchema = new EdiSchema(releaseSchema);
+    this._schema = ediSchema;
   }
 
   private escapeCharRegex(str: string): string {
@@ -267,7 +266,8 @@ export class EdiMessage {
   public segments: EdiSegment[];
 
   public buildUNBDescription(): string {
-    let sender: string = this.sender?.trim(), recipient: string = this.recipient?.trim();
+    let sender: string | undefined = this.sender?.trim();
+    let recipient: string | undefined = this.recipient?.trim();
 
     if (sender) {
       if (this.senderQualifier) {
@@ -314,7 +314,7 @@ export class EdiSegment {
   public id: string;
   public elements: Array<EdiElement>;
   public endingDelimiter: string;
-  public ediReleaseSchemaSegment: EdiReleaseSchemaSegment;
+  public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
 
   public toString() {
     return `${this.id}${this.elements.join("")}${this.endingDelimiter}`;
@@ -356,7 +356,7 @@ export class EdiElement {
   public designatorIndex: string;
   public segmentName: string;
   public components: EdiElement[];
-  public ediReleaseSchemaElement: EdiReleaseSchemaElement;
+  public ediReleaseSchemaElement?: EdiReleaseSchemaElement;
 
   public getDesignator() {
     return `${this.segmentName}${this.designatorIndex}`;

@@ -4,7 +4,7 @@ import { EdiElement, EdiSegment, EdiVersion, EdifactParser } from "../parser";
 import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
 
 export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
-  async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover> {
+  async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover | undefined | null> {
     if (vscode.workspace.getConfiguration("ediEdifactSupport").get("enableHover") !== true) {
       return null;
     }
@@ -17,17 +17,17 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
     );
     let selectedSegment = segments.find(x => realPosition >= x.startIndex && realPosition <= (x.endIndex + 1));
 
-    if (selectedSegment?.elements?.length <= 0) {
+    if (!selectedSegment?.elements || selectedSegment?.elements?.length <= 0) {
       return null;
     }
 
-    const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
+    const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
     if (!selectedElement) {
       return new vscode.Hover(this.buildSegmentMarkdownString(ediVersion, selectedSegment));
     }
-    let selectedComponentElement: EdiElement = null;
+    let selectedComponentElement: EdiElement | undefined = undefined;
     if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
-      selectedComponentElement = selectedElement?.components.find(x => realPosition >= (selectedSegment.startIndex + x.startIndex) && realPosition <= (selectedSegment.startIndex + x.endIndex + 1));
+      selectedComponentElement = selectedElement?.components.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
     }
 
     if (!selectedElement) {
@@ -95,7 +95,7 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
     const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediVersion.release, segment.id, element.getDesignator());
     if (element?.ediReleaseSchemaElement?.qualifierRef) {
       const codes = element?.ediReleaseSchemaElement?.getCodes();
-      if (codes?.length > 0) {
+      if (codes && codes.length > 0) {
         mdStrings.push(new vscode.MarkdownString(
           `*Codes*: ${codes.map(code => `[\`${code.value}\`](${elementSchemaViewerUrl} "${code.desc}")`).join(" ")}`
         ));

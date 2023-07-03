@@ -1,6 +1,8 @@
 import MessageInfo from "../interfaces/messageInfo";
 import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
 
+export type Nullable<T> = T | null | undefined;
+
 export default class Utils {
   static isNullOrUndefined(o: any): boolean {
     return o === null || o === undefined;
@@ -32,7 +34,7 @@ export default class Utils {
 }
 
 export class SchemaViewerUtils {
-  static getSegmentUrl(release: string, segment: string): string {
+  static getSegmentUrl(release: Nullable<string>, segment: Nullable<string>): string {
     if (!release || !segment) {
       return this.getIndexUrl();
     }
@@ -40,7 +42,7 @@ export class SchemaViewerUtils {
     return `https://www.kasoftware.com/schema/edi/edifact/${release}/segments/${segment}/`;
   }
 
-  static getElementUrl(release: string, segment: string, element: string): string {
+  static getElementUrl(release: Nullable<string>, segment: Nullable<string>, element: Nullable<string>): string {
     if (!release || !segment || !element) {
       return this.getIndexUrl();
     }

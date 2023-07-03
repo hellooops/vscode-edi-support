@@ -3,7 +3,7 @@ import { IProvidable } from "../interfaces/providable";
 import { EdifactParser } from "../parser";
 
 export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
-  async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[]> {
+  async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
 
     const documentText = document.getText();
     const parser = new EdifactParser(documentText);

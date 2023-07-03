@@ -3,14 +3,14 @@ import { IProvidable } from "../interfaces/providable";
 import { EdifactParser } from "../parser";
 
 export class HighlightEdifactProvider implements vscode.DocumentHighlightProvider, IProvidable {
-  async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[]> {
+  async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[] | null | undefined> {
     const text = document.getText();
     const parser = new EdifactParser(text);
     const segments = await parser.parseSegments();
     const realPosition = document.offsetAt(new vscode.Position(position.line, position.character));
 
     const selectedSegment = segments.find(x => realPosition >= x.startIndex && realPosition <= (x.endIndex + 1));
-    if (selectedSegment?.elements?.length <= 0) {
+    if (!selectedSegment?.elements || selectedSegment?.elements?.length <= 0) {
       return [];
     }
 
