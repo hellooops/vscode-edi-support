@@ -1,8 +1,8 @@
 {
   "name": "edi-edifact-support",
-  "displayName": "Edi Edifact Support",
-  "description": "Provides basic support for the EDI EDIFACT format and highlighting.",
-  "version": "0.2.4",
+  "displayName": "Edi Support",
+  "description": "Format, highlighting, hover supports for X12 and EDIFACT in vscode.",
+  "version": "0.3.0",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
@@ -12,10 +12,10 @@
     "vscode": "^1.78.0"
   },
   "license": "MIT",
-  "homepage": "https://github.com/hellooops/vscode-edi-edifact-support/blob/main//README.md",
+  "homepage": "https://github.com/hellooops/vscode-edi-support/blob/main/README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hellooops/vscode-edi-edifact-support.git"
+    "url": "https://github.com/hellooops/vscode-edi-support.git"
   },
   "categories": [
     "Programming Languages",
@@ -27,6 +27,19 @@
   "main": "./out/extension.js",
   "contributes": {
     "languages": [
+      {
+        "id": "x12",
+        "aliases": [
+          "Electronic Data Interchange (X12)",
+          "x12",
+          "X12"
+        ],
+        "extensions": [
+          ".edi",
+          ".x12"
+        ],
+        "configuration": "./language-configuration.json"
+      },
       {
         "id": "edifact",
         "aliases": [
@@ -42,6 +55,11 @@
       }
     ],
     "grammars": [
+      {
+        "language": "x12",
+        "scopeName": "source.x12",
+        "path": "./syntaxes/x12.tmLanguage.json"
+      },
       {
         "language": "edifact",
         "scopeName": "source.edifact",
