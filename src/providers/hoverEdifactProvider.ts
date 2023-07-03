@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiElement, EdiSegment, EdiVersion, EdifactParser } from "../parser";
+import { EdifactParser } from "../parser/edifactParser";
+import { EdiVersion, EdiElement, EdiSegment } from "../parser/entities";
 import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
 
 export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {

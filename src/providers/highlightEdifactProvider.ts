@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser } from "../parser";
+import { EdifactParser } from "../parser/edifactParser";
 
 export class HighlightEdifactProvider implements vscode.DocumentHighlightProvider, IProvidable {
   async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[] | null | undefined> {

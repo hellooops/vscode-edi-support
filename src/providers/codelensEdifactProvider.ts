@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiSegment, EdifactParser } from "../parser";
+import { EdifactParser } from "../parser/edifactParser";
+import { EdiSegment } from "../parser/entities";
 
 export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvidable {
   private parser?: EdifactParser;

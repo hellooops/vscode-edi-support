@@ -1,6 +1,6 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
-import { EdifactParser } from "../parser";
+import { EdifactParser } from "../parser/edifactParser";
 
 export class MinifyEdifactCommand implements ICommandable {
   public name: string = "edi-edifact-support.minify";

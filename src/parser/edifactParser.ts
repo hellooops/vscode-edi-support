@@ -1,5 +1,6 @@
-import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment, EdiSchema } from "./schemas/schemas";
-import Utils from "./utils/utils";
+import { EdiVersion, EdiSegment, EdiElement, ElementType } from "./entities";
+import { EdiSchema } from "../schemas/schemas";
+import Utils from "../utils/utils";
 
 export class EdifactParser {
   private _document: string;
@@ -48,7 +49,7 @@ export class EdifactParser {
     return ediVersion;
   }
 
-  public async parseMessage(): Promise<EdiMessage | undefined> {
+  public async parseMessage(): Promise<EdifactEdiMessage | undefined> {
     // await this.loadSchema();
     // TODO
     const segments = await this.parseSegments();
@@ -58,7 +59,7 @@ export class EdifactParser {
       return undefined;
     }
 
-    const ediMessage: EdiMessage = new EdiMessage();
+    const ediMessage: EdifactEdiMessage = new EdifactEdiMessage();
     ediMessage.segments = segments;
 
     ediMessage.sender = unb.getElement(2, 1)?.value;
@@ -231,7 +232,7 @@ export class EdifactParser {
     }
     let releaseSchema = null;
     try {
-      releaseSchema = await import(`./schemas/edifact/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
+      releaseSchema = await import(`../schemas/edifact/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
     } catch (ex) {
       return;
     }
@@ -250,7 +251,7 @@ export class EdifactParser {
   }
 }
 
-export class EdiMessage {
+export class EdifactEdiMessage {
   public sender?: string; // UNB02-01
   public senderQualifier?: string; // UNB02-02
   public recipient?: string; // UNB03-01
@@ -299,70 +300,5 @@ export class EdiMessage {
     }
 
     return `${this.release}-${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
-  }
-}
-
-export class EdiVersion {
-  public release?: string; // D96A
-  public version?: string; // ORDERS
-}
-
-export class EdiSegment {
-  public startIndex: number;
-  public endIndex: number;
-  public length: number;
-  public id: string;
-  public elements: Array<EdiElement>;
-  public endingDelimiter: string;
-  public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
-
-  public toString() {
-    return `${this.id}${this.elements.join("")}${this.endingDelimiter}`;
-  }
-
-  public getElement(elementIndex: number, componentIndex: number | undefined = undefined): EdiElement | null {
-    if (!this.elements || this.elements.length <= 0) {
-      return null;
-    }
-    const element = this.elements[elementIndex - 1];
-    if (!element) {
-      return null;
-    }
-    if (componentIndex === undefined) {
-      return element;
-    }
-    if (!element.components || element.components.length <= 0) {
-      return null;
-    }
-    const component = element.components[componentIndex - 1];
-    if (!component) {
-      return null;
-    }
-    return component;
-  }
-}
-
-export enum ElementType {
-  dataElement = "Data Element",
-  componentElement = "Component Element"
-}
-
-export class EdiElement {
-  public type: ElementType;
-  public value: string;
-  public startIndex: number;
-  public separator: string;
-  public endIndex: number;
-  public designatorIndex: string;
-  public segmentName: string;
-  public components: EdiElement[];
-  public ediReleaseSchemaElement?: EdiReleaseSchemaElement;
-
-  public getDesignator() {
-    return `${this.segmentName}${this.designatorIndex}`;
-  }
-
-  public toString() {
-    return this.separator + this.value;
   }
 }

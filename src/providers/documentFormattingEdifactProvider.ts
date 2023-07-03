@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser } from "../parser";
+import { EdifactParser } from "../parser/edifactParser";
 
 export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {

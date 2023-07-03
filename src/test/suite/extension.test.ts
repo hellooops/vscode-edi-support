@@ -1,7 +1,8 @@
 import * as assert from "assert";
 
 import * as vscode from "vscode";
-import { EdiMessage, EdiSegment, EdiVersion, EdifactParser, ElementType } from "../../parser";
+import { EdifactParser } from "../../parser/edifactParser";
+import { EdiVersion, EdiSegment, ElementType } from "../../parser/entities";
 import { EdiReleaseSchema } from "../../schemas/schemas";
 
 suite("Extension Test Suite", () => {
@@ -115,14 +116,4 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ADR0101.qualifierRef, "Address purpose, coded");
     assert.strictEqual(ADR0101.definition, "To specify the purpose of the address.");
   });
-
-  // test("Edifact Parse Segments 1", async () => {
-  //   // const releaseSchema = await import(`./schemas/D96A/RSSBus_D96A.json`);
-  //   const releaseSchema = await import("../../schemas/D96A/RSSBus_D96A.json");
-  //   const documentStr = "UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+5++++1+EANCOM'UNH+1+ORDERS:D:96A:UN:EAN008'";
-  //   const parser: EdifactParser = new EdifactParser(documentStr);
-  //   const ediSegments: EdiSegment[] = await parser.parseSegments();
-
-  //   assert.strictEqual(ediSegments.length, "<Sender GLN>");
-  // });
 });
