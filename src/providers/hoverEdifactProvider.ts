@@ -95,10 +95,19 @@ export class HoverEdifactProvider implements vscode.HoverProvider, IProvidable {
     const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediVersion.release, segment.id, element.getDesignator());
     if (element?.ediReleaseSchemaElement?.qualifierRef) {
       const codes = element?.ediReleaseSchemaElement?.getCodes();
+      const elementValueCode = element?.ediReleaseSchemaElement?.getCodeByValue(element.value);
+      const part3MdSb = new StringBuilder();
+      if (element.value && elementValueCode) {
+        part3MdSb.append(`${element.value}: \`${elementValueCode.desc}\`\n\n`);
+      }
+
       if (codes && codes.length > 0) {
-        mdStrings.push(new vscode.MarkdownString(
-          `*Codes*: ${codes.map(code => `[\`${code.value}\`](${elementSchemaViewerUrl} "${code.desc}")`).join(" ")}`
-        ));
+        part3MdSb.append(`Available codes: ${codes.map(code => `[\`${code.value}\`](${elementSchemaViewerUrl} "${code.desc}")`).join(" ")}`);
+      }
+
+      const part3MdStr = part3MdSb.toString();
+      if (part3MdStr.length > 0) {
+        mdStrings.push(new vscode.MarkdownString(part3MdStr));
       }
     }
 

@@ -91,6 +91,20 @@ export class EdiReleaseSchemaElement {
     return this._schema.qualifiers[this.qualifierRef];
   }
 
+  public getCodeByValue(value: string): EdiQualifier {
+    const codes = this.getCodes();
+    if (!codes) {
+      return new EdiQualifier(value, `No codes found for ${this.id}`);
+    }
+
+    const code = codes.find(c => c.value === value);
+    if (!code) {
+      return new EdiQualifier(value, `No code found for ${value}`);
+    }
+
+    return code;
+  }
+
   public getQualifierDesc(code: string) : string | null {
     const codes = this.getCodes();
     if (!codes) {
