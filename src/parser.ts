@@ -32,6 +32,10 @@ export class EdifactParser {
       }
     }
 
+    if (!unhStr) {
+      return ediVersion;
+    }
+
     // UNH+1+ORDERS:D:96A:UN:EAN008'
     const segmentFrags: string[] = unhStr.split(/[+:]/);
     if (segmentFrags.length >= 3) {
@@ -158,6 +162,7 @@ export class EdifactParser {
         element.designatorIndex = this.pad(elementIndex, 2, "0");
         elementDesignator = element.designatorIndex;
         element.separator = "+";
+        element.segmentName = segment.id;
         segment.elements.push(element);
         if (element.ediReleaseSchemaElement?.isComposite()) {
           element.components = [];
