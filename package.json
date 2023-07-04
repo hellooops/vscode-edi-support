@@ -68,28 +68,28 @@
     ],
     "commands": [
       {
-        "command": "edi-edifact-support.prettify",
+        "command": "edi-support.prettify",
         "title": "Prettify (format using new lines)",
-        "category": "EDI EDIFACT Support"
+        "category": "EDI Support"
       },
       {
-        "command": "edi-edifact-support.minify",
+        "command": "edi-support.minify",
         "title": "Minify (format without new lines)",
-        "category": "EDI EDIFACT Support"
+        "category": "EDI Support"
       }
     ],
     "configuration": {
-      "title": "EDI EDIFACT Support",
+      "title": "EDI Support",
       "properties": {
-        "ediEdifactSupport.enableCodelens": {
+        "ediSupport.enableCodelens": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable codelens for EDI EDIFACT messages."
+          "description": "Enable/disable codelens for EDI messages."
         },
-        "ediEdifactSupport.enableHover": {
+        "ediSupport.enableHover": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable hover for EDI EDIFACT messages."
+          "description": "Enable/disable hover for EDI messages."
         }
       }
     }

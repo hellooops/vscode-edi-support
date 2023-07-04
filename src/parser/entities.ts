@@ -75,3 +75,8 @@ export class EdiMessageSeparators {
   public dataElementSeparator?: string;
   public componentElementSeparator?: string;
 }
+
+export class EdiType {
+  static X12 = "x12";
+  static EDIFACT = "edifact";
+}
