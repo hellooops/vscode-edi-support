@@ -16,6 +16,10 @@ export class EdiQualifier {
     this.value = value;
     this.desc = desc;
   }
+
+  getEscapedDesc() : string {
+    return this.desc.replace(/"/g, '\\"');
+  }
 }
 
 export class EdiReleaseSchema {
