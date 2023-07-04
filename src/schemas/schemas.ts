@@ -4,7 +4,7 @@ export class EdiSchema {
 
   constructor(rawReleaseSchema: any) {
     this.ediReleaseSchema = new EdiReleaseSchema(rawReleaseSchema);
-    this.ediVersionSchema = undefined; // TODO(Deric)
+    this.ediVersionSchema = undefined;  // TODO(Deric): May implement message schemas in the future.
   }
 }
 
@@ -270,5 +270,5 @@ export class EdiReleaseSchemaSegment {
 }
 
 export class EdiVersionSchema {
-  // TODO(Deric)
+  // TODO(Deric): May implement message schemas in the future.
 }

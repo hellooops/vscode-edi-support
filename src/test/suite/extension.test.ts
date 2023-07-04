@@ -212,7 +212,7 @@ suite("Extension Test Suite", () => {
     GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     ST*850*0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const x12EdiMessage: X12EdiMessage = await parser.parseMessage();
+    const x12EdiMessage: X12EdiMessage = await parser.parseMessage() as X12EdiMessage;
 
     assert.strictEqual(x12EdiMessage.sender, "DERICL");
     assert.strictEqual(x12EdiMessage.senderQualifier, "ZZ");
@@ -222,7 +222,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(x12EdiMessage.type, "850");
     assert.strictEqual(x12EdiMessage.release, "00401");
 
-    const separators = parser.getMessageSeparator();
+    const separators = parser.getMessageSeparators();
     assert.strictEqual(separators.segmentSeparator, "~");
     assert.strictEqual(separators.dataElementSeparator, "*");
     assert.strictEqual(separators.componentElementSeparator, ">");

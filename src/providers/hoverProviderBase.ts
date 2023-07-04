@@ -1,9 +1,8 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { X12Parser } from "../parser/x12Parser";
-import { EdifactParser } from "../parser/edifactParser";
 import { EdiVersion, EdiElement, EdiSegment } from "../parser/entities";
 import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
+import { EdiParserBase } from "../parser/ediParserBase";
 
 export abstract class HoverProviderBase implements vscode.HoverProvider, IProvidable {
   async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover | undefined | null> {
@@ -45,8 +44,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
 
   public abstract getLanguageName(): string;
 
-  // TODO: return type
-  public abstract getParser(document: string): X12Parser | EdifactParser;
+  public abstract getParser(document: string): EdiParserBase;
 
   private buildSegmentMarkdownString(ediVersion: EdiVersion, segment: EdiSegment) : vscode.MarkdownString[] {
     const part2MdSb = new StringBuilder();

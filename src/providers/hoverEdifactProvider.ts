@@ -2,7 +2,7 @@ import { X12Parser } from "../parser/x12Parser";
 import { HoverProviderBase } from "./hoverProviderBase";
 import { EdifactParser } from "../parser/edifactParser";
 
-export class HoverX12Provider extends HoverProviderBase {
+export class HoverEdifactProvider extends HoverProviderBase {
   public getLanguageName(): string {
     return "edifact";
   }

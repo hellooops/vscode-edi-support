@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser } from "../parser/edifactParser";
+import { EdifactParser, EdifactEdiMessage } from "../parser/edifactParser";
 import { EdiSegment } from "../parser/entities";
 
 export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvidable {
@@ -14,7 +14,7 @@ export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvid
     const text = document.getText();
     this.parser = new EdifactParser(text);
     const segments = await this.parser.parseSegments();
-    const ediMessage = await this.parser.parseMessage();
+    const ediMessage = await this.parser.parseMessage() as EdifactEdiMessage;
     
 
     const una: EdiSegment | undefined = segments.find(segment => segment.id === "UNA");
