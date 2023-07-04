@@ -3,6 +3,11 @@ import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/sch
 export class EdiVersion {
   public release?: string; // D96A
   public version?: string; // ORDERS
+
+  constructor(release?: string, version?: string) {
+    this.release = release;
+    this.version = version;
+  }
 }
 
 export class EdiSegment {
@@ -63,4 +68,10 @@ export class EdiElement {
   public toString() {
     return this.separator + this.value;
   }
+}
+
+export class EdiMessageSeparators {
+  public segmentSeparator?: string;
+  public dataElementSeparator?: string;
+  public componentElementSeparator?: string;
 }

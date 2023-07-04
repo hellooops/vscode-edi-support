@@ -194,6 +194,10 @@ export class EdifactParser {
     return segment;
   }
 
+  public setEdiVersion(ediVersion: EdiVersion) {
+    this._ediVersion = ediVersion;
+  }
+
   private async parseSegmentUNA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
     await this.loadSchema();
     segment.elements = [];

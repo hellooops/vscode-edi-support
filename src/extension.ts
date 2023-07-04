@@ -4,6 +4,7 @@ import { PrettifyEdifactCommand } from "./commands/prettifyEdifactCommand";
 import { MinifyEdifactCommand } from "./commands/minifyEdifactCommand";
 import { IProvidable } from "./interfaces/providable";
 import { HighlightEdifactProvider } from "./providers/highlightEdifactProvider";
+import { HoverX12Provider } from "./providers/hoverX12Provider";
 import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
 import { DocumentFormattingEditEdifactProvider } from "./providers/documentFormattingEdifactProvider";
 import { CodelensEdifactProvider } from "./providers/codelensEdifactProvider";
@@ -12,6 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyEdifactCommand());
   registerCommand(context, new MinifyEdifactCommand());
   registerProvider(context, new HighlightEdifactProvider());
+  registerProvider(context, new HoverX12Provider());
   registerProvider(context, new HoverEdifactProvider());
   registerProvider(context, new DocumentFormattingEditEdifactProvider());
   registerProvider(context, new CodelensEdifactProvider());
