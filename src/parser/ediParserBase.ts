@@ -51,7 +51,7 @@ export abstract class EdiParserBase {
     segment.endIndex = endIndex;
     segment.length = segmentStr.length;
 
-    const firstElementSeparatorIndex = segmentStr.indexOf(this.getMessageSeparators().dataElementSeparator!);
+    const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length - 1;
     segment.id = segmentStr.substring(0, firstElementSeparatorIndex);
     segment.elements = [];
 

@@ -99,8 +99,8 @@ export class EdifactParser extends EdiParserBase {
 
     const ediMessageSeparators = new EdiMessageSeparators();
     ediMessageSeparators.segmentSeparator = segmentStr[8];
-    ediMessageSeparators.dataElementSeparator = segmentStr[5];
-    ediMessageSeparators.componentElementSeparator = segmentStr[4];
+    ediMessageSeparators.dataElementSeparator = segmentStr[4];
+    ediMessageSeparators.componentElementSeparator = segmentStr[3];
     this._separators = ediMessageSeparators;
 
     for (let i = 0; i < 6; i++) {
@@ -134,7 +134,8 @@ export class EdifactEdiMessage implements IEdiMessage {
   public release?: string; // UNH02-02 + UNH02-03
   public segments: EdiSegment[];
 
-  public buildUNBDescription(): string {
+  public buildMessageDescriptions(): string[] {
+    const descriptions: string[] = [];
     let sender: string | undefined = this.sender?.trim();
     let recipient: string | undefined = this.recipient?.trim();
 
@@ -154,19 +155,29 @@ export class EdifactEdiMessage implements IEdiMessage {
       recipient = "Unknown";
     }
 
-    return `From ${sender} to ${recipient} at ${this.datetime}`;
-  }
+    descriptions.push(`From ${sender} to ${recipient} at ${this.datetime}`);
 
-  public buildUNHDescription(): string {
-    if (!this.release || !this.type) {
-      return "";
+    let part2 = "";
+    if (this.release && this.type) {
+      const messageInfo = Utils.getMessageInfoByDocumentType(this.type);
+      if (messageInfo) {
+        part2 = `${this.release}-${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
+      } else {
+        part2 = `${this.release}-${this.type}`;
+      }
+    } else if (this.type) {
+      const messageInfo = Utils.getMessageInfoByDocumentType(this.type);
+      if (messageInfo) {
+        part2 = `${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
+      } else {
+        part2 = `${this.type}`;
+      }
     }
 
-    const messageInfo = Utils.getMessageInfoByDocumentType(this.type);
-    if (!messageInfo) {
-      return `${this.release}-${this.type}`;
+    if (part2) {
+      descriptions.push(part2);
     }
 
-    return `${this.release}-${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
+    return descriptions;
   }
 }
