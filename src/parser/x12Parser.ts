@@ -1,6 +1,7 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
 import { EdiParserBase, IEdiMessage } from "./ediParserBase";
 import Utils from "../utils/utils";
+import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 
 export class X12Parser extends EdiParserBase {
   public getCustomSegmentParser(segmentId: string): (segment: EdiSegment, segmentStr: string) => Promise<EdiSegment> {
@@ -95,6 +96,15 @@ export class X12Parser extends EdiParserBase {
   
   public getSchemaRootPath(): string {
     return "../schemas/x12";
+  }
+
+  async afterSchemaLoaded(schema: EdiSchema): Promise<void> {
+    if (schema.ediReleaseSchema?.segments) {
+      schema.ediReleaseSchema.segments["ISA"] = EdiReleaseSchemaSegment.ISA;
+      schema.ediReleaseSchema.segments["GS"] = EdiReleaseSchemaSegment.GS;
+      schema.ediReleaseSchema.segments["GE"] = EdiReleaseSchemaSegment.GE;
+      schema.ediReleaseSchema.segments["IEA"] = EdiReleaseSchemaSegment.IEA;
+    }
   }
 
   private async parseSegmentISA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {

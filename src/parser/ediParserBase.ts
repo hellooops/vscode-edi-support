@@ -180,8 +180,11 @@ export abstract class EdiParserBase {
     }
 
     const ediSchema = new EdiSchema(releaseSchema);
+    await this.afterSchemaLoaded(ediSchema);
     this.schema = ediSchema;
   }
+
+  abstract afterSchemaLoaded(schema: EdiSchema): Promise<void>;
 
   escapeCharRegex(str: string): string {
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");

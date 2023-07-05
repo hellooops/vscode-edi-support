@@ -48,20 +48,6 @@ export class EdiReleaseSchema {
   }
 
   public getSegment(name: string) : EdiReleaseSchemaSegment | undefined {
-    if (name === "UNA") {
-      return EdiReleaseSchemaSegment.UNA;
-    } else if (name === "UNB") {
-      return EdiReleaseSchemaSegment.UNB;
-    } else if (name === "ISA") {
-      return EdiReleaseSchemaSegment.ISA;
-    } else if (name === "GS") {
-      return EdiReleaseSchemaSegment.GS;
-    } else if (name === "GE") {
-      return EdiReleaseSchemaSegment.GE;
-    } else if (name === "IEA") {
-      return EdiReleaseSchemaSegment.IEA;
-    }
-
     return this.segments[name];
   }
 }

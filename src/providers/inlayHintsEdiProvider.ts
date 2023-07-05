@@ -41,7 +41,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
 
     }
 
-    return inlayHints.filter((i, index) => index < 500);
+    return inlayHints;
   }
 
   private getSegmentNameInlayHint(segment: EdiSegment, document: vscode.TextDocument): vscode.InlayHint | undefined {
