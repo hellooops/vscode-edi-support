@@ -123,6 +123,7 @@ export class EdiReleaseSchemaSegment {
   public desc: string;
   public purpose: string;
   public elements: EdiReleaseSchemaElement[];
+  // EDIFACT
   public static UNA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Delimiter String Advice",
     Elements: [
@@ -194,7 +195,17 @@ export class EdiReleaseSchemaSegment {
     ],
     Purpose: "To start, identify and specify an interchange."
   }, undefined);
-  // TODO: Add UNA, UNT, UNZ
+  public static UNZ: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Interchange trailer",
+    Elements: [
+      { Id: "0036", Required: true, MinLength: 1, MaxLength: 6, Desc: "Interchange control count" },
+      { Id: "0020", Required: true, MinLength: 1, MaxLength: 14, Desc: "Interchange control reference" },
+    ],
+    Purpose: "To end and check the completeness of an interchange."
+  }, undefined);
+  // TODO: Add UNT
+  // TODO: Id is supposed to be a number
+  // X12
   public static ISA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange Control Header",
     Elements: [

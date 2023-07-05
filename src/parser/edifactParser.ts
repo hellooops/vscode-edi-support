@@ -105,6 +105,7 @@ export class EdifactParser extends EdiParserBase {
     if (schema.ediReleaseSchema?.segments) {
       schema.ediReleaseSchema.segments["UNA"] = EdiReleaseSchemaSegment.UNA;
       schema.ediReleaseSchema.segments["UNB"] = EdiReleaseSchemaSegment.UNB;
+      schema.ediReleaseSchema.segments["UNZ"] = EdiReleaseSchemaSegment.UNZ;
     }
   }
 
