@@ -20,8 +20,6 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new HoverEdifactProvider());
   registerProvider(context, new DocumentFormattingEditEdiProvider());
   registerProvider(context, new CodelensEdiProvider());
-
-
   registerProvider(context, new InlayHintsEdiProvider());
   console.log('Extension "edi-support" is now active!');
 }

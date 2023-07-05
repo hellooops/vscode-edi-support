@@ -31,7 +31,7 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
         arguments: []
       }
     ));
-    const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration("ediSupport").get("inlayHints.segmentNames")
+    const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration("ediSupport").get("inlayHints.segmentNames");
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
       {

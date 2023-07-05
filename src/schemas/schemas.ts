@@ -209,52 +209,52 @@ export class EdiReleaseSchemaSegment {
   public static ISA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange Control Header",
     Elements: [
-      { Id: "ISA01", Required: true, MinLength: 2, MaxLength: 2, Desc: "Authorization Information Qualifier" },
-      { Id: "ISA02", Required: true, MinLength: 10, MaxLength: 10, Desc: "Authorization Information" },
-      { Id: "ISA03", Required: true, MinLength: 2, MaxLength: 2, Desc: "Security Information Qualifier" },
-      { Id: "ISA04", Required: true, MinLength: 10, MaxLength: 10, Desc: "Security Information" },
-      { Id: "ISA05", Required: true, MinLength: 2, MaxLength: 2, Desc: "Interchange ID Qualifier" },
-      { Id: "ISA06", Required: true, MinLength: 15, MaxLength: 15, Desc: "Interchange Sender ID" },
-      { Id: "ISA07", Required: true, MinLength: 2, MaxLength: 2, Desc: "Interchange ID Qualifier" },
-      { Id: "ISA08", Required: true, MinLength: 15, MaxLength: 15, Desc: "Interchange Receiver ID" },
-      { Id: "ISA09", Required: true, MinLength: 6, MaxLength: 6, Desc: "Interchange Date" },
-      { Id: "ISA10", Required: true, MinLength: 4, MaxLength: 4, Desc: "Interchange Time" },
-      { Id: "ISA11", Required: true, MinLength: 1, MaxLength: 1, Desc: "Interchange Control Standards Identifier" },
-      { Id: "ISA12", Required: true, MinLength: 5, MaxLength: 5, Desc: "Interchange Control Version Number" },
-      { Id: "ISA13", Required: true, MinLength: 9, MaxLength: 9, Desc: "Interchange Control Number" },
-      { Id: "ISA14", Required: true, MinLength: 1, MaxLength: 1, Desc: "Acknowledgment Requested" },
-      { Id: "ISA15", Required: true, MinLength: 1, MaxLength: 1, Desc: "Usage Indicator" },
-      { Id: "ISA16", Required: true, MinLength: 1, MaxLength: 1, Desc: "Component Element Separator" },
+      { Id: "I01", Required: true, MinLength: 2, MaxLength: 2, Desc: "Authorization Information Qualifier" },
+      { Id: "I02", Required: true, MinLength: 10, MaxLength: 10, Desc: "Authorization Information" },
+      { Id: "I03", Required: true, MinLength: 2, MaxLength: 2, Desc: "Security Information Qualifier" },
+      { Id: "I04", Required: true, MinLength: 10, MaxLength: 10, Desc: "Security Information" },
+      { Id: "I05", Required: true, MinLength: 2, MaxLength: 2, Desc: "Interchange ID Qualifier" },
+      { Id: "I06", Required: true, MinLength: 15, MaxLength: 15, Desc: "Interchange Sender ID" },
+      { Id: "I05", Required: true, MinLength: 2, MaxLength: 2, Desc: "Interchange ID Qualifier" },
+      { Id: "I07", Required: true, MinLength: 15, MaxLength: 15, Desc: "Interchange Receiver ID" },
+      { Id: "I08", Required: true, MinLength: 6, MaxLength: 6, Desc: "Interchange Date" },
+      { Id: "I09", Required: true, MinLength: 4, MaxLength: 4, Desc: "Interchange Time" },
+      { Id: "I10", Required: true, MinLength: 1, MaxLength: 1, Desc: "Interchange Control Standards Identifier" },
+      { Id: "I11", Required: true, MinLength: 5, MaxLength: 5, Desc: "Interchange Control Version Number" },
+      { Id: "I12", Required: true, MinLength: 9, MaxLength: 9, Desc: "Interchange Control Number" },
+      { Id: "I13", Required: true, MinLength: 1, MaxLength: 1, Desc: "Acknowledgment Requested" },
+      { Id: "I14", Required: true, MinLength: 1, MaxLength: 1, Desc: "Usage Indicator" },
+      { Id: "I15", Required: true, MinLength: 1, MaxLength: 1, Desc: "Component Element Separator" },
     ],
     Purpose: "To start and identify an interchange of zero or more functional groups and interchange-related control segments"
   }, undefined);
   public static GS: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Functional Group Header",
     Elements: [
-      { Id: "GS01", Required: true, MinLength: 2, MaxLength: 2, Desc: "Functional Identifier Code" },
-      { Id: "GS02", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Sender's Code" },
-      { Id: "GS03", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Receiver's Code" },
-      { Id: "GS04", Required: true, MinLength: 8, MaxLength: 8, Desc: "Date" },
-      { Id: "GS05", Required: true, MinLength: 4, MaxLength: 8, Desc: "Time" },
-      { Id: "GS06", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
-      { Id: "GS07", Required: true, MinLength: 1, MaxLength: 2, Desc: "Responsible Agency Code" },
-      { Id: "GS08", Required: true, MinLength: 1, MaxLength: 12, Desc: "Version / Release / Industry Identifier Code" },
+      { Id: "479", Required: true, MinLength: 2, MaxLength: 2, Desc: "Functional Identifier Code" },
+      { Id: "142", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Sender's Code" },
+      { Id: "124", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Receiver's Code" },
+      { Id: "373", Required: true, MinLength: 8, MaxLength: 8, Desc: "Date" },
+      { Id: "337", Required: true, MinLength: 4, MaxLength: 8, Desc: "Time" },
+      { Id: "28", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
+      { Id: "455", Required: true, MinLength: 1, MaxLength: 2, Desc: "Responsible Agency Code" },
+      { Id: "480", Required: true, MinLength: 1, MaxLength: 12, Desc: "Version / Release / Industry Identifier Code" },
     ],
     Purpose: "To indicate the beginning of a functional group and to provide control information"
   }, undefined);
   public static GE: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Functional Group Trailer",
     Elements: [
-      { Id: "GE01", Required: true, MinLength: 1, MaxLength: 6, Desc: "Number of Transaction Sets Included" },
-      { Id: "GE02", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
+      { Id: "97", Required: true, MinLength: 1, MaxLength: 6, Desc: "Number of Transaction Sets Included" },
+      { Id: "28", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
     ],
     Purpose: "To indicate the end of a functional group and to provide control information"
   }, undefined);
   public static IEA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange Control Trailer",
     Elements: [
-      { Id: "IEA01", Required: true, MinLength: 1, MaxLength: 5, Desc: "Number of Transaction Sets Included" },
-      { Id: "IEA02", Required: true, MinLength: 9, MaxLength: 9, Desc: "Group Control Number" },
+      { Id: "I16", Required: true, MinLength: 1, MaxLength: 5, Desc: "Number of Transaction Sets Included" },
+      { Id: "I12", Required: true, MinLength: 9, MaxLength: 9, Desc: "Group Control Number" },
     ],
     Purpose: "To define the end of an interchange of zero or more functional groups and interchange-related control segments"
   }, undefined);
