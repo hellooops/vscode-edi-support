@@ -3,7 +3,9 @@ import * as vscode from "vscode";
 import { VscodeUtils } from "../utils/utils";
 
 export class PrettifyDocumentCommand implements ICommandable {
-  public name: string = "edi-support.prettify";
+  public static commandName: string = "edi-support.prettify";
+  public static commandLabel: string = "Prettify";
+  name: string = PrettifyDocumentCommand.commandName;
 
   public async command(...args: any[]) {
     if (!vscode.window.activeTextEditor) {
@@ -13,7 +15,7 @@ export class PrettifyDocumentCommand implements ICommandable {
     let document = vscode.window.activeTextEditor.document;
     const documentContent = document.getText();
 
-    const { parser, ediType } = VscodeUtils.getEdiParser(document);
+    const { parser, ediType } = VscodeUtils.getEdiParser(document)!;
 
     let segments = await parser.parseSegments();
     let text = segments.join("\n");
