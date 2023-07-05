@@ -1,13 +1,11 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser } from "../parser/edifactParser";
 import { EdiType } from "../parser/entities";
+import { VscodeUtils } from "../utils/utils";
 
-export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
+export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
-
-    const documentText = document.getText();
-    const parser = new EdifactParser(documentText);
+    const { parser, ediType } = VscodeUtils.getEdiParser(document);
     let segments = await parser.parseSegments();
     const formattedDocumentText = segments.join("\n");
 
@@ -15,7 +13,7 @@ export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFor
     result.push(new vscode.TextEdit(
       new vscode.Range(
         document.positionAt(0),
-        document.positionAt(documentText.length)
+        document.positionAt(document.getText().length)
       ),
       formattedDocumentText
     ));
@@ -24,6 +22,7 @@ export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFor
 
   public registerFunctions(): vscode.Disposable[] {
     return [
+      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.X12, scheme: "file" }, this),
       vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
     ];
   }

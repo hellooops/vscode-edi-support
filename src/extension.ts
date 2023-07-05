@@ -6,7 +6,7 @@ import { IProvidable } from "./interfaces/providable";
 import { HighlightEdiProvider } from "./providers/highlightEdiProvider";
 import { HoverX12Provider } from "./providers/hoverX12Provider";
 import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
-import { DocumentFormattingEditEdifactProvider } from "./providers/documentFormattingEdifactProvider";
+import { DocumentFormattingEditEdiProvider } from "./providers/documentFormattingEdiProvider";
 import { CodelensEdifactProvider } from "./providers/codelensEdifactProvider";
 import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
 
@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new HighlightEdiProvider());
   registerProvider(context, new HoverX12Provider());
   registerProvider(context, new HoverEdifactProvider());
-  registerProvider(context, new DocumentFormattingEditEdifactProvider());
+  registerProvider(context, new DocumentFormattingEditEdiProvider());
   registerProvider(context, new CodelensEdifactProvider());
 
 
