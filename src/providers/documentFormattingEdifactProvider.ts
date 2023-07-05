@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdifactParser } from "../parser/edifactParser";
+import { EdiType } from "../parser/entities";
 
 export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
@@ -21,11 +22,9 @@ export class DocumentFormattingEditEdifactProvider implements vscode.DocumentFor
     return result;
   }
 
-  public registerFunction(): vscode.Disposable {
-    const selector = { language: "edifact", scheme: "file" };
-    return vscode.languages.registerDocumentFormattingEditProvider(
-      selector,
-      this
-    );
+  public registerFunctions(): vscode.Disposable[] {
+    return [
+      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+    ];
   }
 }

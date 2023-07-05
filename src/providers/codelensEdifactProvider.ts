@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdifactParser, EdifactEdiMessage } from "../parser/edifactParser";
-import { EdiSegment } from "../parser/entities";
+import { EdiSegment, EdiType } from "../parser/entities";
 
 export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvidable {
   private parser?: EdifactParser;
   onDidChangeCodeLenses?: vscode.Event<void>;
   async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[] | null | undefined> {
-    if (vscode.workspace.getConfiguration("ediEdifactSupport").get("enableCodelens") !== true) {
+    if (vscode.workspace.getConfiguration("ediSupport").get("enableCodelens") !== true) {
       return [];
     }
     const codeLenses: vscode.CodeLens[] = [];
@@ -64,11 +64,9 @@ export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvid
     return codeLenses;
   }
 
-  public registerFunction(): vscode.Disposable {
-    const selector = { language: "edifact", scheme: "file" };
-    return vscode.languages.registerCodeLensProvider(
-      selector,
-      this
-    );
+  public registerFunctions(): vscode.Disposable[] {
+    return [
+      vscode.languages.registerCodeLensProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+    ];
   }
 }

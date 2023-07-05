@@ -1,10 +1,6 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
 import { VscodeUtils } from "../utils/utils";
-import { EdiParserBase } from "../parser/ediParserBase";
-import { X12Parser } from "../parser/x12Parser";
-import { EdifactParser } from "../parser/edifactParser";
-import { EdiType } from "../parser/entities";
 
 export class MinifyDocumentCommand implements ICommandable {
   public name: string = "edi-support.minify";
@@ -17,17 +13,7 @@ export class MinifyDocumentCommand implements ICommandable {
     let document = vscode.window.activeTextEditor.document;
     const documentContent = document.getText();
 
-    let ediType: string;
-    let parser: EdiParserBase;
-    if (VscodeUtils.isX12(document)) {
-      parser = new X12Parser(documentContent);
-      ediType = EdiType.X12;
-    } else if (VscodeUtils.isEdifact(document)) {
-      parser = new EdifactParser(documentContent);
-      ediType = EdiType.EDIFACT;
-    } else {
-      return;
-    }
+    const { parser, ediType } = VscodeUtils.getEdiParser(document);
 
     let segments = await parser.parseSegments();
     let text = segments.join("");
@@ -45,7 +31,7 @@ export class MinifyDocumentCommand implements ICommandable {
 
     vscode.languages.setTextDocumentLanguage(
       vscode.window.activeTextEditor.document,
-      "edifact"
+      ediType
     );
   }
 }

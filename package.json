@@ -90,6 +90,16 @@
           "type": "boolean",
           "default": true,
           "description": "Enable/disable hover for EDI messages."
+        },
+        "ediSupport.inlayHints.segmentNames": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inlay hints for segment names."
+        },
+        "ediSupport.inlayHints.elements": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inlay hints for elements."
         }
       }
     }

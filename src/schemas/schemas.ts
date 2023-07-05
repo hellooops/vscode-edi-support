@@ -208,6 +208,7 @@ export class EdiReleaseSchemaSegment {
     ],
     Purpose: "To start, identify and specify an interchange."
   }, undefined);
+  // TODO: Add UNA, UNT, UNZ
   public static ISA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange Control Header",
     Elements: [

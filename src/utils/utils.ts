@@ -1,4 +1,8 @@
 import MessageInfo from "../interfaces/messageInfo";
+import { EdiParserBase } from "../parser/ediParserBase";
+import { EdifactParser } from "../parser/edifactParser";
+import { EdiType } from "../parser/entities";
+import { X12Parser } from "../parser/x12Parser";
 import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
 import * as vscode from "vscode";
 
@@ -116,5 +120,25 @@ export class VscodeUtils {
     }
 
     return false;
+  }
+
+  static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase, ediType: string } | null {
+    let ediType: string;
+    let parser: EdiParserBase;
+    const documentContent = document.getText();
+    if (VscodeUtils.isX12(document)) {
+      parser = new X12Parser(documentContent);
+      ediType = EdiType.X12;
+    } else if (VscodeUtils.isEdifact(document)) {
+      parser = new EdifactParser(documentContent);
+      ediType = EdiType.EDIFACT;
+    } else {
+      return null;
+    }
+
+    return {
+      parser,
+      ediType
+    };
   }
 }

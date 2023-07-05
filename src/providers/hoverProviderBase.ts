@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiVersion, EdiElement, EdiSegment } from "../parser/entities";
+import { EdiVersion, EdiElement, EdiSegment, EdiType } from "../parser/entities";
 import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
 import { EdiParserBase } from "../parser/ediParserBase";
 
 export abstract class HoverProviderBase implements vscode.HoverProvider, IProvidable {
   async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover | undefined | null> {
-    if (vscode.workspace.getConfiguration("ediEdifactSupport").get("enableHover") !== true) {
+    if (vscode.workspace.getConfiguration("ediSupport").get("enableHover") !== true) {
       return null;
     }
     let text = document.getText();
@@ -122,8 +122,10 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     return mdStrings;
   }
 
-  public registerFunction(): vscode.Disposable {
-    const selector = { language: this.getLanguageName(), scheme: "file" };
-    return vscode.languages.registerHoverProvider(selector, this);
+  public registerFunctions(): vscode.Disposable[] {
+    return [
+      vscode.languages.registerHoverProvider({ language: EdiType.X12, scheme: "file" }, this),
+      vscode.languages.registerHoverProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+    ];
   }
 }

@@ -8,6 +8,7 @@ import { HoverX12Provider } from "./providers/hoverX12Provider";
 import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
 import { DocumentFormattingEditEdifactProvider } from "./providers/documentFormattingEdifactProvider";
 import { CodelensEdifactProvider } from "./providers/codelensEdifactProvider";
+import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
@@ -17,7 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new HoverEdifactProvider());
   registerProvider(context, new DocumentFormattingEditEdifactProvider());
   registerProvider(context, new CodelensEdifactProvider());
-  console.log('Extension "edi-edifact-support" is now active!');
+
+
+  registerProvider(context, new InlayHintsEdiProvider());
+  console.log('Extension "edi-support" is now active!');
 }
 
 function registerCommand(context: vscode.ExtensionContext, command: ICommandable) {
@@ -26,7 +30,7 @@ function registerCommand(context: vscode.ExtensionContext, command: ICommandable
 }
 
 function registerProvider(context: vscode.ExtensionContext, provider: IProvidable) {
-  context.subscriptions.push(provider.registerFunction());
+  context.subscriptions.push(...provider.registerFunctions());
 }
 
 export function deactivate() {}
