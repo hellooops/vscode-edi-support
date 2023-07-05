@@ -5,7 +5,7 @@ import { VscodeUtils } from "../utils/utils";
 
 export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
-    const { parser, ediType } = VscodeUtils.getEdiParser(document);
+    const { parser } = VscodeUtils.getEdiParser(document);
     let segments = await parser.parseSegments();
     const formattedDocumentText = segments.join("\n");
 

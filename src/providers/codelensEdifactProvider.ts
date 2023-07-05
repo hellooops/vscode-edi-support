@@ -1,21 +1,14 @@
 import * as vscode from "vscode";
-import { IProvidable } from "../interfaces/providable";
-import { EdifactParser, EdifactEdiMessage } from "../parser/edifactParser";
-import { EdiSegment, EdiType } from "../parser/entities";
+import { EdifactEdiMessage } from "../parser/edifactParser";
+import { EdiSegment } from "../parser/entities";
+import { CodelensEdifactProviderBase } from "./codelensEdiProviderBase";
+import { EdiParserBase } from "../parser/ediParserBase";
 
-export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvidable {
-  private parser?: EdifactParser;
-  onDidChangeCodeLenses?: vscode.Event<void>;
-  async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[] | null | undefined> {
-    if (vscode.workspace.getConfiguration("ediSupport").get("enableCodelens") !== true) {
-      return [];
-    }
+export class CodelensEdifactProvider extends CodelensEdifactProviderBase {
+  async providerSegmentCodeLenses(parser: EdiParserBase, document: vscode.TextDocument): Promise<vscode.CodeLens[]> {
     const codeLenses: vscode.CodeLens[] = [];
-    const text = document.getText();
-    this.parser = new EdifactParser(text);
-    const segments = await this.parser.parseSegments();
-    const ediMessage = await this.parser.parseMessage() as EdifactEdiMessage;
-    
+    const segments = await parser.parseSegments();
+    const ediMessage = await parser.parseMessage() as EdifactEdiMessage;
 
     const una: EdiSegment | undefined = segments.find(segment => segment.id === "UNA");
     if (una) {
@@ -61,12 +54,7 @@ export class CodelensEdifactProvider implements vscode.CodeLensProvider, IProvid
         }
       ));
     }
-    return codeLenses;
-  }
 
-  public registerFunctions(): vscode.Disposable[] {
-    return [
-      vscode.languages.registerCodeLensProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
-    ];
+    return codeLenses;
   }
 }

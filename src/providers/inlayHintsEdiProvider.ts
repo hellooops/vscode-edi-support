@@ -14,7 +14,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
       return [];
     }
     
-    const { parser, ediType } = VscodeUtils.getEdiParser(document);
+    const { parser } = VscodeUtils.getEdiParser(document)!;
     if (!parser) {
       return [];
     }
