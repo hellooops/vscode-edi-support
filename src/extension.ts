@@ -3,7 +3,7 @@ import { ICommandable } from "./interfaces/commandable";
 import { PrettifyDocumentCommand } from "./commands/prettifyDocumentCommand";
 import { MinifyDocumentCommand } from "./commands/minifyDocumentCommand";
 import { IProvidable } from "./interfaces/providable";
-import { HighlightEdifactProvider } from "./providers/highlightEdifactProvider";
+import { HighlightEdiProvider } from "./providers/highlightEdiProvider";
 import { HoverX12Provider } from "./providers/hoverX12Provider";
 import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
 import { DocumentFormattingEditEdifactProvider } from "./providers/documentFormattingEdifactProvider";
@@ -13,7 +13,7 @@ import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
   registerCommand(context, new MinifyDocumentCommand());
-  registerProvider(context, new HighlightEdifactProvider());
+  registerProvider(context, new HighlightEdiProvider());
   registerProvider(context, new HoverX12Provider());
   registerProvider(context, new HoverEdifactProvider());
   registerProvider(context, new DocumentFormattingEditEdifactProvider());
