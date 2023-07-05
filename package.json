@@ -76,6 +76,11 @@
         "command": "edi-support.minify",
         "title": "Minify (format without new lines)",
         "category": "EDI Support"
+      },
+      {
+        "command": "edi-support.toggleInlayHints",
+        "title": "Toggle inlay hints of segments and elements",
+        "category": "EDI Support"
       }
     ],
     "configuration": {

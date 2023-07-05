@@ -3,6 +3,7 @@ import { IProvidable } from "../interfaces/providable";
 import { EdiType } from "../parser/entities";
 import { PrettifyDocumentCommand } from "../commands/prettifyDocumentCommand";
 import { MinifyDocumentCommand } from "../commands/minifyDocumentCommand";
+import { ToggleInlayHintsCommand } from "../commands/toggleInlayHintsCommand";
 
 export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable {
   onDidChangeCodeLenses?: vscode.Event<void>;
@@ -27,6 +28,16 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
         title: PrettifyDocumentCommand.commandLabel,
         tooltip: PrettifyDocumentCommand.commandLabel,
         command: PrettifyDocumentCommand.commandName,
+        arguments: []
+      }
+    ));
+    const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration("ediSupport").get("inlayHints.segmentNames")
+    codeLenses.push(new vscode.CodeLens(
+      new vscode.Range(0, 0, 0, 0),
+      {
+        title: `${ToggleInlayHintsCommand.commandLabel}(${segmentNamesInlayHintsEnabled ? "on" : "off"})`,
+        tooltip: ToggleInlayHintsCommand.commandLabel,
+        command: ToggleInlayHintsCommand.commandName,
         arguments: []
       }
     ));
