@@ -30,10 +30,5 @@ export class PrettifyDocumentCommand implements ICommandable {
         vscode.window.activeTextEditor.document.positionAt(documentContent.length)
         ), text);
     });
-
-    vscode.languages.setTextDocumentLanguage(
-      vscode.window.activeTextEditor.document,
-      ediType
-    );
   }
 }

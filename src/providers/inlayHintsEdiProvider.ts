@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser, EdifactEdiMessage } from "../parser/edifactParser";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
-import { EdiParserBase } from "../parser/ediParserBase";
 import { VscodeUtils } from "../utils/utils";
 
 export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvidable {

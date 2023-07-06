@@ -93,7 +93,7 @@ export class VscodeUtils {
     }
 
     content = content.trim();
-    if (content.startsWith("ISA") || content.startsWith("GS") || content.startsWith("ST")) {
+    if (content.startsWith("ISA*") || content.startsWith("GS*") || content.startsWith("ST*")) {
       return true;
     }
 
@@ -115,7 +115,7 @@ export class VscodeUtils {
     }
 
     content = content.trim();
-    if (content.startsWith("UNA") || content.startsWith("UNB") || content.startsWith("UNH")) {
+    if (content.startsWith("UNA+") || content.startsWith("UNB+") || content.startsWith("UNH+")) {
       return true;
     }
 
@@ -134,6 +134,10 @@ export class VscodeUtils {
       ediType = EdiType.EDIFACT;
     } else {
       ediType = EdiType.UNKNOWN;
+    }
+
+    if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
+      vscode.languages.setTextDocumentLanguage(document, ediType);
     }
 
     return {
