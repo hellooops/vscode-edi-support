@@ -1,23 +1,25 @@
-# EDIFACT Support for VSCode
+# EDI Support for VSCode
 
-This extension provides basic support for the EDI EDIFACT document.
-
-# About
-
-GitHub: https://github.com/hellooops/vscode-edi-edifact-support
-
-![Project Icon](./docs/images/icon-128x128.png)
+> ⚡This extension provides multiple supports for the ⚡X12 and ⚡EDIFACT document.
 
 # Features
 
 - Basic syntax highlighting.
+- 💥Document diagnostics.
+- 💥Inlay hints for segments and elements.
 - Document formatting.
 - Document prettify.
 - Document minify.
-- Message information display.
 - Segment hover description.
 - Element hover description.
 
+
+
+## Document diagnostics.
+<p><img src="./docs/images/diagnostics.png" alt="Document diagnostics"/></p>
+
+## Inlay hints for segments and elements.
+<p><img src="./docs/images/inlayHints.png" alt="Document diagnostics"/></p>
 
 ## Document prettify.
 
@@ -37,6 +39,12 @@ GitHub: https://github.com/hellooops/vscode-edi-edifact-support
 
 # Reference
 [知行软件 - kasoftware](https://www.kasoftware.com)
+
+# About
+
+GitHub: https://github.com/hellooops/vscode-edi-edifact-support
+
+![Project Icon](./docs/images/icon-128x128.png)
 
 # Requirements
 

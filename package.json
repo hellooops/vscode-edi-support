@@ -1,8 +1,8 @@
 {
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
-  "description": "Format, highlighting, hover supports for X12 and EDIFACT in vscode.",
-  "version": "0.3.0",
+  "description": "Language support for X12 and EDIFACT",
+  "version": "1.0.0",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
