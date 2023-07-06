@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdifactParser } from "../parser";
+import { EdiType } from "../parser/entities";
+import { VscodeUtils } from "../utils/utils";
 
-export class HighlightEdifactProvider implements vscode.DocumentHighlightProvider, IProvidable {
+export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, IProvidable {
   async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[] | null | undefined> {
-    const text = document.getText();
-    const parser = new EdifactParser(text);
+    const { parser } = VscodeUtils.getEdiParser(document)!;
     const segments = await parser.parseSegments();
     const realPosition = document.offsetAt(new vscode.Position(position.line, position.character));
 
@@ -41,11 +41,10 @@ export class HighlightEdifactProvider implements vscode.DocumentHighlightProvide
     ];
   }
 
-  public registerFunction(): vscode.Disposable {
-    const selector = { language: "edifact", scheme: "file" };
-    return vscode.languages.registerDocumentHighlightProvider(
-      selector,
-      this
-    );
+  public registerFunctions(): vscode.Disposable[] {
+    return [
+      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.X12, scheme: "file" }, this),
+      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+    ];
   }
 }

@@ -1,5 +1,10 @@
 import MessageInfo from "../interfaces/messageInfo";
+import { EdiParserBase } from "../parser/ediParserBase";
+import { EdifactParser } from "../parser/edifactParser";
+import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
+import { X12Parser } from "../parser/x12Parser";
 import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
+import * as vscode from "vscode";
 
 export type Nullable<T> = T | null | undefined;
 
@@ -69,5 +74,82 @@ export class StringBuilder {
 
   public toString(): string {
     return this.buffer.join("");
+  }
+}
+
+export class VscodeUtils {
+  static isX12(document: vscode.TextDocument): boolean {
+    if (!document) {
+      return false;
+    }
+
+    if (document.languageId === "x12") {
+      return true;
+    }
+
+    let content = document.getText();
+    if (!content) {
+      return false;
+    }
+
+    content = content.trim();
+    if (content.startsWith("ISA*") || content.startsWith("GS*") || content.startsWith("ST*")) {
+      return true;
+    }
+
+    return false;
+  }
+
+  static isEdifact(document: vscode.TextDocument): boolean {
+    if (!document) {
+      return false;
+    }
+
+    if (document.languageId === "edifact") {
+      return true;
+    }
+
+    let content = document.getText();
+    if (!content) {
+      return false;
+    }
+
+    content = content.trim();
+    if (content.startsWith("UNA+") || content.startsWith("UNB+") || content.startsWith("UNH+")) {
+      return true;
+    }
+
+    return false;
+  }
+
+  static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase, ediType: string } {
+    let ediType: string;
+    let parser: EdiParserBase;
+    const documentContent = document.getText();
+    if (VscodeUtils.isX12(document)) {
+      parser = new X12Parser(documentContent);
+      ediType = EdiType.X12;
+    } else if (VscodeUtils.isEdifact(document)) {
+      parser = new EdifactParser(documentContent);
+      ediType = EdiType.EDIFACT;
+    } else {
+      ediType = EdiType.UNKNOWN;
+    }
+
+    if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
+      vscode.languages.setTextDocumentLanguage(document, ediType);
+    }
+
+    return {
+      parser,
+      ediType
+    };
+  }
+
+  static getElementRange(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Range {
+    return new vscode.Range(
+      document.positionAt(segment.startIndex + element.startIndex),
+      document.positionAt(segment.startIndex + element.endIndex + 1),
+    );
   }
 }

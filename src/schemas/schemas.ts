@@ -1,10 +1,10 @@
 export class EdiSchema {
   public ediReleaseSchema: EdiReleaseSchema;
-  public ediVersionSchema: EdiVersionSchema;
+  public ediVersionSchema?: EdiVersionSchema;
 
   constructor(rawReleaseSchema: any) {
     this.ediReleaseSchema = new EdiReleaseSchema(rawReleaseSchema);
-    this.ediVersionSchema = null; // TODO(Deric)
+    this.ediVersionSchema = undefined;  // TODO(Deric): May implement message schemas in the future.
   }
 }
 
@@ -15,6 +15,10 @@ export class EdiQualifier {
   constructor(value: string, desc: string) {
     this.value = value;
     this.desc = desc;
+  }
+
+  getEscapedDesc() : string {
+    return this.desc.replace(/"/g, '\\"');
   }
 }
 
@@ -44,18 +48,12 @@ export class EdiReleaseSchema {
   }
 
   public getSegment(name: string) : EdiReleaseSchemaSegment | undefined {
-    if (name === "UNA") {
-      return EdiReleaseSchemaSegment.UNA;
-    } else if (name === "UNB") {
-      return EdiReleaseSchemaSegment.UNB;
-    }
-
     return this.segments[name];
   }
 }
 
 export class EdiReleaseSchemaElement {
-  private _schema: EdiReleaseSchema;
+  private _schema?: EdiReleaseSchema;
   public id: string;
   public desc: string;
   public dataType: string;
@@ -66,7 +64,7 @@ export class EdiReleaseSchemaElement {
   public definition: string;
   public components: EdiReleaseSchemaElement[];
 
-  constructor(raw: any, schema: EdiReleaseSchema) {
+  constructor(raw: any, schema: EdiReleaseSchema | undefined) {
     this.id = raw.Id;
     this.desc = raw.Desc;
     this.dataType = raw.DataType;
@@ -105,6 +103,20 @@ export class EdiReleaseSchemaElement {
     return code;
   }
 
+  public getCodeOrNullByValue(value: string): EdiQualifier | null {
+    const codes = this.getCodes();
+    if (!codes) {
+      return null;
+    }
+
+    const code = codes.find(c => c.value === value);
+    if (!code) {
+      return null;
+    }
+
+    return code;
+  }
+
   public getQualifierDesc(code: string) : string | null {
     const codes = this.getCodes();
     if (!codes) {
@@ -121,10 +133,11 @@ export class EdiReleaseSchemaElement {
 }
 
 export class EdiReleaseSchemaSegment {
-  private _schema: EdiReleaseSchema;
+  private _schema?: EdiReleaseSchema;
   public desc: string;
   public purpose: string;
   public elements: EdiReleaseSchemaElement[];
+  // EDIFACT
   public static UNA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Delimiter String Advice",
     Elements: [
@@ -136,7 +149,7 @@ export class EdiReleaseSchemaSegment {
       { Id: "UNA06", Required: true, MinLength: 1, MaxLength: 1, Desc: "Segment terminator" },
     ],
     Purpose: "To start, identify and specify an interchange."
-  }, null);
+  }, undefined);
   public static UNB: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange header",
     Elements: [
@@ -195,9 +208,72 @@ export class EdiReleaseSchemaSegment {
       { Id: "0035", Desc: "Test indicator", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Indication that the interchange is a test." },
     ],
     Purpose: "To start, identify and specify an interchange."
-  }, null);
+  }, undefined);
+  public static UNZ: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Interchange trailer",
+    Elements: [
+      { Id: "0036", Required: true, MinLength: 1, MaxLength: 6, Desc: "Interchange control count" },
+      { Id: "0020", Required: true, MinLength: 1, MaxLength: 14, Desc: "Interchange control reference" },
+    ],
+    Purpose: "To end and check the completeness of an interchange."
+  }, undefined);
+  // TODO: Add UNT
+  // TODO: Id is supposed to be a number
+  // X12
+  public static ISA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Interchange Control Header",
+    Elements: [
+      { Id: "I01", Required: true, MinLength: 2, MaxLength: 2, Desc: "Authorization Information Qualifier" },
+      { Id: "I02", Required: true, MinLength: 10, MaxLength: 10, Desc: "Authorization Information" },
+      { Id: "I03", Required: true, MinLength: 2, MaxLength: 2, Desc: "Security Information Qualifier" },
+      { Id: "I04", Required: true, MinLength: 10, MaxLength: 10, Desc: "Security Information" },
+      { Id: "I05", Required: true, MinLength: 2, MaxLength: 2, Desc: "Interchange ID Qualifier" },
+      { Id: "I06", Required: true, MinLength: 15, MaxLength: 15, Desc: "Interchange Sender ID" },
+      { Id: "I05", Required: true, MinLength: 2, MaxLength: 2, Desc: "Interchange ID Qualifier" },
+      { Id: "I07", Required: true, MinLength: 15, MaxLength: 15, Desc: "Interchange Receiver ID" },
+      { Id: "I08", Required: true, MinLength: 6, MaxLength: 6, Desc: "Interchange Date" },
+      { Id: "I09", Required: true, MinLength: 4, MaxLength: 4, Desc: "Interchange Time" },
+      { Id: "I10", Required: true, MinLength: 1, MaxLength: 1, Desc: "Interchange Control Standards Identifier" },
+      { Id: "I11", Required: true, MinLength: 5, MaxLength: 5, Desc: "Interchange Control Version Number" },
+      { Id: "I12", Required: true, MinLength: 9, MaxLength: 9, Desc: "Interchange Control Number" },
+      { Id: "I13", Required: true, MinLength: 1, MaxLength: 1, Desc: "Acknowledgment Requested" },
+      { Id: "I14", Required: true, MinLength: 1, MaxLength: 1, Desc: "Usage Indicator" },
+      { Id: "I15", Required: true, MinLength: 1, MaxLength: 1, Desc: "Component Element Separator" },
+    ],
+    Purpose: "To start and identify an interchange of zero or more functional groups and interchange-related control segments"
+  }, undefined);
+  public static GS: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Functional Group Header",
+    Elements: [
+      { Id: "479", Required: true, MinLength: 2, MaxLength: 2, Desc: "Functional Identifier Code" },
+      { Id: "142", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Sender's Code" },
+      { Id: "124", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Receiver's Code" },
+      { Id: "373", Required: true, MinLength: 8, MaxLength: 8, Desc: "Date" },
+      { Id: "337", Required: true, MinLength: 4, MaxLength: 8, Desc: "Time" },
+      { Id: "28", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
+      { Id: "455", Required: true, MinLength: 1, MaxLength: 2, Desc: "Responsible Agency Code" },
+      { Id: "480", Required: true, MinLength: 1, MaxLength: 12, Desc: "Version / Release / Industry Identifier Code" },
+    ],
+    Purpose: "To indicate the beginning of a functional group and to provide control information"
+  }, undefined);
+  public static GE: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Functional Group Trailer",
+    Elements: [
+      { Id: "97", Required: true, MinLength: 1, MaxLength: 6, Desc: "Number of Transaction Sets Included" },
+      { Id: "28", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
+    ],
+    Purpose: "To indicate the end of a functional group and to provide control information"
+  }, undefined);
+  public static IEA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Interchange Control Trailer",
+    Elements: [
+      { Id: "I16", Required: true, MinLength: 1, MaxLength: 5, Desc: "Number of Transaction Sets Included" },
+      { Id: "I12", Required: true, MinLength: 9, MaxLength: 9, Desc: "Group Control Number" },
+    ],
+    Purpose: "To define the end of an interchange of zero or more functional groups and interchange-related control segments"
+  }, undefined);
 
-  constructor(raw: any, schema: EdiReleaseSchema) {
+  constructor(raw: any, schema: EdiReleaseSchema | undefined) {
     this.desc = raw.Desc;
     this.purpose = raw.Purpose;
     this.elements = raw.Elements?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
@@ -206,5 +282,5 @@ export class EdiReleaseSchemaSegment {
 }
 
 export class EdiVersionSchema {
-  // TODO(Deric)
+  // TODO(Deric): May implement message schemas in the future.
 }

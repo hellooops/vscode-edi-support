@@ -1,8 +1,11 @@
 import * as assert from "assert";
 
 import * as vscode from "vscode";
-import { EdiMessage, EdiSegment, EdiVersion, EdifactParser, ElementType } from "../../parser";
+import { EdifactParser } from "../../parser/edifactParser";
+import { X12Parser, X12EdiMessage } from "../../parser/x12Parser";
+import { EdiVersion, EdiSegment, ElementType } from "../../parser/entities";
 import { EdiReleaseSchema } from "../../schemas/schemas";
+import * as myExtension from "../../extension";
 
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
@@ -47,7 +50,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].components.length, 5);
 
     // +ORDERS
-    assert.strictEqual(segment.elements[1].components[0].designatorIndex, "02-01");
+    assert.strictEqual(segment.elements[1].components[0].designatorIndex, "0201");
     assert.strictEqual(segment.elements[1].components[0].separator, "+");
     assert.strictEqual(segment.elements[1].components[0].startIndex, 5);
     assert.strictEqual(segment.elements[1].components[0].endIndex, 11);
@@ -55,7 +58,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].components[0].value, "ORDERS");
 
     // :D
-    assert.strictEqual(segment.elements[1].components[1].designatorIndex, "02-02");
+    assert.strictEqual(segment.elements[1].components[1].designatorIndex, "0202");
     assert.strictEqual(segment.elements[1].components[1].separator, ":");
     assert.strictEqual(segment.elements[1].components[1].startIndex, 12);
     assert.strictEqual(segment.elements[1].components[1].endIndex, 13);
@@ -63,7 +66,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].components[1].value, "D");
 
     // :96A
-    assert.strictEqual(segment.elements[1].components[2].designatorIndex, "02-03");
+    assert.strictEqual(segment.elements[1].components[2].designatorIndex, "0203");
     assert.strictEqual(segment.elements[1].components[2].separator, ":");
     assert.strictEqual(segment.elements[1].components[2].startIndex, 14);
     assert.strictEqual(segment.elements[1].components[2].endIndex, 17);
@@ -71,7 +74,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].components[2].value, "96A");
 
     // :UN
-    assert.strictEqual(segment.elements[1].components[3].designatorIndex, "02-04");
+    assert.strictEqual(segment.elements[1].components[3].designatorIndex, "0204");
     assert.strictEqual(segment.elements[1].components[3].separator, ":");
     assert.strictEqual(segment.elements[1].components[3].startIndex, 18);
     assert.strictEqual(segment.elements[1].components[3].endIndex, 20);
@@ -79,7 +82,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].components[3].value, "UN");
 
     // :EAN008
-    assert.strictEqual(segment.elements[1].components[4].designatorIndex, "02-05");
+    assert.strictEqual(segment.elements[1].components[4].designatorIndex, "0205");
     assert.strictEqual(segment.elements[1].components[4].separator, ":");
     assert.strictEqual(segment.elements[1].components[4].startIndex, 21);
     assert.strictEqual(segment.elements[1].components[4].endIndex, 27);
@@ -116,13 +119,112 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ADR0101.definition, "To specify the purpose of the address.");
   });
 
-  // test("Edifact Parse Segments 1", async () => {
-  //   // const releaseSchema = await import(`./schemas/D96A/RSSBus_D96A.json`);
-  //   const releaseSchema = await import("../../schemas/D96A/RSSBus_D96A.json");
-  //   const documentStr = "UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+5++++1+EANCOM'UNH+1+ORDERS:D:96A:UN:EAN008'";
-  //   const parser: EdifactParser = new EdifactParser(documentStr);
-  //   const ediSegments: EdiSegment[] = await parser.parseSegments();
+  test("X12 Parse Version", () => {
+    const documentStr = `
+    ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
+    GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
+    ST*850*0001~`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const ediVersion: EdiVersion = parser.parseReleaseAndVersion();
 
-  //   assert.strictEqual(ediSegments.length, "<Sender GLN>");
-  // });
+    assert.strictEqual(ediVersion.release, "00401");
+    assert.strictEqual(ediVersion.version, "850");
+  });
+
+  test("X12 Parse Segment", async () => {
+    const documentStr = "SV2*0730*HC>93010*76.56*UN*3~";
+    const parser: X12Parser = new X12Parser(documentStr);
+    parser.setEdiVersion(new EdiVersion("00401", "850"));
+    const segment: EdiSegment = await parser.parseSegment(documentStr, 0, documentStr.length - 1, "~");
+
+    assert.strictEqual(segment.id, "SV2");
+    assert.strictEqual(segment.elements.length, 5);
+    assert.strictEqual(segment.endingDelimiter, "~");
+    assert.strictEqual(segment.length, 29);
+    assert.strictEqual(segment.startIndex, 0);
+    assert.strictEqual(segment.endIndex, 28);
+
+    // *0730
+    assert.strictEqual(segment.elements[0].designatorIndex, "01");
+    assert.strictEqual(segment.elements[0].separator, "*");
+    assert.strictEqual(segment.elements[0].startIndex, 3);
+    assert.strictEqual(segment.elements[0].endIndex, 7);
+    assert.strictEqual(segment.elements[0].type, ElementType.dataElement);
+    assert.strictEqual(segment.elements[0].value, "0730");
+    assert.strictEqual(segment.elements[0].components, undefined);
+
+    // *HC>93010
+    assert.strictEqual(segment.elements[1].designatorIndex, "02");
+    assert.strictEqual(segment.elements[1].separator, "*");
+    assert.strictEqual(segment.elements[1].startIndex, 8);
+    assert.strictEqual(segment.elements[1].endIndex, 16);
+    assert.strictEqual(segment.elements[1].type, ElementType.dataElement);
+    assert.strictEqual(segment.elements[1].value, "HC>93010");
+    assert.strictEqual(segment.elements[1].components.length, 2);
+
+    // *HC
+    assert.strictEqual(segment.elements[1].components[0].designatorIndex, "0201");
+    assert.strictEqual(segment.elements[1].components[0].separator, "*");
+    assert.strictEqual(segment.elements[1].components[0].startIndex, 8);
+    assert.strictEqual(segment.elements[1].components[0].endIndex, 10);
+    assert.strictEqual(segment.elements[1].components[0].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components[0].value, "HC");
+
+    // >93010
+    assert.strictEqual(segment.elements[1].components[1].designatorIndex, "0202");
+    assert.strictEqual(segment.elements[1].components[1].separator, ">");
+    assert.strictEqual(segment.elements[1].components[1].startIndex, 11);
+    assert.strictEqual(segment.elements[1].components[1].endIndex, 16);
+    assert.strictEqual(segment.elements[1].components[1].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components[1].value, "93010");
+
+    // *76.56
+    assert.strictEqual(segment.elements[2].designatorIndex, "03");
+    assert.strictEqual(segment.elements[2].separator, "*");
+    assert.strictEqual(segment.elements[2].startIndex, 17);
+    assert.strictEqual(segment.elements[2].endIndex, 22);
+    assert.strictEqual(segment.elements[2].type, ElementType.dataElement);
+    assert.strictEqual(segment.elements[2].value, "76.56");
+    assert.strictEqual(segment.elements[2].components.length, undefined);
+
+    // *UN
+    assert.strictEqual(segment.elements[3].designatorIndex, "04");
+    assert.strictEqual(segment.elements[3].separator, "*");
+    assert.strictEqual(segment.elements[3].startIndex, 23);
+    assert.strictEqual(segment.elements[3].endIndex, 25);
+    assert.strictEqual(segment.elements[3].type, ElementType.dataElement);
+    assert.strictEqual(segment.elements[3].value, "UN");
+    assert.strictEqual(segment.elements[3].components.length, undefined);
+
+    // *3
+    assert.strictEqual(segment.elements[4].designatorIndex, "05");
+    assert.strictEqual(segment.elements[4].separator, "*");
+    assert.strictEqual(segment.elements[4].startIndex, 26);
+    assert.strictEqual(segment.elements[4].endIndex, 27);
+    assert.strictEqual(segment.elements[4].type, ElementType.dataElement);
+    assert.strictEqual(segment.elements[4].value, "3");
+    assert.strictEqual(segment.elements[4].components.length, undefined);
+  });
+
+  test("X12 Parse Edi Message", async () => {
+    const documentStr = `
+    ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
+    GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
+    ST*850*0001~`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const x12EdiMessage: X12EdiMessage = await parser.parseMessage() as X12EdiMessage;
+
+    assert.strictEqual(x12EdiMessage.sender, "DERICL");
+    assert.strictEqual(x12EdiMessage.senderQualifier, "ZZ");
+    assert.strictEqual(x12EdiMessage.recipient, "TEST01");
+    assert.strictEqual(x12EdiMessage.recipientQualifier, "ZZ");
+    assert.strictEqual(x12EdiMessage.datetime, "21-05-17 06:43");
+    assert.strictEqual(x12EdiMessage.type, "850");
+    assert.strictEqual(x12EdiMessage.release, "00401");
+
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "~");
+    assert.strictEqual(separators.dataElementSeparator, "*");
+    assert.strictEqual(separators.componentElementSeparator, ">");
+  });
 });
