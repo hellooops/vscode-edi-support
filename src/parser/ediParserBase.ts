@@ -35,10 +35,19 @@ export abstract class EdiParserBase {
   private async parseSegmentsInternal(): Promise<EdiSegment[]> {
     let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
-    let results = await this.parseRegex(regex, this.document, (x) =>
-      this.parseSegment(x[0], x.index, x.index + x[0].length - 1, x[2])
-    );
 
+    const results: EdiSegment[] = [];
+    let match: RegExpExecArray | null;
+    while ((match = regex.exec(this.document)) !== null) {
+      try {
+        const ediSegment = await this.parseSegment(match[0], match.index, match.index + match[0].length - 1, match[2]);
+        if (ediSegment) {
+          results.push(ediSegment);
+        }
+      } catch (ex: any) {
+        console.error("Edi Support Error", ex);
+      }
+    }
     return results;
   }
 

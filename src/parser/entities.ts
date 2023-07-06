@@ -120,7 +120,7 @@ export class EdiElement {
         if (!elementValueCode) {
           errors.push(
             new DiagnosticError(
-              `Invalid code value ${this.value} for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
+              `Invalid code value '${this.value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
               "Qualifier invalid code"
             )
           );
