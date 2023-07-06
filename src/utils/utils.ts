@@ -1,7 +1,7 @@
 import MessageInfo from "../interfaces/messageInfo";
 import { EdiParserBase } from "../parser/ediParserBase";
 import { EdifactParser } from "../parser/edifactParser";
-import { EdiType } from "../parser/entities";
+import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
 import { X12Parser } from "../parser/x12Parser";
 import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
 import * as vscode from "vscode";
@@ -122,7 +122,7 @@ export class VscodeUtils {
     return false;
   }
 
-  static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase, ediType: string } | null {
+  static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase, ediType: string } {
     let ediType: string;
     let parser: EdiParserBase;
     const documentContent = document.getText();
@@ -133,12 +133,19 @@ export class VscodeUtils {
       parser = new EdifactParser(documentContent);
       ediType = EdiType.EDIFACT;
     } else {
-      return null;
+      ediType = EdiType.UNKNOWN;
     }
 
     return {
       parser,
       ediType
     };
+  }
+
+  static getElementRange(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Range {
+    return new vscode.Range(
+      document.positionAt(segment.startIndex + element.startIndex),
+      document.positionAt(segment.startIndex + element.endIndex + 1),
+    );
   }
 }

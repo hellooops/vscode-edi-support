@@ -50,6 +50,15 @@ export enum ElementType {
   componentElement = "Component Element"
 }
 
+export class DiagnosticError {
+  error: string;
+  code: string;
+  constructor(error: string, code: string) {
+    this.error = error;
+    this.code = `Edi Support: ${code}`;
+  }
+}
+
 export class EdiElement {
   public type: ElementType;
   public value: string;
@@ -63,6 +72,63 @@ export class EdiElement {
 
   public getDesignator() {
     return `${this.segmentName}${this.designatorIndex}`;
+  }
+
+  public getErrors(): DiagnosticError[] {
+    if (this.components && this.components.length > 0) {
+      return this.components.reduce((errors: DiagnosticError[], component: EdiElement) => {
+        return errors.concat(component.getErrors());
+      }, []);
+    }
+
+    if (!this.ediReleaseSchemaElement) {
+      return [];
+    }
+
+    const errors: DiagnosticError[] = [];
+    if (this.value && this.value.length > this.ediReleaseSchemaElement.maxLength) {
+      errors.push(
+        new DiagnosticError(
+          `Element ${this.ediReleaseSchemaElement?.id} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}.`,
+          "Value too long"
+        )
+      );
+    }
+
+    if (this.value && this.value.length < this.ediReleaseSchemaElement.minLength) {
+      errors.push(
+        new DiagnosticError(
+          `Element ${this.ediReleaseSchemaElement?.id} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}.`,
+          "Value too short"
+        )
+      );
+    }
+
+    if (this.ediReleaseSchemaElement?.required && !this.value) {
+      errors.push(
+        new DiagnosticError(
+          `Element ${this.ediReleaseSchemaElement?.id} is required.`,
+          "Value required"
+        )
+      );
+    }
+
+    if (this.ediReleaseSchemaElement.qualifierRef && this.value) {
+      const codes = this.ediReleaseSchemaElement.getCodes();
+      if (codes) {
+        const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(this.value);
+        if (!elementValueCode) {
+          errors.push(
+            new DiagnosticError(
+              `Invalid code value ${this.value} for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
+              "Qualifier invalid code"
+            )
+          );
+        }
+      }
+    }
+
+    return errors;
   }
 
   public toString() {
@@ -79,4 +145,5 @@ export class EdiMessageSeparators {
 export class EdiType {
   static X12 = "x12";
   static EDIFACT = "edifact";
+  static UNKNOWN = "unknown";
 }

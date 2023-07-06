@@ -103,6 +103,20 @@ export class EdiReleaseSchemaElement {
     return code;
   }
 
+  public getCodeOrNullByValue(value: string): EdiQualifier | null {
+    const codes = this.getCodes();
+    if (!codes) {
+      return null;
+    }
+
+    const code = codes.find(c => c.value === value);
+    if (!code) {
+      return null;
+    }
+
+    return code;
+  }
+
   public getQualifierDesc(code: string) : string | null {
     const codes = this.getCodes();
     if (!codes) {

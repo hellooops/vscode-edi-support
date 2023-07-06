@@ -41,6 +41,15 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
         arguments: []
       }
     ));
+    codeLenses.push(new vscode.CodeLens(
+      new vscode.Range(0, 0, 0, 0),
+      {
+        title: `知行软件 (www.kasoftware.com) All rights reserved`,
+        tooltip: "知行软件 (www.kasoftware.com) All rights reserved",
+        command: "vscode.open",
+        arguments: ["https://www.kasoftware.com"]
+      }
+    ));
 
     return codeLenses;
   }

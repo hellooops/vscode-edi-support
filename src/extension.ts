@@ -10,6 +10,8 @@ import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
 import { DocumentFormattingEditEdiProvider } from "./providers/documentFormattingEdiProvider";
 import { CodelensEdiProvider } from "./providers/codelensEdiProvider";
 import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
+import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
+import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
@@ -21,6 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new DocumentFormattingEditEdiProvider());
   registerProvider(context, new CodelensEdiProvider());
   registerProvider(context, new InlayHintsEdiProvider());
+  registerDiagnostics(context, new EdiDiagnosticsMgr());
+
   console.log('Extension "edi-support" is now active!');
 }
 
@@ -31,6 +35,10 @@ function registerCommand(context: vscode.ExtensionContext, command: ICommandable
 
 function registerProvider(context: vscode.ExtensionContext, provider: IProvidable) {
   context.subscriptions.push(...provider.registerFunctions());
+}
+
+function registerDiagnostics(context: vscode.ExtensionContext, diagnostics: IDiagnosticsable) {
+  context.subscriptions.push(...diagnostics.registerDiagnostics());
 }
 
 export function deactivate() {}
