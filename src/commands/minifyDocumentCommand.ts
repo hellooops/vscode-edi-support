@@ -18,6 +18,10 @@ export class MinifyDocumentCommand implements ICommandable {
     const { parser, ediType } = VscodeUtils.getEdiParser(document)!;
 
     let segments = await parser.parseSegments();
+    if (!segments || segments.length <= 0) {
+      return;
+    }
+
     let text = segments.join("");
 
     vscode.window.activeTextEditor.edit((builder) => {

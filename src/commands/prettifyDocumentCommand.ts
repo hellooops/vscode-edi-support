@@ -18,6 +18,10 @@ export class PrettifyDocumentCommand implements ICommandable {
     const { parser, ediType } = VscodeUtils.getEdiParser(document)!;
 
     let segments = await parser.parseSegments();
+    if (!segments || segments.length <= 0) {
+      return;
+    }
+
     let text = segments.join("\n");
 
     vscode.window.activeTextEditor.edit((builder) => {

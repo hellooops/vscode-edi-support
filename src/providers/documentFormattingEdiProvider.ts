@@ -7,6 +7,10 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
     const { parser } = VscodeUtils.getEdiParser(document);
     let segments = await parser.parseSegments();
+    if (!segments || segments.length <= 0) {
+      return;
+    }
+
     const formattedDocumentText = segments.join("\n");
 
     const result: vscode.TextEdit[] = [];
