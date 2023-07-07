@@ -16,6 +16,25 @@ export class X12Parser extends EdiParserBase {
     }
   }
 
+  parseSeparators(): EdiMessageSeparators | null {
+    const document = this.document.trim();
+    if (!document || document.length < 106 || !document.startsWith("ISA")) {
+      return null;
+    }
+
+    const separators = new EdiMessageSeparators();
+    separators.dataElementSeparator = document[3];
+    const documentFrags = document.split(separators.dataElementSeparator);
+    if (documentFrags.length < 17) {
+      return null;
+    }
+
+    separators.segmentSeparator = documentFrags[16][1];
+    separators.componentElementSeparator = documentFrags[16][0];
+    
+    return separators;
+  }
+
   public getDefaultMessageSeparators(): EdiMessageSeparators {
     const separators = new EdiMessageSeparators();
     separators.segmentSeparator = "~";
@@ -114,12 +133,6 @@ export class X12Parser extends EdiParserBase {
     if (segmentStr.length !== 106) {
       return;
     }
-
-    const ediMessageSeparators = new EdiMessageSeparators();
-    ediMessageSeparators.segmentSeparator = segmentStr[105];
-    ediMessageSeparators.dataElementSeparator = segmentStr[3];
-    ediMessageSeparators.componentElementSeparator = segmentStr[104];
-    this._separators = ediMessageSeparators;
 
     for (let i = 0; i < 16; i++) {
       const element = new EdiElement();

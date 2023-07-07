@@ -5,7 +5,6 @@ import { EdifactParser } from "../../parser/edifactParser";
 import { X12Parser, X12EdiMessage } from "../../parser/x12Parser";
 import { EdiVersion, EdiSegment, ElementType } from "../../parser/entities";
 import { EdiReleaseSchema } from "../../schemas/schemas";
-import * as myExtension from "../../extension";
 
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
@@ -224,6 +223,25 @@ suite("Extension Test Suite", () => {
 
     const separators = parser.getMessageSeparators();
     assert.strictEqual(separators.segmentSeparator, "~");
+    assert.strictEqual(separators.dataElementSeparator, "*");
+    assert.strictEqual(separators.componentElementSeparator, ">");
+  });
+
+  test("X12 Parse Separators 1", async () => {
+    const documentStr = `ISA*00*          *00*          *ZZ*1234567890     *ZZ*ABCDEFGH       *230705*1100*U*00400*000000001*0*P*>^`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "^");
+    assert.strictEqual(separators.dataElementSeparator, "*");
+    assert.strictEqual(separators.componentElementSeparator, ">");
+  });
+
+  test("X12 Parse Separators 2", async () => {
+    const documentStr = `ISA*00**00* *ZZ*1234567890*ZZ*ABCDEFGH*230705*1100*U*00400*000000001*0*P*>^
+    GS*PO*1234567890*ABCDEFGH*20030705*1100*1*X*004010^`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "^");
     assert.strictEqual(separators.dataElementSeparator, "*");
     assert.strictEqual(separators.componentElementSeparator, ">");
   });

@@ -1,6 +1,5 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
 import { EdiSchema } from "../schemas/schemas";
-import Utils from "../utils/utils";
 
 export abstract class EdiParserBase {
   private _segments: EdiSegment[];
@@ -152,11 +151,17 @@ export abstract class EdiParserBase {
 
   public getMessageSeparators(): EdiMessageSeparators {
     if (!this._separators) {
+      this._separators = this.parseSeparators();
+    }
+
+    if (!this._separators) {
       return this.getDefaultMessageSeparators();
     }
     
     return this._separators;
   }
+
+  abstract parseSeparators(): EdiMessageSeparators | null;
 
   public abstract getDefaultMessageSeparators(): EdiMessageSeparators;
 

@@ -16,6 +16,10 @@ export class EdifactParser extends EdiParserBase {
     }
   }
 
+  parseSeparators(): EdiMessageSeparators | null {
+    return null;
+  }
+
   public getDefaultMessageSeparators(): EdiMessageSeparators {
     const separators = new EdiMessageSeparators();
     separators.segmentSeparator = "'";
