@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
   "description": "Language support for X12 and EDIFACT",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
@@ -39,6 +39,7 @@
           ".x12"
         ],
         "configuration": "./language-configuration.json",
+        "firstLine": "^(ISA|GS|ST)\\*",
         "icon": {
           "light": "./docs/images/icon-600x600.svg",
           "dark": "./docs/images/icon-600x600.svg"
@@ -56,6 +57,7 @@
           ".edifact"
         ],
         "configuration": "./language-configuration.json",
+        "firstLine": "^(UNA:|UNB\\+|UNH\\+)",
         "icon": {
           "light": "./docs/images/icon-600x600.svg",
           "dark": "./docs/images/icon-600x600.svg"
