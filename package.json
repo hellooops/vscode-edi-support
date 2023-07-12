@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
   "description": "Language support for X12 and EDIFACT",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
@@ -38,7 +38,11 @@
           ".edi",
           ".x12"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./docs/images/icon-600x600.svg",
+          "dark": "./docs/images/icon-600x600.svg"
+        }
       },
       {
         "id": "edifact",
@@ -51,7 +55,11 @@
           ".edi",
           ".edifact"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./docs/images/icon-600x600.svg",
+          "dark": "./docs/images/icon-600x600.svg"
+        }
       }
     ],
     "grammars": [
@@ -70,17 +78,20 @@
       {
         "command": "edi-support.prettify",
         "title": "Prettify (format using new lines)",
-        "category": "EDI Support"
+        "category": "EDI Support",
+        "icon": "$(ungroup-by-ref-type)"
       },
       {
         "command": "edi-support.minify",
         "title": "Minify (format without new lines)",
-        "category": "EDI Support"
+        "category": "EDI Support",
+        "icon": "$(group-by-ref-type)"
       },
       {
         "command": "edi-support.toggleInlayHints",
         "title": "Toggle inlay hints of segments and elements",
-        "category": "EDI Support"
+        "category": "EDI Support",
+        "icon": "$(radio-tower)"
       }
     ],
     "configuration": {
@@ -107,6 +118,25 @@
           "description": "Show inlay hints for elements."
         }
       }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "command": "edi-support.prettify",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "command": "edi-support.minify",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "command": "edi-support.toggleInlayHints",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "scripts": {
