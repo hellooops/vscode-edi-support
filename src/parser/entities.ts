@@ -89,7 +89,7 @@ export class EdiElement {
     if (this.value && this.value.length > this.ediReleaseSchemaElement.maxLength) {
       errors.push(
         new DiagnosticError(
-          `Element ${this.ediReleaseSchemaElement?.id} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}.`,
+          `Element ${this.ediReleaseSchemaElement?.id} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}, got ${this.value.length}.`,
           "Value too long"
         )
       );
@@ -98,7 +98,7 @@ export class EdiElement {
     if (this.value && this.value.length < this.ediReleaseSchemaElement.minLength) {
       errors.push(
         new DiagnosticError(
-          `Element ${this.ediReleaseSchemaElement?.id} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}.`,
+          `Element ${this.ediReleaseSchemaElement?.id} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}, got ${this.value.length}.`,
           "Value too short"
         )
       );

@@ -7,7 +7,7 @@ export class X12Parser extends EdiParserBase {
   public getCustomSegmentParser(segmentId: string): (segment: EdiSegment, segmentStr: string) => Promise<EdiSegment> {
     if (segmentId === "ISA") {
       return async (segment, segmentStr) => {
-        if (segmentStr.length !== 106) {
+        if (!segmentStr.length) {
           return segment;
         }
   
@@ -127,17 +127,30 @@ export class X12Parser extends EdiParserBase {
   }
 
   private async parseSegmentISA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
-    await this.loadSchema();
-    segment.elements = [];
-    let cIndex = 3;
-    if (segmentStr.length !== 106) {
+    if (!segmentStr) {
       return;
     }
 
-    for (let i = 0; i < 16; i++) {
+    await this.loadSchema();
+    segment.elements = [];
+    let cIndex = 3;
+
+    const separators = this.getMessageSeparators();
+    if (segmentStr.endsWith(separators.segmentSeparator)) {
+      segmentStr = segmentStr.substring(0, segmentStr.length - 1);
+    }
+    
+    const segmentFrags = segmentStr.split(separators.dataElementSeparator);
+    if (segmentFrags.length < 1) {
+      return segment;
+    }
+
+    segmentFrags.splice(0, 1);
+    for (let i = 0; i < segmentFrags.length; i++) {
       const element = new EdiElement();
+      const segmentFrag = segmentFrags[i];
       element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment("ISA")?.elements[i];
-      const elementLength = element.ediReleaseSchemaElement.minLength + 1;
+      const elementLength = segmentFrag.length + 1;
       element.value = segmentStr.substring(cIndex + 1, cIndex + elementLength);
       element.type = ElementType.dataElement;
       element.startIndex = cIndex;

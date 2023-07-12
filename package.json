@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
   "description": "Language support for X12 and EDIFACT",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
@@ -22,7 +22,7 @@
     "Formatters",
     "Other"
   ],
-  "icon": "docs/images/icon-128x128.png",
+  "icon": "docs/images/icon-600x600.png",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
