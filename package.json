@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
   "description": "Language support for X12 and EDIFACT",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",
@@ -116,23 +116,28 @@
           "type": "boolean",
           "default": true,
           "description": "Show inlay hints for elements."
+        },
+        "ediSupport.menu.icon": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show action icons in the title area of editor."
         }
       }
     },
     "menus": {
       "editor/title": [
         {
-          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
           "command": "edi-support.prettify",
           "group": "navigation"
         },
         {
-          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
           "command": "edi-support.minify",
           "group": "navigation"
         },
         {
-          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
           "command": "edi-support.toggleInlayHints",
           "group": "navigation"
         }
