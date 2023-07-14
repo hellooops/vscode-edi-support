@@ -39,20 +39,20 @@ export default class Utils {
 }
 
 export class SchemaViewerUtils {
-  static getSegmentUrl(release: Nullable<string>, segment: Nullable<string>): string {
+  static getSegmentUrl(ediType: EdiType, release: Nullable<string>, segment: Nullable<string>): string {
     if (!release || !segment) {
       return this.getIndexUrl();
     }
 
-    return `https://www.kasoftware.com/schema/edi/edifact/${release}/segments/${segment}/`;
+    return `https://www.kasoftware.com/schema/edi/${ediType}/${release}/segments/${segment}/`;
   }
 
-  static getElementUrl(release: Nullable<string>, segment: Nullable<string>, element: Nullable<string>): string {
+  static getElementUrl(ediType: EdiType, release: Nullable<string>, segment: Nullable<string>, element: Nullable<string>): string {
     if (!release || !segment || !element) {
       return this.getIndexUrl();
     }
     
-    return `https://www.kasoftware.com/schema/edi/edifact/${release}/elements/${segment}/${element}/`;
+    return `https://www.kasoftware.com/schema/edi/${ediType}/${release}/elements/${segment}/${element}/`;
   }
 
   static getIndexUrl(): string {
@@ -79,12 +79,12 @@ export class StringBuilder {
 
 export class VscodeUtils {
   static isX12(document: vscode.TextDocument): boolean {
-    if (!document) {
-      return false;
-    }
-
     if (document.languageId === "x12") {
       return true;
+    }
+
+    if (!document) {
+      return false;
     }
 
     let content = document.getText();
@@ -101,12 +101,12 @@ export class VscodeUtils {
   }
 
   static isEdifact(document: vscode.TextDocument): boolean {
-    if (!document) {
-      return false;
-    }
-
     if (document.languageId === "edifact") {
       return true;
+    }
+
+    if (!document) {
+      return false;
     }
 
     let content = document.getText();

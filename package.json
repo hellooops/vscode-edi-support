@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
   "description": "Language support for X12 and EDIFACT",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "publisher": "DericLee",
   "author": {
     "email": "dericl@Kasoftware.cn",

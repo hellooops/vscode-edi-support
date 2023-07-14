@@ -1,13 +1,16 @@
-import { X12Parser } from "../parser/x12Parser";
+import * as vscode from "vscode";
 import { HoverProviderBase } from "./hoverProviderBase";
-import { EdifactParser } from "../parser/edifactParser";
+import { Disposable } from "vscode";
+import { EdiType } from "../parser/entities";
 
 export class HoverEdifactProvider extends HoverProviderBase {
   public getLanguageName(): string {
     return "edifact";
   }
 
-  public getParser(document: string): X12Parser | EdifactParser {
-    return new EdifactParser(document);
+  public registerFunctions(): Disposable[] {
+    return [
+      vscode.languages.registerHoverProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+    ];
   }
 }

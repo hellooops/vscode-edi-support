@@ -1,16 +1,14 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiVersion, EdiElement, EdiSegment, EdiType } from "../parser/entities";
-import { SchemaViewerUtils, StringBuilder } from "../utils/utils";
-import { EdiParserBase } from "../parser/ediParserBase";
+import { SchemaViewerUtils, StringBuilder, VscodeUtils } from "../utils/utils";
 
 export abstract class HoverProviderBase implements vscode.HoverProvider, IProvidable {
   async provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Hover | undefined | null> {
     if (vscode.workspace.getConfiguration("ediSupport").get("enableHover") !== true) {
       return null;
     }
-    let text = document.getText();
-    const parser = this.getParser(text);
+    const { parser, ediType } = VscodeUtils.getEdiParser(document);
     let ediVersion: EdiVersion = parser.parseReleaseAndVersion();
     let segments = await parser.parseSegments();
     let realPosition = document.offsetAt(
@@ -24,7 +22,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
 
     const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
     if (!selectedElement) {
-      return new vscode.Hover(this.buildSegmentMarkdownString(ediVersion, selectedSegment));
+      return new vscode.Hover(this.buildSegmentMarkdownString(ediType, ediVersion, selectedSegment));
     }
     let selectedComponentElement: EdiElement | undefined = undefined;
     if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
@@ -36,17 +34,15 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     }
 
     if (selectedComponentElement) {
-      return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedComponentElement));
+      return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, selectedSegment, selectedComponentElement));
     } else {
-      return new vscode.Hover(this.buildElementMarkdownString(ediVersion, selectedSegment, selectedElement));
+      return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, selectedSegment, selectedElement));
     }
   }
 
   public abstract getLanguageName(): string;
 
-  public abstract getParser(document: string): EdiParserBase;
-
-  private buildSegmentMarkdownString(ediVersion: EdiVersion, segment: EdiSegment) : vscode.MarkdownString[] {
+  private buildSegmentMarkdownString(ediType: EdiType, ediVersion: EdiVersion, segment: EdiSegment) : vscode.MarkdownString[] {
     const part2MdSb = new StringBuilder();
     if (segment?.ediReleaseSchemaSegment?.desc) {
       part2MdSb.append(`**${segment.ediReleaseSchemaSegment.desc}**\n\n`);
@@ -55,7 +51,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       part2MdSb.append(`${segment.ediReleaseSchemaSegment.purpose}\n\n`);
     }
     part2MdSb.append(`\`\`\`${this.getLanguageName()}\n${segment}\n\`\`\``);
-    const segmentSchemaViewerUrl: string = SchemaViewerUtils.getSegmentUrl(ediVersion.release, segment.id);
+    const segmentSchemaViewerUrl: string = SchemaViewerUtils.getSegmentUrl(ediType, ediVersion.release, segment.id);
     const mdStrings: vscode.MarkdownString[] = [
       new vscode.MarkdownString(
         `**${segment.id}** (Segment)`
@@ -66,7 +62,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     return mdStrings;
   }
 
-  private buildElementMarkdownString(ediVersion: EdiVersion, segment: EdiSegment, element: EdiElement) : vscode.MarkdownString[] {
+  private buildElementMarkdownString(ediType: EdiType, ediVersion: EdiVersion, segment: EdiSegment, element: EdiElement) : vscode.MarkdownString[] {
     const part1MdSb = new StringBuilder();
     part1MdSb.append(`**${segment.id}**${element.designatorIndex} (Element)`);
     if (element?.ediReleaseSchemaElement) {
@@ -97,7 +93,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       new vscode.MarkdownString(part2MdSb.toString()),
     ];
 
-    const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediVersion.release, segment.id, element.getDesignator());
+    const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediType, ediVersion.release, segment.id, element.getDesignator());
     if (element?.ediReleaseSchemaElement?.qualifierRef) {
       const codes = element?.ediReleaseSchemaElement?.getCodes();
       const elementValueCode = element?.ediReleaseSchemaElement?.getCodeByValue(element.value);
@@ -122,10 +118,5 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     return mdStrings;
   }
 
-  public registerFunctions(): vscode.Disposable[] {
-    return [
-      vscode.languages.registerHoverProvider({ language: EdiType.X12, scheme: "file" }, this),
-      vscode.languages.registerHoverProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
-    ];
-  }
+  public abstract registerFunctions(): vscode.Disposable[];
 }
