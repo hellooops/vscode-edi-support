@@ -4,6 +4,13 @@ All notable changes to the "edi-edifact-support" extension will be documented in
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.8] - 2023-07-14
+
+### Fixed
+
+- Fix the incorrect url in x12 hovering markdown.
+
+
 ## [1.0.7] - 2023-07-12
 
 ### Added
