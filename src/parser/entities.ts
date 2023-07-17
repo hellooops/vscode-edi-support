@@ -70,7 +70,7 @@ export class EdiElement {
   public components: EdiElement[];
   public ediReleaseSchemaElement?: EdiReleaseSchemaElement;
 
-  public getDesignator() {
+  public getDesignator() : string {
     return `${this.segmentName}${this.designatorIndex}`;
   }
 

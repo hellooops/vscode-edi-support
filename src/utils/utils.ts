@@ -78,6 +78,12 @@ export class StringBuilder {
 }
 
 export class VscodeUtils {
+  static icons = {
+    segment: new vscode.ThemeIcon("symbol-parameter"),
+    element: new vscode.ThemeIcon("record-small"),
+    attribute: new vscode.ThemeIcon("mention"),
+  };
+
   static isX12(document: vscode.TextDocument): boolean {
     if (!document) {
       return false;

@@ -10,6 +10,7 @@ import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
 import { DocumentFormattingEditEdiProvider } from "./providers/documentFormattingEdiProvider";
 import { CodelensEdiProvider } from "./providers/codelensEdiProvider";
 import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
+import { TreeEdiProvider } from "./providers/treeEdiProvider";
 import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 
@@ -25,11 +26,15 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new InlayHintsEdiProvider());
   registerDiagnostics(context, new EdiDiagnosticsMgr());
 
+  const treeEdiProvider = new TreeEdiProvider();
+  registerProvider(context, treeEdiProvider);
+  registerCommand(context, treeEdiProvider, () => treeEdiProvider.refresh());
+
   console.log('Extension "edi-support" is now active!');
 }
 
-function registerCommand(context: vscode.ExtensionContext, command: ICommandable) {
-  const commandDisposable = vscode.commands.registerCommand(command.name, command.command);
+function registerCommand(context: vscode.ExtensionContext, command: ICommandable, callback?: (...args: any[]) => any) {
+  const commandDisposable = vscode.commands.registerCommand(command.name, callback || command.command);
   context.subscriptions.push(commandDisposable);
 }
 

@@ -26,6 +26,16 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "edi-support-explorer",
+          "name": "EDI Support Explorer",
+          "when": "resourceLangId == x12 || resourceLangId == edifact",
+          "icon": "./docs/images/icon-600x600.svg"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "x12",
@@ -94,6 +104,12 @@
         "title": "Toggle inlay hints of segments and elements",
         "category": "EDI Support",
         "icon": "$(radio-tower)"
+      },
+      {
+        "command": "edi-support.refreshEdiExplorer",
+        "title": "Refresh Edi Explorer",
+        "category": "EDI Support",
+        "icon": "$(refresh)"
       }
     ],
     "configuration": {
@@ -141,6 +157,13 @@
         {
           "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
           "command": "edi-support.toggleInlayHints",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "when": "view == edi-support-explorer",
+          "command": "edi-support.refreshEdiExplorer",
           "group": "navigation"
         }
       ]
