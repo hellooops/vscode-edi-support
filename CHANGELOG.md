@@ -4,6 +4,17 @@ All notable changes to the "edi-edifact-support" extension will be documented in
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.9] - 2023-07-18
+
+### Added
+
+- Support `Edi Support Explorer` view
+
+### Fixed
+
+- Fix x12 ISA and edifact UNA segments lost segmentName property when parsing
+
+
 ## [1.0.8] - 2023-07-14
 
 ### Fixed
