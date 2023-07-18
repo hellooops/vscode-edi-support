@@ -4,6 +4,12 @@ All notable changes to the "edi-edifact-support" extension will be documented in
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## Unreleased
+
+### Added
+
+- Support extra commands in edi explorer.
+
 ## [1.0.9] - 2023-07-18
 
 ### Added

@@ -166,6 +166,21 @@
           "when": "view == edi-support-explorer",
           "command": "edi-support.refreshEdiExplorer",
           "group": "navigation"
+        },
+        {
+          "when": "view == edi-support-explorer",
+          "command": "edi-support.prettify",
+          "group": "format"
+        },
+        {
+          "when": "view == edi-support-explorer",
+          "command": "edi-support.minify",
+          "group": "format"
+        },
+        {
+          "when": "view == edi-support-explorer",
+          "command": "edi-support.toggleInlayHints",
+          "group": "inlayHints"
         }
       ]
     }
