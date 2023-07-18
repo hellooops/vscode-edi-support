@@ -148,7 +148,20 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     };
   }
 
+  public onTextChange(e: any) {
+    if (!e?.document) {
+      return;
+    }
+
+    if (VscodeUtils.isX12(e?.document) || VscodeUtils.isEdifact(e?.document)) {
+      this.refresh();
+    }
+  }
+
   public registerFunctions(): vscode.Disposable[] {
+    vscode.window.onDidChangeActiveTextEditor(e => this.onTextChange(e));
+    vscode.workspace.onDidChangeTextDocument(e => this.onTextChange(e));
+
     return [
       vscode.window.createTreeView("edi-support-explorer", {
         treeDataProvider: this,
