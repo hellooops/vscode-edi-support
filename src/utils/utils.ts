@@ -36,6 +36,14 @@ export default class Utils {
   static getMessageInfoByDocumentType(documentType: string): MessageInfo | null {
     return d96a_message_infos.find(m => m.documentType === documentType) || null;
   }
+
+  static toString(value: Nullable<any>): string | null | undefined {
+    if (value === null || value === undefined) {
+      return value;
+    }
+
+    return value.toString();
+  }
 }
 
 export class SchemaViewerUtils {
@@ -78,6 +86,12 @@ export class StringBuilder {
 }
 
 export class VscodeUtils {
+  static icons = {
+    segment: new vscode.ThemeIcon("symbol-parameter"),
+    element: new vscode.ThemeIcon("record-small"),
+    elementAttribute: new vscode.ThemeIcon("mention"),
+  };
+
   static isX12(document: vscode.TextDocument): boolean {
     if (document.languageId === "x12") {
       return true;
