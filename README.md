@@ -7,6 +7,7 @@
 - Basic syntax highlighting.
 - 💥Document diagnostics.
 - 💥Inlay hints for segments and elements.
+- 💥Edi Explorer
 - Document formatting.
 - Document prettify.
 - Document minify.
@@ -20,6 +21,9 @@
 
 ## Inlay hints for segments and elements.
 <p><img src="./docs/images/inlayHints.png" alt="Document diagnostics"/></p>
+
+## Edi Explorer.
+<p><img src="./docs/images/edi-support-explorer.png" alt="Document diagnostics"/></p>
 
 ## Document prettify.
 
