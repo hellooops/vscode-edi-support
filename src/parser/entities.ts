@@ -131,6 +131,10 @@ export class EdiElement {
     return errors;
   }
 
+  public isComposite(): boolean {
+    return this.components && this.components.length > 0;
+  }
+
   public toString() {
     return this.separator + this.value;
   }

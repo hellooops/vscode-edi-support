@@ -1,19 +1,11 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { VscodeUtils } from "../utils/utils";
+import Utils, { VscodeUtils } from "../utils/utils";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
-import { EdiParserBase } from "../parser/ediParserBase";
 import { ICommandable } from "../interfaces/commandable";
 
-export class TreeEdiProvider implements vscode.TreeDataProvider<{ key: string }>, IProvidable, ICommandable {
+export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>, IProvidable, ICommandable {
   name: string = "edi-support.refreshEdiExplorer";
-  static readonly icons = {
-    segment: "$(selection)",
-    element: "$(record-small)",
-  };
-  private static readonly elementDesignatorPattern = /\d\d/;
-  private static readonly compositeElementDesignatorPattern = /\d\d\d\d/;
-  private _parser: EdiParserBase;
   private _onDidChangeTreeData: vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
   readonly onDidChangeTreeData: vscode.Event<any> = this._onDidChangeTreeData.event;
 
@@ -21,47 +13,28 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<{ key: string }>
     this._onDidChangeTreeData.fire(undefined);
   }
 
-  async getTreeItem(element: { key: string; }): Promise<vscode.TreeItem> {
-    const treeItem = new vscode.TreeItem(element.key);
-    const segments = await this._parser.parseSegments();
-    const segmentOrElement = this.getSegmentOrElementByName(segments, element.key);
-    if (segmentOrElement instanceof EdiSegment) {
-      // Segment
-      const segmentDesc = segmentOrElement.ediReleaseSchemaSegment?.desc ?? "";
-      return {
-        label: segmentOrElement.id,
-        iconPath: VscodeUtils.icons.segment,
-        description: segmentDesc,
-        tooltip: segmentDesc,
-        collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
-      };
-    } else if (segmentOrElement instanceof EdiElement) {
-      // Element
-      const elementDesc = segmentOrElement.ediReleaseSchemaElement?.desc ?? "";
-      const isDataElement = segmentOrElement.components && segmentOrElement.components.length > 0;
-
-      return {
-        label: segmentOrElement.getDesignator(),
-        iconPath: VscodeUtils.icons.element,
-        description: elementDesc,
-        tooltip: elementDesc,
-        collapsibleState: isDataElement ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
-      };
+  async getTreeItem(element: TreeItemElement): Promise<vscode.TreeItem> {
+    if (element.type === TreeItemType.Segment) {
+      return this.getSegmentTreeItem(element.segment);
+    } else if (element.type === TreeItemType.DataElement) {
+      return this.getDataElementTreeItem(element.element);
+    } else if (element.type === TreeItemType.CompositeElement) {
+      return this.getCompositeElementTreeItem(element.element);
+    } else if (element.type === TreeItemType.ElementAttribute) {
+      return this.getElementAttributeTreeItem(element.elementAttribute);
     } else {
-      return treeItem;
+      throw new Error(`Unknown tree item type: ${element.type}`);
     }
   }
 
-  async getChildren(element?: { key: string; } | undefined): Promise<{ key: string; }[] | null | undefined> {
+  async getChildren(element?: TreeItemElement | undefined): Promise<TreeItemElement[] | null | undefined> {
     const document = vscode.window.activeTextEditor?.document;
     if (!document) {
       return;
     }
 
     if (!element) {
-      const diagnostics: vscode.Diagnostic[] = [];
       const { parser, ediType } = VscodeUtils.getEdiParser(document);
-      this._parser = parser;
       if (ediType === EdiType.UNKNOWN) {
         return;
       }
@@ -71,91 +44,108 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<{ key: string }>
       return segments.map((segment) => {
         return {
           key: segment.id,
+          type: TreeItemType.Segment,
+          segment
         };
       });
     }
-    
-    const segments = await this._parser.parseSegments();
-    const segmentOrElement = this.getSegmentOrElementByName(segments, element.key);
-    if (segmentOrElement instanceof EdiSegment) {
-      // Segment
-      const segment = segments.filter(segment => segment.id === element.key)[0];
-      if (!segment.elements) {
-        return;
-      }
 
-      return segment.elements.map((element) => {
+    if (element.type === TreeItemType.Segment) {
+      return element.segment.elements.map((el) => {
         return {
-          key: element.getDesignator(),
+          key: el.getDesignator(),
+          type: TreeItemType.DataElement,
+          element: el
         };
       });
-    } else if (segmentOrElement instanceof EdiElement) {
-      // Element
-      const elementDesc = segmentOrElement.ediReleaseSchemaElement?.desc ?? "";
-      const isDataElement = segmentOrElement.components && segmentOrElement.components.length > 0;
-
-      if (!isDataElement) {
-        return;
-      }
-
-      return segmentOrElement.components.map((element) => {
+    } else if (element.type === TreeItemType.DataElement && element.element.isComposite()) {
+      return element.element.components.map((el) => {
         return {
-          key: element.getDesignator(),
+          key: el.getDesignator(),
+          type: TreeItemType.CompositeElement,
+          element: el
         };
       });
+    } else if (element.type === TreeItemType.CompositeElement || (element.type === TreeItemType.DataElement && !element.element.isComposite())) {
+      const attrKeys: { key: string, label: string }[] = [
+        {key: "id", label: "Id"},
+        {key: "desc", label: "Description"},
+        {key: "dataType", label: "Data Type"},
+        {key: "required", label: "Required"},
+        {key: "minLength", label: "Min Length"},
+        {key: "maxLength", label: "Max Length"},
+        {key: "qualifierRef", label: "Qualifier Ref"},
+        {key: "definition", label: "Definition"},
+      ];
+      const children = [];
+      for (let attrKey of attrKeys) {
+        const attrValue = Utils.toString(element.element.ediReleaseSchemaElement?.[attrKey.key]);
+        if (attrValue === null || attrValue === undefined || attrValue === "") {
+          continue;
+        }
+
+        children.push({
+          key: `${element.element.getDesignator()}-${attrKey.key}`,
+          type: TreeItemType.ElementAttribute,
+          elementAttribute: {
+            key: attrKey.label,
+            value: Utils.toString(element.element.ediReleaseSchemaElement?.[attrKey.key])
+          }
+        });
+      }
+
+      return children;
     } else {
       return;
     }
   }
 
-  getParent?(element: { key: string; }): vscode.ProviderResult<{ key: string; }> {
+  getParent?(element: TreeItemElement): vscode.ProviderResult<TreeItemElement> {
     throw new Error("Method not implemented.");
   }
 
-  resolveTreeItem?(item: vscode.TreeItem, element: { key: string; }, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TreeItem> {
+  resolveTreeItem?(item: vscode.TreeItem, element: TreeItemElement, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TreeItem> {
     return item;
-  }
-
-  private getSegmentOrElementByName(segments: EdiSegment[], name: string): EdiSegment | EdiElement | undefined {
-    if (!name) {
-      return;
-    }
-
-    if (this.isCompositeElement(name)) {
-      const elementDesignator = name.substring(0, name.length - 2);
-      const element = this.getSegmentOrElementByName(segments, elementDesignator) as EdiElement;
-      const compositeElementIndex = parseInt(name.substring(name.length - 2, name.length)) - 1;
-      return element.components[compositeElementIndex];
-    } else if (this.isDataElement(name)) {
-      const segmentNameLength = name.length - 2;
-      const segmentName = name.substring(0, segmentNameLength);
-      const elementIndex = parseInt(name.substring(segmentNameLength, segmentNameLength + 2)) - 1;
-      const segment = this.getSegmentOrElementByName(segments, segmentName) as EdiSegment;
-      return segment.elements[elementIndex];
-    } else {
-      return segments.filter(segment => segment.id === name)[0];
-    }
-  }
-
-  private isDataElement(name: string): boolean {
-    if (!name || this.isCompositeElement(name) || !TreeEdiProvider.elementDesignatorPattern.test(name)) {
-      return false;
-    }
-
-    return name.length > 3; // T01 is segmentName
-  }
-
-  private isCompositeElement(name: string): boolean {
-    if (!name || !TreeEdiProvider.compositeElementDesignatorPattern.test(name)) {
-      return false;
-    }
-
-
-    return name.length > 5; // T0102
   }
   
   command(...args: any[]) {
     this.refresh();
+  }
+
+  private getSegmentTreeItem(segment: EdiSegment): vscode.TreeItem {
+    const segmentDesc = segment.ediReleaseSchemaSegment?.desc ?? "";
+    return {
+      label: segment.id,
+      iconPath: VscodeUtils.icons.segment,
+      description: segmentDesc,
+      tooltip: segmentDesc,
+      collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+    };
+  }
+
+  private getDataElementTreeItem(element: EdiElement): vscode.TreeItem {
+    return this.getCompositeElementTreeItem(element);
+  }
+
+  private getCompositeElementTreeItem(element: EdiElement): vscode.TreeItem {
+    const elementDesc = element.ediReleaseSchemaElement?.desc ?? "";
+    return {
+      label: element.getDesignator(),
+      iconPath: VscodeUtils.icons.element,
+      description: elementDesc,
+      tooltip: elementDesc,
+      collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+    };
+  }
+
+  private getElementAttributeTreeItem(elementAttribute: ElementAttribute): vscode.TreeItem {
+    return {
+      label: elementAttribute.key,
+      iconPath: VscodeUtils.icons.elementAttribute,
+      description: elementAttribute.value,
+      tooltip: elementAttribute.value,
+      collapsibleState: vscode.TreeItemCollapsibleState.None,
+    };
   }
 
   public registerFunctions(): vscode.Disposable[] {
@@ -167,3 +157,30 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<{ key: string }>
     ];
   }
 }
+
+enum TreeItemType {
+  Segment,
+  DataElement,
+  CompositeElement,
+  ElementAttribute
+}
+
+class TreeItemElement {
+  key: string;
+  type: TreeItemType;
+  segment?: EdiSegment;
+  element?: EdiElement;
+  compositeElement?: EdiElement;
+  elementAttribute?: ElementAttribute;
+}
+
+class ElementAttribute {
+  key: string;
+  value: string;
+
+  constructor(key: string, value: string) {
+    this.key = key;
+    this.value = value;
+  }
+}
+

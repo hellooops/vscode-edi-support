@@ -128,6 +128,7 @@ export class EdifactParser extends EdiParserBase {
 
     for (let i = 0; i < 6; i++) {
       const element = new EdiElement();
+      element.segmentName = segment.id;
       element.value = segmentStr[i + 3];
       element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment("UNA")?.elements[i];
       element.type = ElementType.dataElement;

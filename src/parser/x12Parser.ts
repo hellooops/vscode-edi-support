@@ -148,6 +148,7 @@ export class X12Parser extends EdiParserBase {
     segmentFrags.splice(0, 1);
     for (let i = 0; i < segmentFrags.length; i++) {
       const element = new EdiElement();
+      element.segmentName = segment.id;
       const segmentFrag = segmentFrags[i];
       element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment("ISA")?.elements[i];
       const elementLength = segmentFrag.length + 1;

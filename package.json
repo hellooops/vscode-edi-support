@@ -32,7 +32,8 @@
           "id": "edi-support-explorer",
           "name": "EDI Support Explorer",
           "when": "resourceLangId == x12 || resourceLangId == edifact",
-          "icon": "./docs/images/icon-600x600.svg"
+          "icon": "./docs/images/icon-600x600.svg",
+          "contextualTitle": "EDI Support Explorer"
         }
       ]
     },
