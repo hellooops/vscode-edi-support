@@ -10,7 +10,7 @@ export class HoverEdifactProvider extends HoverProviderBase {
 
   public registerFunctions(): Disposable[] {
     return [
-      vscode.languages.registerHoverProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+      vscode.languages.registerHoverProvider({ language: EdiType.EDIFACT }, this),
     ];
   }
 }

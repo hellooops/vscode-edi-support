@@ -10,6 +10,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Support extra commands in edi explorer.
 
+### Changed
+
+- Remove the scheme restriction for the features.
+
 ## [1.0.9] - 2023-07-18
 
 ### Added

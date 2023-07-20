@@ -56,8 +56,8 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
 
   public registerFunctions(): vscode.Disposable[] {
     return [
-      vscode.languages.registerCodeLensProvider({ language: EdiType.X12, scheme: "file" }, this),
-      vscode.languages.registerCodeLensProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+      vscode.languages.registerCodeLensProvider({ language: EdiType.X12 }, this),
+      vscode.languages.registerCodeLensProvider({ language: EdiType.EDIFACT }, this),
     ];
   }
 }

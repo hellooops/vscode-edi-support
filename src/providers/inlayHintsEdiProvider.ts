@@ -86,8 +86,8 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
 
   public registerFunctions(): vscode.Disposable[] {
     return [
-      vscode.languages.registerInlayHintsProvider({ language: EdiType.X12, scheme: "file" }, this),
-      vscode.languages.registerInlayHintsProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+      vscode.languages.registerInlayHintsProvider({ language: EdiType.X12 }, this),
+      vscode.languages.registerInlayHintsProvider({ language: EdiType.EDIFACT }, this),
     ];
   }
 }

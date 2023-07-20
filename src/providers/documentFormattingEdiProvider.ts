@@ -26,8 +26,8 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
 
   public registerFunctions(): vscode.Disposable[] {
     return [
-      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.X12, scheme: "file" }, this),
-      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.X12 }, this),
+      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.EDIFACT }, this),
     ];
   }
 }

@@ -43,8 +43,8 @@ export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, I
 
   public registerFunctions(): vscode.Disposable[] {
     return [
-      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.X12, scheme: "file" }, this),
-      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.EDIFACT, scheme: "file" }, this),
+      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.X12 }, this),
+      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.EDIFACT }, this),
     ];
   }
 }

@@ -10,7 +10,7 @@ export class HoverX12Provider extends HoverProviderBase {
 
   public registerFunctions(): Disposable[] {
     return [
-      vscode.languages.registerHoverProvider({ language: EdiType.X12, scheme: "file" }, this),
+      vscode.languages.registerHoverProvider({ language: EdiType.X12 }, this),
     ];
   }
 }
