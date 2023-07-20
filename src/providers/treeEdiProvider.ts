@@ -18,9 +18,9 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     if (element.type === TreeItemType.Segment) {
       return this.getSegmentTreeItem(element.segment);
     } else if (element.type === TreeItemType.DataElement) {
-      return this.getDataElementTreeItem(element.element);
+      return this.getDataElementTreeItem(element.segment, element.element);
     } else if (element.type === TreeItemType.CompositeElement) {
-      return this.getCompositeElementTreeItem(element.element);
+      return this.getCompositeElementTreeItem(element.segment, element.element);
     } else if (element.type === TreeItemType.ElementAttribute) {
       return this.getElementAttributeTreeItem(element.elementAttribute);
     } else {
@@ -56,7 +56,8 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
         return {
           key: el.getDesignator(),
           type: TreeItemType.DataElement,
-          element: el
+          element: el,
+          segment: element.segment
         };
       });
     } else if (element.type === TreeItemType.DataElement && element.element.isComposite()) {
@@ -64,7 +65,8 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
         return {
           key: el.getDesignator(),
           type: TreeItemType.CompositeElement,
-          element: el
+          element: el,
+          segment: element.segment
         };
       });
     } else if (element.type === TreeItemType.CompositeElement || (element.type === TreeItemType.DataElement && !element.element.isComposite())) {
@@ -132,11 +134,11 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     };
   }
 
-  private getDataElementTreeItem(element: EdiElement): vscode.TreeItem {
-    return this.getCompositeElementTreeItem(element);
+  private getDataElementTreeItem(segment: EdiSegment, element: EdiElement): vscode.TreeItem {
+    return this.getCompositeElementTreeItem(segment, element);
   }
 
-  private getCompositeElementTreeItem(element: EdiElement): vscode.TreeItem {
+  private getCompositeElementTreeItem(segment: EdiSegment, element: EdiElement): vscode.TreeItem {
     const elementDesc = element.ediReleaseSchemaElement?.desc ?? "";
     return {
       label: element.getDesignator(),
@@ -144,6 +146,11 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       description: elementDesc,
       tooltip: elementDesc,
       collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+      command: {
+        command: "edi-support.selectTextByPosition",
+        title: "",
+        arguments: [segment.startIndex + element.startIndex, segment.startIndex + element.endIndex + 1]
+      }
     };
   }
 

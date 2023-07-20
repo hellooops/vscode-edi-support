@@ -111,6 +111,11 @@
         "title": "Refresh Edi Explorer",
         "category": "EDI Support",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "edi-support.selectTextByPosition",
+        "title": "Select Text By Position",
+        "category": "EDI Support Internal"
       }
     ],
     "configuration": {

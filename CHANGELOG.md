@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 
 - Support extra commands in edi explorer.
+- Support segment and element navigation in edi explorer.
 
 ### Changed
 
