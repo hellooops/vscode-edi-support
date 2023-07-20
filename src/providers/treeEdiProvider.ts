@@ -3,6 +3,7 @@ import { IProvidable } from "../interfaces/providable";
 import Utils, { VscodeUtils } from "../utils/utils";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
 import { ICommandable } from "../interfaces/commandable";
+import * as constants from "../constants";
 
 export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>, IProvidable, ICommandable {
   name: string = "edi-support.refreshEdiExplorer";
@@ -120,6 +121,14 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       description: segmentDesc,
       tooltip: segmentDesc,
       collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+      command: {
+        command: constants.nativeCommands.revealLine,
+        title: "",
+        arguments: [{
+          lineNumber: vscode.window.activeTextEditor?.document.positionAt(segment.startIndex).line ?? 0,
+          at: "top"
+        }]
+      }
     };
   }
 
