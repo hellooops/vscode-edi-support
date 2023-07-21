@@ -1,5 +1,6 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
+import * as constants from "../constants";
 
 export class SelectTextByPositionCommand implements ICommandable {
   name: string = "edi-support.selectTextByPosition";
@@ -21,5 +22,6 @@ export class SelectTextByPositionCommand implements ICommandable {
       editor.document.positionAt(fromIndex),
       editor.document.positionAt(toIndex)
     )];
+    vscode.commands.executeCommand(constants.nativeCommands.focusFirstEditorGroup);
   }
 }
