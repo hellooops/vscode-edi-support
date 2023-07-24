@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+
+- Message version is not longer essential for getting schema.
+
 
 ## [1.1.1] - 2023-07-24
 

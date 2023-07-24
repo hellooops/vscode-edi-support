@@ -183,7 +183,7 @@ export abstract class EdiParserBase {
     }
 
     const ediVersion = this.parseReleaseAndVersion();
-    if (!ediVersion || !ediVersion.release || !ediVersion.version) {
+    if (!ediVersion || !ediVersion.release) {
       return;
     }
     let releaseSchema = null;
