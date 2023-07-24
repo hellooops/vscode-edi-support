@@ -49,10 +49,10 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
     }
 
     const inlayHint = new vscode.InlayHint(
-      document.positionAt(segment.startIndex + segment.id.length),
+      document.positionAt(segment.startIndex),
       segment.ediReleaseSchemaSegment.desc
     );
-    inlayHint.paddingRight = true;
+
     return inlayHint;
   }
 
@@ -73,10 +73,10 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
       }
 
       const inlayHint = new vscode.InlayHint(
-        document.positionAt(segment.startIndex + element.endIndex + 1),
+        document.positionAt(segment.startIndex + element.startIndex),
         element.ediReleaseSchemaElement.desc
       );
-      inlayHint.paddingRight = true;
+      inlayHint.paddingLeft = true;
       return [inlayHint];
     }
   }

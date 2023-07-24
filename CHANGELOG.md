@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.1.1] - 2023-07-24
+
+### Changed
+
+- Move the inlayHint to the element left.
+
+
 ## [1.1.0] - 2023-07-24
 
 ### Added
