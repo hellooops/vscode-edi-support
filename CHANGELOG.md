@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+
+## [1.1.0] - 2023-07-24
+
 ### Added
 
 - Support extra commands in edi explorer.
@@ -14,6 +17,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 
 - Remove the scheme restriction for the features.
+
 
 ## [1.0.9] - 2023-07-18
 

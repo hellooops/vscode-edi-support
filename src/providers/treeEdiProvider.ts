@@ -124,12 +124,9 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       tooltip: segmentDesc,
       collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
       command: {
-        command: constants.nativeCommands.revealLine,
+        command: constants.commands.selectTextByPositionCommand.name,
         title: "",
-        arguments: [{
-          lineNumber: vscode.window.activeTextEditor?.document.positionAt(segment.startIndex).line ?? 0,
-          at: "top"
-        }]
+        arguments: [segment.startIndex, segment.endIndex + 1]
       }
     };
   }
