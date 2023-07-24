@@ -1,11 +1,10 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
 import { VscodeUtils } from "../utils/utils";
+import * as constants from "../constants";
 
 export class PrettifyDocumentCommand implements ICommandable {
-  public static commandName: string = "edi-support.prettify";
-  public static commandLabel: string = "Prettify";
-  name: string = PrettifyDocumentCommand.commandName;
+  name: string = constants.commands.prettifyDocumentCommand.name;
 
   public async command(...args: any[]) {
     if (!vscode.window.activeTextEditor) {
@@ -22,7 +21,7 @@ export class PrettifyDocumentCommand implements ICommandable {
       return;
     }
 
-    let text = segments.join("\n");
+    let text = segments.join(constants.ediDocument.lineBreak);
 
     vscode.window.activeTextEditor.edit((builder) => {
       if (!vscode.window.activeTextEditor) {

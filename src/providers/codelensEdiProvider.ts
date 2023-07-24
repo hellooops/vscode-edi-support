@@ -1,14 +1,12 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiType } from "../parser/entities";
-import { PrettifyDocumentCommand } from "../commands/prettifyDocumentCommand";
-import { MinifyDocumentCommand } from "../commands/minifyDocumentCommand";
-import { ToggleInlayHintsCommand } from "../commands/toggleInlayHintsCommand";
+import * as constants from "../constants";
 
 export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable {
   onDidChangeCodeLenses?: vscode.Event<void>;
   async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[] | null | undefined> {
-    if (vscode.workspace.getConfiguration("ediSupport").get("enableCodelens") !== true) {
+    if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableCodelens) !== true) {
       return [];
     }
 
@@ -16,38 +14,38 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
       {
-        title: MinifyDocumentCommand.commandLabel,
-        tooltip: MinifyDocumentCommand.commandLabel,
-        command: MinifyDocumentCommand.commandName,
+        title: constants.commands.minifyDocumentCommand.label,
+        tooltip: constants.commands.minifyDocumentCommand.label,
+        command: constants.commands.minifyDocumentCommand.name,
         arguments: []
       }
     ));
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
       {
-        title: PrettifyDocumentCommand.commandLabel,
-        tooltip: PrettifyDocumentCommand.commandLabel,
-        command: PrettifyDocumentCommand.commandName,
+        title: constants.commands.prettifyDocumentCommand.label,
+        tooltip: constants.commands.prettifyDocumentCommand.label,
+        command: constants.commands.prettifyDocumentCommand.name,
         arguments: []
       }
     ));
-    const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration("ediSupport").get("inlayHints.segmentNames");
+    const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.inlayHints.segmentNames);
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
       {
-        title: `${ToggleInlayHintsCommand.commandLabel}(${segmentNamesInlayHintsEnabled ? "on" : "off"})`,
-        tooltip: ToggleInlayHintsCommand.commandLabel,
-        command: ToggleInlayHintsCommand.commandName,
+        title: `${constants.commands.toggleInlayHintsCommand.label}(${segmentNamesInlayHintsEnabled ? "on" : "off"})`,
+        tooltip: constants.commands.toggleInlayHintsCommand.label,
+        command: constants.commands.toggleInlayHintsCommand.name,
         arguments: []
       }
     ));
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
       {
-        title: `知行软件 (www.kasoftware.com) All rights reserved`,
-        tooltip: "知行软件 (www.kasoftware.com) All rights reserved",
-        command: "vscode.open",
-        arguments: ["https://www.kasoftware.com"]
+        title: constants.common.kasoftware.allRightsReserved,
+        tooltip: constants.common.kasoftware.allRightsReserved,
+        command: constants.nativeCommands.open,
+        arguments: [constants.common.kasoftware.url]
       }
     ));
 

@@ -1,4 +1,5 @@
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
+import * as constants from "../constants";
 
 export class EdiVersion {
   public release?: string; // D96A
@@ -147,7 +148,7 @@ export class EdiMessageSeparators {
 }
 
 export class EdiType {
-  static X12 = "x12";
-  static EDIFACT = "edifact";
+  static X12 = constants.ediDocument.x12.name;
+  static EDIFACT = constants.ediDocument.edifact.name;
   static UNKNOWN = "unknown";
 }

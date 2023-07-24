@@ -2,10 +2,11 @@ import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators }
 import { EdiParserBase, IEdiMessage } from "./ediParserBase";
 import Utils from "../utils/utils";
 import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
+import * as constants from "../constants";
 
 export class X12Parser extends EdiParserBase {
   public getCustomSegmentParser(segmentId: string): (segment: EdiSegment, segmentStr: string) => Promise<EdiSegment> {
-    if (segmentId === "ISA") {
+    if (segmentId === constants.ediDocument.x12.segment.ISA) {
       return async (segment, segmentStr) => {
         if (!segmentStr.length) {
           return segment;
@@ -18,7 +19,7 @@ export class X12Parser extends EdiParserBase {
 
   parseSeparators(): EdiMessageSeparators | null {
     const document = this.document.trim();
-    if (!document || document.length < 106 || !document.startsWith("ISA")) {
+    if (!document || document.length < 106 || !document.startsWith(constants.ediDocument.x12.segment.ISA)) {
       return null;
     }
 
@@ -37,9 +38,9 @@ export class X12Parser extends EdiParserBase {
 
   public getDefaultMessageSeparators(): EdiMessageSeparators {
     const separators = new EdiMessageSeparators();
-    separators.segmentSeparator = "~";
-    separators.dataElementSeparator = "*";
-    separators.componentElementSeparator = ":";
+    separators.segmentSeparator = constants.ediDocument.x12.defaultSeparators.segmentSeparator;
+    separators.dataElementSeparator = constants.ediDocument.x12.defaultSeparators.dataElementSeparator;
+    separators.componentElementSeparator = constants.ediDocument.x12.defaultSeparators.componentElementSeparator;
     return separators;
   }
 
@@ -54,12 +55,12 @@ export class X12Parser extends EdiParserBase {
     let stStr: string | undefined = undefined;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(this.document)) !== null) {
-      if (match[0].startsWith("ISA")) {
+      if (match[0].startsWith(constants.ediDocument.x12.segment.ISA)) {
         isaStr = match[0];
         if (isaStr && stStr) {
           break;
         }
-      } else if (match[0].startsWith("ST")) {
+      } else if (match[0].startsWith(constants.ediDocument.x12.segment.ST)) {
         stStr = match[0];
         if (isaStr && stStr) {
           break;
@@ -86,8 +87,8 @@ export class X12Parser extends EdiParserBase {
 
   public async parseMessage(): Promise<IEdiMessage | undefined> {
     const segments = await this.parseSegments();
-    const isa = segments.find(segment => segment.id === "ISA");
-    const st = segments.find(segment => segment.id === "ST");
+    const isa = segments.find(segment => segment.id === constants.ediDocument.x12.segment.ISA);
+    const st = segments.find(segment => segment.id === constants.ediDocument.x12.segment.ST);
     if (!isa || !st) {
       return undefined;
     }
@@ -119,10 +120,10 @@ export class X12Parser extends EdiParserBase {
 
   async afterSchemaLoaded(schema: EdiSchema): Promise<void> {
     if (schema.ediReleaseSchema?.segments) {
-      schema.ediReleaseSchema.segments["ISA"] = EdiReleaseSchemaSegment.ISA;
-      schema.ediReleaseSchema.segments["GS"] = EdiReleaseSchemaSegment.GS;
-      schema.ediReleaseSchema.segments["GE"] = EdiReleaseSchemaSegment.GE;
-      schema.ediReleaseSchema.segments["IEA"] = EdiReleaseSchemaSegment.IEA;
+      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.ISA] = EdiReleaseSchemaSegment.ISA;
+      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GS] = EdiReleaseSchemaSegment.GS;
+      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GE] = EdiReleaseSchemaSegment.GE;
+      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.IEA] = EdiReleaseSchemaSegment.IEA;
     }
   }
 
@@ -150,7 +151,7 @@ export class X12Parser extends EdiParserBase {
       const element = new EdiElement();
       element.segmentName = segment.id;
       const segmentFrag = segmentFrags[i];
-      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment("ISA")?.elements[i];
+      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.x12.segment.ISA)?.elements[i];
       const elementLength = segmentFrag.length + 1;
       element.value = segmentStr.substring(cIndex + 1, cIndex + elementLength);
       element.type = ElementType.dataElement;

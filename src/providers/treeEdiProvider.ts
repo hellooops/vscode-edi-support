@@ -6,7 +6,7 @@ import { ICommandable } from "../interfaces/commandable";
 import * as constants from "../constants";
 
 export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>, IProvidable, ICommandable {
-  name: string = "edi-support.refreshEdiExplorer";
+  name: string = constants.explorers.refreshEdiExplorer;
   private _onDidChangeTreeData: vscode.EventEmitter<any> = new vscode.EventEmitter<any>();
   readonly onDidChangeTreeData: vscode.Event<any> = this._onDidChangeTreeData.event;
 
@@ -16,13 +16,13 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
 
   async getTreeItem(element: TreeItemElement): Promise<vscode.TreeItem> {
     if (element.type === TreeItemType.Segment) {
-      return this.getSegmentTreeItem(element.segment);
+      return this.getSegmentTreeItem(element.segment!);
     } else if (element.type === TreeItemType.DataElement) {
-      return this.getDataElementTreeItem(element.segment, element.element);
+      return this.getDataElementTreeItem(element.segment!, element.element!);
     } else if (element.type === TreeItemType.CompositeElement) {
-      return this.getCompositeElementTreeItem(element.segment, element.element);
+      return this.getCompositeElementTreeItem(element.segment!, element.element!);
     } else if (element.type === TreeItemType.ElementAttribute) {
-      return this.getElementAttributeTreeItem(element.elementAttribute);
+      return this.getElementAttributeTreeItem(element.elementAttribute!);
     } else {
       throw new Error(`Unknown tree item type: ${element.type}`);
     }
@@ -52,7 +52,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     }
 
     if (element.type === TreeItemType.Segment) {
-      return element.segment.elements.map((el) => {
+      return element.segment!.elements.map((el) => {
         return {
           key: el.getDesignator(),
           type: TreeItemType.DataElement,
@@ -60,8 +60,8 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
           segment: element.segment
         };
       });
-    } else if (element.type === TreeItemType.DataElement && element.element.isComposite()) {
-      return element.element.components.map((el) => {
+    } else if (element.type === TreeItemType.DataElement && element.element!.isComposite()) {
+      return element.element!.components.map((el) => {
         return {
           key: el.getDesignator(),
           type: TreeItemType.CompositeElement,
@@ -69,7 +69,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
           segment: element.segment
         };
       });
-    } else if (element.type === TreeItemType.CompositeElement || (element.type === TreeItemType.DataElement && !element.element.isComposite())) {
+    } else if (element.type === TreeItemType.CompositeElement || (element.type === TreeItemType.DataElement && !element.element!.isComposite())) {
       const attrKeys: { key: string, label: string }[] = [
         {key: "id", label: "Id"},
         {key: "desc", label: "Description"},
@@ -80,19 +80,19 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
         {key: "qualifierRef", label: "Qualifier Ref"},
         {key: "definition", label: "Definition"},
       ];
-      const children = [];
+      const children: TreeItemElement[] = [];
       for (let attrKey of attrKeys) {
-        const attrValue = Utils.toString(element.element.ediReleaseSchemaElement?.[attrKey.key]);
+        const attrValue = Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key]);
         if (attrValue === null || attrValue === undefined || attrValue === "") {
           continue;
         }
 
         children.push({
-          key: `${element.element.getDesignator()}-${attrKey.key}`,
+          key: `${element.element!.getDesignator()}-${attrKey.key}`,
           type: TreeItemType.ElementAttribute,
           elementAttribute: {
             key: attrKey.label,
-            value: Utils.toString(element.element.ediReleaseSchemaElement?.[attrKey.key])
+            value: Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key])!
           }
         });
       }
@@ -104,7 +104,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
   }
 
   getParent?(element: TreeItemElement): vscode.ProviderResult<TreeItemElement> {
-    throw new Error("Method not implemented.");
+    throw new Error(constants.errors.methodNotImplemented);
   }
 
   resolveTreeItem?(item: vscode.TreeItem, element: TreeItemElement, token: vscode.CancellationToken): vscode.ProviderResult<vscode.TreeItem> {
@@ -147,7 +147,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       tooltip: elementDesc,
       collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
       command: {
-        command: "edi-support.selectTextByPosition",
+        command: constants.commands.selectTextByPositionCommand.name,
         title: "",
         arguments: [segment.startIndex + element.startIndex, segment.startIndex + element.endIndex + 1]
       }
@@ -179,7 +179,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     vscode.workspace.onDidChangeTextDocument(e => this.onTextChange(e));
 
     return [
-      vscode.window.createTreeView("edi-support-explorer", {
+      vscode.window.createTreeView(constants.explorers.treeExplorerId, {
         treeDataProvider: this,
         showCollapseAll: true,
       }),

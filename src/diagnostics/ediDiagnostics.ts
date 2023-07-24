@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
 import { IDiagnosticsable } from "../interfaces/diagnosticsable";
 import { VscodeUtils } from "../utils/utils";
+import * as constants from "../constants";
 
 export class EdiDiagnosticsMgr implements IDiagnosticsable {
   async refreshDiagnostics(document: vscode.TextDocument, ediDiagnostics: vscode.DiagnosticCollection): Promise<void> {
@@ -49,7 +50,7 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
   }
 
   registerDiagnostics(): any[] {
-    const ediDiagnostics = vscode.languages.createDiagnosticCollection("ediDiagnostics");
+    const ediDiagnostics = vscode.languages.createDiagnosticCollection(constants.diagnostic.diagnosticCollectionId);
     if (vscode.window.activeTextEditor) {
       this.refreshDiagnostics(vscode.window.activeTextEditor.document, ediDiagnostics);
     }

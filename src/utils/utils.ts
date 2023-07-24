@@ -5,6 +5,7 @@ import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
 import { X12Parser } from "../parser/x12Parser";
 import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
 import * as vscode from "vscode";
+import * as constants from "../constants";
 
 export type Nullable<T> = T | null | undefined;
 
@@ -64,7 +65,7 @@ export class SchemaViewerUtils {
   }
 
   static getIndexUrl(): string {
-    return "https://www.kasoftware.com/schema/";
+    return constants.common.kasoftware.schemaViewer.url;
   }
 }
 
@@ -87,13 +88,13 @@ export class StringBuilder {
 
 export class VscodeUtils {
   static icons = {
-    segment: new vscode.ThemeIcon("symbol-parameter"),
-    element: new vscode.ThemeIcon("record-small"),
-    elementAttribute: new vscode.ThemeIcon("mention"),
+    segment: new vscode.ThemeIcon(constants.themeIcons.symbolParameter),
+    element: new vscode.ThemeIcon(constants.themeIcons.recordSmall),
+    elementAttribute: new vscode.ThemeIcon(constants.themeIcons.mention),
   };
 
   static isX12(document: vscode.TextDocument): boolean {
-    if (document.languageId === "x12") {
+    if (document.languageId === EdiType.X12) {
       return true;
     }
 
@@ -107,7 +108,10 @@ export class VscodeUtils {
     }
 
     content = content.trim();
-    if (content.startsWith("ISA*") || content.startsWith("GS*") || content.startsWith("ST*")) {
+    if (content.startsWith(`${constants.ediDocument.x12.segment.ISA}${constants.ediDocument.x12.defaultSeparators.dataElementSeparator}`) || // ISA*
+        content.startsWith(`${constants.ediDocument.x12.segment.GS}${constants.ediDocument.x12.defaultSeparators.dataElementSeparator}`) || // GS*
+        content.startsWith(`${constants.ediDocument.x12.segment.ST}${constants.ediDocument.x12.defaultSeparators.dataElementSeparator}`) // ST*
+    ) {
       return true;
     }
 
@@ -115,7 +119,7 @@ export class VscodeUtils {
   }
 
   static isEdifact(document: vscode.TextDocument): boolean {
-    if (document.languageId === "edifact") {
+    if (document.languageId === EdiType.EDIFACT) {
       return true;
     }
 
@@ -129,7 +133,10 @@ export class VscodeUtils {
     }
 
     content = content.trim();
-    if (content.startsWith("UNA+") || content.startsWith("UNB+") || content.startsWith("UNH+")) {
+    if (content.startsWith(`${constants.ediDocument.edifact.segment.UNA}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) || // UNA*
+        content.startsWith(`${constants.ediDocument.edifact.segment.UNB}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) || // UNB*
+        content.startsWith(`${constants.ediDocument.edifact.segment.UNH}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) // UNH*
+    ) {
       return true;
     }
 

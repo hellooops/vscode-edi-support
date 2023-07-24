@@ -1,11 +1,10 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
 import { VscodeUtils } from "../utils/utils";
+import * as constants from "../constants";
 
 export class MinifyDocumentCommand implements ICommandable {
-  public static commandName: string = "edi-support.minify";
-  public static commandLabel: string = "Minify";
-  name: string = MinifyDocumentCommand.commandName;
+  name: string = constants.commands.minifyDocumentCommand.name;
 
   public async command(...args: any[]) {
     if (!vscode.window.activeTextEditor) {

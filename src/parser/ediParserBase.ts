@@ -1,5 +1,6 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
 import { EdiSchema } from "../schemas/schemas";
+import * as constants from "../constants";
 
 export abstract class EdiParserBase {
   private _segments: EdiSegment[];
@@ -44,7 +45,7 @@ export abstract class EdiParserBase {
           results.push(ediSegment);
         }
       } catch (ex: any) {
-        console.error("Edi Support Error", ex);
+        console.error(constants.errors.ediSupportError, ex);
       }
     }
     return results;
@@ -189,7 +190,7 @@ export abstract class EdiParserBase {
     try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
     } catch (ex) {
-      console.error("Failed to import schema: ", ex);
+      console.error(constants.errors.importSchemaError, ex);
       return;
     }
 

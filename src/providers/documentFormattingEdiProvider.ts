@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiType } from "../parser/entities";
 import { VscodeUtils } from "../utils/utils";
+import * as constants from "../constants";
 
 export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
@@ -11,7 +12,7 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
       return;
     }
 
-    const formattedDocumentText = segments.join("\n");
+    const formattedDocumentText = segments.join(constants.ediDocument.lineBreak);
 
     const result: vscode.TextEdit[] = [];
     result.push(new vscode.TextEdit(

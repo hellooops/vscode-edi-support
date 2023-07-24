@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import * as constants from "../constants";
 
 export class SelectTextByPositionCommand implements ICommandable {
-  name: string = "edi-support.selectTextByPosition";
+  name: string = constants.commands.selectTextByPositionCommand.name;
 
   public async command(...args: any[]) {
     if (!args || args.length < 2) {

@@ -2,10 +2,11 @@ import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators }
 import { EdiParserBase, IEdiMessage } from "./ediParserBase";
 import Utils from "../utils/utils";
 import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
+import * as constants from "../constants";
 
 export class EdifactParser extends EdiParserBase {
   public getCustomSegmentParser(segmentId: string): (segment: EdiSegment, segmentStr: string) => Promise<EdiSegment> {
-    if (segmentId === "UNA") {
+    if (segmentId === constants.ediDocument.edifact.segment.UNA) {
       return async (segment, segmentStr) => {
         if (segmentStr.length !== 9) {
           return segment;
@@ -22,20 +23,20 @@ export class EdifactParser extends EdiParserBase {
 
   public getDefaultMessageSeparators(): EdiMessageSeparators {
     const separators = new EdiMessageSeparators();
-    separators.segmentSeparator = "'";
-    separators.dataElementSeparator = "+";
-    separators.componentElementSeparator = ":";
+    separators.segmentSeparator = constants.ediDocument.edifact.defaultSeparators.segmentSeparator;
+    separators.dataElementSeparator = constants.ediDocument.edifact.defaultSeparators.dataElementSeparator;
+    separators.componentElementSeparator = constants.ediDocument.edifact.defaultSeparators.componentElementSeparator;
     return separators;
   }
 
   public parseReleaseAndVersionInternal(): EdiVersion {
     const ediVersion = new EdiVersion();
-    let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator);
+    let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
     let unhStr: string | undefined = undefined;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(this.document)) !== null) {
-      if (match[0].startsWith("UNH")) {
+      if (match[0].startsWith(constants.ediDocument.edifact.segment.UNH)) {
         unhStr = match[0];
         break;
       }
@@ -60,8 +61,8 @@ export class EdifactParser extends EdiParserBase {
 
   public async parseMessage(): Promise<IEdiMessage | undefined> {
     const segments = await this.parseSegments();
-    const unb = segments.find(segment => segment.id === "UNB");
-    const unh = segments.find(segment => segment.id === "UNH");
+    const unb = segments.find(segment => segment.id === constants.ediDocument.edifact.segment.UNB);
+    const unh = segments.find(segment => segment.id === constants.ediDocument.edifact.segment.UNH);
     if (!unb || !unh) {
       return undefined;
     }
@@ -96,20 +97,20 @@ export class EdifactParser extends EdiParserBase {
   }
 
   async afterSchemaLoaded(schema: EdiSchema): Promise<void> {
-    const unh = schema.ediReleaseSchema?.getSegment("UNH");
+    const unh = schema.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNH);
     if (unh) {
       unh.desc = "Message header";
     }
 
-    const unt = schema.ediReleaseSchema?.getSegment("UNT");
+    const unt = schema.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNT);
     if (unt) {
       unt.desc = "Message trailer";
     }
 
     if (schema.ediReleaseSchema?.segments) {
-      schema.ediReleaseSchema.segments["UNA"] = EdiReleaseSchemaSegment.UNA;
-      schema.ediReleaseSchema.segments["UNB"] = EdiReleaseSchemaSegment.UNB;
-      schema.ediReleaseSchema.segments["UNZ"] = EdiReleaseSchemaSegment.UNZ;
+      schema.ediReleaseSchema.segments[constants.ediDocument.edifact.segment.UNA] = EdiReleaseSchemaSegment.UNA;
+      schema.ediReleaseSchema.segments[constants.ediDocument.edifact.segment.UNB] = EdiReleaseSchemaSegment.UNB;
+      schema.ediReleaseSchema.segments[constants.ediDocument.edifact.segment.UNZ] = EdiReleaseSchemaSegment.UNZ;
     }
   }
 
@@ -130,7 +131,7 @@ export class EdifactParser extends EdiParserBase {
       const element = new EdiElement();
       element.segmentName = segment.id;
       element.value = segmentStr[i + 3];
-      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment("UNA")?.elements[i];
+      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNA)?.elements[i];
       element.type = ElementType.dataElement;
       element.startIndex = i + 3;
       element.endIndex = i + 3;
