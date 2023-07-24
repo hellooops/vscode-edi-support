@@ -13,6 +13,7 @@
 - Document minify.
 - Segment hover description.
 - Element hover description.
+- Document Symbols.
 
 
 

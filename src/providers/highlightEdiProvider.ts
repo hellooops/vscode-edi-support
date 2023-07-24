@@ -18,16 +18,16 @@ export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, I
     let highlightStartPosition: vscode.Position;
     let highlightEndPosition: vscode.Position;
     if (selectedElement) {
-      highlightStartPosition = document.positionAt(selectedSegment.startIndex + selectedElement.startIndex);
-      highlightEndPosition = document.positionAt(selectedSegment.startIndex + selectedElement.endIndex + 1);
+      highlightStartPosition = VscodeUtils.getElementStartPosition(document, selectedSegment, selectedElement);
+      highlightEndPosition = VscodeUtils.getElementEndPosition(document, selectedSegment, selectedElement);
     } else {
       if (!selectedSegment?.elements || selectedSegment?.elements.length <= 0) {
         return null;
       }
 
       const firstElement = selectedSegment.elements[0];
-      highlightStartPosition = document.positionAt(selectedSegment.startIndex);
-      highlightEndPosition = document.positionAt(selectedSegment.startIndex + firstElement.startIndex);
+      highlightStartPosition = VscodeUtils.getSegmentStartPosition(document, selectedSegment);
+      highlightEndPosition = VscodeUtils.getElementStartPosition(document, selectedSegment, firstElement);
     }
 
     return [

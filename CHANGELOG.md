@@ -6,9 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+
+## [1.1.2] - 2023-07-24
+
 ### Fixed
 
 - Message version is not longer essential for getting schema.
+- Support Document Symbols
 
 
 ## [1.1.1] - 2023-07-24

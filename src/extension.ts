@@ -12,6 +12,7 @@ import { DocumentFormattingEditEdiProvider } from "./providers/documentFormattin
 import { CodelensEdiProvider } from "./providers/codelensEdiProvider";
 import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
 import { TreeEdiProvider } from "./providers/treeEdiProvider";
+import { DocumentSymbolsEdiProvider } from "./providers/documentSymbolsEdiProvider";
 import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 
@@ -31,6 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
   const treeEdiProvider = new TreeEdiProvider();
   registerProvider(context, treeEdiProvider);
   registerCommand(context, treeEdiProvider, () => treeEdiProvider.refresh());
+
+  registerProvider(context, new DocumentSymbolsEdiProvider());
 
   console.log('Extension "edi-support" is now active!');
 }

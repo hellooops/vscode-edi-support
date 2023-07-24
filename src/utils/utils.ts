@@ -167,10 +167,33 @@ export class VscodeUtils {
     };
   }
 
+  static getSegmentStartPosition(document: vscode.TextDocument, segment: EdiSegment): vscode.Position {
+    return document.positionAt(segment.startIndex);
+  }
+
+  static getSegmentEndPosition(document: vscode.TextDocument, segment: EdiSegment): vscode.Position {
+    return document.positionAt(segment.endIndex + 1);
+  }
+
+  static getSegmentRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range {
+    return new vscode.Range(
+      VscodeUtils.getSegmentStartPosition(document, segment),
+      VscodeUtils.getSegmentEndPosition(document, segment),
+    );
+  }
+
+  static getElementStartPosition(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Position {
+    return document.positionAt(segment.startIndex + element.startIndex);
+  }
+
+  static getElementEndPosition(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Position {
+    return document.positionAt(segment.startIndex + element.endIndex + 1);
+  }
+
   static getElementRange(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Range {
     return new vscode.Range(
-      document.positionAt(segment.startIndex + element.startIndex),
-      document.positionAt(segment.startIndex + element.endIndex + 1),
+      VscodeUtils.getElementStartPosition(document, segment, element),
+      VscodeUtils.getElementEndPosition(document, segment, element),
     );
   }
 }
