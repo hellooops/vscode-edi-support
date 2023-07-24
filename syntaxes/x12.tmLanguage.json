@@ -17,7 +17,7 @@
           "match": "^([A-Z0-9]{1}|[A-Z0-9]{4,})\\*",
           "captures": {
             "1": {
-              "name": "invalid.segment.invalid-id.x12"
+              "name": "invalid.illegal.segment.id.x12"
             }
           }
         },
@@ -35,10 +35,10 @@
           "match": "(\\*)([\\w+\\(\\)'&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<#$]*)",
           "captures": {
             "1": {
-              "name": "meta.operator.segment.data-element.separator.x12"
+              "name": "keyword.control.segment.data-element.separator.x12"
             },
             "2": {
-              "name": "string.other.segment.data-element.x12"
+              "name": "support.variable.segment.data-element.x12"
             }
           }
         },
@@ -47,15 +47,15 @@
           "match": "([:>])([\\w+\\(\\)'&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<#$]*)",
           "captures": {
             "1": {
-              "name": "meta.operator.segment.component-element.separator.x12"
+              "name": "keyword.operator.segment.component-element.separator.x12"
             },
             "2": {
-              "name": "string.other.segment.component-element.x12"
+              "name": "support.other.segment.component-element.x12"
             }
           }
         },
         {
-          "name": "meta.operator.segment.separator.x12",
+          "name": "keyword.other.segment.separator.x12",
           "match": "\\~"
         }
       ]

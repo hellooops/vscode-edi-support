@@ -26,7 +26,7 @@
           "match": "^([A-Z0-9]{1,2}|[A-Z0-9]{4,})\\+",
           "captures": {
             "1": {
-              "name": "invalid.segment.invalid-id.edifact"
+              "name": "invalid.illegal.segment.id.edifact"
             }
           }
         },
@@ -44,10 +44,10 @@
           "match": "(\\+)([\\w\\(\\)\\~&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<>#$]*)",
           "captures": {
             "1": {
-              "name": "meta.operator.segment.data-element.separator.edifact"
+              "name": "keyword.control.segment.data-element.separator.edifact"
             },
             "2": {
-              "name": "string.other.segment.data-element.edifact"
+              "name": "support.variable.segment.data-element.edifact"
             }
           }
         },
@@ -56,15 +56,15 @@
           "match": "(:)([\\w\\(\\)\\~&\"! ,\\-\\./;\\?=%@\\[\\]_\\{\\}\\\\|<>#$]*)",
           "captures": {
             "1": {
-              "name": "meta.operator.segment.component-element.separator.edifact"
+              "name": "keyword.operator.segment.component-element.separator.edifact"
             },
             "2": {
-              "name": "string.other.segment.component-element.edifact"
+              "name": "support.other.segment.component-element.edifact"
             }
           }
         },
         {
-          "name": "meta.operator.segment.separator.edifact",
+          "name": "keyword.other.segment.separator.edifact",
           "match": "\\'"
         }
       ]
