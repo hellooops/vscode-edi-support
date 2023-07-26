@@ -1,6 +1,8 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
+import * as fs from "fs";
+import Utils from "../utils/utils";
 
 export abstract class EdiParserBase {
   private _segments: EdiSegment[];
@@ -115,17 +117,21 @@ export abstract class EdiParserBase {
         element.segmentName = segment.id;
         segment.elements.push(element);
         if (element.ediReleaseSchemaElement?.isComposite()) {
-          element.components = [];
-          subElementIndex++;
-          subElement = new EdiElement();
-          subElement.type = ElementType.componentElement;
-          subElement.startIndex = i;
-          subElement.designatorIndex = `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`;
-          subElement.segmentName = segment.id;
-          subElement.separator = dataElementSeparator;
-          subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
-          element.components = element.components || [];
-          element.components.push(subElement);
+          const nextC: string = i < segmentStr.length - 1 ? segmentStr[i + 1] : undefined;
+          const isElementValueEmpty = nextC === dataElementSeparator || nextC === segmentSeparator || nextC === undefined;
+          if (!isElementValueEmpty) {
+            element.components = [];
+            subElementIndex++;
+            subElement = new EdiElement();
+            subElement.type = ElementType.componentElement;
+            subElement.startIndex = i;
+            subElement.designatorIndex = `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`;
+            subElement.segmentName = segment.id;
+            subElement.separator = dataElementSeparator;
+            subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
+            element.components = element.components || [];
+            element.components.push(subElement);
+          }
         }
       } else if (c === componentElementSeparator) {
         subElementIndex++;
@@ -186,11 +192,19 @@ export abstract class EdiParserBase {
     if (!ediVersion || !ediVersion.release) {
       return;
     }
+
     let releaseSchema = null;
+    try {
+      await fs.promises.access(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`, fs.constants.F_OK);
+    } catch (ex) {
+      console.error(Utils.formatString(constants.errors.schemaFileNotFound, ediVersion.release));
+      return;
+    }
+
     try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
     } catch (ex) {
-      console.error(constants.errors.importSchemaError, ex);
+      console.error(Utils.formatString(constants.errors.importSchemaError, ediVersion.release), ex);
       return;
     }
 

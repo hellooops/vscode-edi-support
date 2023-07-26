@@ -45,6 +45,12 @@ export default class Utils {
 
     return value.toString();
   }
+
+  static formatString(value: string, ...args: string[]): string {
+    return value.replace(/{(\d+)}/g, (match, index) => {
+      return args[index] || "";
+    });
+  }
 }
 
 export class SchemaViewerUtils {

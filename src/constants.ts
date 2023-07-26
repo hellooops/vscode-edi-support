@@ -79,7 +79,8 @@ export namespace explorers {
 export namespace errors {
   export const methodNotImplemented = "Method not implemented.";
   export const ediSupportError = "EDI Support Error";
-  export const importSchemaError = "Failed to import schema";
+  export const importSchemaError = "Failed to import schema {0}";
+  export const schemaFileNotFound = "Schema file {0} not found";
 }
 
 export namespace common {

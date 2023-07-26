@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+
+- Fixed component element parsing bug when the element is empty.
+
 
 ## [1.1.2] - 2023-07-24
 
