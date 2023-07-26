@@ -195,13 +195,6 @@ export abstract class EdiParserBase {
 
     let releaseSchema = null;
     try {
-      await fs.promises.access(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`, fs.constants.F_OK);
-    } catch (ex) {
-      console.error(Utils.formatString(constants.errors.schemaFileNotFound, ediVersion.release));
-      return;
-    }
-
-    try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
     } catch (ex) {
       console.error(Utils.formatString(constants.errors.importSchemaError, ediVersion.release), ex);

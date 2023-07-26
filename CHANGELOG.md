@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.1.4] - 2023-07-26
+
+### Fixed
+
+- Fixed schema import issue.
+
+
 ## [1.1.3] - 2023-07-26
 
 ### Fixed
