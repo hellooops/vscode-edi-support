@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+
+- Fix EDIFACT UNA incorrect parsing and prettify.
+
 
 ## [1.1.4] - 2023-07-26
 

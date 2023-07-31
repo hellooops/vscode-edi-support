@@ -146,7 +146,7 @@ export class EdiReleaseSchemaSegment {
       { Id: "UNA03", Required: true, MinLength: 1, MaxLength: 1, Desc: "Decimal point indicator" },
       { Id: "UNA04", Required: true, MinLength: 1, MaxLength: 1, Desc: "Release character" },
       { Id: "UNA05", Required: true, MinLength: 1, MaxLength: 1, Desc: "Space" },
-      { Id: "UNA06", Required: true, MinLength: 1, MaxLength: 1, Desc: "Segment terminator" },
+      // { Id: "UNA06", Required: true, MinLength: 1, MaxLength: 1, Desc: "Segment terminator" },  // This is supposed to be the segment separator, not including in the elements
     ],
     Purpose: "To start, identify and specify an interchange."
   }, undefined);

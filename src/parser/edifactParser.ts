@@ -127,7 +127,7 @@ export class EdifactParser extends EdiParserBase {
     ediMessageSeparators.componentElementSeparator = segmentStr[3];
     this._separators = ediMessageSeparators;
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       const element = new EdiElement();
       element.segmentName = segment.id;
       element.value = segmentStr[i + 3];
