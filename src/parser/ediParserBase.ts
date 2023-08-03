@@ -167,6 +167,10 @@ export abstract class EdiParserBase {
     return this._separators;
   }
 
+  public setMessageSeparators(separators: EdiMessageSeparators): void {
+    this._separators = separators;
+  }
+
   abstract parseSeparators(): EdiMessageSeparators | null;
 
   public abstract getDefaultMessageSeparators(): EdiMessageSeparators;

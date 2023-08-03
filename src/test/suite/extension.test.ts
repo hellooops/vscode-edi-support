@@ -93,7 +93,7 @@ suite("Extension Test Suite", () => {
     const rawReleaseSchema = await import("./test-files/D96A-sample.json");
     const releaseSchema = new EdiReleaseSchema(rawReleaseSchema);
     assert.strictEqual(releaseSchema.release, "D96A");
-    assert.strictEqual(releaseSchema.qualifiers["Process type identification"]["1"], "Wood preparation");
+    assert.strictEqual(releaseSchema.qualifiers["Process type identification"].find(q => q.value ==="1").desc, "Wood preparation");
 
     const ADR = releaseSchema.segments["ADR"];
     assert.strictEqual(ADR.desc, "ADDRESS");
@@ -133,6 +133,7 @@ suite("Extension Test Suite", () => {
   test("X12 Parse Segment", async () => {
     const documentStr = "SV2*0730*HC>93010*76.56*UN*3~";
     const parser: X12Parser = new X12Parser(documentStr);
+    parser.setMessageSeparators({ segmentSeparator: "~", dataElementSeparator: "*", componentElementSeparator: ">" });
     parser.setEdiVersion(new EdiVersion("00401", "850"));
     const segment: EdiSegment = await parser.parseSegment(documentStr, 0, documentStr.length - 1, "~");
 
@@ -184,7 +185,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[2].endIndex, 22);
     assert.strictEqual(segment.elements[2].type, ElementType.dataElement);
     assert.strictEqual(segment.elements[2].value, "76.56");
-    assert.strictEqual(segment.elements[2].components.length, undefined);
+    assert.strictEqual(segment.elements[2].components, undefined);
 
     // *UN
     assert.strictEqual(segment.elements[3].designatorIndex, "04");
@@ -193,7 +194,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[3].endIndex, 25);
     assert.strictEqual(segment.elements[3].type, ElementType.dataElement);
     assert.strictEqual(segment.elements[3].value, "UN");
-    assert.strictEqual(segment.elements[3].components.length, undefined);
+    assert.strictEqual(segment.elements[3].components, undefined);
 
     // *3
     assert.strictEqual(segment.elements[4].designatorIndex, "05");
@@ -202,7 +203,7 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[4].endIndex, 27);
     assert.strictEqual(segment.elements[4].type, ElementType.dataElement);
     assert.strictEqual(segment.elements[4].value, "3");
-    assert.strictEqual(segment.elements[4].components.length, undefined);
+    assert.strictEqual(segment.elements[4].components, undefined);
   });
 
   test("X12 Parse Edi Message", async () => {
