@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiType } from "../parser/entities";
-import { VscodeUtils } from "../utils/utils";
+import { EdiUtils } from "../utils/ediUtils";
 
 export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, IProvidable {
   async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[] | null | undefined> {
-    const { parser } = VscodeUtils.getEdiParser(document)!;
+    const { parser } = EdiUtils.getEdiParser(document)!;
     const segments = await parser.parseSegments();
     const realPosition = document.offsetAt(new vscode.Position(position.line, position.character));
 
@@ -18,16 +18,16 @@ export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, I
     let highlightStartPosition: vscode.Position;
     let highlightEndPosition: vscode.Position;
     if (selectedElement) {
-      highlightStartPosition = VscodeUtils.getElementStartPosition(document, selectedSegment, selectedElement);
-      highlightEndPosition = VscodeUtils.getElementEndPosition(document, selectedSegment, selectedElement);
+      highlightStartPosition = EdiUtils.getElementStartPosition(document, selectedSegment, selectedElement);
+      highlightEndPosition = EdiUtils.getElementEndPosition(document, selectedSegment, selectedElement);
     } else {
       if (!selectedSegment?.elements || selectedSegment?.elements.length <= 0) {
         return null;
       }
 
       const firstElement = selectedSegment.elements[0];
-      highlightStartPosition = VscodeUtils.getSegmentStartPosition(document, selectedSegment);
-      highlightEndPosition = VscodeUtils.getElementStartPosition(document, selectedSegment, firstElement);
+      highlightStartPosition = EdiUtils.getSegmentStartPosition(document, selectedSegment);
+      highlightEndPosition = EdiUtils.getElementStartPosition(document, selectedSegment, firstElement);
     }
 
     return [

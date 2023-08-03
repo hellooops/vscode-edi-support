@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import Utils, { VscodeUtils } from "../utils/utils";
+import Utils from "../utils/utils";
+import { EdiUtils } from "../utils/ediUtils";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
 import { ICommandable } from "../interfaces/commandable";
 import * as constants from "../constants";
@@ -35,12 +36,12 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     }
 
     if (!element) {
-      const { parser, ediType } = VscodeUtils.getEdiParser(document);
+      const { parser, ediType } = EdiUtils.getEdiParser(document);
       if (ediType === EdiType.UNKNOWN) {
         return;
       }
 
-      let segments = await parser.parseSegments();
+      let segments = await parser!.parseSegments();
 
       return segments.map((segment) => {
         return {
@@ -119,7 +120,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     const segmentDesc = segment.ediReleaseSchemaSegment?.desc ?? "";
     return {
       label: segment.id,
-      iconPath: VscodeUtils.icons.segment,
+      iconPath: EdiUtils.icons.segment,
       description: segmentDesc,
       tooltip: segmentDesc,
       collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
@@ -139,7 +140,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     const elementDesc = element.ediReleaseSchemaElement?.desc ?? "";
     return {
       label: element.getDesignator(),
-      iconPath: VscodeUtils.icons.element,
+      iconPath: EdiUtils.icons.element,
       description: elementDesc,
       tooltip: elementDesc,
       collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
@@ -154,7 +155,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
   private getElementAttributeTreeItem(elementAttribute: ElementAttribute): vscode.TreeItem {
     return {
       label: elementAttribute.key,
-      iconPath: VscodeUtils.icons.elementAttribute,
+      iconPath: EdiUtils.icons.elementAttribute,
       description: elementAttribute.value,
       tooltip: elementAttribute.value,
       collapsibleState: vscode.TreeItemCollapsibleState.None,
@@ -166,7 +167,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       return;
     }
 
-    if (VscodeUtils.isX12(e?.document) || VscodeUtils.isEdifact(e?.document)) {
+    if (EdiUtils.isX12(e?.document) || EdiUtils.isEdifact(e?.document)) {
       this.refresh();
     }
   }

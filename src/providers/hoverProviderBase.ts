@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiVersion, EdiElement, EdiSegment, EdiType } from "../parser/entities";
-import { SchemaViewerUtils, StringBuilder, VscodeUtils } from "../utils/utils";
+import { StringBuilder } from "../utils/utils";
+import { SchemaViewerUtils } from "../utils/schemaViewerUtils";
+import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 
 export abstract class HoverProviderBase implements vscode.HoverProvider, IProvidable {
@@ -9,7 +11,11 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableHover) !== true) {
       return null;
     }
-    const { parser, ediType } = VscodeUtils.getEdiParser(document);
+    const { parser, ediType } = EdiUtils.getEdiParser(document);
+    if (!parser) {
+      return null;
+    }
+    
     let ediVersion: EdiVersion = parser.parseReleaseAndVersion();
     let segments = await parser.parseSegments();
     let realPosition = document.offsetAt(

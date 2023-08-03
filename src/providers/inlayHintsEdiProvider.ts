@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
-import { VscodeUtils } from "../utils/utils";
+import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 
 export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvidable {
@@ -13,7 +13,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
       return [];
     }
     
-    const { parser } = VscodeUtils.getEdiParser(document)!;
+    const { parser } = EdiUtils.getEdiParser(document)!;
     if (!parser) {
       return [];
     }

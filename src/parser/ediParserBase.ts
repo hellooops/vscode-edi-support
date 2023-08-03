@@ -1,7 +1,6 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
-import * as fs from "fs";
 import Utils from "../utils/utils";
 
 export abstract class EdiParserBase {

@@ -1,6 +1,6 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
-import { VscodeUtils } from "../utils/utils";
+import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 
 export class PrettifyDocumentCommand implements ICommandable {
@@ -14,7 +14,7 @@ export class PrettifyDocumentCommand implements ICommandable {
     let document = vscode.window.activeTextEditor.document;
     const documentContent = document.getText();
 
-    const { parser, ediType } = VscodeUtils.getEdiParser(document)!;
+    const { parser, ediType } = EdiUtils.getEdiParser(document)!;
 
     let segments = await parser.parseSegments();
     if (!segments || segments.length <= 0) {

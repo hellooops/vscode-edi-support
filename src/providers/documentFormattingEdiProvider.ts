@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import { EdiType } from "../parser/entities";
-import { VscodeUtils } from "../utils/utils";
+import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 
 export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
-    const { parser } = VscodeUtils.getEdiParser(document);
+    const { parser } = EdiUtils.getEdiParser(document);
     let segments = await parser.parseSegments();
     if (!segments || segments.length <= 0) {
       return;
