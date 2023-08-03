@@ -29,7 +29,7 @@ export class EdifactParser extends EdiParserBase {
     return separators;
   }
 
-  public parseReleaseAndVersionInternal(): EdiVersion {
+  public async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
     const ediVersion = new EdiVersion();
     let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");

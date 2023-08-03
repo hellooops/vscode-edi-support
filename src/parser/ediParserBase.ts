@@ -9,23 +9,38 @@ export abstract class EdiParserBase {
   document: string;
   schema: EdiSchema;
   _separators?: EdiMessageSeparators;
+
+  _parsingRleaseAndVersion?: boolean = false;
   public constructor(document: string) {
     this.document = document;
   }
 
-  public parseReleaseAndVersion(): EdiVersion {
+  public async parseReleaseAndVersion(): Promise<EdiVersion> {
+    if (this._parsingRleaseAndVersion) {
+      return;
+    }
+
     if (!this._ediVersion) {
-      this._ediVersion = this.parseReleaseAndVersionInternal();
+      this._parsingRleaseAndVersion = true;
+      try {
+        this._ediVersion = await this.parseReleaseAndVersionInternal();
+      } finally {
+        this. _parsingRleaseAndVersion = false;
+      }
     }
 
     return this._ediVersion;
   }
 
-  public abstract parseReleaseAndVersionInternal(): EdiVersion;
+  public abstract parseReleaseAndVersionInternal(): Promise<EdiVersion>;
 
   public abstract parseMessage(): Promise<IEdiMessage | undefined>;
 
-  public async parseSegments(): Promise<EdiSegment[]> {
+  public async parseSegments(force: boolean = false): Promise<EdiSegment[]> {
+    if (force) {
+      return await this.parseSegmentsInternal();
+    }
+    
     if (!this._segments) {
       this._segments = await this.parseSegmentsInternal();
     }
@@ -191,7 +206,7 @@ export abstract class EdiParserBase {
       return;
     }
 
-    const ediVersion = this.parseReleaseAndVersion();
+    const ediVersion = await this.parseReleaseAndVersion();
     if (!ediVersion || !ediVersion.release) {
       return;
     }

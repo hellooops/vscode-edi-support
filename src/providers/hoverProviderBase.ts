@@ -15,8 +15,8 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     if (!parser) {
       return null;
     }
-    
-    let ediVersion: EdiVersion = parser.parseReleaseAndVersion();
+
+    let ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
     let segments = await parser.parseSegments();
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)

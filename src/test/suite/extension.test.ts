@@ -9,10 +9,10 @@ import { EdiReleaseSchema } from "../../schemas/schemas";
 suite("Extension Test Suite", () => {
   vscode.window.showInformationMessage("Start all tests.");
 
-  test("Edifact Parse Version", () => {
+  test("Edifact Parse Version", async () => {
     const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
     const parser: EdifactParser = new EdifactParser(documentStr);
-    const ediVersion: EdiVersion = parser.parseReleaseAndVersion();
+    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
 
     assert.strictEqual(ediVersion.release, "D96A");
     assert.strictEqual(ediVersion.version, "ORDERS");
@@ -118,13 +118,37 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ADR0101.definition, "To specify the purpose of the address.");
   });
 
-  test("X12 Parse Version", () => {
+  test("X12 Parse Version", async () => {
     const documentStr = `
     ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     ST*850*0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = parser.parseReleaseAndVersion();
+    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+
+    assert.strictEqual(ediVersion.release, "00401");
+    assert.strictEqual(ediVersion.version, "850");
+  });
+
+  test("X12 Parse Version 2", async () => {
+    const documentStr = `
+    ISA+00+          +00+          +ZZ+DERICL         +ZZ+TEST01         +210517+0643+U+00401+000007080+0+P+>~
+    GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
+    ST+850+0001~`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+
+    assert.strictEqual(ediVersion.release, "00401");
+    assert.strictEqual(ediVersion.version, "850");
+  });
+
+  test("X12 Parse Version 3", async () => {
+    const documentStr = `
+    ISA+00+          +00+          +ZZ+DERICL         +ZZ+TEST01         +210517+0643+U+00400+000007080+0+P+>~
+    GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
+    ST+850+0001~`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");

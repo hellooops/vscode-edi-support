@@ -44,44 +44,38 @@ export class X12Parser extends EdiParserBase {
     return separators;
   }
 
-  public parseReleaseAndVersionInternal(): EdiVersion {
+  public async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
     // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     // GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     // ST*850*0001~
     const ediVersion = new EdiVersion();
-    let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator);
-    let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
-    let isaStr: string | undefined = undefined;
-    let stStr: string | undefined = undefined;
-    let match: RegExpExecArray | null;
-    while ((match = regex.exec(this.document)) !== null) {
-      if (match[0].startsWith(constants.ediDocument.x12.segment.ISA)) {
-        isaStr = match[0];
-        if (isaStr && stStr) {
-          break;
-        }
-      } else if (match[0].startsWith(constants.ediDocument.x12.segment.ST)) {
-        stStr = match[0];
-        if (isaStr && stStr) {
-          break;
-        }
+    const segments = await this.parseSegments(true);
+
+    // Use GS segment to get edi release because ISA12 is a backward compatible release, see https://stackoverflow.com/questions/55401075/edi-headers-why-would-isa12-and-gs8-both-have-a-version-number
+    // Eg: ISA segment version is 00400 while GS segment version is 00401
+    const gsSegment = segments.find(s => s.id === constants.ediDocument.x12.segment.GS);
+    if (gsSegment && gsSegment.elements && gsSegment.elements.length >= 8) {
+      const gsEdiRelease = gsSegment.elements[7].value;
+      if (gsEdiRelease && gsEdiRelease.length >= 6) {
+        ediVersion.release = gsEdiRelease.substring(0, 5);
       }
     }
 
-    if(isaStr) {
-      const isaSegmentFrags: string[] = isaStr.split(/\*/);
-      if (isaSegmentFrags.length >= 13) {
-        ediVersion.release = isaSegmentFrags[12];
+    if (!ediVersion.release) {
+      const isaSegment = segments.find(s => s.id === constants.ediDocument.x12.segment.ISA);
+      if (!isaSegment || !isaSegment.elements || isaSegment.elements.length < 12) {
+        return ediVersion;
       }
+  
+      ediVersion.release = isaSegment.elements[11].value;
     }
 
-    if(stStr) {
-      const stSegmentFrags: string[] = stStr.split(/\*/);
-      if (stSegmentFrags.length >= 2) {
-        ediVersion.version = stSegmentFrags[1];
-      }
+    const stSegment = segments.find(s => s.id === constants.ediDocument.x12.segment.ST);
+    if (!stSegment || !stSegment.elements || stSegment.elements.length < 1) {
+      return ediVersion;
     }
 
+    ediVersion.version = stSegment.elements[0].value;
     return ediVersion;
   }
 
