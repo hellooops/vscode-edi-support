@@ -75,6 +75,15 @@ export class EdiElement {
     return `${this.segmentName}${this.designatorIndex}`;
   }
 
+  public getDesignatorWithId(): string {
+    const elementId = this.ediReleaseSchemaElement?.id;
+    if (!elementId) {
+      return this.getDesignator();
+    }
+
+    return `${this.getDesignator()}(${elementId})`;
+  }
+
   public getErrors(): DiagnosticError[] {
     if (this.components && this.components.length > 0) {
       return this.components.reduce((errors: DiagnosticError[], component: EdiElement) => {

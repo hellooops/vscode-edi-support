@@ -24,8 +24,8 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
       const elementSymbols = segment?.elements?.map(element => {
         const elementRange = EdiUtils.getElementRange(document, segment, element);
         const elementSymbol = new vscode.DocumentSymbol(
-          element.getDesignator(),
-          element?.ediReleaseSchemaElement?.desc || element.getDesignator(),
+          element.getDesignatorWithId(),
+          element?.ediReleaseSchemaElement?.desc || element.getDesignatorWithId(),
           vscode.SymbolKind.Field,
           elementRange,
           elementRange, 
@@ -34,8 +34,8 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
         const componentSymbols = element?.components?.map(componentElement => {
           const componentElementRange = EdiUtils.getElementRange(document, segment, componentElement);
           const componentSymbol = new vscode.DocumentSymbol(
-            componentElement.getDesignator(),
-            componentElement?.ediReleaseSchemaElement?.desc || componentElement.getDesignator(),
+            componentElement.getDesignatorWithId(),
+            componentElement?.ediReleaseSchemaElement?.desc || componentElement.getDesignatorWithId(),
             vscode.SymbolKind.Property,
             componentElementRange,
             componentElementRange, 

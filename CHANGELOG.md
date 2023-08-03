@@ -7,6 +7,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.1.6] - 2023-08-03
+
+### Added
+
+- Support x12 different release in ISA and GS.
+
+### Changed
+
+- Also show element id in explorer and documentSymbols.
+
+
 ## [1.1.5] - 2023-07-31
 
 ### Fixed

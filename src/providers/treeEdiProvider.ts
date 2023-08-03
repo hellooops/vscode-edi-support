@@ -139,7 +139,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
   private getCompositeElementTreeItem(segment: EdiSegment, element: EdiElement): vscode.TreeItem {
     const elementDesc = element.ediReleaseSchemaElement?.desc ?? "";
     return {
-      label: element.getDesignator(),
+      label: element.getDesignatorWithId(),
       iconPath: EdiUtils.icons.element,
       description: elementDesc,
       tooltip: elementDesc,
