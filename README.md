@@ -4,7 +4,7 @@
 
   <h1>EDI Support for VSCode</h1>
 
-  [![Visual Studio Marketplace](https://img.shields.io/badge/Visual%20Studio-Marketplace-007acc.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
+  [![Visual Studio Marketplace](https://img.shields.io/badge/Visual%20Studio-Marketplace-007acc.svg)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
   [![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
   [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
   [![Visual Studio Marketplace Rating (Stars)](https://img.shields.io/visual-studio-marketplace/stars/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
