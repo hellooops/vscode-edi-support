@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./docs/images/icon-600x600.png" alt="Project Icon" width="128" height="128" />
+  <img src="./docs/images/icon-600x600.png" alt="Project Icon" width="128" height="128" />
 
   <h1>EDI Support for VSCode</h1>
 
@@ -9,6 +9,8 @@
   [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
   [![Visual Studio Marketplace Rating (Stars)](https://img.shields.io/visual-studio-marketplace/stars/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
   [![GitHub stars](https://img.shields.io/github/stars/hellooops/vscode-edi-support)](https://github.com/hellooops/vscode-edi-support)
+
+  [![GitHub stars](https://img.shields.io/badge/github-Report_A_Bug-blue?style=flat-square&logo=github)](https://github.com/hellooops/vscode-edi-support/issues/new)
 
 </div>
 
