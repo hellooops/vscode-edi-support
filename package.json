@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "Edi Support",
   "description": "Language support for X12/HIPAA and EDIFACT",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "publisher": "DericLee",
   "author": {
     "email": "slxs1415@163.com",
@@ -47,7 +47,8 @@
         ],
         "extensions": [
           ".edi",
-          ".x12"
+          ".x12",
+          ".ansi"
         ],
         "configuration": "./language-configuration.json",
         "firstLine": "^(ISA|GS|ST)\\*",

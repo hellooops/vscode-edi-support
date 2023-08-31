@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.1.7] - 2023-08-31
+
+### Added
+
+- Support `.ansi` file extension for x12.
+
+
 ## [1.1.6] - 2023-08-03
 
 ### Added
