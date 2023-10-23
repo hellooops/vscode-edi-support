@@ -60,6 +60,13 @@ export class DiagnosticError {
   }
 }
 
+export interface DiagnoscticsContext {
+  segment: EdiSegment;
+  element: EdiElement;
+  ediType: string;
+  segments: EdiSegment[]
+}
+
 export class EdiElement {
   public type: ElementType;
   public value: string;
@@ -84,18 +91,19 @@ export class EdiElement {
     return `${this.getDesignator()}(${elementId})`;
   }
 
-  public getErrors(): DiagnosticError[] {
+  public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors = this.getCustomElementErrors(context);
+
     if (this.components && this.components.length > 0) {
       return this.components.reduce((errors: DiagnosticError[], component: EdiElement) => {
-        return errors.concat(component.getErrors());
-      }, []);
+        return errors.concat(component.getErrors(context));
+      }, errors);
     }
 
     if (!this.ediReleaseSchemaElement) {
-      return [];
+      return errors;
     }
 
-    const errors: DiagnosticError[] = [];
     if (this.value && this.value.length > this.ediReleaseSchemaElement.maxLength) {
       errors.push(
         new DiagnosticError(
@@ -136,6 +144,71 @@ export class EdiElement {
           );
         }
       }
+    }
+
+    return errors;
+  }
+
+  getCustomElementErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors: DiagnosticError[] = [];
+    if (context.ediType === EdiType.X12) {
+      if (context.element.getDesignator() === "SE01") {
+        errors.push(...this.getErrors_SE01(context));
+      }
+    } else if (context.ediType === EdiType.EDIFACT) {
+      if (context.element.getDesignator() === "UNT01") {
+        errors.push(...this.getErrors_UNT01(context));
+      }
+    }
+
+    return errors;
+  }
+
+  getErrors_SE01(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors: DiagnosticError[] = [];
+    const startSegmentIndex = context.segments.findIndex(segment => segment.id === "ST");
+    if (startSegmentIndex === -1) {
+      return errors;
+    }
+
+    const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
+    if (startSegmentIndex === -1) {
+      return errors;
+    }
+    // To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)
+    const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
+    if (context.element.value !== valueExpected) {
+      errors.push(
+        new DiagnosticError(
+          `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
+          "Wrong SE01 value"
+        )
+      );
+    }
+
+    return errors;
+  }
+
+  getErrors_UNT01(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors: DiagnosticError[] = [];
+    const startSegmentIndex = context.segments.findIndex(segment => segment.id === "UNH");
+    if (startSegmentIndex === -1) {
+      return errors;
+    }
+
+    const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
+    if (startSegmentIndex === -1) {
+      return errors;
+    }
+    // Control count of number of segments in a message.
+    const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
+    if (context.element.value !== valueExpected) {
+      errors.push(
+        new DiagnosticError(
+          `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
+          "Wrong UNT01 value"
+        )
+      );
     }
 
     return errors;

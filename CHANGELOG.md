@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.1.8] - 2023-10-23
+
+### Added
+
+- Support segments count check for X12-CTT01 and EDIFACT-UNT01.
+
+
 ## [1.1.7] - 2023-08-31
 
 ### Added

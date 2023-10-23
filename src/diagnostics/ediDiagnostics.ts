@@ -1,8 +1,12 @@
 import * as vscode from "vscode";
-import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
+import { EdiType, type DiagnoscticsContext } from "../parser/entities";
 import { IDiagnosticsable } from "../interfaces/diagnosticsable";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
+
+interface VscodeDiagnoscticsContext extends DiagnoscticsContext {
+  document: vscode.TextDocument;
+}
 
 export class EdiDiagnosticsMgr implements IDiagnosticsable {
   async refreshDiagnostics(document: vscode.TextDocument, ediDiagnostics: vscode.DiagnosticCollection): Promise<void> {
@@ -23,7 +27,14 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
       }
 
       for (let element of segment.elements) {
-        const elementDiagnostic = this.getElementDiagnostic(document, segment, element);
+        const diagnoscticsContext: VscodeDiagnoscticsContext = {
+          document,
+          segment,
+          element,
+          ediType,
+          segments
+        };
+        const elementDiagnostic = this.getElementDiagnostic(diagnoscticsContext);
         if (elementDiagnostic?.length > 0) {
           diagnostics.push(...elementDiagnostic);
         }
@@ -33,16 +44,16 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     ediDiagnostics.set(document.uri, diagnostics);
   }
 
-  getElementDiagnostic(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Diagnostic[] {
-    if (!element?.ediReleaseSchemaElement) {
+  getElementDiagnostic(context: VscodeDiagnoscticsContext): vscode.Diagnostic[] {
+    if (!context.element?.ediReleaseSchemaElement) {
       return [];
     }
 
     const diagnostics: vscode.Diagnostic[] = [];
-    const elementErrors = element.getErrors();
+    const elementErrors = context.element.getErrors(context);
     for (let elementError of elementErrors) {
       const diagnostic = new vscode.Diagnostic(
-        EdiUtils.getElementRange(document, segment, element),
+        EdiUtils.getElementRange(context.document, context.segment, context.element),
         elementError.error,
         vscode.DiagnosticSeverity.Error
       );
