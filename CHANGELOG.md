@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.1.9] - 2023-11-03
+
+### Fixed
+
+- Fix parsing escaped element and segment delimiter according to UNA release character.
+
+
 ## [1.1.8] - 2023-10-23
 
 ### Added

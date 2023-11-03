@@ -18,7 +18,19 @@ export class EdifactParser extends EdiParserBase {
   }
 
   parseSeparators(): EdiMessageSeparators | null {
-    return null;
+    const document = this.document.trim();
+    if (!document || document.length < 9 || !document.startsWith(constants.ediDocument.edifact.segment.UNA)) {
+      return null;
+    }
+
+    const ediMessageSeparators = new EdiMessageSeparators();
+    ediMessageSeparators.segmentSeparator = document[8];
+    ediMessageSeparators.dataElementSeparator = document[4];
+    ediMessageSeparators.componentElementSeparator = document[3];
+    ediMessageSeparators.releaseCharacter = document[6];
+    this._separators = ediMessageSeparators;
+    
+    return ediMessageSeparators;
   }
 
   public getDefaultMessageSeparators(): EdiMessageSeparators {
@@ -26,6 +38,7 @@ export class EdifactParser extends EdiParserBase {
     separators.segmentSeparator = constants.ediDocument.edifact.defaultSeparators.segmentSeparator;
     separators.dataElementSeparator = constants.ediDocument.edifact.defaultSeparators.dataElementSeparator;
     separators.componentElementSeparator = constants.ediDocument.edifact.defaultSeparators.componentElementSeparator;
+    separators.releaseCharacter = constants.ediDocument.edifact.defaultSeparators.releaseCharacter;
     return separators;
   }
 
@@ -125,6 +138,7 @@ export class EdifactParser extends EdiParserBase {
     ediMessageSeparators.segmentSeparator = segmentStr[8];
     ediMessageSeparators.dataElementSeparator = segmentStr[4];
     ediMessageSeparators.componentElementSeparator = segmentStr[3];
+    ediMessageSeparators.releaseCharacter = segmentStr[6];
     this._separators = ediMessageSeparators;
 
     for (let i = 0; i < 5; i++) {

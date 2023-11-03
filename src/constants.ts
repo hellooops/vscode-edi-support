@@ -37,7 +37,7 @@ export namespace ediDocument {
     defaultSeparators: {
       segmentSeparator: "~",
       dataElementSeparator: "*",
-      componentElementSeparator: ":"
+      componentElementSeparator: ":",
     }
   };
   export const edifact = {
@@ -52,7 +52,8 @@ export namespace ediDocument {
     defaultSeparators: {
       segmentSeparator: "'",
       dataElementSeparator: "+",
-      componentElementSeparator: ":"
+      componentElementSeparator: ":",
+      releaseCharacter: "?"
     }
   };
 }

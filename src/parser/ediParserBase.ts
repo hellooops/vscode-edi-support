@@ -49,9 +49,15 @@ export abstract class EdiParserBase {
   }
 
   private async parseSegmentsInternal(): Promise<EdiSegment[]> {
-    let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
-    let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
-
+    const separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
+    const releaseCharacter = this.escapeCharRegex(this.getMessageSeparators().releaseCharacter!);
+    let regexPattern: string;
+    if (releaseCharacter) {
+      regexPattern = `\\b([\\s\\S]*?)((?<!${releaseCharacter})${separater})`;
+    } else {
+      regexPattern = `\\b([\\s\\S]*?)(${separater})`;
+    }
+    const regex = new RegExp(regexPattern, "g");
     const results: EdiSegment[] = [];
     let match: RegExpExecArray | null;
     while ((match = regex.exec(this.document)) !== null) {
@@ -92,12 +98,12 @@ export abstract class EdiParserBase {
     let elementIndex = 0;
     let subElementIndex = 0;
     let elementDesignator: string | undefined = undefined;
-    const segmentSeparator = this.getMessageSeparators().segmentSeparator;
-    const dataElementSeparator = this.getMessageSeparators().dataElementSeparator;
-    const componentElementSeparator = this.getMessageSeparators().componentElementSeparator;
+    const { segmentSeparator, dataElementSeparator, componentElementSeparator, releaseCharacter } = this.getMessageSeparators();
     for (let i = segment.id.length; i < segmentStr.length; i++) {
-      const c: string = segmentStr[i];
-      if (c === dataElementSeparator || c === segmentSeparator) {
+      const isSegmentSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, segmentSeparator, releaseCharacter);
+      const isDataElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, dataElementSeparator, releaseCharacter);
+      const isComponentElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, componentElementSeparator, releaseCharacter);
+      if (isDataElementSeparator || isSegmentSeparator) {
         if (element) {
           element.endIndex = i - 1;
           element.value = segmentStr.substring(element.startIndex + 1, element.endIndex + 1);
@@ -111,7 +117,7 @@ export abstract class EdiParserBase {
         }
 
         subElementIndex = 0;
-      } else if (c === componentElementSeparator) {
+      } else if (isComponentElementSeparator) {
         if (subElement) {
           subElement.endIndex = i - 1;
           subElement.value = segmentStr.substring(subElement.startIndex + 1, subElement.endIndex + 1);
@@ -119,7 +125,7 @@ export abstract class EdiParserBase {
         }
       }
 
-      if (c === dataElementSeparator) {
+      if (isDataElementSeparator) {
         elementIndex++;
         element = new EdiElement();
         element.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1];
@@ -147,7 +153,7 @@ export abstract class EdiParserBase {
             element.components.push(subElement);
           }
         }
-      } else if (c === componentElementSeparator) {
+      } else if (isComponentElementSeparator) {
         subElementIndex++;
         subElement = new EdiElement();
         subElement.type = ElementType.componentElement;
@@ -162,6 +168,15 @@ export abstract class EdiParserBase {
     }
 
     return segment;
+  }
+
+  private static isCharWithoutEscape(str: string, i: number, char: string, escapeChar: string): boolean {
+    if (i < 0 || i >= str.length) return false;
+    if (i === 0 || !escapeChar) {
+      return str[i] === char;
+    }
+
+    return str[i] === char && str[i - 1] !== escapeChar;
   }
 
   public abstract getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined;
@@ -226,7 +241,11 @@ export abstract class EdiParserBase {
 
   abstract afterSchemaLoaded(schema: EdiSchema): Promise<void>;
 
-  escapeCharRegex(str: string): string {
+  escapeCharRegex(str: string | undefined | null): string {
+    if (str === undefined || str === null) {
+      return str;
+    }
+
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   }
 

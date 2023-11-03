@@ -227,6 +227,7 @@ export class EdiMessageSeparators {
   public segmentSeparator?: string;
   public dataElementSeparator?: string;
   public componentElementSeparator?: string;
+  public releaseCharacter?: string; // escape char
 }
 
 export class EdiType {

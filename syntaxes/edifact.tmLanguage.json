@@ -65,7 +65,7 @@
         },
         {
           "name": "keyword.other.segment.separator.edifact",
-          "match": "\\'"
+          "match": "(?<!\\?)\\'"
         }
       ]
     }
