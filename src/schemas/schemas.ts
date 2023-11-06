@@ -64,6 +64,8 @@ export class EdiReleaseSchemaElement {
   public definition: string;
   public components: EdiReleaseSchemaElement[];
 
+  public mock: boolean;
+
   constructor(raw: any, schema: EdiReleaseSchema | undefined) {
     this.id = raw.Id;
     this.desc = raw.Desc;
@@ -75,6 +77,7 @@ export class EdiReleaseSchemaElement {
     this.definition = raw.Definition;
     this.components = raw.Components?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
     this._schema = schema;
+    this.mock = !!raw.mock;
   }
 
   public isComposite() : boolean {
@@ -137,18 +140,21 @@ export class EdiReleaseSchemaSegment {
   public desc: string;
   public purpose: string;
   public elements: EdiReleaseSchemaElement[];
+
+  public mock: boolean;
   // EDIFACT
   public static UNA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Delimiter String Advice",
     Elements: [
-      { Id: "UNA01", Required: true, MinLength: 1, MaxLength: 1, Desc: "Sub-element delimiter" },
-      { Id: "UNA02", Required: true, MinLength: 1, MaxLength: 1, Desc: "Data element delimiter" },
-      { Id: "UNA03", Required: true, MinLength: 1, MaxLength: 1, Desc: "Decimal point indicator" },
-      { Id: "UNA04", Required: true, MinLength: 1, MaxLength: 1, Desc: "Release character" },
-      { Id: "UNA05", Required: true, MinLength: 1, MaxLength: 1, Desc: "Space" },
+      { Id: "UNA01", Required: true, MinLength: 1, MaxLength: 1, Desc: "Sub-element delimiter", mock: true },
+      { Id: "UNA02", Required: true, MinLength: 1, MaxLength: 1, Desc: "Data element delimiter", mock: true },
+      { Id: "UNA03", Required: true, MinLength: 1, MaxLength: 1, Desc: "Decimal point indicator", mock: true },
+      { Id: "UNA04", Required: true, MinLength: 1, MaxLength: 1, Desc: "Release character", mock: true },
+      { Id: "UNA05", Required: true, MinLength: 1, MaxLength: 1, Desc: "Space", mock: true },
       // { Id: "UNA06", Required: true, MinLength: 1, MaxLength: 1, Desc: "Segment terminator" },  // This is supposed to be the segment separator, not including in the elements
     ],
-    Purpose: "To start, identify and specify an interchange."
+    Purpose: "To start, identify and specify an interchange.",
+    mock: true
   }, undefined);
   public static UNB: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange header",
@@ -158,64 +164,71 @@ export class EdiReleaseSchemaSegment {
         Desc: "Syntax identifier",
         Required: true,
         Components: [
-          { Id: "0001", Desc: "Syntax identifier", DataType: "AN", Required: true, MinLength: 4, MaxLength: 4, Definition: "Coded identification of the agency controlling a syntax and syntax level used in an interchange." },
-          { Id: "0002", Desc: "Syntax version number", DataType: "N", Required: true, MinLength: 1, MaxLength: 1, Definition: "Version number of the syntax identified in the syntax identifier (0001)" },
-        ]
+          { Id: "0001", Desc: "Syntax identifier", DataType: "AN", Required: true, MinLength: 4, MaxLength: 4, Definition: "Coded identification of the agency controlling a syntax and syntax level used in an interchange.", mock: true },
+          { Id: "0002", Desc: "Syntax version number", DataType: "N", Required: true, MinLength: 1, MaxLength: 1, Definition: "Version number of the syntax identified in the syntax identifier (0001)", mock: true },
+        ],
+        mock: true
       },
       {
         Id: "S002",
         Desc: "Interchange sender",
         Required: true,
         Components: [
-          { Id: "0004", Desc: "Sender identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded representation of the sender of a data interchange." },
-          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners." },
-          { Id: "0008", Desc: "Address for reverse routing", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Address specified by the sender of an interchange to be included by the recipient in the response interchanges to facilitate internal routing." },
-        ]
+          { Id: "0004", Desc: "Sender identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded representation of the sender of a data interchange.", mock: true },
+          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners.", mock: true },
+          { Id: "0008", Desc: "Address for reverse routing", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Address specified by the sender of an interchange to be included by the recipient in the response interchanges to facilitate internal routing.", mock: true },
+        ],
+        mock: true
       },
       {
         Id: "S003",
         Desc: "Interchange recipient",
         Required: true,
         Components: [
-          { Id: "0010", Desc: "Recipient identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded representation of the recipient of a data interchange." },
-          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners." },
-          { Id: "0014", Desc: "Routing address", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Address specified by the recipient of an interchange to be included by the sender and used by the recipient for routing of received interchanges inside his organization." },
-        ]
+          { Id: "0010", Desc: "Recipient identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded representation of the recipient of a data interchange.", mock: true },
+          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners.", mock: true },
+          { Id: "0014", Desc: "Routing address", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Address specified by the recipient of an interchange to be included by the sender and used by the recipient for routing of received interchanges inside his organization.", mock: true },
+        ],
+        mock: true
       },
       {
         Id: "S004",
         Desc: "Date/time of preparation",
         Required: true,
         Components: [
-          { Id: "0017", Desc: "Date of preparation", DataType: "N", Required: true, MinLength: 6, MaxLength: 6, Definition: "Local date when an interchange or a functional group was prepared." },
-          { Id: "0019", Desc: "Time of preparation", DataType: "N", Required: false, MinLength: 4, MaxLength: 4, Definition: "Local time of day when an interchange or a functional group was prepared." },
-        ]
+          { Id: "0017", Desc: "Date of preparation", DataType: "N", Required: true, MinLength: 6, MaxLength: 6, Definition: "Local date when an interchange or a functional group was prepared.", mock: true },
+          { Id: "0019", Desc: "Time of preparation", DataType: "N", Required: false, MinLength: 4, MaxLength: 4, Definition: "Local time of day when an interchange or a functional group was prepared.", mock: true },
+        ],
+        mock: true
       },
-      { Id: "0020", Desc: "Interchange control reference", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference assigned by the sender to an interchange." },
+      { Id: "0020", Desc: "Interchange control reference", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference assigned by the sender to an interchange.", mock: true },
       {
         Id: "S005",
         Desc: "Recipient's reference, password",
         Required: true,
         Components: [
-          { Id: "0022", Desc: "Recipient's reference/password", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference assigned by the recipient to the data interchange or a password to the recipient's system or to a third party network as specified in the partners interchange agreement." },
-          { Id: "0025", Desc: "Recipient's reference/password qualifier", DataType: "AN", Required: false, MinLength: 2, MaxLength: 2, Definition: "Qualifier for the recipient's reference or password." },
-        ]
+          { Id: "0022", Desc: "Recipient's reference/password", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference assigned by the recipient to the data interchange or a password to the recipient's system or to a third party network as specified in the partners interchange agreement.", mock: true },
+          { Id: "0025", Desc: "Recipient's reference/password qualifier", DataType: "AN", Required: false, MinLength: 2, MaxLength: 2, Definition: "Qualifier for the recipient's reference or password.", mock: true },
+        ],
+        mock: true
       },
-      { Id: "0026", Desc: "Application reference", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Identification of the application area assigned by the sender, to which the messages in the interchange relate e.g. the message identifier if all the messages in the interchange are of the same type." },
-      { Id: "0029", Desc: "Processing priority code", DataType: "AN", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender requesting processing priority for the interchange." },
-      { Id: "0031", Desc: "Acknowledgement request", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender for acknowledgement of the interchange." },
-      { Id: "0032", Desc: "Communications agreement ID", DataType: "AN", Required: false, MinLength: 1, MaxLength: 35, Definition: "Identification by name or code of the type of agreement under which the interchange takes place." },
-      { Id: "0035", Desc: "Test indicator", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Indication that the interchange is a test." },
+      { Id: "0026", Desc: "Application reference", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Identification of the application area assigned by the sender, to which the messages in the interchange relate e.g. the message identifier if all the messages in the interchange are of the same type.", mock: true },
+      { Id: "0029", Desc: "Processing priority code", DataType: "AN", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender requesting processing priority for the interchange.", mock: true },
+      { Id: "0031", Desc: "Acknowledgement request", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender for acknowledgement of the interchange.", mock: true },
+      { Id: "0032", Desc: "Communications agreement ID", DataType: "AN", Required: false, MinLength: 1, MaxLength: 35, Definition: "Identification by name or code of the type of agreement under which the interchange takes place.", mock: true },
+      { Id: "0035", Desc: "Test indicator", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Indication that the interchange is a test.", mock: true },
     ],
-    Purpose: "To start, identify and specify an interchange."
+    Purpose: "To start, identify and specify an interchange.",
+    mock: true
   }, undefined);
   public static UNZ: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange trailer",
     Elements: [
-      { Id: "0036", Required: true, MinLength: 1, MaxLength: 6, Desc: "Interchange control count" },
-      { Id: "0020", Required: true, MinLength: 1, MaxLength: 14, Desc: "Interchange control reference" },
+      { Id: "0036", Required: true, MinLength: 1, MaxLength: 6, Desc: "Interchange control count", mock: true },
+      { Id: "0020", Required: true, MinLength: 1, MaxLength: 14, Desc: "Interchange control reference", mock: true },
     ],
-    Purpose: "To end and check the completeness of an interchange."
+    Purpose: "To end and check the completeness of an interchange.",
+    mock: true
   }, undefined);
   // TODO: Add UNT
   // TODO: Id is supposed to be a number
@@ -240,7 +253,8 @@ export class EdiReleaseSchemaSegment {
       { Id: "I14", Required: true, MinLength: 1, MaxLength: 1, Desc: "Usage Indicator" },
       { Id: "I15", Required: true, MinLength: 1, MaxLength: 1, Desc: "Component Element Separator" },
     ],
-    Purpose: "To start and identify an interchange of zero or more functional groups and interchange-related control segments"
+    Purpose: "To start and identify an interchange of zero or more functional groups and interchange-related control segments",
+    mock: true
   }, undefined);
   public static GS: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Functional Group Header",
@@ -254,7 +268,8 @@ export class EdiReleaseSchemaSegment {
       { Id: "455", Required: true, MinLength: 1, MaxLength: 2, Desc: "Responsible Agency Code" },
       { Id: "480", Required: true, MinLength: 1, MaxLength: 12, Desc: "Version / Release / Industry Identifier Code" },
     ],
-    Purpose: "To indicate the beginning of a functional group and to provide control information"
+    Purpose: "To indicate the beginning of a functional group and to provide control information",
+    mock: true
   }, undefined);
   public static GE: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Functional Group Trailer",
@@ -262,7 +277,8 @@ export class EdiReleaseSchemaSegment {
       { Id: "97", Required: true, MinLength: 1, MaxLength: 6, Desc: "Number of Transaction Sets Included" },
       { Id: "28", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
     ],
-    Purpose: "To indicate the end of a functional group and to provide control information"
+    Purpose: "To indicate the end of a functional group and to provide control information",
+    mock: true
   }, undefined);
   public static IEA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange Control Trailer",
@@ -270,7 +286,8 @@ export class EdiReleaseSchemaSegment {
       { Id: "I16", Required: true, MinLength: 1, MaxLength: 5, Desc: "Number of Transaction Sets Included" },
       { Id: "I12", Required: true, MinLength: 9, MaxLength: 9, Desc: "Group Control Number" },
     ],
-    Purpose: "To define the end of an interchange of zero or more functional groups and interchange-related control segments"
+    Purpose: "To define the end of an interchange of zero or more functional groups and interchange-related control segments",
+    mock: true
   }, undefined);
 
   constructor(raw: any, schema: EdiReleaseSchema | undefined) {
@@ -278,6 +295,7 @@ export class EdiReleaseSchemaSegment {
     this.purpose = raw.Purpose;
     this.elements = raw.Elements?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
     this._schema = schema;
+    this.mock = !!raw.mock;
   }
 }
 

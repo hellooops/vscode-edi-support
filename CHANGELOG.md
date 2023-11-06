@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.2.0] - 2023-11-06
+
+### Changed
+
+- Remove "EDI Schema Reference" link for mock segments and elements.
+
+
 ## [1.1.9] - 2023-11-03
 
 ### Fixed

@@ -64,8 +64,13 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
         `**${segment.id}** (Segment)`
       ),
       new vscode.MarkdownString(part2MdSb.toString()),
-      new vscode.MarkdownString(`[EDI Schema Reference](${segmentSchemaViewerUrl})\n`)
     ];
+
+    if (!segment?.ediReleaseSchemaSegment?.mock) {
+      mdStrings.push(new vscode.MarkdownString(
+        `[EDI Schema Reference](${segmentSchemaViewerUrl})\n`
+      ));
+    }
     return mdStrings;
   }
 
@@ -119,9 +124,11 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       }
     }
 
-    mdStrings.push(new vscode.MarkdownString(
-      `[EDI Schema Reference](${elementSchemaViewerUrl})\n`
-    ));
+    if (!element?.ediReleaseSchemaElement?.mock) {
+      mdStrings.push(new vscode.MarkdownString(
+        `[EDI Schema Reference](${elementSchemaViewerUrl})\n`
+      ));
+    }
     return mdStrings;
   }
 
