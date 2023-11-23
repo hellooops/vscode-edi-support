@@ -166,12 +166,14 @@ export class EdiElement {
 
   getErrors_SE01(context: DiagnoscticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
-    const startSegmentIndex = context.segments.findIndex(segment => segment.id === "ST");
-    if (startSegmentIndex === -1) {
-      return errors;
-    }
-
     const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
+    let startSegmentIndex = -1;
+    context.segments.forEach((segment, i) => {
+      if (i >= endSegmentIndex) return;
+      if (segment.id === "ST") {
+        startSegmentIndex = i;
+      }
+    });
     if (startSegmentIndex === -1) {
       return errors;
     }
@@ -191,12 +193,15 @@ export class EdiElement {
 
   getErrors_UNT01(context: DiagnoscticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
-    const startSegmentIndex = context.segments.findIndex(segment => segment.id === "UNH");
-    if (startSegmentIndex === -1) {
-      return errors;
-    }
-
     const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
+    let startSegmentIndex = -1;
+    context.segments.forEach((segment, i) => {
+      if (i >= endSegmentIndex) return;
+      if (segment.id === "UNH") {
+        startSegmentIndex = i;
+      }
+    });
+
     if (startSegmentIndex === -1) {
       return errors;
     }

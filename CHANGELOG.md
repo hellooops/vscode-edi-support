@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.2.1] - 2023-11-23
+
+### Fixed
+
+- Fix wrong segments count for X12-SE01 and EDIFACT-UNT01 when there are multiple transactions in one file.
+
+
 ## [1.2.0] - 2023-11-06
 
 ### Changed
@@ -25,7 +32,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
-- Support segments count check for X12-CTT01 and EDIFACT-UNT01.
+- Support segments count check for X12-SE01 and EDIFACT-UNT01.
 
 
 ## [1.1.7] - 2023-08-31
