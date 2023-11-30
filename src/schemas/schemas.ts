@@ -256,7 +256,22 @@ export class EdiReleaseSchemaSegment {
     Purpose: "To start and identify an interchange of zero or more functional groups and interchange-related control segments",
     mock: true
   }, undefined);
-  public static GS: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+  public static GS_lt_00401: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Functional Group Header",
+    Elements: [
+      { Id: "479", Required: true, MinLength: 2, MaxLength: 2, Desc: "Functional Identifier Code" },
+      { Id: "142", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Sender's Code" },
+      { Id: "124", Required: true, MinLength: 2, MaxLength: 15, Desc: "Application Receiver's Code" },
+      { Id: "373", Required: true, MinLength: 6, MaxLength: 6, Desc: "Date" },
+      { Id: "337", Required: true, MinLength: 4, MaxLength: 8, Desc: "Time" },
+      { Id: "28", Required: true, MinLength: 1, MaxLength: 9, Desc: "Group Control Number" },
+      { Id: "455", Required: true, MinLength: 1, MaxLength: 2, Desc: "Responsible Agency Code" },
+      { Id: "480", Required: true, MinLength: 1, MaxLength: 12, Desc: "Version / Release / Industry Identifier Code" },
+    ],
+    Purpose: "To indicate the beginning of a functional group and to provide control information",
+    mock: true
+  }, undefined);
+  public static GS_ge_00401: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Functional Group Header",
     Elements: [
       { Id: "479", Required: true, MinLength: 2, MaxLength: 2, Desc: "Functional Identifier Code" },

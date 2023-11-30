@@ -235,11 +235,11 @@ export abstract class EdiParserBase {
     }
 
     const ediSchema = new EdiSchema(releaseSchema);
-    await this.afterSchemaLoaded(ediSchema);
+    await this.afterSchemaLoaded(ediSchema, ediVersion);
     this.schema = ediSchema;
   }
 
-  abstract afterSchemaLoaded(schema: EdiSchema): Promise<void>;
+  abstract afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void>;
 
   escapeCharRegex(str: string | undefined | null): string {
     if (str === undefined || str === null) {

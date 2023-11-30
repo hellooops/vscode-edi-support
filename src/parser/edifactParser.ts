@@ -109,7 +109,7 @@ export class EdifactParser extends EdiParserBase {
     return "../schemas/edifact";
   }
 
-  async afterSchemaLoaded(schema: EdiSchema): Promise<void> {
+  async afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void> {
     const unh = schema.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNH);
     if (unh) {
       unh.desc = "Message header";

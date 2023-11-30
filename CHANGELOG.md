@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.2.2] - 2023-11-30
+
+### Fixed
+
+- GS06 length is supposed to be 6 when release is less than 00401.
+
+
 ## [1.2.1] - 2023-11-23
 
 ### Fixed

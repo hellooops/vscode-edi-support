@@ -112,13 +112,23 @@ export class X12Parser extends EdiParserBase {
     return "../schemas/x12";
   }
 
-  async afterSchemaLoaded(schema: EdiSchema): Promise<void> {
+  async afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void> {
     if (schema.ediReleaseSchema?.segments) {
       schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.ISA] = EdiReleaseSchemaSegment.ISA;
-      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GS] = EdiReleaseSchemaSegment.GS;
+      if (this.isReleaseLt(ediVersion.release, "00401")) {
+        schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GS] = EdiReleaseSchemaSegment.GS_lt_00401;
+      } else {
+        schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GS] = EdiReleaseSchemaSegment.GS_ge_00401;
+      }
+
       schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GE] = EdiReleaseSchemaSegment.GE;
       schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.IEA] = EdiReleaseSchemaSegment.IEA;
     }
+  }
+
+  private isReleaseLt(release: string, compareTo: string): boolean {
+    if (!release || !compareTo) return false;
+    return parseInt(release) < parseInt(compareTo);
   }
 
   private async parseSegmentISA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
