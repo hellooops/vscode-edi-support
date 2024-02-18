@@ -30,8 +30,8 @@ export class EdiReleaseSchema {
   public segments: Record<string, EdiReleaseSchemaSegment>;
   constructor (raw: any) {
     this.release = raw.Release;
+    this.qualifiers = {};
     if (raw.Qualifiers) {
-      this.qualifiers = {};
       for (let qualifierName in raw.Qualifiers) {
         const qualifier = raw.Qualifiers[qualifierName];
         this.qualifiers[qualifierName] = Object.keys(qualifier).map(qualifierKey => {

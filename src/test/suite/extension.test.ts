@@ -12,7 +12,7 @@ suite("Extension Test Suite", () => {
   test("Edifact Parse Version", async () => {
     const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
     const parser: EdifactParser = new EdifactParser(documentStr);
-    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
 
     assert.strictEqual(ediVersion.release, "D96A");
     assert.strictEqual(ediVersion.version, "ORDERS");
@@ -46,54 +46,54 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].endIndex, 27);
     assert.strictEqual(segment.elements[1].type, ElementType.dataElement);
     assert.strictEqual(segment.elements[1].value, "ORDERS:D:96A:UN:EAN008");
-    assert.strictEqual(segment.elements[1].components.length, 5);
+    assert.strictEqual(segment.elements[1].components!.length, 5);
 
     // +ORDERS
-    assert.strictEqual(segment.elements[1].components[0].designatorIndex, "0201");
-    assert.strictEqual(segment.elements[1].components[0].separator, "+");
-    assert.strictEqual(segment.elements[1].components[0].startIndex, 5);
-    assert.strictEqual(segment.elements[1].components[0].endIndex, 11);
-    assert.strictEqual(segment.elements[1].components[0].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[0].value, "ORDERS");
+    assert.strictEqual(segment.elements[1].components![0].designatorIndex, "0201");
+    assert.strictEqual(segment.elements[1].components![0].separator, "+");
+    assert.strictEqual(segment.elements[1].components![0].startIndex, 5);
+    assert.strictEqual(segment.elements[1].components![0].endIndex, 11);
+    assert.strictEqual(segment.elements[1].components![0].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![0].value, "ORDERS");
 
     // :D
-    assert.strictEqual(segment.elements[1].components[1].designatorIndex, "0202");
-    assert.strictEqual(segment.elements[1].components[1].separator, ":");
-    assert.strictEqual(segment.elements[1].components[1].startIndex, 12);
-    assert.strictEqual(segment.elements[1].components[1].endIndex, 13);
-    assert.strictEqual(segment.elements[1].components[1].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[1].value, "D");
+    assert.strictEqual(segment.elements[1].components![1].designatorIndex, "0202");
+    assert.strictEqual(segment.elements[1].components![1].separator, ":");
+    assert.strictEqual(segment.elements[1].components![1].startIndex, 12);
+    assert.strictEqual(segment.elements[1].components![1].endIndex, 13);
+    assert.strictEqual(segment.elements[1].components![1].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![1].value, "D");
 
     // :96A
-    assert.strictEqual(segment.elements[1].components[2].designatorIndex, "0203");
-    assert.strictEqual(segment.elements[1].components[2].separator, ":");
-    assert.strictEqual(segment.elements[1].components[2].startIndex, 14);
-    assert.strictEqual(segment.elements[1].components[2].endIndex, 17);
-    assert.strictEqual(segment.elements[1].components[2].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[2].value, "96A");
+    assert.strictEqual(segment.elements[1].components![2].designatorIndex, "0203");
+    assert.strictEqual(segment.elements[1].components![2].separator, ":");
+    assert.strictEqual(segment.elements[1].components![2].startIndex, 14);
+    assert.strictEqual(segment.elements[1].components![2].endIndex, 17);
+    assert.strictEqual(segment.elements[1].components![2].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![2].value, "96A");
 
     // :UN
-    assert.strictEqual(segment.elements[1].components[3].designatorIndex, "0204");
-    assert.strictEqual(segment.elements[1].components[3].separator, ":");
-    assert.strictEqual(segment.elements[1].components[3].startIndex, 18);
-    assert.strictEqual(segment.elements[1].components[3].endIndex, 20);
-    assert.strictEqual(segment.elements[1].components[3].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[3].value, "UN");
+    assert.strictEqual(segment.elements[1].components![3].designatorIndex, "0204");
+    assert.strictEqual(segment.elements[1].components![3].separator, ":");
+    assert.strictEqual(segment.elements[1].components![3].startIndex, 18);
+    assert.strictEqual(segment.elements[1].components![3].endIndex, 20);
+    assert.strictEqual(segment.elements[1].components![3].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![3].value, "UN");
 
     // :EAN008
-    assert.strictEqual(segment.elements[1].components[4].designatorIndex, "0205");
-    assert.strictEqual(segment.elements[1].components[4].separator, ":");
-    assert.strictEqual(segment.elements[1].components[4].startIndex, 21);
-    assert.strictEqual(segment.elements[1].components[4].endIndex, 27);
-    assert.strictEqual(segment.elements[1].components[4].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[4].value, "EAN008");
+    assert.strictEqual(segment.elements[1].components![4].designatorIndex, "0205");
+    assert.strictEqual(segment.elements[1].components![4].separator, ":");
+    assert.strictEqual(segment.elements[1].components![4].startIndex, 21);
+    assert.strictEqual(segment.elements[1].components![4].endIndex, 27);
+    assert.strictEqual(segment.elements[1].components![4].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![4].value, "EAN008");
   });
 
   test("Edifact Load Schema", async () => {
     const rawReleaseSchema = await import("./test-files/D96A-sample.json");
     const releaseSchema = new EdiReleaseSchema(rawReleaseSchema);
     assert.strictEqual(releaseSchema.release, "D96A");
-    assert.strictEqual(releaseSchema.qualifiers["Process type identification"].find(q => q.value ==="1").desc, "Wood preparation");
+    assert.strictEqual(releaseSchema.qualifiers["Process type identification"].find(q => q.value ==="1")!.desc, "Wood preparation");
 
     const ADR = releaseSchema.segments["ADR"];
     assert.strictEqual(ADR.desc, "ADDRESS");
@@ -124,7 +124,7 @@ suite("Extension Test Suite", () => {
     GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     ST*850*0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");
@@ -136,7 +136,7 @@ suite("Extension Test Suite", () => {
     GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
     ST+850+0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");
@@ -148,7 +148,7 @@ suite("Extension Test Suite", () => {
     GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
     ST+850+0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");
@@ -184,23 +184,23 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[1].endIndex, 16);
     assert.strictEqual(segment.elements[1].type, ElementType.dataElement);
     assert.strictEqual(segment.elements[1].value, "HC>93010");
-    assert.strictEqual(segment.elements[1].components.length, 2);
+    assert.strictEqual(segment.elements[1].components!.length, 2);
 
     // *HC
-    assert.strictEqual(segment.elements[1].components[0].designatorIndex, "0201");
-    assert.strictEqual(segment.elements[1].components[0].separator, "*");
-    assert.strictEqual(segment.elements[1].components[0].startIndex, 8);
-    assert.strictEqual(segment.elements[1].components[0].endIndex, 10);
-    assert.strictEqual(segment.elements[1].components[0].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[0].value, "HC");
+    assert.strictEqual(segment.elements[1].components![0].designatorIndex, "0201");
+    assert.strictEqual(segment.elements[1].components![0].separator, "*");
+    assert.strictEqual(segment.elements[1].components![0].startIndex, 8);
+    assert.strictEqual(segment.elements[1].components![0].endIndex, 10);
+    assert.strictEqual(segment.elements[1].components![0].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![0].value, "HC");
 
     // >93010
-    assert.strictEqual(segment.elements[1].components[1].designatorIndex, "0202");
-    assert.strictEqual(segment.elements[1].components[1].separator, ">");
-    assert.strictEqual(segment.elements[1].components[1].startIndex, 11);
-    assert.strictEqual(segment.elements[1].components[1].endIndex, 16);
-    assert.strictEqual(segment.elements[1].components[1].type, ElementType.componentElement);
-    assert.strictEqual(segment.elements[1].components[1].value, "93010");
+    assert.strictEqual(segment.elements[1].components![1].designatorIndex, "0202");
+    assert.strictEqual(segment.elements[1].components![1].separator, ">");
+    assert.strictEqual(segment.elements[1].components![1].startIndex, 11);
+    assert.strictEqual(segment.elements[1].components![1].endIndex, 16);
+    assert.strictEqual(segment.elements[1].components![1].type, ElementType.componentElement);
+    assert.strictEqual(segment.elements[1].components![1].value, "93010");
 
     // *76.56
     assert.strictEqual(segment.elements[2].designatorIndex, "03");

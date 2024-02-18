@@ -5,7 +5,7 @@ import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class EdifactParser extends EdiParserBase {
-  public getCustomSegmentParser(segmentId: string): (segment: EdiSegment, segmentStr: string) => Promise<EdiSegment> {
+  public getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
     if (segmentId === constants.ediDocument.edifact.segment.UNA) {
       return async (segment, segmentStr) => {
         if (segmentStr.length !== 9) {
@@ -80,8 +80,7 @@ export class EdifactParser extends EdiParserBase {
       return undefined;
     }
 
-    const ediMessage: EdifactEdiMessage = new EdifactEdiMessage();
-    ediMessage.segments = segments;
+    const ediMessage: EdifactEdiMessage = new EdifactEdiMessage(segments);
 
     ediMessage.sender = unb.getElement(2, 1)?.value;
     ediMessage.senderQualifier = unb.getElement(2, 2)?.value;
@@ -130,10 +129,6 @@ export class EdifactParser extends EdiParserBase {
   private async parseSegmentUNA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
     await this.loadSchema();
     segment.elements = [];
-    if (segmentStr.length !== 9) {
-      return;
-    }
-
     const ediMessageSeparators = new EdiMessageSeparators();
     ediMessageSeparators.segmentSeparator = segmentStr[8];
     ediMessageSeparators.dataElementSeparator = segmentStr[4];
@@ -142,15 +137,16 @@ export class EdifactParser extends EdiParserBase {
     this._separators = ediMessageSeparators;
 
     for (let i = 0; i < 5; i++) {
-      const element = new EdiElement();
-      element.segmentName = segment.id;
+      const element = new EdiElement(
+        ElementType.dataElement,
+        i + 3,
+        i + 3,
+        "",
+        segment.id,
+        this.pad(i + 1, 2, "0")
+      );
       element.value = segmentStr[i + 3];
       element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNA)?.elements[i];
-      element.type = ElementType.dataElement;
-      element.startIndex = i + 3;
-      element.endIndex = i + 3;
-      element.designatorIndex = this.pad(i + 1, 2, "0");
-      element.separator = "";
       segment.elements.push(element);
     }
 
@@ -172,6 +168,10 @@ export class EdifactEdiMessage implements IEdiMessage {
   public type?: string; // UNH02-01
   public release?: string; // UNH02-02 + UNH02-03
   public segments: EdiSegment[];
+
+  constructor(segments: EdiSegment[]) {
+    this.segments = segments;
+  }
 
   public buildMessageDescriptions(): string[] {
     const descriptions: string[] = [];

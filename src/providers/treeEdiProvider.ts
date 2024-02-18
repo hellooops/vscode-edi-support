@@ -3,6 +3,7 @@ import { IProvidable } from "../interfaces/providable";
 import Utils from "../utils/utils";
 import { EdiUtils } from "../utils/ediUtils";
 import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
+import { EdiReleaseSchemaElement } from "../schemas/schemas"
 import { ICommandable } from "../interfaces/commandable";
 import * as constants from "../constants";
 
@@ -62,7 +63,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
         };
       });
     } else if (element.type === TreeItemType.DataElement && element.element!.isComposite()) {
-      return element.element!.components.map((el) => {
+      return element.element!.components!.map((el) => {
         return {
           key: el.getDesignator(),
           type: TreeItemType.CompositeElement,
@@ -83,7 +84,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       ];
       const children: TreeItemElement[] = [];
       for (let attrKey of attrKeys) {
-        const attrValue = Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key]);
+        const attrValue = Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key as keyof EdiReleaseSchemaElement]);
         if (attrValue === null || attrValue === undefined || attrValue === "") {
           continue;
         }
@@ -93,7 +94,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
           type: TreeItemType.ElementAttribute,
           elementAttribute: {
             key: attrKey.label,
-            value: Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key])!
+            value: Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key as keyof EdiReleaseSchemaElement])!
           }
         });
       }
@@ -192,7 +193,7 @@ enum TreeItemType {
   ElementAttribute
 }
 
-class TreeItemElement {
+interface TreeItemElement {
   key: string;
   type: TreeItemType;
   segment?: EdiSegment;

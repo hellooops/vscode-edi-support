@@ -16,7 +16,8 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       return null;
     }
 
-    let ediVersion: EdiVersion = await parser.parseReleaseAndVersion();
+    let ediVersion = await parser.parseReleaseAndVersion();
+    if (!ediVersion) return;
     let segments = await parser.parseSegments();
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)
@@ -33,7 +34,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     }
     let selectedComponentElement: EdiElement | undefined = undefined;
     if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
-      selectedComponentElement = selectedElement?.components.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
+      selectedComponentElement = selectedElement?.components?.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
     }
 
     if (!selectedElement) {
@@ -108,10 +109,12 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     const elementSchemaViewerUrl: string = SchemaViewerUtils.getElementUrl(ediType, ediVersion.release, segment.id, element.getDesignator());
     if (element?.ediReleaseSchemaElement?.qualifierRef) {
       const codes = element?.ediReleaseSchemaElement?.getCodes();
-      const elementValueCode = element?.ediReleaseSchemaElement?.getCodeByValue(element.value);
       const part3MdSb = new StringBuilder();
-      if (element.value && elementValueCode) {
-        part3MdSb.append(`${element.value}: \`${elementValueCode.desc}\`\n\n`);
+      if (element.value) {
+        const elementValueCode = element?.ediReleaseSchemaElement?.getCodeByValue(element.value);
+        if (element.value && elementValueCode) {
+          part3MdSb.append(`${element.value}: \`${elementValueCode.desc}\`\n\n`);
+        }
       }
 
       if (codes && codes.length > 0) {

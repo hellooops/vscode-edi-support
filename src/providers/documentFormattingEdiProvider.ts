@@ -7,6 +7,7 @@ import * as constants from "../constants";
 export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
     const { parser } = EdiUtils.getEdiParser(document);
+    if (!parser) return;
     let segments = await parser.parseSegments();
     if (!segments || segments.length <= 0) {
       return;

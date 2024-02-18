@@ -4,18 +4,18 @@ import * as constants from "../constants";
 import Utils from "../utils/utils";
 
 export abstract class EdiParserBase {
-  private _segments: EdiSegment[];
-  private _ediVersion: EdiVersion;
+  private _segments?: EdiSegment[];
+  private _ediVersion?: EdiVersion;
   document: string;
-  schema: EdiSchema;
-  _separators?: EdiMessageSeparators;
+  schema?: EdiSchema;
+  _separators?: EdiMessageSeparators | null;
 
   _parsingRleaseAndVersion?: boolean = false;
   public constructor(document: string) {
     this.document = document;
   }
 
-  public async parseReleaseAndVersion(): Promise<EdiVersion> {
+  public async parseReleaseAndVersion(): Promise<EdiVersion | undefined> {
     if (this._parsingRleaseAndVersion) {
       return;
     }
@@ -76,16 +76,14 @@ export abstract class EdiParserBase {
   public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
     await this.loadSchema();
 
-    const segment = new EdiSegment();
-    segment.endingDelimiter = endingDelimiter;
-    segment.startIndex = startIndex;
-    segment.endIndex = endIndex;
-    segment.length = segmentStr.length;
-
     const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length - 1;
-    segment.id = segmentStr.substring(0, firstElementSeparatorIndex);
-    segment.elements = [];
-
+    const segment = new EdiSegment(
+      segmentStr.substring(0, firstElementSeparatorIndex),
+      startIndex,
+      endIndex,
+      segmentStr.length,
+      endingDelimiter
+    );
     segment.ediReleaseSchemaSegment = this.schema?.ediReleaseSchema?.getSegment(segment.id);
 
     const customSegmentParser = this.getCustomSegmentParser(segment.id);
@@ -98,7 +96,7 @@ export abstract class EdiParserBase {
     let elementIndex = 0;
     let subElementIndex = 0;
     let elementDesignator: string | undefined = undefined;
-    const { segmentSeparator, dataElementSeparator, componentElementSeparator, releaseCharacter } = this.getMessageSeparators();
+    const { segmentSeparator, dataElementSeparator, componentElementSeparator, releaseCharacter } = <Required<EdiMessageSeparators>>this.getMessageSeparators();
     for (let i = segment.id.length; i < segmentStr.length; i++) {
       const isSegmentSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, segmentSeparator, releaseCharacter);
       const isDataElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, dataElementSeparator, releaseCharacter);
@@ -127,27 +125,30 @@ export abstract class EdiParserBase {
 
       if (isDataElementSeparator) {
         elementIndex++;
-        element = new EdiElement();
+        element = new EdiElement(
+          ElementType.dataElement,
+          i,
+          -1, // endIndex will be set later
+          dataElementSeparator,
+          segment.id,
+          this.pad(elementIndex, 2, "0")
+        );
         element.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1];
-        element.type = ElementType.dataElement;
-        element.startIndex = i;
-        element.designatorIndex = this.pad(elementIndex, 2, "0");
         elementDesignator = element.designatorIndex;
-        element.separator = dataElementSeparator;
-        element.segmentName = segment.id;
         segment.elements.push(element);
         if (element.ediReleaseSchemaElement?.isComposite()) {
-          const nextC: string = i < segmentStr.length - 1 ? segmentStr[i + 1] : undefined;
+          const nextC: string | undefined = i < segmentStr.length - 1 ? segmentStr[i + 1] : undefined;
           const isElementValueEmpty = nextC === dataElementSeparator || nextC === segmentSeparator || nextC === undefined;
           if (!isElementValueEmpty) {
-            element.components = [];
             subElementIndex++;
-            subElement = new EdiElement();
-            subElement.type = ElementType.componentElement;
-            subElement.startIndex = i;
-            subElement.designatorIndex = `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`;
-            subElement.segmentName = segment.id;
-            subElement.separator = dataElementSeparator;
+            subElement = new EdiElement(
+              ElementType.componentElement,
+              i,
+              -1, // endIndex will be set later
+              dataElementSeparator,
+              segment.id,
+              `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
+            );
             subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
             element.components = element.components || [];
             element.components.push(subElement);
@@ -155,12 +156,14 @@ export abstract class EdiParserBase {
         }
       } else if (isComponentElementSeparator) {
         subElementIndex++;
-        subElement = new EdiElement();
-        subElement.type = ElementType.componentElement;
-        subElement.startIndex = i;
-        subElement.designatorIndex = `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`;
-        subElement.segmentName = segment.id;
-        subElement.separator = componentElementSeparator;
+        subElement = new EdiElement(
+          ElementType.componentElement,
+          i,
+          -1, // endIndex will be set later
+          componentElementSeparator,
+          segment.id,
+          `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
+        );
         subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
         element!.components = element!.components || [];
         element!.components.push(subElement);
@@ -241,7 +244,7 @@ export abstract class EdiParserBase {
 
   abstract afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void>;
 
-  escapeCharRegex(str: string | undefined | null): string {
+  escapeCharRegex(str: string | undefined | null): string | undefined | null {
     if (str === undefined || str === null) {
       return str;
     }

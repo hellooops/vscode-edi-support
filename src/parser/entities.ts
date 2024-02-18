@@ -12,13 +12,22 @@ export class EdiVersion {
 }
 
 export class EdiSegment {
+  public id: string;
   public startIndex: number;
   public endIndex: number;
   public length: number;
-  public id: string;
   public elements: Array<EdiElement>;
   public endingDelimiter: string;
   public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
+
+  constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
+    this.id = id;
+    this.startIndex = startIndex;
+    this.endIndex = endIndex;
+    this.length = length;
+    this.endingDelimiter = endingDelimiter;
+    this.elements = [];
+  }
 
   public toString() {
     return `${this.id}${this.elements.join("")}${this.endingDelimiter}`;
@@ -69,14 +78,23 @@ export interface DiagnoscticsContext {
 
 export class EdiElement {
   public type: ElementType;
-  public value: string;
+  public value?: string;
   public startIndex: number;
-  public separator: string;
   public endIndex: number;
+  public separator: string;
   public designatorIndex: string;
   public segmentName: string;
-  public components: EdiElement[];
+  public components?: EdiElement[];
   public ediReleaseSchemaElement?: EdiReleaseSchemaElement;
+
+  constructor(type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, designatorIndex: string) {
+    this.type = type;
+    this.startIndex = startIndex;
+    this.endIndex = endIndex;
+    this.separator = separator;
+    this.segmentName = segmentName;
+    this.designatorIndex = designatorIndex;
+  }
 
   public getDesignator() : string {
     return `${this.segmentName}${this.designatorIndex}`;
@@ -220,7 +238,7 @@ export class EdiElement {
   }
 
   public isComposite(): boolean {
-    return this.components && this.components.length > 0;
+    return !!this.components && this.components.length > 0;
   }
 
   public toString() {

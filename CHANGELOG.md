@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+
+- Open strict mode. Fix typescript issue.
+
 
 ## [1.2.2] - 2023-11-30
 

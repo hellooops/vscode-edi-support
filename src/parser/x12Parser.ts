@@ -5,7 +5,7 @@ import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class X12Parser extends EdiParserBase {
-  public getCustomSegmentParser(segmentId: string): (segment: EdiSegment, segmentStr: string) => Promise<EdiSegment> {
+  public getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
     if (segmentId === constants.ediDocument.x12.segment.ISA) {
       return async (segment, segmentStr) => {
         if (!segmentStr.length) {
@@ -87,13 +87,11 @@ export class X12Parser extends EdiParserBase {
       return undefined;
     }
 
-    const ediMessage: X12EdiMessage = new X12EdiMessage();
-    ediMessage.segments = segments;
-
+    const ediMessage: X12EdiMessage = new X12EdiMessage(segments);
     ediMessage.sender = isa.getElement(6)?.value?.trim();
     ediMessage.senderQualifier = isa.getElement(5)?.value;
 
-    ediMessage.recipient = isa.getElement(8)?.value.trim();
+    ediMessage.recipient = isa.getElement(8)?.value?.trim();
     ediMessage.recipientQualifier = isa.getElement(7)?.value;
 
     const date = isa.getElement(9)?.value;
@@ -126,21 +124,17 @@ export class X12Parser extends EdiParserBase {
     }
   }
 
-  private isReleaseLt(release: string, compareTo: string): boolean {
+  private isReleaseLt(release: string | undefined, compareTo: string): boolean {
     if (!release || !compareTo) return false;
     return parseInt(release) < parseInt(compareTo);
   }
 
   private async parseSegmentISA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
-    if (!segmentStr) {
-      return;
-    }
-
     await this.loadSchema();
     segment.elements = [];
     let cIndex = 3;
 
-    const separators = this.getMessageSeparators();
+    const separators = <Required<EdiMessageSeparators>>this.getMessageSeparators();
     if (segmentStr.endsWith(separators.segmentSeparator)) {
       segmentStr = segmentStr.substring(0, segmentStr.length - 1);
     }
@@ -152,17 +146,18 @@ export class X12Parser extends EdiParserBase {
 
     segmentFrags.splice(0, 1);
     for (let i = 0; i < segmentFrags.length; i++) {
-      const element = new EdiElement();
-      element.segmentName = segment.id;
       const segmentFrag = segmentFrags[i];
-      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.x12.segment.ISA)?.elements[i];
       const elementLength = segmentFrag.length + 1;
+      const element = new EdiElement(
+        ElementType.dataElement,
+        cIndex,
+        cIndex + elementLength - 1,
+        separators.dataElementSeparator,
+        segment.id,
+        this.pad(i + 1, 2, "0")
+      );
+      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.x12.segment.ISA)?.elements[i];
       element.value = segmentStr.substring(cIndex + 1, cIndex + elementLength);
-      element.type = ElementType.dataElement;
-      element.startIndex = cIndex;
-      element.endIndex = cIndex + elementLength - 1;
-      element.designatorIndex = this.pad(i + 1, 2, "0");
-      element.separator = this.getMessageSeparators().dataElementSeparator;
       segment.elements.push(element);
       cIndex += elementLength;
     }
@@ -182,6 +177,10 @@ export class X12EdiMessage implements IEdiMessage {
   public type?: string; // ST01
   public release?: string; // ISA12
   public segments: EdiSegment[];
+
+  constructor(segments: EdiSegment[]) {
+    this.segments = segments;
+  }
 
   public buildIsaDescription(): string {
     return "TODO: Deric";

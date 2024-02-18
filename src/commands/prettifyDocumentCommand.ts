@@ -14,7 +14,8 @@ export class PrettifyDocumentCommand implements ICommandable {
     let document = vscode.window.activeTextEditor.document;
     const documentContent = document.getText();
 
-    const { parser, ediType } = EdiUtils.getEdiParser(document)!;
+    const { parser, ediType } = EdiUtils.getEdiParser(document);
+    if (!parser) return;
 
     let segments = await parser.parseSegments();
     if (!segments || segments.length <= 0) {

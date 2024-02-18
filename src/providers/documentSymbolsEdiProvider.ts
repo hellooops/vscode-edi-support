@@ -6,6 +6,7 @@ import { EdiUtils } from "../utils/ediUtils";
 export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider, IProvidable {
   async provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[] | vscode.SymbolInformation[]> {
     const { parser } = EdiUtils.getEdiParser(document);
+    if (!parser) return [];
     let segments = await parser.parseSegments();
     if (!segments || segments.length <= 0) {
       return [];
@@ -44,7 +45,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
           return componentSymbol;
         });
 
-        elementSymbol.children = componentSymbols;
+        elementSymbol.children = componentSymbols || [];
         return elementSymbol;
       });
 
