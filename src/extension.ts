@@ -13,6 +13,7 @@ import { CodelensEdiProvider } from "./providers/codelensEdiProvider";
 import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
 import { TreeEdiProvider } from "./providers/treeEdiProvider";
 import { DocumentSymbolsEdiProvider } from "./providers/documentSymbolsEdiProvider";
+import { SemanticTokensProvider } from "./providers/semanticTokensProvider";
 import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 
@@ -34,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, treeEdiProvider, () => treeEdiProvider.refresh());
 
   registerProvider(context, new DocumentSymbolsEdiProvider());
+  registerProvider(context, new SemanticTokensProvider());
 
   console.log('Extension "edi-support" is now active!');
 }

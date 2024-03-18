@@ -101,6 +101,20 @@ export class EdiUtils {
     );
   }
 
+  static getSegmentIdRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getSegmentStartPosition(document, segment),
+      EdiUtils.getSegmentStartPosition(document, segment).translate(0, segment.id.length),
+    );
+  }
+
+  static getSegmentDelimiterRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getSegmentEndPosition(document, segment).translate(0, -1),
+      EdiUtils.getSegmentEndPosition(document, segment),
+    );
+  }
+
   static getElementStartPosition(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Position {
     return document.positionAt(segment.startIndex + element.startIndex);
   }
@@ -112,6 +126,20 @@ export class EdiUtils {
   static getElementRange(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Range {
     return new vscode.Range(
       EdiUtils.getElementStartPosition(document, segment, element),
+      EdiUtils.getElementEndPosition(document, segment, element),
+    );
+  }
+
+  static getElementSeparatorRange(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getElementStartPosition(document, segment, element),
+      EdiUtils.getElementStartPosition(document, segment, element).translate(0, 1),
+    );
+  }
+
+  static getElementWithoutSeparatorRange(document: vscode.TextDocument, segment: EdiSegment, element: EdiElement): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getElementStartPosition(document, segment, element).translate(0, 1),
       EdiUtils.getElementEndPosition(document, segment, element),
     );
   }

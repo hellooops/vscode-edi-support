@@ -76,18 +76,6 @@
         }
       }
     ],
-    "grammars": [
-      {
-        "language": "x12",
-        "scopeName": "source.x12",
-        "path": "./syntaxes/x12.tmLanguage.json"
-      },
-      {
-        "language": "edifact",
-        "scopeName": "source.edifact",
-        "path": "./syntaxes/edifact.tmLanguage.json"
-      }
-    ],
     "commands": [
       {
         "command": "edi-support.prettify",
@@ -189,7 +177,21 @@
           "group": "inlayHints"
         }
       ]
-    }
+    },
+    "semanticTokenScopes": [
+      {
+        "scopes": {
+          "EdiSegmentId": ["keyword"],
+          "EdiSegmentSeparator": ["keyword.operator"],
+          "EdiDataElementSeparator": ["keyword.operator"],
+          "EdiComponentElementSeparator": ["keyword.operator"],
+          "EdiValueTypeNumber": ["comment"],
+          "EdiValueTypeDatetime": ["string.regexp"],
+          "EdiValueTypeQualifer": ["entity.name.operator"],
+          "EdiValueTypeOther": ["variable", "variable.other.constant"]
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
