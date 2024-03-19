@@ -20,7 +20,7 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
       return;
     }
 
-    let segments = await parser.parseSegments();
+    const { segments } = await parser.parse();
     let diagnoscticsContext: VscodeDiagnoscticsContext;
     for (let segment of segments) {
       diagnoscticsContext = {

@@ -9,32 +9,54 @@ export abstract class EdiParserBase {
   document: string;
   schema?: EdiSchema;
   _separators?: EdiMessageSeparators | null;
+  private parseResult?: EdiParseResult;
+  private parsingPromise?: Promise<EdiParseResult>;
 
-  _parsingRleaseAndVersion?: boolean = false;
   public constructor(document: string) {
     this.document = document;
   }
 
-  public async parseReleaseAndVersion(): Promise<EdiVersion | undefined> {
-    if (this._parsingRleaseAndVersion) {
-      return;
+  public async parse(): Promise<EdiParseResult> {
+    if (this.parsingPromise) {
+      return this.parsingPromise;
     }
 
-    if (!this._ediVersion) {
-      this._parsingRleaseAndVersion = true;
-      try {
-        this._ediVersion = await this.parseReleaseAndVersionInternal();
-      } finally {
-        this. _parsingRleaseAndVersion = false;
+    const parsingPromise = this.parseInternal();
+    this.parsingPromise = parsingPromise;
+    const that = this;
+    parsingPromise.finally(() => {
+      that.parsingPromise = undefined;
+    })
+
+    return parsingPromise;
+  }
+
+  private async parseInternal(): Promise<EdiParseResult> {
+    if (!this.parseResult) {
+      const separators = this.getMessageSeparators();
+      const releaseAndVersion = this.parseReleaseAndVersion();
+      const segments = await this.parseSegments();
+      this.parseResult = {
+        separators,
+        ediVersion: releaseAndVersion,
+        segments
       }
+    }
+
+    return this.parseResult;
+  }
+
+  public parseReleaseAndVersion(): EdiVersion {
+    if (!this._ediVersion) {
+      this._ediVersion = this.parseReleaseAndVersionInternal();
     }
 
     return this._ediVersion;
   }
 
-  protected abstract parseReleaseAndVersionInternal(): Promise<EdiVersion>;
+  protected abstract parseReleaseAndVersionInternal(): EdiVersion;
 
-  public async parseSegments(force: boolean = false): Promise<EdiSegment[]> {
+  private async parseSegments(force: boolean = false): Promise<EdiSegment[]> {
     if (force) {
       return await this.parseSegmentsInternal();
     }
@@ -47,15 +69,7 @@ export abstract class EdiParserBase {
   }
 
   private async parseSegmentsInternal(): Promise<EdiSegment[]> {
-    const separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
-    const releaseCharacter = this.escapeCharRegex(this.getMessageSeparators().releaseCharacter!);
-    let regexPattern: string;
-    if (releaseCharacter) {
-      regexPattern = `\\b([\\s\\S]*?)((?<!${releaseCharacter})${separater})`;
-    } else {
-      regexPattern = `\\b([\\s\\S]*?)(${separater})`;
-    }
-    const regex = new RegExp(regexPattern, "g");
+    const regex = this.getSegmentRegex();
     const results: EdiSegment[] = [];
     let match: RegExpExecArray | null;
     while ((match = regex.exec(this.document)) !== null) {
@@ -69,6 +83,28 @@ export abstract class EdiParserBase {
       }
     }
     return results;
+  }
+
+  protected getSegmentByRegex(segmentId: string): string | null {
+    const regex = this.getSegmentRegex(segmentId);
+    let match: RegExpExecArray | null;
+    if ((match = regex.exec(this.document)) !== null) {
+      return match[0];
+    }
+
+    return null;
+  }
+
+  private getSegmentRegex(segmentId?: string): RegExp {
+    const separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
+    const releaseCharacter = this.escapeCharRegex(this.getMessageSeparators().releaseCharacter!);
+    let regexPattern: string;
+    if (releaseCharacter) {
+      regexPattern = `\\b(${segmentId ?? ""}[\\s\\S]*?)((?<!${releaseCharacter})${separater})`;
+    } else {
+      regexPattern = `\\b(${segmentId ?? ""}[\\s\\S]*?)(${separater})`;
+    }
+    return new RegExp(regexPattern, "g");
   }
 
   public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
@@ -218,7 +254,7 @@ export abstract class EdiParserBase {
       return;
     }
 
-    const ediVersion = await this.parseReleaseAndVersion();
+    const ediVersion = this.parseReleaseAndVersion();
     if (!ediVersion || !ediVersion.release) {
       return;
     }
@@ -250,4 +286,10 @@ export abstract class EdiParserBase {
       let nStr = n.toString() + '';
       return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
   }
+}
+
+export interface EdiParseResult {
+  separators: EdiMessageSeparators;
+  ediVersion: EdiVersion;
+  segments: EdiSegment[];
 }

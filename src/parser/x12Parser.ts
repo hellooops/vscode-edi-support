@@ -43,39 +43,58 @@ export class X12Parser extends EdiParserBase {
     return separators;
   }
 
-  protected async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
+  protected parseReleaseAndVersionInternal(): EdiVersion {
     // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     // GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     // ST*850*0001~
-    const ediVersion = new EdiVersion();
-    const segments = await this.parseSegments(true);
 
-    // Use GS segment to get edi release because ISA12 is a backward compatible release, see https://stackoverflow.com/questions/55401075/edi-headers-why-would-isa12-and-gs8-both-have-a-version-number
+    // Use GS segment to get edi release because ISA12 is a backward compatible release
+    // see https://stackoverflow.com/questions/55401075/edi-headers-why-would-isa12-and-gs8-both-have-a-version-number
     // Eg: ISA segment version is 00400 while GS segment version is 00401
-    const gsSegment = segments.find(s => s.id === constants.ediDocument.x12.segment.GS);
-    if (gsSegment && gsSegment.elements && gsSegment.elements.length >= 8) {
-      const gsEdiRelease = gsSegment.elements[7].value;
-      if (gsEdiRelease && gsEdiRelease.length >= 6) {
+    const ediVersion = new EdiVersion();
+    const gsSegmentStr = this.getSegmentByRegex(constants.ediDocument.x12.segment.GS);
+    if (gsSegmentStr) {
+      const gsEdiRelease = this.getElementValueByIndex(gsSegmentStr, 7);
+      if (gsEdiRelease && gsEdiRelease?.length >= 5) {
         ediVersion.release = gsEdiRelease.substring(0, 5);
+      }
+    }
+    
+    if (!ediVersion.release) {
+      const isaSegmentStr = this.getSegmentByRegex(constants.ediDocument.x12.segment.ISA);
+      if (isaSegmentStr) {
+        const isaEdiRelease = this.getElementValueByIndex(isaSegmentStr, 11);
+        if (isaEdiRelease) {
+          ediVersion.release = isaEdiRelease;
+        }
       }
     }
 
     if (!ediVersion.release) {
-      const isaSegment = segments.find(s => s.id === constants.ediDocument.x12.segment.ISA);
-      if (!isaSegment || !isaSegment.elements || isaSegment.elements.length < 12) {
-        return ediVersion;
-      }
-  
-      ediVersion.release = isaSegment.elements[11].value;
-    }
-
-    const stSegment = segments.find(s => s.id === constants.ediDocument.x12.segment.ST);
-    if (!stSegment || !stSegment.elements || stSegment.elements.length < 1) {
       return ediVersion;
     }
 
-    ediVersion.version = stSegment.elements[0].value;
+    const stSegmentStr = this.getSegmentByRegex(constants.ediDocument.x12.segment.ST);
+    if (stSegmentStr) {
+      const stEdiVersion = this.getElementValueByIndex(stSegmentStr, 0);
+      if (stEdiVersion) {
+        ediVersion.version = stEdiVersion;
+      }
+    }
+
     return ediVersion;
+  }
+
+  private getElementValueByIndex(segmentStr: string, index: number): string | null {
+    const segmentSeparator = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
+    const dataElementSeparator = this.escapeCharRegex(this.getMessageSeparators().dataElementSeparator!);
+    const regex = new RegExp(`(.*?${dataElementSeparator}){${index + 1}}(.*?)[${dataElementSeparator}|${segmentSeparator}]`, "g");
+    const match = regex.exec(segmentStr);
+    if (match) {
+      return match[2];
+    }
+
+    return null;
   }
   
   protected getSchemaRootPath(): string {

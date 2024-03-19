@@ -38,12 +38,11 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
 
     if (!element) {
       const { parser, ediType } = EdiUtils.getEdiParser(document);
-      if (ediType === EdiType.UNKNOWN) {
+      if (!parser || ediType === EdiType.UNKNOWN) {
         return;
       }
 
-      let segments = await parser!.parseSegments();
-
+      const { segments } = await parser.parse();
       return segments.map((segment) => {
         return {
           key: segment.id,

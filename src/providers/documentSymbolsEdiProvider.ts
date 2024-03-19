@@ -7,7 +7,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
   async provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[] | vscode.SymbolInformation[]> {
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return [];
-    let segments = await parser.parseSegments();
+    const { segments } = await parser.parse();
     if (!segments || segments.length <= 0) {
       return [];
     }

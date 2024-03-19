@@ -62,7 +62,27 @@ export class EdiUtils {
     return false;
   }
 
+  private static ediParserCache: {
+    document?: string,
+    result: {
+      parser: EdiParserBase | undefined,
+      ediType: string,
+    } | undefined
+  } | undefined = undefined;
+
   static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
+    const documentContent = document.getText();
+    if (!EdiUtils.ediParserCache || documentContent != EdiUtils.ediParserCache.document) {
+      EdiUtils.ediParserCache = {
+        document: documentContent,
+        result: EdiUtils.getEdiParserInternal(document)
+      }
+    }
+
+    return EdiUtils.ediParserCache.result!;
+  }
+
+  static getEdiParserInternal(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
     let ediType: string;
     let parser: EdiParserBase | undefined = undefined;
     const documentContent = document.getText();

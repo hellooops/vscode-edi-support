@@ -1,18 +1,16 @@
 import * as assert from "assert";
 
-import * as vscode from "vscode";
 import { EdifactParser } from "../../parser/edifactParser";
 import { X12Parser } from "../../parser/x12Parser";
 import { EdiVersion, EdiSegment, ElementType } from "../../parser/entities";
 import { EdiReleaseSchema } from "../../schemas/schemas";
 
 suite("Extension Test Suite", () => {
-  vscode.window.showInformationMessage("Start all tests.");
 
   test("Edifact Parse Version", async () => {
     const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
     const parser: EdifactParser = new EdifactParser(documentStr);
-    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
+    const ediVersion: EdiVersion = parser.parseReleaseAndVersion()!;
 
     assert.strictEqual(ediVersion.release, "D96A");
     assert.strictEqual(ediVersion.version, "ORDERS");
@@ -124,7 +122,7 @@ suite("Extension Test Suite", () => {
     GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     ST*850*0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
+    const ediVersion: EdiVersion = parser.parseReleaseAndVersion()!;
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");
@@ -136,7 +134,7 @@ suite("Extension Test Suite", () => {
     GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
     ST+850+0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
+    const ediVersion: EdiVersion = parser.parseReleaseAndVersion()!;
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");
@@ -148,7 +146,7 @@ suite("Extension Test Suite", () => {
     GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
     ST+850+0001~`;
     const parser: X12Parser = new X12Parser(documentStr);
-    const ediVersion: EdiVersion = (await parser.parseReleaseAndVersion())!;
+    const ediVersion: EdiVersion = parser.parseReleaseAndVersion()!;
 
     assert.strictEqual(ediVersion.release, "00401");
     assert.strictEqual(ediVersion.version, "850");
