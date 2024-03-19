@@ -178,17 +178,37 @@
         }
       ]
     },
+    "configurationDefaults": {
+      "editor.semanticTokenColorCustomizations": {
+        "enabled": true,
+        "[*]": {
+          "rules": {
+            "edisupportseparator": "#9CA3AF",
+            "edisupportvaluetypenumber": "#15803D",
+            "edisupportvaluetypedatetime": "#D16969",
+            "edisupportvaluetypequalifer": "#7E22CE"
+          }
+        },
+        "[*Dark*]": {
+          "rules": {
+            "edisupportseparator": "#4B5563",
+            "edisupportvaluetypenumber": "#6A9955",
+            "edisupportvaluetypedatetime": "#D16969",
+            "edisupportvaluetypequalifer": "#B267E6",
+            "edisupportvaluetypeother": "#9CDCFE"
+          }
+        }
+      }
+    },
     "semanticTokenScopes": [
       {
         "scopes": {
-          "EdiSegmentId": ["keyword"],
-          "EdiSegmentSeparator": ["keyword.operator"],
-          "EdiDataElementSeparator": ["keyword.operator"],
-          "EdiComponentElementSeparator": ["keyword.operator"],
-          "EdiValueTypeNumber": ["comment"],
-          "EdiValueTypeDatetime": ["string.regexp"],
-          "EdiValueTypeQualifer": ["entity.name.operator"],
-          "EdiValueTypeOther": ["variable", "variable.other.constant"]
+          "edisupportsegmentid": ["keyword"],
+          "edisupportseparator": ["keyword.operator"],
+          "edisupportvaluetypenumber": ["comment"],
+          "edisupportvaluetypedatetime": ["string.regexp"],
+          "edisupportvaluetypequalifer": ["entity.name.operator"],
+          "edisupportvaluetypeother": ["variable", "variable.other.constant"]
         }
       }
     ]

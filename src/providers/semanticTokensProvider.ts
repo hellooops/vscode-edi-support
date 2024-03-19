@@ -4,18 +4,17 @@ import { EdiSegment, EdiElement, EdiType, EdiMessageSeparators } from '../parser
 import { EdiUtils } from "../utils/ediUtils";
 
 const TokenTypes = {
-  EdiSegmentId: "EdiSegmentId",
-  EdiSegmentInvalidId: "EdiSegmentInvalidId",
-  EdiSegmentSeparator: "EdiSegmentSeparator",
-  EdiDataElementSeparator: "EdiDataElementSeparator",
-  EdiComponentElementSeparator: "EdiComponentElementSeparator",
-  EdiValueTypeNumber: "EdiValueTypeNumber",
-  EdiValueTypeDatetime: "EdiValueTypeDatetime",
-  EdiValueTypeQualifer: "EdiValueTypeQualifer",
-  EdiValueTypeOther: "EdiValueTypeOther",
+  EdiSegmentId: "edisupportsegmentid",
+  EdiSegmentSeparator: "edisupportseparator",
+  EdiDataElementSeparator: "edisupportseparator",
+  EdiComponentElementSeparator: "edisupportseparator",
+  EdiValueTypeNumber: "edisupportvaluetypenumber",
+  EdiValueTypeDatetime: "edisupportvaluetypedatetime",
+  EdiValueTypeQualifer: "edisupportvaluetypequalifer",
+  EdiValueTypeOther: "edisupportvaluetypeother",
 }
 
-const legend = new vscode.SemanticTokensLegend(Object.keys(TokenTypes));
+const legend = new vscode.SemanticTokensLegend(Object.values(TokenTypes));
 
 export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProvider, IProvidable {
   onDidChangeSemanticTokens?: vscode.Event<void> | undefined;
