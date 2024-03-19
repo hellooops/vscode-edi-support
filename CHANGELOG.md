@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+
+## [1.3.0] - 2024-03-19
+
+### Added
+
+- ✨Semantic highlighting with with human readable colors
+- Performance improvement
+
 ### Fixed
 
 - Open strict mode. Fix typescript issue.
