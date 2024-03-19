@@ -2,7 +2,7 @@ import * as assert from "assert";
 
 import * as vscode from "vscode";
 import { EdifactParser } from "../../parser/edifactParser";
-import { X12Parser, X12EdiMessage } from "../../parser/x12Parser";
+import { X12Parser } from "../../parser/x12Parser";
 import { EdiVersion, EdiSegment, ElementType } from "../../parser/entities";
 import { EdiReleaseSchema } from "../../schemas/schemas";
 
@@ -228,28 +228,6 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(segment.elements[4].type, ElementType.dataElement);
     assert.strictEqual(segment.elements[4].value, "3");
     assert.strictEqual(segment.elements[4].components, undefined);
-  });
-
-  test("X12 Parse Edi Message", async () => {
-    const documentStr = `
-    ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
-    GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
-    ST*850*0001~`;
-    const parser: X12Parser = new X12Parser(documentStr);
-    const x12EdiMessage: X12EdiMessage = await parser.parseMessage() as X12EdiMessage;
-
-    assert.strictEqual(x12EdiMessage.sender, "DERICL");
-    assert.strictEqual(x12EdiMessage.senderQualifier, "ZZ");
-    assert.strictEqual(x12EdiMessage.recipient, "TEST01");
-    assert.strictEqual(x12EdiMessage.recipientQualifier, "ZZ");
-    assert.strictEqual(x12EdiMessage.datetime, "21-05-17 06:43");
-    assert.strictEqual(x12EdiMessage.type, "850");
-    assert.strictEqual(x12EdiMessage.release, "00401");
-
-    const separators = parser.getMessageSeparators();
-    assert.strictEqual(separators.segmentSeparator, "~");
-    assert.strictEqual(separators.dataElementSeparator, "*");
-    assert.strictEqual(separators.componentElementSeparator, ">");
   });
 
   test("X12 Parse Separators 1", async () => {

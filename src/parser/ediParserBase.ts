@@ -32,9 +32,7 @@ export abstract class EdiParserBase {
     return this._ediVersion;
   }
 
-  public abstract parseReleaseAndVersionInternal(): Promise<EdiVersion>;
-
-  public abstract parseMessage(): Promise<IEdiMessage | undefined>;
+  protected abstract parseReleaseAndVersionInternal(): Promise<EdiVersion>;
 
   public async parseSegments(force: boolean = false): Promise<EdiSegment[]> {
     if (force) {
@@ -187,7 +185,7 @@ export abstract class EdiParserBase {
     return str[i] === char && str[i - 1] !== escapeChar;
   }
 
-  public abstract getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined;
+  protected abstract getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined;
 
   public setEdiVersion(ediVersion: EdiVersion) {
     this._ediVersion = ediVersion;
@@ -209,22 +207,13 @@ export abstract class EdiParserBase {
     this._separators = separators;
   }
 
-  abstract parseSeparators(): EdiMessageSeparators | null;
+  protected abstract parseSeparators(): EdiMessageSeparators | null;
 
-  public abstract getDefaultMessageSeparators(): EdiMessageSeparators;
+  protected abstract getDefaultMessageSeparators(): EdiMessageSeparators;
 
-  private async parseRegex<T>(exp: RegExp, str: string, selector: (match: RegExpExecArray) => Promise<T>): Promise<Array<T>> {
-    let results: Array<T> = [];
-    let match: RegExpExecArray | null;
-    while ((match = exp.exec(str)) !== null) {
-      results.push(await selector(match));
-    }
-    return results;
-  }
+  protected abstract getSchemaRootPath(): string;
 
-  public abstract getSchemaRootPath(): string;
-
-  async loadSchema(): Promise<void> {
+  protected async loadSchema(): Promise<void> {
     if (this.schema) {
       return;
     }
@@ -247,9 +236,9 @@ export abstract class EdiParserBase {
     this.schema = ediSchema;
   }
 
-  abstract afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void>;
+  protected abstract afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void>;
 
-  escapeCharRegex(str: string | undefined | null): string | undefined | null {
+  protected escapeCharRegex(str: string | undefined | null): string | undefined | null {
     if (str === undefined || str === null) {
       return str;
     }
@@ -257,11 +246,8 @@ export abstract class EdiParserBase {
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   }
 
-  pad(n: number, width: number, z: string = '0') {
+  protected pad(n: number, width: number, z: string = '0') {
       let nStr = n.toString() + '';
       return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
   }
-}
-
-export interface IEdiMessage {
 }

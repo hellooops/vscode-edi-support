@@ -1,11 +1,10 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
-import { EdiParserBase, IEdiMessage } from "./ediParserBase";
-import Utils from "../utils/utils";
+import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class X12Parser extends EdiParserBase {
-  public getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
+  protected getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
     if (segmentId === constants.ediDocument.x12.segment.ISA) {
       return async (segment, segmentStr) => {
         if (!segmentStr.length) {
@@ -17,7 +16,7 @@ export class X12Parser extends EdiParserBase {
     }
   }
 
-  parseSeparators(): EdiMessageSeparators | null {
+  protected parseSeparators(): EdiMessageSeparators | null {
     const document = this.document.trim();
     if (!document || document.length < 106 || !document.startsWith(constants.ediDocument.x12.segment.ISA)) {
       return null;
@@ -36,7 +35,7 @@ export class X12Parser extends EdiParserBase {
     return separators;
   }
 
-  public getDefaultMessageSeparators(): EdiMessageSeparators {
+  protected getDefaultMessageSeparators(): EdiMessageSeparators {
     const separators = new EdiMessageSeparators();
     separators.segmentSeparator = constants.ediDocument.x12.defaultSeparators.segmentSeparator;
     separators.dataElementSeparator = constants.ediDocument.x12.defaultSeparators.dataElementSeparator;
@@ -44,7 +43,7 @@ export class X12Parser extends EdiParserBase {
     return separators;
   }
 
-  public async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
+  protected async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
     // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     // GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     // ST*850*0001~
@@ -78,35 +77,8 @@ export class X12Parser extends EdiParserBase {
     ediVersion.version = stSegment.elements[0].value;
     return ediVersion;
   }
-
-  public async parseMessage(): Promise<IEdiMessage | undefined> {
-    const segments = await this.parseSegments();
-    const isa = segments.find(segment => segment.id === constants.ediDocument.x12.segment.ISA);
-    const st = segments.find(segment => segment.id === constants.ediDocument.x12.segment.ST);
-    if (!isa || !st) {
-      return undefined;
-    }
-
-    const ediMessage: X12EdiMessage = new X12EdiMessage(segments);
-    ediMessage.sender = isa.getElement(6)?.value?.trim();
-    ediMessage.senderQualifier = isa.getElement(5)?.value;
-
-    ediMessage.recipient = isa.getElement(8)?.value?.trim();
-    ediMessage.recipientQualifier = isa.getElement(7)?.value;
-
-    const date = isa.getElement(9)?.value;
-    const time = isa.getElement(10)?.value;
-    if (date && time) {
-      ediMessage.datetime = `${Utils.yyMMddFormat(date)} ${Utils.HHmmFormat(time)}`;
-    }
-
-    ediMessage.release = isa.getElement(12)?.value;
-    ediMessage.type = st.getElement(1)?.value;
-
-    return ediMessage;
-  }
   
-  public getSchemaRootPath(): string {
+  protected getSchemaRootPath(): string {
     return "../schemas/x12";
   }
 
@@ -163,30 +135,5 @@ export class X12Parser extends EdiParserBase {
     }
 
     return segment;
-  }
-}
-
-export class X12EdiMessage implements IEdiMessage {
-  public sender?: string; // ISA06
-  public senderQualifier?: string; // ISA05
-  public recipient?: string; // ISA08
-  public recipientQualifier?: string; // ISA07
-
-  public datetime?: string; // ISA09 + ISA10
-
-  public type?: string; // ST01
-  public release?: string; // ISA12
-  public segments: EdiSegment[];
-
-  constructor(segments: EdiSegment[]) {
-    this.segments = segments;
-  }
-
-  public buildIsaDescription(): string {
-    return "TODO: Deric";
-  }
-
-  public buildUNHDescription(): string {
-    return "TODO: Deric";
   }
 }

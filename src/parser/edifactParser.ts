@@ -1,11 +1,10 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
-import { EdiParserBase, IEdiMessage } from "./ediParserBase";
-import Utils from "../utils/utils";
+import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class EdifactParser extends EdiParserBase {
-  public getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
+  protected getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
     if (segmentId === constants.ediDocument.edifact.segment.UNA) {
       return async (segment, segmentStr) => {
         if (segmentStr.length !== 9) {
@@ -17,7 +16,7 @@ export class EdifactParser extends EdiParserBase {
     }
   }
 
-  parseSeparators(): EdiMessageSeparators | null {
+  protected parseSeparators(): EdiMessageSeparators | null {
     const document = this.document.trim();
     if (!document || document.length < 9 || !document.startsWith(constants.ediDocument.edifact.segment.UNA)) {
       return null;
@@ -33,7 +32,7 @@ export class EdifactParser extends EdiParserBase {
     return ediMessageSeparators;
   }
 
-  public getDefaultMessageSeparators(): EdiMessageSeparators {
+  protected getDefaultMessageSeparators(): EdiMessageSeparators {
     const separators = new EdiMessageSeparators();
     separators.segmentSeparator = constants.ediDocument.edifact.defaultSeparators.segmentSeparator;
     separators.dataElementSeparator = constants.ediDocument.edifact.defaultSeparators.dataElementSeparator;
@@ -42,7 +41,7 @@ export class EdifactParser extends EdiParserBase {
     return separators;
   }
 
-  public async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
+  protected async parseReleaseAndVersionInternal(): Promise<EdiVersion> {
     const ediVersion = new EdiVersion();
     let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
@@ -72,39 +71,7 @@ export class EdifactParser extends EdiParserBase {
     return ediVersion;
   }
 
-  public async parseMessage(): Promise<IEdiMessage | undefined> {
-    const segments = await this.parseSegments();
-    const unb = segments.find(segment => segment.id === constants.ediDocument.edifact.segment.UNB);
-    const unh = segments.find(segment => segment.id === constants.ediDocument.edifact.segment.UNH);
-    if (!unb || !unh) {
-      return undefined;
-    }
-
-    const ediMessage: EdifactEdiMessage = new EdifactEdiMessage(segments);
-
-    ediMessage.sender = unb.getElement(2, 1)?.value;
-    ediMessage.senderQualifier = unb.getElement(2, 2)?.value;
-
-    ediMessage.recipient = unb.getElement(3, 1)?.value;
-    ediMessage.recipientQualifier = unb.getElement(3, 2)?.value;
-
-    const date = unb.getElement(4, 1)?.value;
-    const time = unb.getElement(4, 2)?.value;
-    if (date && time) {
-      ediMessage.datetime = `${Utils.yyMMddFormat(date)} ${Utils.HHmmFormat(time)}`;
-    }
-
-    ediMessage.communicationsAgreementID = unb.getElement(10)?.value;
-    ediMessage.testIndicator = unb.getElement(11)?.value;
-
-    ediMessage.referenceNumber = unh.getElement(1)?.value;
-    ediMessage.type = unh.getElement(2, 1)?.value;
-    ediMessage.release = `${unh.getElement(2, 2)?.value}${unh.getElement(2, 3)?.value}`;
-
-    return ediMessage;
-  }
-
-  public getSchemaRootPath(): string {
+  protected getSchemaRootPath(): string {
     return "../schemas/edifact";
   }
 
@@ -151,72 +118,5 @@ export class EdifactParser extends EdiParserBase {
     }
 
     return segment;
-  }
-}
-
-export class EdifactEdiMessage implements IEdiMessage {
-  public sender?: string; // UNB02-01
-  public senderQualifier?: string; // UNB02-02
-  public recipient?: string; // UNB03-01
-  public recipientQualifier?: string; // UNB03-02
-
-  public datetime?: string; // UNB04-01 + UNB04-02
-  public communicationsAgreementID?: string; // UNB10
-  public testIndicator?: string; // UNB11
-
-  public referenceNumber?: string; // UNH01
-  public type?: string; // UNH02-01
-  public release?: string; // UNH02-02 + UNH02-03
-  public segments: EdiSegment[];
-
-  constructor(segments: EdiSegment[]) {
-    this.segments = segments;
-  }
-
-  public buildMessageDescriptions(): string[] {
-    const descriptions: string[] = [];
-    let sender: string | undefined = this.sender?.trim();
-    let recipient: string | undefined = this.recipient?.trim();
-
-    if (sender) {
-      if (this.senderQualifier) {
-        sender += `(${this.senderQualifier})`;
-      }
-    } else {
-      sender = "Unknown";
-    }
-
-    if (recipient) {
-      if (this.recipientQualifier) {
-        recipient += `(${this.recipientQualifier})`;
-      }
-    } else {
-      recipient = "Unknown";
-    }
-
-    descriptions.push(`From ${sender} to ${recipient} at ${this.datetime}`);
-
-    let part2 = "";
-    if (this.release && this.type) {
-      const messageInfo = Utils.getMessageInfoByDocumentType(this.type);
-      if (messageInfo) {
-        part2 = `${this.release}-${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
-      } else {
-        part2 = `${this.release}-${this.type}`;
-      }
-    } else if (this.type) {
-      const messageInfo = Utils.getMessageInfoByDocumentType(this.type);
-      if (messageInfo) {
-        part2 = `${this.type}(${messageInfo.name}): ${messageInfo.introduction}`;
-      } else {
-        part2 = `${this.type}`;
-      }
-    }
-
-    if (part2) {
-      descriptions.push(part2);
-    }
-
-    return descriptions;
   }
 }
