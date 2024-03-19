@@ -84,7 +84,12 @@ export abstract class EdiParserBase {
       segmentStr.length,
       endingDelimiter
     );
-    segment.ediReleaseSchemaSegment = this.schema?.ediReleaseSchema?.getSegment(segment.id);
+    if (this.schema?.ediReleaseSchema) {
+      segment.ediReleaseSchemaSegment = this.schema.ediReleaseSchema.getSegment(segment.id);
+      if (!segment.ediReleaseSchemaSegment) {
+        segment.isInvalidSegment = true;
+      }
+    }
 
     const customSegmentParser = this.getCustomSegmentParser(segment.id);
     if (customSegmentParser) {

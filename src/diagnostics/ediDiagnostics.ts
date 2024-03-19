@@ -21,13 +21,26 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     }
 
     let segments = await parser.parseSegments();
+    let diagnoscticsContext: VscodeDiagnoscticsContext;
     for (let segment of segments) {
-      if (!segment.ediReleaseSchemaSegment || !segment.elements) {
+      diagnoscticsContext = {
+        document,
+        segment,
+        ediType,
+        segments
+      };
+
+      const segmentDiagnostic = this.getSegmentDiagnostic(diagnoscticsContext);
+      if (segmentDiagnostic?.length > 0) {
+        diagnostics.push(...segmentDiagnostic);
+      }
+
+      if (!segment.elements) {
         continue;
       }
 
       for (let element of segment.elements) {
-        const diagnoscticsContext: VscodeDiagnoscticsContext = {
+        diagnoscticsContext = {
           document,
           segment,
           element,
@@ -44,16 +57,28 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     ediDiagnostics.set(document.uri, diagnostics);
   }
 
-  getElementDiagnostic(context: VscodeDiagnoscticsContext): vscode.Diagnostic[] {
-    if (!context.element?.ediReleaseSchemaElement) {
-      return [];
+  getSegmentDiagnostic(context: VscodeDiagnoscticsContext): vscode.Diagnostic[] {
+    const diagnostics: vscode.Diagnostic[] = [];
+    const segmentErrors = context.segment.getErrors(context);
+    for (let segmentError of segmentErrors) {
+      const diagnostic = new vscode.Diagnostic(
+        EdiUtils.getSegmentIdRange(context.document, context.segment),
+        segmentError.error,
+        vscode.DiagnosticSeverity.Error
+      );
+      diagnostic.code = segmentError.code;
+      diagnostics.push(diagnostic);
     }
 
+    return diagnostics;
+  }
+
+  getElementDiagnostic(context: VscodeDiagnoscticsContext): vscode.Diagnostic[] {
     const diagnostics: vscode.Diagnostic[] = [];
-    const elementErrors = context.element.getErrors(context);
+    const elementErrors = context.element!.getErrors(context);
     for (let elementError of elementErrors) {
       const diagnostic = new vscode.Diagnostic(
-        EdiUtils.getElementRange(context.document, context.segment, context.element),
+        EdiUtils.getElementRange(context.document, context.segment, context.element!),
         elementError.error,
         vscode.DiagnosticSeverity.Error
       );

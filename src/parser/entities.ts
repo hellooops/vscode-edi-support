@@ -19,6 +19,7 @@ export class EdiSegment {
   public elements: Array<EdiElement>;
   public endingDelimiter: string;
   public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
+  public isInvalidSegment: boolean;
 
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
     this.id = id;
@@ -27,6 +28,7 @@ export class EdiSegment {
     this.length = length;
     this.endingDelimiter = endingDelimiter;
     this.elements = [];
+    this.isInvalidSegment = false;
   }
 
   public toString() {
@@ -53,6 +55,21 @@ export class EdiSegment {
     }
     return component;
   }
+
+  public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors: DiagnosticError[] = [];
+    
+    if (this.isInvalidSegment) {
+      errors.push(
+        new DiagnosticError(
+          `Segment ${this.id} not found.`,
+          "Invalid value"
+        )
+      );
+    }
+
+    return errors;
+  }
 }
 
 export enum ElementType {
@@ -71,7 +88,7 @@ export class DiagnosticError {
 
 export interface DiagnoscticsContext {
   segment: EdiSegment;
-  element: EdiElement;
+  element?: EdiElement;
   ediType: string;
   segments: EdiSegment[]
 }
@@ -170,11 +187,11 @@ export class EdiElement {
   getCustomElementErrors(context: DiagnoscticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (context.ediType === EdiType.X12) {
-      if (context.element.getDesignator() === "SE01") {
+      if (context.element!.getDesignator() === "SE01") {
         errors.push(...this.getErrors_SE01(context));
       }
     } else if (context.ediType === EdiType.EDIFACT) {
-      if (context.element.getDesignator() === "UNT01") {
+      if (context.element!.getDesignator() === "UNT01") {
         errors.push(...this.getErrors_UNT01(context));
       }
     }
@@ -197,7 +214,7 @@ export class EdiElement {
     }
     // To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)
     const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
-    if (context.element.value !== valueExpected) {
+    if (context.element!.value !== valueExpected) {
       errors.push(
         new DiagnosticError(
           `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
@@ -225,7 +242,7 @@ export class EdiElement {
     }
     // Control count of number of segments in a message.
     const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
-    if (context.element.value !== valueExpected) {
+    if (context.element!.value !== valueExpected) {
       errors.push(
         new DiagnosticError(
           `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
