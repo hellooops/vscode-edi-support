@@ -45,10 +45,14 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
       EdiUtils.getSegmentIdRange(document, segment),
       TokenTypes.EdiSegmentId,
     );
-    builder.push(
-      EdiUtils.getSegmentDelimiterRange(document, segment),
-      TokenTypes.EdiSegmentSeparator,
-    );
+
+    const segmentDelimiterRange = EdiUtils.getSegmentDelimiterRange(document, segment);
+    if (segmentDelimiterRange) {
+      builder.push(
+        segmentDelimiterRange,
+        TokenTypes.EdiSegmentSeparator,
+      );
+    }
 
     for (const ele of segment.elements) {
       this.buildElementSemanticTokens(document, builder, segment, ele, separators);

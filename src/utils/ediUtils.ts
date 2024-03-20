@@ -128,7 +128,11 @@ export class EdiUtils {
     );
   }
 
-  static getSegmentDelimiterRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range {
+  static getSegmentDelimiterRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range | null {
+    if (segment.endingDelimiter === "\r") {
+      return null;
+    }
+
     return new vscode.Range(
       EdiUtils.getSegmentEndPosition(document, segment).translate(0, -1),
       EdiUtils.getSegmentEndPosition(document, segment),
