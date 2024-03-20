@@ -191,7 +191,7 @@
         },
         "[*Dark*]": {
           "rules": {
-            "edisupportseparator": "#4B5563",
+            "edisupportseparator": "#6B7280",
             "edisupportvaluetypenumber": "#6A9955",
             "edisupportvaluetypedatetime": "#D16969",
             "edisupportvaluetypequalifer": "#B267E6",
