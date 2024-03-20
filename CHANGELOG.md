@@ -7,6 +7,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.3.1] - 2024-03-20
+
+### Changed
+
+- Adjust separator color in dark theme
+
+### Fixed
+
+- Fix bug when segment delimiter is \r, the semantic tokens are built wrong.
+
+
 ## [1.3.0] - 2024-03-19
 
 ### Added
