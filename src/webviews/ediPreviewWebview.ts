@@ -26,7 +26,7 @@ function prepareWebView(context: vscode.ExtensionContext) {
     }
   );
 
-  const dependencyNameList: string[] = ["index.js"];
+  const dependencyNameList: string[] = ["index.js", "index.css"];
   const dependencyList: vscode.Uri[] = dependencyNameList.map(item =>
     panel.webview.asWebviewUri(
       vscode.Uri.file(
@@ -45,6 +45,7 @@ function prepareWebView(context: vscode.ExtensionContext) {
     const vscode = acquireVsCodeApi();
   </script>
   <script type="module" crossorigin src="${dependencyList[0]}"></script>
+  <link rel="stylesheet" href="${dependencyList[1]}">
 </head>
 <body>
   <div id="app"></div>
@@ -79,9 +80,6 @@ function receiveMessages(webview: vscode.Webview) {
 
 async function handleFileChange(webview: vscode.Webview, document: vscode.TextDocument | undefined) {
   if (!document) return;
-
-  const fileName = document.fileName;
-  const text = document.getText();
     
   const { parser } = EdiUtils.getEdiParser(document)!;
   if (!parser) {
@@ -89,16 +87,12 @@ async function handleFileChange(webview: vscode.Webview, document: vscode.TextDo
   }
 
   const result = await parser.parse();
-  let a: VSCodeMessage;
-
-  await webview.postMessage({
+  const iEdiMessage = result.getIResult();
+  const vcmMessage: VcmMessage = {
     name: "fileChange",
-    data: {
-      fileName,
-      text,
-      parsedResult: 123
-    }
-  });
+    data: iEdiMessage
+  };
+  await webview.postMessage(vcmMessage);
 }
 
 function sendMessages(webview: vscode.Webview) {

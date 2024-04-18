@@ -1,4 +1,4 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
+import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiMessage } from "./entities";
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
@@ -9,14 +9,14 @@ export abstract class EdiParserBase {
   document: string;
   schema?: EdiSchema;
   _separators?: EdiMessageSeparators | null;
-  private parseResult?: EdiParseResult;
-  private parsingPromise?: Promise<EdiParseResult>;
+  private parseResult?: EdiMessage;
+  private parsingPromise?: Promise<EdiMessage>;
 
   public constructor(document: string) {
     this.document = document;
   }
 
-  public async parse(): Promise<EdiParseResult> {
+  public async parse(): Promise<EdiMessage> {
     if (this.parsingPromise) {
       return this.parsingPromise;
     }
@@ -31,16 +31,12 @@ export abstract class EdiParserBase {
     return parsingPromise;
   }
 
-  private async parseInternal(): Promise<EdiParseResult> {
+  private async parseInternal(): Promise<EdiMessage> {
     if (!this.parseResult) {
       const separators = this.getMessageSeparators();
       const releaseAndVersion = this.parseReleaseAndVersion();
       const segments = await this.parseSegments();
-      this.parseResult = {
-        separators,
-        ediVersion: releaseAndVersion,
-        segments
-      }
+      this.parseResult = new EdiMessage(separators, releaseAndVersion, segments);
     }
 
     return this.parseResult;
@@ -286,10 +282,4 @@ export abstract class EdiParserBase {
       let nStr = n.toString() + '';
       return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
   }
-}
-
-export interface EdiParseResult {
-  separators: EdiMessageSeparators;
-  ediVersion: EdiVersion;
-  segments: EdiSegment[];
 }

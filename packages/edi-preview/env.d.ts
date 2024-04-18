@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 type VSCode = {
-  postMessage(message: VSCodeMessage): void;
+  postMessage(message: Vcm): void;
   getState(): any;
   setState(state: any): void;
 };

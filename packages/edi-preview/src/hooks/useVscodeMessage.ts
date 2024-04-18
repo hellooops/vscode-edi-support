@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted } from "vue";
 
 
-type FileChangeCallback = (data: VSCodeMessageFileChange["data"]) => void;
+type RefreshCallback = (data: VcmMessage["data"]) => void;
 
 function useEvent(eventName: string, func: any) {
   let eventListener: any;
@@ -13,7 +13,7 @@ function useEvent(eventName: string, func: any) {
   });
 }
 
-export default function useVscodeMessage() {
+export default function useVcm() {
   function vscodeLog(message: string) {
     vscode.postMessage({
       name: "log",
@@ -21,15 +21,15 @@ export default function useVscodeMessage() {
     });
   }
 
-  function onFileChange(callback: FileChangeCallback) {
+  function onRefresh(callback: RefreshCallback) {
     useEvent("message", (event: any) => {
-      const vscodeMessage = event.data as VSCodeMessageFileChange;
+      const vscodeMessage = event.data as VcmMessage;
       callback(vscodeMessage.data);
     });
   }
 
   return {
     vscodeLog,
-    onFileChange
+    onRefresh
   };
 }

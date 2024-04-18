@@ -1,7 +1,11 @@
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 
-export class EdiVersion {
+interface IEdiMessageResult<T> {
+  getIResult(): T;
+}
+
+export class EdiVersion implements IEdiMessageResult<IEdiVersion> {
   public release?: string; // D96A
   public version?: string; // ORDERS
 
@@ -9,9 +13,13 @@ export class EdiVersion {
     this.release = release;
     this.version = version;
   }
+
+  getIResult(): IEdiVersion {
+    return this;
+  }
 }
 
-export class EdiSegment {
+export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
   public id: string;
   public startIndex: number;
   public endIndex: number;
@@ -70,6 +78,16 @@ export class EdiSegment {
 
     return errors;
   }
+
+  getIResult(): IEdiSegment {
+    return {
+      key: this.startIndex,
+      id: this.id,
+      desc: this.ediReleaseSchemaSegment!.desc,
+      purpose: this.ediReleaseSchemaSegment!.purpose,
+      elements: this.elements.map(e => e.getIResult())
+    };
+  }
 }
 
 export enum ElementType {
@@ -93,7 +111,7 @@ export interface DiagnoscticsContext {
   segments: EdiSegment[]
 }
 
-export class EdiElement {
+export class EdiElement implements IEdiMessageResult<IEdiElement> {
   public type: ElementType;
   public value?: string;
   public startIndex: number;
@@ -261,6 +279,23 @@ export class EdiElement {
   public toString() {
     return this.separator + this.value;
   }
+
+  getIResult(): IEdiElement {
+    return {
+      key: this.getDesignator(),
+      type: this.type,
+      value: this.value,
+      components: this.components?.map(e => e.getIResult()),
+      id: this.ediReleaseSchemaElement!.id,
+      desc: this.ediReleaseSchemaElement!.desc,
+      dataType: this.ediReleaseSchemaElement!.dataType,
+      required: this.ediReleaseSchemaElement!.required,
+      minLength: this.ediReleaseSchemaElement!.minLength,
+      maxLength: this.ediReleaseSchemaElement!.maxLength,
+      qualifierRef: this.ediReleaseSchemaElement!.qualifierRef,
+      definition: this.ediReleaseSchemaElement!.definition,
+    };
+  }
 }
 
 export class EdiMessageSeparators {
@@ -274,4 +309,23 @@ export class EdiType {
   static X12 = constants.ediDocument.x12.name;
   static EDIFACT = constants.ediDocument.edifact.name;
   static UNKNOWN = "unknown";
+}
+
+export class EdiMessage implements IEdiMessageResult<IEdiMessage> {
+  separators: EdiMessageSeparators;
+  ediVersion: EdiVersion;
+  segments: EdiSegment[];
+
+  constructor(separators: EdiMessageSeparators, ediVersion: EdiVersion, segments: EdiSegment[]) {
+    this.separators = separators;
+    this.ediVersion = ediVersion;
+    this.segments = segments;
+  }
+
+  getIResult(): IEdiMessage {
+    return {
+      ediVersion: this.ediVersion.getIResult(),
+      segments: this.segments.map(segment => segment.getIResult())
+    };
+  }
 }
