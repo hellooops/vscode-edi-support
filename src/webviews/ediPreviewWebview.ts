@@ -1,10 +1,14 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import * as constants from "../constants";
+import { EdiUtils } from "../utils/ediUtils";
 
 export function createWebview(context: vscode.ExtensionContext) {
+  const currentDocument = vscode.window.activeTextEditor?.document;
   const panel = prepareWebView(context);
   sendAndReceiveMessages(panel.webview);
+
+  handleFileChange(panel.webview, currentDocument);
 }
 
 function prepareWebView(context: vscode.ExtensionContext) {
@@ -73,19 +77,33 @@ function receiveMessages(webview: vscode.Webview) {
   });
 }
 
+async function handleFileChange(webview: vscode.Webview, document: vscode.TextDocument | undefined) {
+  if (!document) return;
+
+  const fileName = document.fileName;
+  const text = document.getText();
+    
+  const { parser } = EdiUtils.getEdiParser(document)!;
+  if (!parser) {
+    return [];
+  }
+
+  const result = await parser.parse();
+  let a: VSCodeMessage;
+
+  await webview.postMessage({
+    name: "fileChange",
+    data: {
+      fileName,
+      text,
+      parsedResult: 123
+    }
+  });
+}
+
 function sendMessages(webview: vscode.Webview) {
-  vscode.window.onDidChangeActiveTextEditor(async editor => {
+  vscode.workspace.onDidChangeTextDocument(async editor => {
     if (!editor) return;
-
-    const fileName = editor.document.fileName;
-    const text = editor.document.getText();
-
-    await webview.postMessage({
-      name: "fileChange",
-      data: {
-        fileName,
-        text
-      }
-    });
+    await handleFileChange(webview, editor.document);
   });
 }

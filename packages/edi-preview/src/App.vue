@@ -2,32 +2,29 @@
   <div>
     <h1>edi preview</h1>
     <span>count: {{ count }}</span>
+    <button @click="vscodeLog('' + count)">Hello</button>
+    <p>{{ message }}</p>
+    <p>{{ other }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import useVscodeMessage from "@/hooks/useVscodeMessage";
 
 const count = ref(0);
+const message = ref("");
+const other = ref<any>();
 
 let interval: number | undefined = undefined;
 
-window.addEventListener("message", (event) => {
-  const vscodeMessage = event.data as VSCodeMessage;
-  vscodeLog(vscodeMessage.name);
-  count.value = -50;
-  if (vscodeMessage.name === "fileChange") {
-    count.value = -100;
-  }
+const { vscodeLog, onFileChange } = useVscodeMessage();
+
+onFileChange((data) => {
+  message.value = data.fileName + " | " + data.text;
+  other.value = (data as any).result.ediVersion;
 });
 
-
-function vscodeLog(message: string) {
-  vscode.postMessage({
-    name: "log",
-    data: message
-  });
-}
 
 onMounted(() => {
   interval = setInterval(() => {
