@@ -10,6 +10,7 @@
           <span class="inline-flex items-center">
             <span><ElementIcon width="12px" height="12px" /></span>
             <span class="ml-2">{{ element.id.toUpperCase() }}</span>
+            <span class="ml-2">{{ element.desc }}</span>
           </span>
         </InspectorPopover>
       </div>
@@ -17,7 +18,6 @@
     <div class="flex-1">
       <div>
         <span class="font-semibold">{{ element.value }}</span>
-        <span class="ml-2">{{ element.desc }}</span>
       </div>
       <span class="text-neutral-500 text-xs">{{ element.definition }}</span>
     </div>

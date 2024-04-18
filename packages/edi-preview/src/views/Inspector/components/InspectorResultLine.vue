@@ -5,7 +5,7 @@
       :isRequired="isRequired"
       :desc="content"
     >
-      <div class="inline-flex hover:bg-[#EFEFF0] p-1 rounded transition-all hover:cursor-pointer" @click="handleToggleContentVisible">
+      <div class="inline-flex hover:bg-[#f6f8fa] p-1 rounded transition-all hover:cursor-pointer" @click="handleToggleContentVisible">
         <RightOutlined class="transition-all" :class="{'rotate-90': visible}" />
         <span class="ml-2 bg-black-100 text-white px-1">{{ name }}</span>
         <span class="ml-2 text-black-100">{{ description }}</span>
