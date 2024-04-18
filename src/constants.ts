@@ -21,6 +21,10 @@ export namespace commands {
     name: "edi-support.toggleInlayHints",
     label: "Toggle inlay hints"
   };
+  export const previewDocumentCommand = {
+    name: "edi-support.preview",
+    label: "Preview"
+  };
 }
 
 export namespace ediDocument {
@@ -75,6 +79,10 @@ export namespace diagnostic {
 export namespace explorers {
   export const treeExplorerId = "edi-support-explorer";
   export const refreshEdiExplorer = "edi-support.refreshEdiExplorer";
+}
+
+export namespace webviews {
+  export const previewViewType = "edi-support-preview";
 }
 
 export namespace errors {

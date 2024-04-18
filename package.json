@@ -90,6 +90,12 @@
         "icon": "$(group-by-ref-type)"
       },
       {
+        "command": "edi-support.preview",
+        "title": "Preview",
+        "category": "EDI Support",
+        "icon": "$(open-preview)"
+      },
+      {
         "command": "edi-support.toggleInlayHints",
         "title": "Toggle inlay hints of segments and elements",
         "category": "EDI Support",
@@ -151,6 +157,11 @@
         },
         {
           "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
+          "command": "edi-support.preview",
+          "group": "navigation"
+        },
+        {
+          "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
           "command": "edi-support.toggleInlayHints",
           "group": "navigation"
         }
@@ -169,6 +180,11 @@
         {
           "when": "view == edi-support-explorer",
           "command": "edi-support.minify",
+          "group": "format"
+        },
+        {
+          "when": "view == edi-support-explorer",
+          "command": "edi-support.preview",
           "group": "format"
         },
         {

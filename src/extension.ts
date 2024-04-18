@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { ICommandable } from "./interfaces/commandable";
 import { PrettifyDocumentCommand } from "./commands/prettifyDocumentCommand";
 import { MinifyDocumentCommand } from "./commands/minifyDocumentCommand";
+import { PreviewDocumentCommand } from "./commands/previewDocumentCommand";
 import { ToggleInlayHintsCommand } from "./commands/toggleInlayHintsCommand";
 import { SelectTextByPositionCommand } from "./commands/selectTextByPositionCommand";
 import { IProvidable } from "./interfaces/providable";
@@ -20,6 +21,7 @@ import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
   registerCommand(context, new MinifyDocumentCommand());
+  registerCommand(context, new PreviewDocumentCommand(context));
   registerCommand(context, new ToggleInlayHintsCommand());
   registerCommand(context, new SelectTextByPositionCommand());
   registerProvider(context, new HighlightEdiProvider());
