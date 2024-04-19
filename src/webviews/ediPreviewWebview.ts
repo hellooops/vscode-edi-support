@@ -1,110 +1,43 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import * as constants from "../constants";
-import { EdiUtils } from "../utils/ediUtils";
+import WebviewProvider from './webviewProvider';
+
+// TODO: change to existing webview if already exists
+// TODO: only update relative webview if edi file is changed.
+
+const webviewsProvidersMap: Map<string, WebviewProvider> = new Map();
 
 export function createWebview(context: vscode.ExtensionContext) {
   const currentDocument = vscode.window.activeTextEditor?.document;
   if (!currentDocument) return;
-  const panel = prepareWebView(context, currentDocument);
-  sendAndReceiveMessages(panel);
-
-  handleFileChange(panel.webview, currentDocument);
-}
-
-function prepareWebView(context: vscode.ExtensionContext, document: vscode.TextDocument) {
-  const panel = vscode.window.createWebviewPanel(
-    constants.webviews.previewViewType,
-    `Preview ${document.fileName}`,
-    vscode.ViewColumn.Two,
-    {
-      enableScripts: true,
-      localResourceRoots: [
-        vscode.Uri.file(
-          path.join(context.extensionPath, "edi-preview-dist", "assets")
-        )
-      ]
-    }
-  );
-
-  const dependencyNameList: string[] = ["index.js", "index.css"];
-  const dependencyList: vscode.Uri[] = dependencyNameList.map(item =>
-    panel.webview.asWebviewUri(
-      vscode.Uri.file(
-        path.join(context.extensionPath, "edi-preview-dist", "assets", item)
-      )
-    )
-  );
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EDI Preview</title>
-  <script>
-    const vscode = acquireVsCodeApi();
-  </script>
-  <script type="module" crossorigin src="${dependencyList[0]}"></script>
-  <link rel="stylesheet" href="${dependencyList[1]}">
-</head>
-<body>
-  <div id="app"></div>
-</body>
-</html>
-`;
-  panel.webview.html = html;
-
-  panel.webview.onDidReceiveMessage(
-    async ({ message }) => {
-      vscode.window.showInformationMessage(message);
-    },
-    undefined,
-    context.subscriptions
-  );
-  return panel;
-}
-
-function sendAndReceiveMessages(panel: vscode.WebviewPanel) {
-  receiveMessages(panel);
-  sendMessages(panel);
-}
-
-function receiveMessages(panel: vscode.WebviewPanel) {
-  const e = panel.webview.onDidReceiveMessage(async (message) => {
-    if (message.name === "log") {
-      console.log(message.data);
-      await vscode.window.showInformationMessage(message.data);
-    }
-  });
-  panel.onDidDispose(() => {
-    e.dispose();
-  });
-}
-
-async function handleFileChange(webview: vscode.Webview, document: vscode.TextDocument | undefined) {
-  if (!document) return;
-    
-  const { parser } = EdiUtils.getEdiParser(document)!;
-  if (!parser) {
-    return [];
+  const fileName = currentDocument.fileName;
+  let webviewProvider = webviewsProvidersMap.get(fileName);
+  if (webviewProvider) {
+    // TODO: show existing webview
+    return;
   }
 
-  const result = await parser.parse();
-  const iEdiMessage = result.getIResult();
-  const vcmMessage: VcmMessage = {
-    name: "fileChange",
-    data: iEdiMessage
-  };
-  await webview.postMessage(vcmMessage);
+  webviewProvider = new WebviewProvider(fileName, context);
+  webviewProvider.create();
+  webviewProvider.onDidDispose(() => {
+    webviewsProvidersMap.delete(fileName);
+  });
+  webviewsProvidersMap.set(fileName, webviewProvider);
+  registerEvents();
 }
 
-function sendMessages(panel: vscode.WebviewPanel) {
-  const e = vscode.workspace.onDidChangeTextDocument(async editor => {
-    if (!editor) return;
-    await handleFileChange(panel.webview, editor.document);
+function registerEvents() {
+  vscode.workspace.onDidChangeTextDocument(async editor => {
+    if (!editor?.document) return;
+    const webviewProvider = webviewsProvidersMap.get(editor.document.fileName);
+    if (!webviewProvider) return;
+    webviewProvider.update(editor.document);
   });
-  panel.onDidDispose(() => {
-    e.dispose();
+
+  vscode.window.onDidChangeTextEditorSelection(async (event) => {
+    if (!event.textEditor.document) return;
+    const webviewProvider = webviewsProvidersMap.get(event.textEditor.document.fileName);
+    if (!webviewProvider) return;
+    webviewProvider.onSelectionChange(event.selections[0].active.line);
   });
 }
