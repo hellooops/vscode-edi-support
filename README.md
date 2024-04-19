@@ -19,10 +19,11 @@
 
 ## 👍 Features
 
+- 💥Preview EDI files.
 - Basic syntax highlighting.
-- 💥Document diagnostics.
-- 💥Inlay hints for segments and elements.
-- 💥Edi Explorer
+- Document diagnostics.
+- Inlay hints for segments and elements.
+- Edi Explorer
 - Document formatting.
 - Document prettify.
 - Document minify.
@@ -30,6 +31,9 @@
 - Element hover description.
 - Document Symbols.
 
+
+### Document preview.
+<p><img src="./docs/images/edi-support-preview.png" alt="Document preview"/></p>
 
 ### Document diagnostics.
 <p><img src="./docs/images/diagnostics.png" alt="Document diagnostics"/></p>

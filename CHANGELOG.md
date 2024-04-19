@@ -7,6 +7,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [1.4.0] - 2024-04-19
+
+### Added
+
+- ✨ Support document preview.
+
+
 ## [1.3.1] - 2024-03-20
 
 ### Changed
