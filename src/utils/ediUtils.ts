@@ -167,4 +167,35 @@ export class EdiUtils {
       EdiUtils.getElementEndPosition(document, segment, element),
     );
   }
+
+  static getSegmentOrElementByPosition(position: number, segments: EdiSegment[]): {segment?: EdiSegment, element?: EdiElement} {
+    const active: {segment?: EdiSegment, element?: EdiElement} = {};
+    let selectedSegment = segments.find(x => position >= x.startIndex && position <= (x.endIndex + 1));
+    if (!selectedSegment?.elements || selectedSegment?.elements?.length <= 0) {
+      return active;
+    }
+
+    active.segment = selectedSegment;
+
+    let selectedElement = selectedSegment?.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position <= (selectedSegment!.startIndex + x.endIndex + 1));
+
+    if (!selectedElement) {
+      return active;
+    }
+
+    active.element = selectedElement;
+    
+    if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
+      let selectedComponentElement: EdiElement | undefined = undefined;
+      selectedComponentElement = selectedElement?.components?.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position <= (selectedSegment!.startIndex + x.endIndex + 1));
+      if (selectedComponentElement) selectedElement = selectedComponentElement;
+    }
+
+    if (!selectedElement) {
+      return {};
+    }
+
+    active.element = selectedElement;
+    return active;
+  }
 }

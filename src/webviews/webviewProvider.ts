@@ -106,8 +106,12 @@ export default class WebviewProvider {
     await this.panel!.webview.postMessage(vcmMessage);
   }
 
-  onSelectionChange(activeLine: number) {
-
+  async onSelectionChange(startOffset: number) {
+    const vcmMessage: VcmActiveLine = {
+      name: "activeLine",
+      data: startOffset
+    };
+    await this.panel!.webview.postMessage(vcmMessage);
   }
 
   onDidDispose(callback: () => any) {

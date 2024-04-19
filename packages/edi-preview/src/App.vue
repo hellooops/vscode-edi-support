@@ -1,5 +1,6 @@
 <template>
   <div class="p-2">
+    {{ activeLine }}
     <InspectorResult
       v-if="iEdiMessage"
       :iEdiMessage="iEdiMessage"
@@ -10,19 +11,24 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import useVscodeMessage from "@/hooks/useVscodeMessage";
+import useVcm from "@/hooks/useVscodeMessage";
 import InspectorResult from "@/views/Inspector/InspectorResult.vue";
 import useTestData from "./hooks/useTestData";
 
-const { onRefresh } = useVscodeMessage();
+const { onReceiveMessage, } = useVcm();
 
 const iEdiMessage = ref<IEdiMessage>();
+const activeLine = ref<number>();
 const errormsg = ref("");
 
-iEdiMessage.value = useTestData();
+// iEdiMessage.value = useTestData();
 
-onRefresh((message) => {
-  iEdiMessage.value = message;
+onReceiveMessage("fileChange", (data) => {
+  iEdiMessage.value = data;
+});
+
+onReceiveMessage("activeLine", (data) => {
+  activeLine.value = data;
 });
 
 </script>

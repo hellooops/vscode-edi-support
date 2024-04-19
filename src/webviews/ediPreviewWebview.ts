@@ -37,6 +37,7 @@ function registerEvents() {
     if (!event.textEditor.document) return;
     const webviewProvider = webviewsProvidersMap.get(event.textEditor.document.fileName);
     if (!webviewProvider) return;
-    webviewProvider.onSelectionChange(event.selections[0].active.line);
+    const startOffset = event.textEditor.document.offsetAt(event.selections[0].start);
+    await webviewProvider.onSelectionChange(startOffset);
   });
 }

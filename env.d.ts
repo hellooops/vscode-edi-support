@@ -50,3 +50,6 @@ interface IEdiMessage {
 }
 
 type VcmMessage = VcmTemplate<IEdiMessage>;
+
+
+type VcmActiveLine = VcmTemplate<number>;

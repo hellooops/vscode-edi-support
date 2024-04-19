@@ -1,9 +1,9 @@
 import { onMounted, onUnmounted } from "vue";
 
 
-type RefreshCallback = (data: VcmMessage["data"]) => void;
+type MessageEventCallback = (data: Vcm["data"]) => void;
 
-function useEvent(eventName: string, func: any) {
+function useEvent(eventName: string, func: (event: any) => void) {
   let eventListener: any;
   onMounted(() => {
     eventListener = window.addEventListener(eventName, func);
@@ -21,15 +21,17 @@ export default function useVcm() {
     });
   }
 
-  function onRefresh(callback: RefreshCallback) {
-    useEvent("message", (event: any) => {
-      const vscodeMessage = event.data as VcmMessage;
-      callback(vscodeMessage.data);
+  function onReceiveMessage(vcmName: string, callback: MessageEventCallback) {
+    useEvent("message", (event) => {
+      const vcm = event.data as Vcm;
+      if (vcmName === vcm.name) {
+        callback && callback(vcm.data);
+      }
     });
   }
 
   return {
     vscodeLog,
-    onRefresh
+    onReceiveMessage
   };
 }

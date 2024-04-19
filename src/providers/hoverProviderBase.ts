@@ -22,29 +22,13 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)
     );
-    let selectedSegment = segments.find(x => realPosition >= x.startIndex && realPosition <= (x.endIndex + 1));
+    const { element, segment } = EdiUtils.getSegmentOrElementByPosition(realPosition, segments);
+    if (!segment) return;
 
-    if (!selectedSegment?.elements || selectedSegment?.elements?.length <= 0) {
-      return null;
-    }
-
-    const selectedElement = selectedSegment?.elements.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
-    if (!selectedElement) {
-      return new vscode.Hover(this.buildSegmentMarkdownString(ediType, ediVersion, selectedSegment));
-    }
-    let selectedComponentElement: EdiElement | undefined = undefined;
-    if (selectedElement?.ediReleaseSchemaElement?.isComposite()) {
-      selectedComponentElement = selectedElement?.components?.find(x => realPosition >= (selectedSegment!.startIndex + x.startIndex) && realPosition <= (selectedSegment!.startIndex + x.endIndex + 1));
-    }
-
-    if (!selectedElement) {
-      return null;
-    }
-
-    if (selectedComponentElement) {
-      return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, selectedSegment, selectedComponentElement));
+    if (element) {
+      return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, segment, element));
     } else {
-      return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, selectedSegment, selectedElement));
+      return new vscode.Hover(this.buildSegmentMarkdownString(ediType, ediVersion, segment));
     }
   }
 
