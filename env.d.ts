@@ -31,7 +31,7 @@ interface IEdiElement {
   required: boolean;
   minLength?: number;
   maxLength?: number;
-  qualifierRef?: string;
+  codeValue?: string;
   definition?: string;
 }
 

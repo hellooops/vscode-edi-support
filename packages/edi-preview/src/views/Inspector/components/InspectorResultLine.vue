@@ -8,8 +8,8 @@
       <div class="inline-flex items-center px-2 py-1 gap-2 rounded transition-all hover:cursor-pointer text-sm" @click="handleToggleContentVisible">
         <RightIcon class="transition-all w-4 h-4" :class="{'rotate-90': visible}" />
         <SegmentIcon />
-        <span class="bg-neutral-700 text-white px-1 rounded-sm">{{ name }}</span>
-        <span class="text-neutral-600">{{ description }}</span>
+        <span class="bg-neutral-800 text-white px-1 rounded-sm">{{ name }}</span>
+        <span class="text-neutral-800">{{ description }}</span>
       </div>
     </InspectorPopover>
     <div v-show="visible" class="pl-8 mt-2">

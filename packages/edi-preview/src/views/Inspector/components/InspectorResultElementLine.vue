@@ -10,15 +10,16 @@
           <span class="inline-flex items-center py-1 gap-2 rounded text-sm">
             <span class="w-4"></span>
             <ElementIcon />
-            <span class="bg-neutral-700 text-white px-1 rounded-sm">{{ element.id.toUpperCase() }}</span>
-            <span class="text-neutral-600">{{ element.desc }}</span>
+            <span class="bg-neutral-800 text-white px-1 rounded-sm">{{ element.id.toUpperCase() }}</span>
+            <span class="text-neutral-800">{{ element.desc }}</span>
           </span>
         </InspectorPopover>
       </div>
     </div>
     <div class="flex-1">
-      <div>
+      <div class="flex items-center gap-4 text-sm">
         <span class="font-semibold">{{ element.value }}</span>
+        <span>{{ element.codeValue }}</span>
       </div>
       <span class="text-neutral-500 text-xs">{{ element.definition }}</span>
     </div>

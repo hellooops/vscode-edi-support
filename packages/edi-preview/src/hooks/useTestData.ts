@@ -270,7 +270,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 6,
-                qualifierRef: "Message type identifier",
+                codeValue: "Purchase order message",
                 definition:
                   "Code identifying a type of message and assigned by its controlling agency."
               },
@@ -308,7 +308,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 2,
-                qualifierRef: "Controlling agency",
+                codeValue: "UN/ECE/TRADE/WP.4, United Nations Standard Messages (UNSM)",
                 definition:
                   "Code to identify the agency controlling the specification, maintenance and publication of the message type."
               },
@@ -356,7 +356,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Document/message name, coded",
+                codeValue: "Order",
                 definition: "Document/message identifier expressed in code."
               }
             ],
@@ -388,7 +388,7 @@ export default function useTestData(): IEdiMessage {
             required: false,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Message function, coded",
+            codeValue: "Original",
             definition: "Code indicating the function of the message."
           }
         ]
@@ -414,7 +414,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Date/time/period qualifier",
+                codeValue: "Document/message date/time",
                 definition: "Code giving specific meaning to a date, time or period."
               },
               {
@@ -440,7 +440,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Date/time/period format qualifier",
+                codeValue: "CCYYMMDD",
                 definition:
                   "Specification of the representation of a date, a date and time or of a period."
               }
@@ -474,7 +474,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Date/time/period qualifier",
+                codeValue: "Delivery date/time, latest",
                 definition: "Code giving specific meaning to a date, time or period."
               },
               {
@@ -500,7 +500,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Date/time/period format qualifier",
+                codeValue: "CCYYMMDD",
                 definition:
                   "Specification of the representation of a date, a date and time or of a period."
               }
@@ -534,7 +534,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Date/time/period qualifier",
+                codeValue: "Delivery date/time, earliest",
                 definition: "Code giving specific meaning to a date, time or period."
               },
               {
@@ -560,7 +560,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Date/time/period format qualifier",
+                codeValue: "CCYYMMDD",
                 definition:
                   "Specification of the representation of a date, a date and time or of a period."
               }
@@ -594,7 +594,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Reference qualifier",
+                codeValue: "Account number",
                 definition:
                   "Code giving specific meaning to a reference segment or a reference number."
               },
@@ -640,7 +640,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Reference qualifier",
+                codeValue: "Promotion deal number",
                 definition:
                   "Code giving specific meaning to a reference segment or a reference number."
               },
@@ -686,7 +686,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Reference qualifier",
+                codeValue: "Customer reference number",
                 definition:
                   "Code giving specific meaning to a reference segment or a reference number."
               },
@@ -728,7 +728,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Party qualifier",
+            codeValue: "Buyer",
             definition: "Code giving specific meaning to a party."
           },
           {
@@ -758,7 +758,6 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list qualifier",
                 definition: "Identification of a code list."
               },
               {
@@ -771,7 +770,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list responsible agency, coded",
+                codeValue: "EAN (International Article Numbering association)",
                 definition: "Code identifying the agency responsible for a code list."
               }
             ],
@@ -799,7 +798,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Party qualifier",
+            codeValue: "Supplier",
             definition: "Code giving specific meaning to a party."
           },
           {
@@ -829,7 +828,6 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list qualifier",
                 definition: "Identification of a code list."
               },
               {
@@ -842,7 +840,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list responsible agency, coded",
+                codeValue: "EAN (International Article Numbering association)",
                 definition: "Code identifying the agency responsible for a code list."
               }
             ],
@@ -870,7 +868,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Party qualifier",
+            codeValue: "Delivery party",
             definition: "Code giving specific meaning to a party."
           },
           {
@@ -900,7 +898,6 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list qualifier",
                 definition: "Identification of a code list."
               },
               {
@@ -913,7 +910,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list responsible agency, coded",
+                codeValue: "EAN (International Article Numbering association)",
                 definition: "Code identifying the agency responsible for a code list."
               }
             ],
@@ -1020,7 +1017,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Party qualifier",
+            codeValue: "Invoicee",
             definition: "Code giving specific meaning to a party."
           },
           {
@@ -1050,7 +1047,6 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list qualifier",
                 definition: "Identification of a code list."
               },
               {
@@ -1063,7 +1059,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Code list responsible agency, coded",
+                codeValue: "EAN (International Article Numbering association)",
                 definition: "Code identifying the agency responsible for a code list."
               }
             ],
@@ -1226,7 +1222,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Reference qualifier",
+                codeValue: "VAT registration number",
                 definition:
                   "Code giving specific meaning to a reference segment or a reference number."
               },
@@ -1273,7 +1269,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Currency details qualifier",
+                codeValue: "Reference currency",
                 definition: "Specification of the usage to which the currency relates."
               },
               {
@@ -1299,7 +1295,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Currency qualifier",
+                codeValue: "Order currency",
                 definition: "Code giving specific meaning to data element 6345 Currency."
               }
             ],
@@ -1338,7 +1334,6 @@ export default function useTestData(): IEdiMessage {
             required: false,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Action request/notification, coded",
             definition: "Code specifying the action to be taken or already taken."
           },
           {
@@ -1368,7 +1363,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Item number type, coded",
+                codeValue: "International Article Numbering Association (EAN)",
                 definition: "Identification of the type of item number."
               }
             ],
@@ -1395,7 +1390,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Product id. function qualifier",
+            codeValue: "Product identification",
             definition: "Indication of the function of the product code."
           },
           {
@@ -1425,7 +1420,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Item number type, coded",
+                codeValue: "Supplier's article number",
                 definition: "Identification of the type of item number."
               }
             ],
@@ -1457,7 +1452,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Quantity qualifier",
+                codeValue: "Ordered quantity",
                 definition: "Code giving specific meaning to a quantity."
               },
               {
@@ -1501,7 +1496,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Price qualifier",
+                codeValue: "Calculation net",
                 definition: "Identification of a type of price."
               },
               {
@@ -1553,7 +1548,6 @@ export default function useTestData(): IEdiMessage {
             required: false,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Action request/notification, coded",
             definition: "Code specifying the action to be taken or already taken."
           },
           {
@@ -1583,7 +1577,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Item number type, coded",
+                codeValue: "UPC (Universal product code)",
                 definition: "Identification of the type of item number."
               }
             ],
@@ -1615,7 +1609,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Quantity qualifier",
+                codeValue: "Ordered quantity",
                 definition: "Code giving specific meaning to a quantity."
               },
               {
@@ -1659,7 +1653,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Price qualifier",
+                codeValue: "Calculation net",
                 definition: "Identification of a type of price."
               },
               {
@@ -1719,7 +1713,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 0,
             maxLength: 3,
-            qualifierRef: "Product id. function qualifier",
+            codeValue: "Product identification",
             definition: "Indication of the function of the product code."
           },
           {
@@ -1749,7 +1743,7 @@ export default function useTestData(): IEdiMessage {
                 required: false,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Item number type, coded",
+                codeValue: "Supplier's article number",
                 definition: "Identification of the type of item number."
               }
             ],
@@ -1781,7 +1775,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Quantity qualifier",
+                codeValue: "Ordered quantity",
                 definition: "Code giving specific meaning to a quantity."
               },
               {
@@ -1825,7 +1819,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Price qualifier",
+                codeValue: "Calculation net",
                 definition: "Identification of a type of price."
               },
               {
@@ -1864,7 +1858,7 @@ export default function useTestData(): IEdiMessage {
             required: true,
             minLength: 1,
             maxLength: 1,
-            qualifierRef: "Section identification",
+            codeValue: "Detail/summary section separation",
             definition: "Separates sections in a message."
           }
         ]
@@ -1890,7 +1884,7 @@ export default function useTestData(): IEdiMessage {
                 required: true,
                 minLength: 0,
                 maxLength: 3,
-                qualifierRef: "Control qualifier",
+                codeValue: "Number of line items in message",
                 definition:
                   "Determines the source data elements in the message which forms the basis for 6066 Control value."
               },

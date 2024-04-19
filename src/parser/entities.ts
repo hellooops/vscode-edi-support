@@ -281,6 +281,19 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
   }
 
   getIResult(): IEdiElement {
+    let codeValue: string | undefined;
+    if (this.ediReleaseSchemaElement?.qualifierRef && this.value) {
+      const codes = this.ediReleaseSchemaElement.getCodes();
+      if (codes) {
+        const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(this.value);
+        if (elementValueCode) {
+          codeValue = elementValueCode.desc;
+        } else {
+          codeValue = "Invalid code value: " + this.value;
+        }
+      }
+    }
+
     return {
       key: this.getDesignator(),
       type: this.type,
@@ -292,7 +305,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
       required: this.ediReleaseSchemaElement!.required,
       minLength: this.ediReleaseSchemaElement!.minLength,
       maxLength: this.ediReleaseSchemaElement!.maxLength,
-      qualifierRef: this.ediReleaseSchemaElement!.qualifierRef,
+      codeValue,
       definition: this.ediReleaseSchemaElement!.definition,
     };
   }
