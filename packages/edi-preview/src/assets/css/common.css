@@ -1,0 +1,4 @@
+.invert-color {
+  color: var(--vscode-editor-background);
+  background-color: var(--vscode-editor-foreground);
+}

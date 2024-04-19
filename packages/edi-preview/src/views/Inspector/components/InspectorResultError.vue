@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center text-lg text-neutral-900">
+  <div class="text-center text-lg">
     {{ errormsg }}
   </div>
 </template>

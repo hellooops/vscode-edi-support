@@ -6,7 +6,7 @@
           <span class="w-4"></span>
           <ElementIcon />
           <span class="bg-neutral-800 text-white px-1 rounded-sm">{{ element.id.toUpperCase() }}</span>
-          <span class="text-neutral-800">{{ element.desc }}</span>
+          <span class="opacity-80">{{ element.desc }}</span>
         </span>
       </div>
     </div>
@@ -15,12 +15,12 @@
         <span class="font-semibold">{{ element.value }}</span>
         <span>{{ element.codeValue }}</span>
       </div>
-      <div class="text-xs text-neutral-800 space-x-2">
+      <div class="text-xs opacity-80 space-x-2">
         <span>{{ element.required ? "Required" : "Optional" }}</span>
         <span>{{ getMinMaxStr() }}</span>
         <span v-if="element.dataType">{{ element.dataType }}</span>
       </div>
-      <p class="text-neutral-500 text-xs">{{ element.definition }}</p>
+      <p class="opacity-70 text-xs">{{ element.definition }}</p>
     </div>
   </div>
 </template>
