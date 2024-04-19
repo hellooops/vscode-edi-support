@@ -2,3 +2,8 @@
   color: var(--vscode-editor-background);
   background-color: var(--vscode-editor-foreground);
 }
+
+.active-fragment {
+  border-left: 4px;
+  border-style: solid;
+}

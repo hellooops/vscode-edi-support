@@ -3,18 +3,18 @@ export default function useTestData(): IEdiMessage {
     ediVersion: { release: "D96A", version: "ORDERS" },
     segments: [
       {
-        key: 0,
+        key: "seg-UNB-0",
         id: "UNB",
         desc: "Interchange header",
         purpose: "To start, identify and specify an interchange.",
         elements: [
           {
-            key: "UNB01",
+            key: "ele-UNB01-0-3",
             type: "Data Element",
             value: "UNOA:2",
             components: [
               {
-                key: "UNB0101",
+                key: "ele-UNB0101-0-3",
                 type: "Component Element",
                 value: "UNOA",
                 id: "0001",
@@ -27,7 +27,7 @@ export default function useTestData(): IEdiMessage {
                   "Coded identification of the agency controlling a syntax and syntax level used in an interchange."
               },
               {
-                key: "UNB0102",
+                key: "ele-UNB0102-0-8",
                 type: "Component Element",
                 value: "2",
                 id: "0002",
@@ -45,12 +45,12 @@ export default function useTestData(): IEdiMessage {
             required: true
           },
           {
-            key: "UNB02",
+            key: "ele-UNB02-0-10",
             type: "Data Element",
             value: "<Sender GLN>:14",
             components: [
               {
-                key: "UNB0201",
+                key: "ele-UNB0201-0-10",
                 type: "Component Element",
                 value: "<Sender GLN>",
                 id: "0004",
@@ -62,7 +62,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Name or coded representation of the sender of a data interchange."
               },
               {
-                key: "UNB0202",
+                key: "ele-UNB0202-0-23",
                 type: "Component Element",
                 value: "14",
                 id: "0007",
@@ -80,12 +80,12 @@ export default function useTestData(): IEdiMessage {
             required: true
           },
           {
-            key: "UNB03",
+            key: "ele-UNB03-0-26",
             type: "Data Element",
             value: "<Receiver GLN>:14",
             components: [
               {
-                key: "UNB0301",
+                key: "ele-UNB0301-0-26",
                 type: "Component Element",
                 value: "<Receiver GLN>",
                 id: "0010",
@@ -97,7 +97,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Name or coded representation of the recipient of a data interchange."
               },
               {
-                key: "UNB0302",
+                key: "ele-UNB0302-0-41",
                 type: "Component Element",
                 value: "14",
                 id: "0007",
@@ -115,12 +115,12 @@ export default function useTestData(): IEdiMessage {
             required: true
           },
           {
-            key: "UNB04",
+            key: "ele-UNB04-0-44",
             type: "Data Element",
             value: "140407:0910",
             components: [
               {
-                key: "UNB0401",
+                key: "ele-UNB0401-0-44",
                 type: "Component Element",
                 value: "140407",
                 id: "0017",
@@ -132,7 +132,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Local date when an interchange or a functional group was prepared."
               },
               {
-                key: "UNB0402",
+                key: "ele-UNB0402-0-51",
                 type: "Component Element",
                 value: "0910",
                 id: "0019",
@@ -150,7 +150,7 @@ export default function useTestData(): IEdiMessage {
             required: true
           },
           {
-            key: "UNB05",
+            key: "ele-UNB05-0-56",
             type: "Data Element",
             value: "5",
             id: "0020",
@@ -162,12 +162,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Unique reference assigned by the sender to an interchange."
           },
           {
-            key: "UNB06",
+            key: "ele-UNB06-0-58",
             type: "Data Element",
             value: "000000001",
             components: [
               {
-                key: "UNB0601",
+                key: "ele-UNB0601-0-58",
                 type: "Component Element",
                 value: "000000001",
                 id: "0022",
@@ -185,7 +185,7 @@ export default function useTestData(): IEdiMessage {
             required: true
           },
           {
-            key: "UNB07",
+            key: "ele-UNB07-0-68",
             type: "Data Element",
             value: "",
             id: "0026",
@@ -198,7 +198,7 @@ export default function useTestData(): IEdiMessage {
               "Identification of the application area assigned by the sender, to which the messages in the interchange relate e.g. the message identifier if all the messages in the interchange are of the same type."
           },
           {
-            key: "UNB08",
+            key: "ele-UNB08-0-69",
             type: "Data Element",
             value: "",
             id: "0029",
@@ -211,7 +211,7 @@ export default function useTestData(): IEdiMessage {
               "Code determined by the sender requesting processing priority for the interchange."
           },
           {
-            key: "UNB09",
+            key: "ele-UNB09-0-70",
             type: "Data Element",
             value: "1",
             id: "0031",
@@ -223,7 +223,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Code determined by the sender for acknowledgement of the interchange."
           },
           {
-            key: "UNB10",
+            key: "ele-UNB10-0-72",
             type: "Data Element",
             value: "EANCOM",
             id: "0032",
@@ -238,13 +238,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 82,
+        key: "seg-UNH-82",
         id: "UNH",
         desc: "Message header",
         purpose: "To head, identify and specify a message.",
         elements: [
           {
-            key: "UNH01",
+            key: "ele-UNH01-82-3",
             type: "Data Element",
             value: "1",
             id: "0062",
@@ -256,12 +256,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Unique message reference assigned by the sender."
           },
           {
-            key: "UNH02",
+            key: "ele-UNH02-82-5",
             type: "Data Element",
             value: "ORDERS:D:96A:UN:EAN008",
             components: [
               {
-                key: "UNH0201",
+                key: "ele-UNH0201-82-5",
                 type: "Component Element",
                 value: "ORDERS",
                 id: "0065",
@@ -275,7 +275,7 @@ export default function useTestData(): IEdiMessage {
                   "Code identifying a type of message and assigned by its controlling agency."
               },
               {
-                key: "UNH0202",
+                key: "ele-UNH0202-82-12",
                 type: "Component Element",
                 value: "D",
                 id: "0052",
@@ -287,7 +287,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Version number of a message type."
               },
               {
-                key: "UNH0203",
+                key: "ele-UNH0203-82-14",
                 type: "Component Element",
                 value: "96A",
                 id: "0054",
@@ -299,7 +299,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Release number within the current message type version number (0052)."
               },
               {
-                key: "UNH0204",
+                key: "ele-UNH0204-82-18",
                 type: "Component Element",
                 value: "UN",
                 id: "0051",
@@ -313,7 +313,7 @@ export default function useTestData(): IEdiMessage {
                   "Code to identify the agency controlling the specification, maintenance and publication of the message type."
               },
               {
-                key: "UNH0205",
+                key: "ele-UNH0205-82-21",
                 type: "Component Element",
                 value: "EAN008",
                 id: "0057",
@@ -335,19 +335,19 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 113,
+        key: "seg-BGM-113",
         id: "BGM",
         desc: "BEGINNING OF MESSAGE",
         purpose:
           "To indicate the type and function of a message and to transmit the identifying number.",
         elements: [
           {
-            key: "BGM01",
+            key: "ele-BGM01-113-3",
             type: "Data Element",
             value: "220",
             components: [
               {
-                key: "BGM0101",
+                key: "ele-BGM0101-113-3",
                 type: "Component Element",
                 value: "220",
                 id: "1001",
@@ -367,7 +367,7 @@ export default function useTestData(): IEdiMessage {
               "Identification of a type of document/message by code or name. Code preferred."
           },
           {
-            key: "BGM02",
+            key: "ele-BGM02-113-7",
             type: "Data Element",
             value: "1AA1TEST",
             id: "1004",
@@ -379,7 +379,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Reference number assigned to the document/message by the issuer."
           },
           {
-            key: "BGM03",
+            key: "ele-BGM03-113-16",
             type: "Data Element",
             value: "9",
             id: "1225",
@@ -394,18 +394,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 134,
+        key: "seg-DTM-134",
         id: "DTM",
         desc: "DATE/TIME/PERIOD",
         purpose: "To specify date, and/or time, or period.",
         elements: [
           {
-            key: "DTM01",
+            key: "ele-DTM01-134-3",
             type: "Data Element",
             value: "137:20140407:102",
             components: [
               {
-                key: "DTM0101",
+                key: "ele-DTM0101-134-3",
                 type: "Component Element",
                 value: "137",
                 id: "2005",
@@ -418,7 +418,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code giving specific meaning to a date, time or period."
               },
               {
-                key: "DTM0102",
+                key: "ele-DTM0102-134-7",
                 type: "Component Element",
                 value: "20140407",
                 id: "2380",
@@ -431,7 +431,7 @@ export default function useTestData(): IEdiMessage {
                   "The value of a date, a date and time, a time or of a period in a specified representation."
               },
               {
-                key: "DTM0103",
+                key: "ele-DTM0103-134-16",
                 type: "Component Element",
                 value: "102",
                 id: "2379",
@@ -454,18 +454,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 157,
+        key: "seg-DTM-157",
         id: "DTM",
         desc: "DATE/TIME/PERIOD",
         purpose: "To specify date, and/or time, or period.",
         elements: [
           {
-            key: "DTM01",
+            key: "ele-DTM01-157-3",
             type: "Data Element",
             value: "63:20140421:102",
             components: [
               {
-                key: "DTM0101",
+                key: "ele-DTM0101-157-3",
                 type: "Component Element",
                 value: "63",
                 id: "2005",
@@ -478,7 +478,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code giving specific meaning to a date, time or period."
               },
               {
-                key: "DTM0102",
+                key: "ele-DTM0102-157-6",
                 type: "Component Element",
                 value: "20140421",
                 id: "2380",
@@ -491,7 +491,7 @@ export default function useTestData(): IEdiMessage {
                   "The value of a date, a date and time, a time or of a period in a specified representation."
               },
               {
-                key: "DTM0103",
+                key: "ele-DTM0103-157-15",
                 type: "Component Element",
                 value: "102",
                 id: "2379",
@@ -514,18 +514,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 179,
+        key: "seg-DTM-179",
         id: "DTM",
         desc: "DATE/TIME/PERIOD",
         purpose: "To specify date, and/or time, or period.",
         elements: [
           {
-            key: "DTM01",
+            key: "ele-DTM01-179-3",
             type: "Data Element",
             value: "64:20140414:102",
             components: [
               {
-                key: "DTM0101",
+                key: "ele-DTM0101-179-3",
                 type: "Component Element",
                 value: "64",
                 id: "2005",
@@ -538,7 +538,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code giving specific meaning to a date, time or period."
               },
               {
-                key: "DTM0102",
+                key: "ele-DTM0102-179-6",
                 type: "Component Element",
                 value: "20140414",
                 id: "2380",
@@ -551,7 +551,7 @@ export default function useTestData(): IEdiMessage {
                   "The value of a date, a date and time, a time or of a period in a specified representation."
               },
               {
-                key: "DTM0103",
+                key: "ele-DTM0103-179-15",
                 type: "Component Element",
                 value: "102",
                 id: "2379",
@@ -574,18 +574,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 201,
+        key: "seg-RFF-201",
         id: "RFF",
         desc: "REFERENCE",
         purpose: "To specify a reference.",
         elements: [
           {
-            key: "RFF01",
+            key: "ele-RFF01-201-3",
             type: "Data Element",
             value: "ADE:FIRSTORDER",
             components: [
               {
-                key: "RFF0101",
+                key: "ele-RFF0101-201-3",
                 type: "Component Element",
                 value: "ADE",
                 id: "1153",
@@ -599,7 +599,7 @@ export default function useTestData(): IEdiMessage {
                   "Code giving specific meaning to a reference segment or a reference number."
               },
               {
-                key: "RFF0102",
+                key: "ele-RFF0102-201-7",
                 type: "Component Element",
                 value: "FIRSTORDER",
                 id: "1154",
@@ -620,18 +620,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 222,
+        key: "seg-RFF-222",
         id: "RFF",
         desc: "REFERENCE",
         purpose: "To specify a reference.",
         elements: [
           {
-            key: "RFF01",
+            key: "ele-RFF01-222-3",
             type: "Data Element",
             value: "PD:1704",
             components: [
               {
-                key: "RFF0101",
+                key: "ele-RFF0101-222-3",
                 type: "Component Element",
                 value: "PD",
                 id: "1153",
@@ -645,7 +645,7 @@ export default function useTestData(): IEdiMessage {
                   "Code giving specific meaning to a reference segment or a reference number."
               },
               {
-                key: "RFF0102",
+                key: "ele-RFF0102-222-6",
                 type: "Component Element",
                 value: "1704",
                 id: "1154",
@@ -666,18 +666,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 236,
+        key: "seg-RFF-236",
         id: "RFF",
         desc: "REFERENCE",
         purpose: "To specify a reference.",
         elements: [
           {
-            key: "RFF01",
+            key: "ele-RFF01-236-3",
             type: "Data Element",
             value: "CR:ABCD5",
             components: [
               {
-                key: "RFF0101",
+                key: "ele-RFF0101-236-3",
                 type: "Component Element",
                 value: "CR",
                 id: "1153",
@@ -691,7 +691,7 @@ export default function useTestData(): IEdiMessage {
                   "Code giving specific meaning to a reference segment or a reference number."
               },
               {
-                key: "RFF0102",
+                key: "ele-RFF0102-236-6",
                 type: "Component Element",
                 value: "ABCD5",
                 id: "1154",
@@ -712,14 +712,14 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 251,
+        key: "seg-NAD-251",
         id: "NAD",
         desc: "NAME AND ADDRESS",
         purpose:
           "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
         elements: [
           {
-            key: "NAD01",
+            key: "ele-NAD01-251-3",
             type: "Data Element",
             value: "BY",
             id: "3035",
@@ -732,12 +732,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Code giving specific meaning to a party."
           },
           {
-            key: "NAD02",
+            key: "ele-NAD02-251-6",
             type: "Data Element",
             value: "5450534000024::9",
             components: [
               {
-                key: "NAD0201",
+                key: "ele-NAD0201-251-6",
                 type: "Component Element",
                 value: "5450534000024",
                 id: "3039",
@@ -749,7 +749,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code identifying a party involved in a transaction."
               },
               {
-                key: "NAD0202",
+                key: "ele-NAD0202-251-20",
                 type: "Component Element",
                 value: "",
                 id: "1131",
@@ -761,7 +761,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a code list."
               },
               {
-                key: "NAD0203",
+                key: "ele-NAD0203-251-21",
                 type: "Component Element",
                 value: "9",
                 id: "3055",
@@ -782,14 +782,14 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 277,
+        key: "seg-NAD-277",
         id: "NAD",
         desc: "NAME AND ADDRESS",
         purpose:
           "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
         elements: [
           {
-            key: "NAD01",
+            key: "ele-NAD01-277-3",
             type: "Data Element",
             value: "SU",
             id: "3035",
@@ -802,12 +802,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Code giving specific meaning to a party."
           },
           {
-            key: "NAD02",
+            key: "ele-NAD02-277-6",
             type: "Data Element",
             value: "<Supplier GLN>::9",
             components: [
               {
-                key: "NAD0201",
+                key: "ele-NAD0201-277-6",
                 type: "Component Element",
                 value: "<Supplier GLN>",
                 id: "3039",
@@ -819,7 +819,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code identifying a party involved in a transaction."
               },
               {
-                key: "NAD0202",
+                key: "ele-NAD0202-277-21",
                 type: "Component Element",
                 value: "",
                 id: "1131",
@@ -831,7 +831,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a code list."
               },
               {
-                key: "NAD0203",
+                key: "ele-NAD0203-277-22",
                 type: "Component Element",
                 value: "9",
                 id: "3055",
@@ -852,14 +852,14 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 304,
+        key: "seg-NAD-304",
         id: "NAD",
         desc: "NAME AND ADDRESS",
         purpose:
           "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
         elements: [
           {
-            key: "NAD01",
+            key: "ele-NAD01-304-3",
             type: "Data Element",
             value: "DP",
             id: "3035",
@@ -872,12 +872,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Code giving specific meaning to a party."
           },
           {
-            key: "NAD02",
+            key: "ele-NAD02-304-6",
             type: "Data Element",
             value: "5450534000109::9",
             components: [
               {
-                key: "NAD0201",
+                key: "ele-NAD0201-304-6",
                 type: "Component Element",
                 value: "5450534000109",
                 id: "3039",
@@ -889,7 +889,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code identifying a party involved in a transaction."
               },
               {
-                key: "NAD0202",
+                key: "ele-NAD0202-304-20",
                 type: "Component Element",
                 value: "",
                 id: "1131",
@@ -901,7 +901,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a code list."
               },
               {
-                key: "NAD0203",
+                key: "ele-NAD0203-304-21",
                 type: "Component Element",
                 value: "9",
                 id: "3055",
@@ -920,7 +920,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Identification of a transaction party by code."
           },
           {
-            key: "NAD03",
+            key: "ele-NAD03-304-23",
             type: "Data Element",
             value: "",
             id: "C058",
@@ -929,7 +929,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Unstructured name and address: one to five lines."
           },
           {
-            key: "NAD04",
+            key: "ele-NAD04-304-24",
             type: "Data Element",
             value: "",
             id: "C080",
@@ -939,7 +939,7 @@ export default function useTestData(): IEdiMessage {
               "Identification of a transaction party by name, one to five lines. Party name may be formatted."
           },
           {
-            key: "NAD05",
+            key: "ele-NAD05-304-25",
             type: "Data Element",
             value: "",
             id: "C059",
@@ -949,7 +949,7 @@ export default function useTestData(): IEdiMessage {
               "Street address and/or PO Box number in a structured address: one to three lines."
           },
           {
-            key: "NAD06",
+            key: "ele-NAD06-304-26",
             type: "Data Element",
             value: "",
             id: "3164",
@@ -961,7 +961,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Name of a city (a town, a village) for addressing purposes."
           },
           {
-            key: "NAD07",
+            key: "ele-NAD07-304-27",
             type: "Data Element",
             value: "",
             id: "3229",
@@ -974,7 +974,7 @@ export default function useTestData(): IEdiMessage {
               "Identification of the name of sub-entities (state, province) defined by appropriate governmental agencies."
           },
           {
-            key: "NAD08",
+            key: "ele-NAD08-304-28",
             type: "Data Element",
             value: "",
             id: "3251",
@@ -986,7 +986,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Code defining postal zones or addresses."
           },
           {
-            key: "NAD09",
+            key: "ele-NAD09-304-29",
             type: "Data Element",
             value: "GB",
             id: "3207",
@@ -1001,14 +1001,14 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 339,
+        key: "seg-NAD-339",
         id: "NAD",
         desc: "NAME AND ADDRESS",
         purpose:
           "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
         elements: [
           {
-            key: "NAD01",
+            key: "ele-NAD01-339-3",
             type: "Data Element",
             value: "IV",
             id: "3035",
@@ -1021,12 +1021,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Code giving specific meaning to a party."
           },
           {
-            key: "NAD02",
+            key: "ele-NAD02-339-6",
             type: "Data Element",
             value: "5450534007139::9",
             components: [
               {
-                key: "NAD0201",
+                key: "ele-NAD0201-339-6",
                 type: "Component Element",
                 value: "5450534007139",
                 id: "3039",
@@ -1038,7 +1038,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code identifying a party involved in a transaction."
               },
               {
-                key: "NAD0202",
+                key: "ele-NAD0202-339-20",
                 type: "Component Element",
                 value: "",
                 id: "1131",
@@ -1050,7 +1050,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a code list."
               },
               {
-                key: "NAD0203",
+                key: "ele-NAD0203-339-21",
                 type: "Component Element",
                 value: "9",
                 id: "3055",
@@ -1069,7 +1069,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Identification of a transaction party by code."
           },
           {
-            key: "NAD03",
+            key: "ele-NAD03-339-23",
             type: "Data Element",
             value: "",
             id: "C058",
@@ -1078,12 +1078,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Unstructured name and address: one to five lines."
           },
           {
-            key: "NAD04",
+            key: "ele-NAD04-339-24",
             type: "Data Element",
             value: "Test:Name2",
             components: [
               {
-                key: "NAD0401",
+                key: "ele-NAD0401-339-24",
                 type: "Component Element",
                 value: "Test",
                 id: "3036",
@@ -1095,7 +1095,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Name of a party involved in a transaction."
               },
               {
-                key: "NAD0402",
+                key: "ele-NAD0402-339-29",
                 type: "Component Element",
                 value: "Name2",
                 id: "3036",
@@ -1114,12 +1114,12 @@ export default function useTestData(): IEdiMessage {
               "Identification of a transaction party by name, one to five lines. Party name may be formatted."
           },
           {
-            key: "NAD05",
+            key: "ele-NAD05-339-35",
             type: "Data Element",
             value: "Test Street:Steet2",
             components: [
               {
-                key: "NAD0501",
+                key: "ele-NAD0501-339-35",
                 type: "Component Element",
                 value: "Test Street",
                 id: "3042",
@@ -1131,7 +1131,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Street and number in plain language, or Post Office Box No."
               },
               {
-                key: "NAD0502",
+                key: "ele-NAD0502-339-47",
                 type: "Component Element",
                 value: "Steet2",
                 id: "3042",
@@ -1150,7 +1150,7 @@ export default function useTestData(): IEdiMessage {
               "Street address and/or PO Box number in a structured address: one to three lines."
           },
           {
-            key: "NAD06",
+            key: "ele-NAD06-339-54",
             type: "Data Element",
             value: "Beijing",
             id: "3164",
@@ -1162,7 +1162,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Name of a city (a town, a village) for addressing purposes."
           },
           {
-            key: "NAD07",
+            key: "ele-NAD07-339-62",
             type: "Data Element",
             value: "",
             id: "3229",
@@ -1175,7 +1175,7 @@ export default function useTestData(): IEdiMessage {
               "Identification of the name of sub-entities (state, province) defined by appropriate governmental agencies."
           },
           {
-            key: "NAD08",
+            key: "ele-NAD08-339-63",
             type: "Data Element",
             value: "EC2A 2FA",
             id: "3251",
@@ -1187,7 +1187,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Code defining postal zones or addresses."
           },
           {
-            key: "NAD09",
+            key: "ele-NAD09-339-72",
             type: "Data Element",
             value: "GB",
             id: "3207",
@@ -1202,18 +1202,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 417,
+        key: "seg-RFF-417",
         id: "RFF",
         desc: "REFERENCE",
         purpose: "To specify a reference.",
         elements: [
           {
-            key: "RFF01",
+            key: "ele-RFF01-417-3",
             type: "Data Element",
             value: "VA:GB727255821",
             components: [
               {
-                key: "RFF0101",
+                key: "ele-RFF0101-417-3",
                 type: "Component Element",
                 value: "VA",
                 id: "1153",
@@ -1227,7 +1227,7 @@ export default function useTestData(): IEdiMessage {
                   "Code giving specific meaning to a reference segment or a reference number."
               },
               {
-                key: "RFF0102",
+                key: "ele-RFF0102-417-6",
                 type: "Component Element",
                 value: "GB727255821",
                 id: "1154",
@@ -1248,19 +1248,19 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 438,
+        key: "seg-CUX-438",
         id: "CUX",
         desc: "CURRENCIES",
         purpose:
           "To specify currencies used in the transaction and relevant details for the rate of exchange.",
         elements: [
           {
-            key: "CUX01",
+            key: "ele-CUX01-438-3",
             type: "Data Element",
             value: "2:EUR:9",
             components: [
               {
-                key: "CUX0101",
+                key: "ele-CUX0101-438-3",
                 type: "Component Element",
                 value: "2",
                 id: "6347",
@@ -1273,7 +1273,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Specification of the usage to which the currency relates."
               },
               {
-                key: "CUX0102",
+                key: "ele-CUX0102-438-5",
                 type: "Component Element",
                 value: "EUR",
                 id: "6345",
@@ -1286,7 +1286,7 @@ export default function useTestData(): IEdiMessage {
                   "Identification of the name or symbol of the monetary unit involved in the transaction."
               },
               {
-                key: "CUX0103",
+                key: "ele-CUX0103-438-9",
                 type: "Component Element",
                 value: "9",
                 id: "6343",
@@ -1307,13 +1307,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 452,
+        key: "seg-LIN-452",
         id: "LIN",
         desc: "LINE ITEM",
         purpose: "To identify a line item and configuration.",
         elements: [
           {
-            key: "LIN01",
+            key: "ele-LIN01-452-3",
             type: "Data Element",
             value: "1",
             id: "1082",
@@ -1325,7 +1325,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Serial number designating each separate item within a series of articles."
           },
           {
-            key: "LIN02",
+            key: "ele-LIN02-452-5",
             type: "Data Element",
             value: "",
             id: "1229",
@@ -1337,12 +1337,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Code specifying the action to be taken or already taken."
           },
           {
-            key: "LIN03",
+            key: "ele-LIN03-452-6",
             type: "Data Element",
             value: "9783898307529:EN",
             components: [
               {
-                key: "LIN0301",
+                key: "ele-LIN0301-452-6",
                 type: "Component Element",
                 value: "9783898307529",
                 id: "7140",
@@ -1354,7 +1354,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "A number allocated to a group or item."
               },
               {
-                key: "LIN0302",
+                key: "ele-LIN0302-452-20",
                 type: "Component Element",
                 value: "EN",
                 id: "7143",
@@ -1375,13 +1375,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 478,
+        key: "seg-PIA-478",
         id: "PIA",
         desc: "ADDITIONAL PRODUCT ID",
         purpose: "To specify additional or substitutional item identification codes.",
         elements: [
           {
-            key: "PIA01",
+            key: "ele-PIA01-478-3",
             type: "Data Element",
             value: "5",
             id: "4347",
@@ -1394,12 +1394,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Indication of the function of the product code."
           },
           {
-            key: "PIA02",
+            key: "ele-PIA02-478-5",
             type: "Data Element",
             value: "3899408268X-39:SA",
             components: [
               {
-                key: "PIA0201",
+                key: "ele-PIA0201-478-5",
                 type: "Component Element",
                 value: "3899408268X-39",
                 id: "7140",
@@ -1411,7 +1411,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "A number allocated to a group or item."
               },
               {
-                key: "PIA0202",
+                key: "ele-PIA0202-478-20",
                 type: "Component Element",
                 value: "SA",
                 id: "7143",
@@ -1432,18 +1432,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 504,
+        key: "seg-QTY-504",
         id: "QTY",
         desc: "QUANTITY",
         purpose: "To specify a pertinent quantity.",
         elements: [
           {
-            key: "QTY01",
+            key: "ele-QTY01-504-3",
             type: "Data Element",
             value: "21:5",
             components: [
               {
-                key: "QTY0101",
+                key: "ele-QTY0101-504-3",
                 type: "Component Element",
                 value: "21",
                 id: "6063",
@@ -1456,7 +1456,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code giving specific meaning to a quantity."
               },
               {
-                key: "QTY0102",
+                key: "ele-QTY0102-504-6",
                 type: "Component Element",
                 value: "5",
                 id: "6060",
@@ -1476,18 +1476,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 515,
+        key: "seg-PRI-515",
         id: "PRI",
         desc: "PRICE DETAILS",
         purpose: "To specify price information.",
         elements: [
           {
-            key: "PRI01",
+            key: "ele-PRI01-515-3",
             type: "Data Element",
             value: "AAA:27.5",
             components: [
               {
-                key: "PRI0101",
+                key: "ele-PRI0101-515-3",
                 type: "Component Element",
                 value: "AAA",
                 id: "5125",
@@ -1500,7 +1500,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a type of price."
               },
               {
-                key: "PRI0102",
+                key: "ele-PRI0102-515-7",
                 type: "Component Element",
                 value: "27.5",
                 id: "5118",
@@ -1521,13 +1521,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 530,
+        key: "seg-LIN-530",
         id: "LIN",
         desc: "LINE ITEM",
         purpose: "To identify a line item and configuration.",
         elements: [
           {
-            key: "LIN01",
+            key: "ele-LIN01-530-3",
             type: "Data Element",
             value: "2",
             id: "1082",
@@ -1539,7 +1539,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Serial number designating each separate item within a series of articles."
           },
           {
-            key: "LIN02",
+            key: "ele-LIN02-530-5",
             type: "Data Element",
             value: "",
             id: "1229",
@@ -1551,12 +1551,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Code specifying the action to be taken or already taken."
           },
           {
-            key: "LIN03",
+            key: "ele-LIN03-530-6",
             type: "Data Element",
             value: "390787706322:UP",
             components: [
               {
-                key: "LIN0301",
+                key: "ele-LIN0301-530-6",
                 type: "Component Element",
                 value: "390787706322",
                 id: "7140",
@@ -1568,7 +1568,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "A number allocated to a group or item."
               },
               {
-                key: "LIN0302",
+                key: "ele-LIN0302-530-19",
                 type: "Component Element",
                 value: "UP",
                 id: "7143",
@@ -1589,18 +1589,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 555,
+        key: "seg-QTY-555",
         id: "QTY",
         desc: "QUANTITY",
         purpose: "To specify a pertinent quantity.",
         elements: [
           {
-            key: "QTY01",
+            key: "ele-QTY01-555-3",
             type: "Data Element",
             value: "21:1",
             components: [
               {
-                key: "QTY0101",
+                key: "ele-QTY0101-555-3",
                 type: "Component Element",
                 value: "21",
                 id: "6063",
@@ -1613,7 +1613,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code giving specific meaning to a quantity."
               },
               {
-                key: "QTY0102",
+                key: "ele-QTY0102-555-6",
                 type: "Component Element",
                 value: "1",
                 id: "6060",
@@ -1633,18 +1633,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 566,
+        key: "seg-PRI-566",
         id: "PRI",
         desc: "PRICE DETAILS",
         purpose: "To specify price information.",
         elements: [
           {
-            key: "PRI01",
+            key: "ele-PRI01-566-3",
             type: "Data Element",
             value: "AAA:10.87",
             components: [
               {
-                key: "PRI0101",
+                key: "ele-PRI0101-566-3",
                 type: "Component Element",
                 value: "AAA",
                 id: "5125",
@@ -1657,7 +1657,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a type of price."
               },
               {
-                key: "PRI0102",
+                key: "ele-PRI0102-566-7",
                 type: "Component Element",
                 value: "10.87",
                 id: "5118",
@@ -1678,13 +1678,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 582,
+        key: "seg-LIN-582",
         id: "LIN",
         desc: "LINE ITEM",
         purpose: "To identify a line item and configuration.",
         elements: [
           {
-            key: "LIN01",
+            key: "ele-LIN01-582-3",
             type: "Data Element",
             value: "3",
             id: "1082",
@@ -1698,13 +1698,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 590,
+        key: "seg-PIA-590",
         id: "PIA",
         desc: "ADDITIONAL PRODUCT ID",
         purpose: "To specify additional or substitutional item identification codes.",
         elements: [
           {
-            key: "PIA01",
+            key: "ele-PIA01-590-3",
             type: "Data Element",
             value: "5",
             id: "4347",
@@ -1717,12 +1717,12 @@ export default function useTestData(): IEdiMessage {
             definition: "Indication of the function of the product code."
           },
           {
-            key: "PIA02",
+            key: "ele-PIA02-590-5",
             type: "Data Element",
             value: "3899408268X-39:SA",
             components: [
               {
-                key: "PIA0201",
+                key: "ele-PIA0201-590-5",
                 type: "Component Element",
                 value: "3899408268X-39",
                 id: "7140",
@@ -1734,7 +1734,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "A number allocated to a group or item."
               },
               {
-                key: "PIA0202",
+                key: "ele-PIA0202-590-20",
                 type: "Component Element",
                 value: "SA",
                 id: "7143",
@@ -1755,18 +1755,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 616,
+        key: "seg-QTY-616",
         id: "QTY",
         desc: "QUANTITY",
         purpose: "To specify a pertinent quantity.",
         elements: [
           {
-            key: "QTY01",
+            key: "ele-QTY01-616-3",
             type: "Data Element",
             value: "21:3",
             components: [
               {
-                key: "QTY0101",
+                key: "ele-QTY0101-616-3",
                 type: "Component Element",
                 value: "21",
                 id: "6063",
@@ -1779,7 +1779,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Code giving specific meaning to a quantity."
               },
               {
-                key: "QTY0102",
+                key: "ele-QTY0102-616-6",
                 type: "Component Element",
                 value: "3",
                 id: "6060",
@@ -1799,18 +1799,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 627,
+        key: "seg-PRI-627",
         id: "PRI",
         desc: "PRICE DETAILS",
         purpose: "To specify price information.",
         elements: [
           {
-            key: "PRI01",
+            key: "ele-PRI01-627-3",
             type: "Data Element",
             value: "AAA:3.85",
             components: [
               {
-                key: "PRI0101",
+                key: "ele-PRI0101-627-3",
                 type: "Component Element",
                 value: "AAA",
                 id: "5125",
@@ -1823,7 +1823,7 @@ export default function useTestData(): IEdiMessage {
                 definition: "Identification of a type of price."
               },
               {
-                key: "PRI0102",
+                key: "ele-PRI0102-627-7",
                 type: "Component Element",
                 value: "3.85",
                 id: "5118",
@@ -1844,12 +1844,12 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 642,
+        key: "seg-UNS-642",
         id: "UNS",
         purpose: "To separate header, detail and summary sections of a message.",
         elements: [
           {
-            key: "UNS01",
+            key: "ele-UNS01-642-3",
             type: "Data Element",
             value: "S",
             id: "0081",
@@ -1864,18 +1864,18 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 650,
+        key: "seg-CNT-650",
         id: "CNT",
         desc: "CONTROL TOTAL",
         purpose: "To provide control total.",
         elements: [
           {
-            key: "CNT01",
+            key: "ele-CNT01-650-3",
             type: "Data Element",
             value: "2:3",
             components: [
               {
-                key: "CNT0101",
+                key: "ele-CNT0101-650-3",
                 type: "Component Element",
                 value: "2",
                 id: "6069",
@@ -1889,7 +1889,7 @@ export default function useTestData(): IEdiMessage {
                   "Determines the source data elements in the message which forms the basis for 6066 Control value."
               },
               {
-                key: "CNT0102",
+                key: "ele-CNT0102-650-5",
                 type: "Component Element",
                 value: "3",
                 id: "6066",
@@ -1910,13 +1910,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 660,
+        key: "seg-UNT-660",
         id: "UNT",
         desc: "Message trailer",
         purpose: "To end and check the completeness of a message.",
         elements: [
           {
-            key: "UNT01",
+            key: "ele-UNT01-660-3",
             type: "Data Element",
             value: "28",
             id: "0074",
@@ -1928,7 +1928,7 @@ export default function useTestData(): IEdiMessage {
             definition: "Control count of number of segments in a message."
           },
           {
-            key: "UNT02",
+            key: "ele-UNT02-660-6",
             type: "Data Element",
             value: "1",
             id: "0062",
@@ -1942,13 +1942,13 @@ export default function useTestData(): IEdiMessage {
         ]
       },
       {
-        key: 671,
+        key: "seg-UNZ-671",
         id: "UNZ",
         desc: "Interchange trailer",
         purpose: "To end and check the completeness of an interchange.",
         elements: [
           {
-            key: "UNZ01",
+            key: "ele-UNZ01-671-3",
             type: "Data Element",
             value: "1",
             id: "0036",
@@ -1958,7 +1958,7 @@ export default function useTestData(): IEdiMessage {
             maxLength: 6
           },
           {
-            key: "UNZ02",
+            key: "ele-UNZ02-671-5",
             type: "Data Element",
             value: "5",
             id: "0020",

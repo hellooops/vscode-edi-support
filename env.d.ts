@@ -51,5 +51,9 @@ interface IEdiMessage {
 
 type VcmMessage = VcmTemplate<IEdiMessage>;
 
+type IActiveContext = {
+  segmentKey: any;
+  elementKey: any;
+}
 
-type VcmActiveLine = VcmTemplate<number>;
+type VcmActiveContext = VcmTemplate<IActiveContext>;

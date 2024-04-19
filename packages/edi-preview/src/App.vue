@@ -1,6 +1,5 @@
 <template>
   <div class="p-2">
-    {{ activeLine }}
     <InspectorResult
       v-if="iEdiMessage"
       :iEdiMessage="iEdiMessage"
@@ -10,25 +9,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, provide, onMounted } from "vue";
 import useVcm from "@/hooks/useVscodeMessage";
 import InspectorResult from "@/views/Inspector/InspectorResult.vue";
 import useTestData from "./hooks/useTestData";
 
-const { onReceiveMessage, } = useVcm();
+const { onReceiveMessage } = useVcm();
 
 const iEdiMessage = ref<IEdiMessage>();
-const activeLine = ref<number>();
+const activeId = ref<string>();
+provide("activeId", activeId);
 const errormsg = ref("");
-
-// iEdiMessage.value = useTestData();
 
 onReceiveMessage("fileChange", (data) => {
   iEdiMessage.value = data;
 });
 
-onReceiveMessage("activeLine", (data) => {
-  activeLine.value = data;
+onReceiveMessage("active", (data) => {
+  const activeContext = data as IActiveContext;
+  const scrollToId = activeContext?.elementKey || activeContext?.segmentKey;
+  if (scrollToId) {
+    setActiveId(scrollToId);
+    document.getElementById(scrollToId)?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }
 });
 
+function setActiveId(id: string) {
+  activeId.value = id;
+}
+
+onMounted(() => {
+  // Test
+  // iEdiMessage.value = useTestData();
+  // setActiveId("ele-UNB0201");
+});
 </script>

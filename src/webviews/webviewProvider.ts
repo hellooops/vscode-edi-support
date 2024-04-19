@@ -2,12 +2,14 @@ import * as vscode from "vscode";
 import * as constants from "../constants";
 import * as path from "path";
 import { EdiUtils } from "../utils/ediUtils";
+import { EdiMessage } from "../parser/entities";
 
 export default class WebviewProvider {
   fileName: string;
   extensionContext: vscode.ExtensionContext;
   panel?: vscode.WebviewPanel;
   disposeCallback?: () => any;
+  parsedResult?: EdiMessage;
 
   constructor(fileName: string, extensionContext: vscode.ExtensionContext) {
     this.fileName = fileName;
@@ -98,20 +100,25 @@ export default class WebviewProvider {
     }
   
     const result = await parser.parse();
+    this.parsedResult = result;
     const iEdiMessage = result.getIResult();
-    const vcmMessage: VcmMessage = {
+    const vcm: VcmMessage = {
       name: "fileChange",
       data: iEdiMessage
     };
-    await this.panel!.webview.postMessage(vcmMessage);
+    await this.panel!.webview.postMessage(vcm);
   }
 
   async onSelectionChange(startOffset: number) {
-    const vcmMessage: VcmActiveLine = {
-      name: "activeLine",
-      data: startOffset
+    const { element, segment } = EdiUtils.getSegmentOrElementByPosition(startOffset, this.parsedResult!.segments);
+    const vcm: VcmActiveContext = {
+      name: "active",
+      data: {
+        segmentKey: segment?.getIResult()?.key,
+        elementKey: element?.getIResult()?.key
+      }
     };
-    await this.panel!.webview.postMessage(vcmMessage);
+    await this.panel!.webview.postMessage(vcm);
   }
 
   onDidDispose(callback: () => any) {

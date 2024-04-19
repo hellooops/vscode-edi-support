@@ -166,6 +166,7 @@ export abstract class EdiParserBase {
           -1, // endIndex will be set later
           dataElementSeparator,
           segment.id,
+          segment.startIndex,
           this.pad(elementIndex, 2, "0")
         );
         element.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1];
@@ -182,6 +183,7 @@ export abstract class EdiParserBase {
               -1, // endIndex will be set later
               dataElementSeparator,
               segment.id,
+              segment.startIndex,
               `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
             );
             subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
@@ -197,6 +199,7 @@ export abstract class EdiParserBase {
           -1, // endIndex will be set later
           componentElementSeparator,
           segment.id,
+          segment.startIndex,
           `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
         );
         subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];

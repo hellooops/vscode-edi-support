@@ -6,6 +6,8 @@
     :description="element.desc"
     :isRequired="element.required"
     :content="element.definition"
+    :id="element.key"
+    :class="{'active-fragment': element.key === activeId}"
   >
     <InspectorResultElementList
       v-if="element.components"
@@ -16,11 +18,11 @@
   <InspectorResultElementLine
     v-else
     :element="element"
-    :segment="segment"
+    :id="element.key"
   />
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import InspectorResultLine from "@/views/Inspector/components/InspectorResultLine.vue";
 import InspectorResultElementList from "@/views/Inspector/components/InspectorResultElementList.vue";
 import InspectorResultElementLine from "@/views/Inspector/components/InspectorResultElementLine.vue";
@@ -31,4 +33,5 @@ defineProps<{
 }>();
 
 const visible = ref(true);
+const activeId = inject("activeId");
 </script>

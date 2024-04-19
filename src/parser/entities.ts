@@ -39,6 +39,10 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
     this.isInvalidSegment = false;
   }
 
+  public getKey(): string {
+    return `seg-${this.id}-${this.startIndex}`
+  }
+
   public toString() {
     return `${this.id}${this.elements.join("")}${this.endingDelimiter}`;
   }
@@ -81,7 +85,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
 
   getIResult(): IEdiSegment {
     return {
-      key: this.startIndex,
+      key: this.getKey(),
       id: this.id,
       desc: this.ediReleaseSchemaSegment!.desc,
       purpose: this.ediReleaseSchemaSegment!.purpose,
@@ -118,17 +122,23 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
   public endIndex: number;
   public separator: string;
   public designatorIndex: string;
+  public segmentStartIndex: number;
   public segmentName: string;
   public components?: EdiElement[];
   public ediReleaseSchemaElement?: EdiReleaseSchemaElement;
 
-  constructor(type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, designatorIndex: string) {
+  constructor(type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, segmentStartIndex: number, designatorIndex: string) {
     this.type = type;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
     this.separator = separator;
     this.segmentName = segmentName;
+    this.segmentStartIndex = segmentStartIndex;
     this.designatorIndex = designatorIndex;
+  }
+
+  public getKey(): string {
+    return `ele-${this.getDesignator()}-${this.segmentStartIndex}-${this.startIndex}`;
   }
 
   public getDesignator() : string {
@@ -295,7 +305,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
     }
 
     return {
-      key: this.getDesignator(),
+      key: this.getKey(),
       type: this.type,
       value: this.value,
       components: this.components?.map(e => e.getIResult()),

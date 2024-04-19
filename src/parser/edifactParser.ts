@@ -110,6 +110,7 @@ export class EdifactParser extends EdiParserBase {
         i + 3,
         "",
         segment.id,
+        segment.startIndex,
         this.pad(i + 1, 2, "0")
       );
       element.value = segmentStr[i + 3];

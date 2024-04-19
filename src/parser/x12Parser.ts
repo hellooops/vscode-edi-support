@@ -145,6 +145,7 @@ export class X12Parser extends EdiParserBase {
         cIndex + elementLength - 1,
         separators.dataElementSeparator,
         segment.id,
+        segment.startIndex,
         this.pad(i + 1, 2, "0")
       );
       element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.x12.segment.ISA)?.elements[i];
