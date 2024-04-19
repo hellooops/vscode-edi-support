@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between border-t py-2 pl-1 gap-1">
+  <div class="flex justify-between border-t py-2 pl-2 gap-1">
     <div class="flex-1">
       <div>
         <InspectorPopover
@@ -7,10 +7,11 @@
           :is-required="!!element.required"
           :desc="element.definition"
         >
-          <span class="inline-flex items-center">
-            <span><ElementIcon width="12px" height="12px" /></span>
-            <span class="ml-2">{{ element.id.toUpperCase() }}</span>
-            <span class="ml-2">{{ element.desc }}</span>
+          <span class="inline-flex items-center py-1 gap-2 rounded text-sm">
+            <span class="w-4"></span>
+            <ElementIcon />
+            <span class="bg-neutral-700 text-white px-1 rounded-sm">{{ element.id.toUpperCase() }}</span>
+            <span class="text-neutral-600">{{ element.desc }}</span>
           </span>
         </InspectorPopover>
       </div>

@@ -1,9 +1,11 @@
 <template>
-  <InspectorResult
-    v-if="iEdiMessage"
-    :iEdiMessage="iEdiMessage"
-    :errormsg="errormsg"
-  />
+  <div class="p-2">
+    <InspectorResult
+      v-if="iEdiMessage"
+      :iEdiMessage="iEdiMessage"
+      :errormsg="errormsg"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

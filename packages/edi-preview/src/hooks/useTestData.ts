@@ -1,575 +1,1977 @@
 export default function useTestData(): IEdiMessage {
   return {
-    ediVersion: { release: "00401", version: "850" },
+    ediVersion: { release: "D96A", version: "ORDERS" },
     segments: [
       {
         key: 0,
-        id: "ISA",
-        desc: "Interchange Control Header",
-        purpose:
-          "To start and identify an interchange of zero or more functional groups and interchange-related control segments",
+        id: "UNB",
+        desc: "Interchange header",
+        purpose: "To start, identify and specify an interchange.",
         elements: [
           {
-            key: "ISA01",
+            key: "UNB01",
             type: "Data Element",
-            value: "00",
-            id: "I01",
-            desc: "Authorization Information Qualifier",
-            required: true,
-            minLength: 2,
-            maxLength: 2
+            value: "UNOA:2",
+            components: [
+              {
+                key: "UNB0101",
+                type: "Component Element",
+                value: "UNOA",
+                id: "0001",
+                desc: "Syntax identifier",
+                dataType: "AN",
+                required: true,
+                minLength: 4,
+                maxLength: 4,
+                definition:
+                  "Coded identification of the agency controlling a syntax and syntax level used in an interchange."
+              },
+              {
+                key: "UNB0102",
+                type: "Component Element",
+                value: "2",
+                id: "0002",
+                desc: "Syntax version number",
+                dataType: "N",
+                required: true,
+                minLength: 1,
+                maxLength: 1,
+                definition:
+                  "Version number of the syntax identified in the syntax identifier (0001)"
+              }
+            ],
+            id: "S001",
+            desc: "Syntax identifier",
+            required: true
           },
           {
-            key: "ISA02",
+            key: "UNB02",
             type: "Data Element",
-            value: " ",
-            id: "I02",
-            desc: "Authorization Information",
-            required: true,
-            minLength: 10,
-            maxLength: 10
+            value: "<Sender GLN>:14",
+            components: [
+              {
+                key: "UNB0201",
+                type: "Component Element",
+                value: "<Sender GLN>",
+                id: "0004",
+                desc: "Sender identification",
+                dataType: "AN",
+                required: true,
+                minLength: 1,
+                maxLength: 35,
+                definition: "Name or coded representation of the sender of a data interchange."
+              },
+              {
+                key: "UNB0202",
+                type: "Component Element",
+                value: "14",
+                id: "0007",
+                desc: "Partner identification code qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 1,
+                maxLength: 4,
+                definition:
+                  "Qualifier referring to the source of codes for the identifiers of interchanging partners."
+              }
+            ],
+            id: "S002",
+            desc: "Interchange sender",
+            required: true
           },
           {
-            key: "ISA03",
+            key: "UNB03",
             type: "Data Element",
-            value: "00",
-            id: "I03",
-            desc: "Security Information Qualifier",
-            required: true,
-            minLength: 2,
-            maxLength: 2
+            value: "<Receiver GLN>:14",
+            components: [
+              {
+                key: "UNB0301",
+                type: "Component Element",
+                value: "<Receiver GLN>",
+                id: "0010",
+                desc: "Recipient identification",
+                dataType: "AN",
+                required: true,
+                minLength: 1,
+                maxLength: 35,
+                definition: "Name or coded representation of the recipient of a data interchange."
+              },
+              {
+                key: "UNB0302",
+                type: "Component Element",
+                value: "14",
+                id: "0007",
+                desc: "Partner identification code qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 1,
+                maxLength: 4,
+                definition:
+                  "Qualifier referring to the source of codes for the identifiers of interchanging partners."
+              }
+            ],
+            id: "S003",
+            desc: "Interchange recipient",
+            required: true
           },
           {
-            key: "ISA04",
+            key: "UNB04",
             type: "Data Element",
-            value: " ",
-            id: "I04",
-            desc: "Security Information",
-            required: true,
-            minLength: 10,
-            maxLength: 10
+            value: "140407:0910",
+            components: [
+              {
+                key: "UNB0401",
+                type: "Component Element",
+                value: "140407",
+                id: "0017",
+                desc: "Date of preparation",
+                dataType: "N",
+                required: true,
+                minLength: 6,
+                maxLength: 6,
+                definition: "Local date when an interchange or a functional group was prepared."
+              },
+              {
+                key: "UNB0402",
+                type: "Component Element",
+                value: "0910",
+                id: "0019",
+                desc: "Time of preparation",
+                dataType: "N",
+                required: false,
+                minLength: 4,
+                maxLength: 4,
+                definition:
+                  "Local time of day when an interchange or a functional group was prepared."
+              }
+            ],
+            id: "S004",
+            desc: "Date/time of preparation",
+            required: true
           },
           {
-            key: "ISA05",
+            key: "UNB05",
             type: "Data Element",
-            value: "ZZ",
-            id: "I05",
-            desc: "Interchange ID Qualifier",
-            required: true,
-            minLength: 2,
-            maxLength: 2
-          },
-          {
-            key: "ISA06",
-            type: "Data Element",
-            value: "DERICL ",
-            id: "I06",
-            desc: "Interchange Sender ID",
-            required: true,
-            minLength: 15,
-            maxLength: 15
-          },
-          {
-            key: "ISA07",
-            type: "Data Element",
-            value: "ZZ",
-            id: "I05",
-            desc: "Interchange ID Qualifier",
-            required: true,
-            minLength: 2,
-            maxLength: 2
-          },
-          {
-            key: "ISA08",
-            type: "Data Element",
-            value: "TEST01 ",
-            id: "I07",
-            desc: "Interchange Receiver ID",
-            required: true,
-            minLength: 15,
-            maxLength: 15
-          },
-          {
-            key: "ISA09",
-            type: "Data Element",
-            value: "210517",
-            id: "I08",
-            desc: "Interchange Date",
-            required: true,
-            minLength: 6,
-            maxLength: 6
-          },
-          {
-            key: "ISA10",
-            type: "Data Element",
-            value: "0643",
-            id: "I09",
-            desc: "Interchange Time",
-            required: true,
-            minLength: 4,
-            maxLength: 4
-          },
-          {
-            key: "ISA11",
-            type: "Data Element",
-            value: "U",
-            id: "I10",
-            desc: "Interchange Control Standards Identifier",
-            required: true,
-            minLength: 1,
-            maxLength: 1
-          },
-          {
-            key: "ISA12",
-            type: "Data Element",
-            value: "00401",
-            id: "I11",
-            desc: "Interchange Control Version Number",
-            required: true,
-            minLength: 5,
-            maxLength: 5
-          },
-          {
-            key: "ISA13",
-            type: "Data Element",
-            value: "000007080",
-            id: "I12",
-            desc: "Interchange Control Number",
-            required: true,
-            minLength: 9,
-            maxLength: 9
-          },
-          {
-            key: "ISA14",
-            type: "Data Element",
-            value: "0",
-            id: "I13",
-            desc: "Acknowledgment Requested",
-            required: true,
-            minLength: 1,
-            maxLength: 1
-          },
-          {
-            key: "ISA15",
-            type: "Data Element",
-            value: "P",
-            id: "I14",
-            desc: "Usage Indicator",
-            required: true,
-            minLength: 1,
-            maxLength: 1
-          },
-          {
-            key: "ISA16",
-            type: "Data Element",
-            value: ">",
-            id: "I15",
-            desc: "Component Element Separator",
-            required: true,
-            minLength: 1,
-            maxLength: 1
-          }
-        ]
-      },
-      {
-        key: 108,
-        id: "GS",
-        desc: "Functional Group Header",
-        purpose:
-          "To indicate the beginning of a functional group and to provide control information",
-        elements: [
-          {
-            key: "GS01",
-            type: "Data Element",
-            value: "PO",
-            id: "479",
-            desc: "Functional Identifier Code",
-            required: true,
-            minLength: 2,
-            maxLength: 2
-          },
-          {
-            key: "GS02",
-            type: "Data Element",
-            value: "DERICL",
-            id: "142",
-            desc: "Application Sender's Code",
-            required: true,
-            minLength: 2,
-            maxLength: 15
-          },
-          {
-            key: "GS03",
-            type: "Data Element",
-            value: "TEST01",
-            id: "124",
-            desc: "Application Receiver's Code",
-            required: true,
-            minLength: 2,
-            maxLength: 15
-          },
-          {
-            key: "GS04",
-            type: "Data Element",
-            value: "20210517",
-            id: "373",
-            desc: "Date",
-            required: true,
-            minLength: 8,
-            maxLength: 8
-          },
-          {
-            key: "GS05",
-            type: "Data Element",
-            value: "0643",
-            id: "337",
-            desc: "Time",
-            required: true,
-            minLength: 4,
-            maxLength: 8
-          },
-          {
-            key: "GS06",
-            type: "Data Element",
-            value: "7080",
-            id: "28",
-            desc: "Group Control Number",
-            required: true,
-            minLength: 1,
-            maxLength: 9
-          },
-          {
-            key: "GS07",
-            type: "Data Element",
-            value: "X",
-            id: "455",
-            desc: "Responsible Agency Code",
-            required: true,
-            minLength: 1,
-            maxLength: 2
-          },
-          {
-            key: "GS08",
-            type: "Data Element",
-            value: "004010",
-            id: "480",
-            desc: "Version / Release / Industry Identifier Code",
-            required: true,
-            minLength: 1,
-            maxLength: 12
-          }
-        ]
-      },
-      {
-        key: 158,
-        id: "ST",
-        desc: "Transaction Set Header",
-        purpose: "To indicate the start of a transaction set and to assign a control number",
-        elements: [
-          {
-            key: "ST01",
-            type: "Data Element",
-            value: "850",
-            id: "143",
-            desc: "Transaction Set Identifier Code",
-            dataType: "AN",
-            required: true,
-            minLength: 3,
-            maxLength: 3,
-            qualifierRef: "Transaction Set Identifier Code",
-            definition: "Code uniquely identifying a Transaction Set"
-          },
-          {
-            key: "ST02",
-            type: "Data Element",
-            value: "0001",
-            id: "329",
-            desc: "Transaction Set Control Number",
-            dataType: "AN",
-            required: true,
-            minLength: 4,
-            maxLength: 9,
-            definition:
-              "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set"
-          }
-        ]
-      },
-      {
-        key: 172,
-        id: "BEG",
-        desc: "Beginning Segment for Purchase Order",
-        purpose:
-          "To indicate the beginning of the Purchase Order Transaction Set and transmit identifying numbers and dates",
-        elements: [
-          {
-            key: "BEG01",
-            type: "Data Element",
-            value: "00",
-            id: "353",
-            desc: "Transaction Set Purpose Code",
-            required: true,
-            qualifierRef: "Transaction Set Purpose Code",
-            definition: "Code identifying purpose of transaction set"
-          },
-          {
-            key: "BEG02",
-            type: "Data Element",
-            value: "BK",
-            id: "92",
-            desc: "Purchase Order Type Code",
-            required: true,
-            qualifierRef: "Purchase Order Type Code",
-            definition: "Code specifying the type of Purchase Order"
-          },
-          {
-            key: "BEG03",
-            type: "Data Element",
-            value: "0019-1234567-1234",
-            id: "324",
-            desc: "Purchase Order Number",
+            value: "5",
+            id: "0020",
+            desc: "Interchange control reference",
             dataType: "AN",
             required: true,
             minLength: 1,
-            maxLength: 22,
-            definition: "Identifying number for Purchase Order assigned by the orderer/purchaser"
+            maxLength: 14,
+            definition: "Unique reference assigned by the sender to an interchange."
           },
           {
-            key: "BEG04",
+            key: "UNB06",
+            type: "Data Element",
+            value: "000000001",
+            components: [
+              {
+                key: "UNB0601",
+                type: "Component Element",
+                value: "000000001",
+                id: "0022",
+                desc: "Recipient's reference/password",
+                dataType: "AN",
+                required: true,
+                minLength: 1,
+                maxLength: 14,
+                definition:
+                  "Unique reference assigned by the recipient to the data interchange or a password to the recipient's system or to a third party network as specified in the partners interchange agreement."
+              }
+            ],
+            id: "S005",
+            desc: "Recipient's reference, password",
+            required: true
+          },
+          {
+            key: "UNB07",
             type: "Data Element",
             value: "",
-            id: "328",
-            desc: "Release Number",
+            id: "0026",
+            desc: "Application reference",
             dataType: "AN",
             required: false,
             minLength: 1,
-            maxLength: 30,
+            maxLength: 14,
             definition:
-              "Number identifying a release against a Purchase Order previously placed by the parties involved in the transaction"
+              "Identification of the application area assigned by the sender, to which the messages in the interchange relate e.g. the message identifier if all the messages in the interchange are of the same type."
           },
           {
-            key: "BEG05",
+            key: "UNB08",
             type: "Data Element",
-            value: "20000130",
-            id: "373",
-            desc: "Date",
-            dataType: "DT",
-            required: true,
-            minLength: 8,
-            maxLength: 8,
-            definition: "Date expressed as CCYYMMDD"
-          }
-        ]
-      },
-      {
-        key: 212,
-        id: "REF",
-        desc: "Reference Identification",
-        purpose: "To specify identifying information",
-        elements: [
-          {
-            key: "REF01",
-            type: "Data Element",
-            value: "IA",
-            id: "128",
-            desc: "Reference Identification Qualifier",
-            required: true,
-            qualifierRef: "Reference Identification Qualifier",
-            definition: "Code qualifying the Reference Identification"
-          },
-          {
-            key: "REF02",
-            type: "Data Element",
-            value: "3688063",
-            id: "127",
-            desc: "Reference Identification",
+            value: "",
+            id: "0029",
+            desc: "Processing priority code",
             dataType: "AN",
             required: false,
             minLength: 1,
-            maxLength: 30,
+            maxLength: 1,
             definition:
-              "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
+              "Code determined by the sender requesting processing priority for the interchange."
           },
           {
-            key: "REF03",
-            type: "Data Element",
-            value: "VENDOR NAME",
-            id: "352",
-            desc: "Description",
-            dataType: "AN",
-            required: false,
-            minLength: 1,
-            maxLength: 80,
-            definition:
-              "A free-form description to clarify the related data elements and their content"
-          }
-        ]
-      },
-      {
-        key: 241,
-        id: "REF",
-        desc: "Reference Identification",
-        purpose: "To specify identifying information",
-        elements: [
-          {
-            key: "REF01",
-            type: "Data Element",
-            value: "2H",
-            id: "128",
-            desc: "Reference Identification Qualifier",
-            required: true,
-            qualifierRef: "Reference Identification Qualifier",
-            definition: "Code qualifying the Reference Identification"
-          },
-          {
-            key: "REF02",
-            type: "Data Element",
-            value: "AD",
-            id: "127",
-            desc: "Reference Identification",
-            dataType: "AN",
-            required: false,
-            minLength: 1,
-            maxLength: 30,
-            definition:
-              "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
-          },
-          {
-            key: "REF03",
-            type: "Data Element",
-            value: "Ad",
-            id: "352",
-            desc: "Description",
-            dataType: "AN",
-            required: false,
-            minLength: 1,
-            maxLength: 80,
-            definition:
-              "A free-form description to clarify the related data elements and their content"
-          }
-        ]
-      },
-      {
-        key: 256,
-        id: "CTT",
-        desc: "Transaction Totals",
-        purpose: "To transmit a hash total for a specific element in the transaction set",
-        elements: [
-          {
-            key: "CTT01",
+            key: "UNB09",
             type: "Data Element",
             value: "1",
-            id: "354",
-            desc: "Number of Line Items",
+            id: "0031",
+            desc: "Acknowledgement request",
             dataType: "N",
-            required: true,
-            minLength: 1,
-            maxLength: 6,
-            definition: "Total number of line items in the transaction set"
-          },
-          {
-            key: "CTT02",
-            type: "Data Element",
-            value: "200",
-            id: "347",
-            desc: "Hash Total",
-            dataType: "R",
             required: false,
             minLength: 1,
-            maxLength: 10,
+            maxLength: 1,
+            definition: "Code determined by the sender for acknowledgement of the interchange."
+          },
+          {
+            key: "UNB10",
+            type: "Data Element",
+            value: "EANCOM",
+            id: "0032",
+            desc: "Communications agreement ID",
+            dataType: "AN",
+            required: false,
+            minLength: 1,
+            maxLength: 35,
             definition:
-              "Sum of values of the specified data element. All values in the data element will be summed without regard to decimal points (explicit or implicit) or signs. Truncation will occur on the left most digits if the sum is greater than the maximum size of the hash total of the data element.\n\nExample:\n-.0018 First occurrence of value being hashed.\n.18 Second occurrence of value being hashed.\n1.8 Third occurrence of value being hashed.\n18.01 Fourth occurrence of value being hashed.\n---------\n1855 Hash total prior to truncation.\n855 Hash total after truncation to three-digit field."
+              "Identification by name or code of the type of agreement under which the interchange takes place."
           }
         ]
       },
       {
-        key: 268,
-        id: "SE",
-        desc: "Transaction Set Trailer",
-        purpose:
-          "To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)",
+        key: 82,
+        id: "UNH",
+        desc: "Message header",
+        purpose: "To head, identify and specify a message.",
         elements: [
           {
-            key: "SE01",
+            key: "UNH01",
             type: "Data Element",
-            value: "6",
-            id: "96",
-            desc: "Number of Included Segments",
+            value: "1",
+            id: "0062",
+            desc: "MESSAGE REFERENCE NUMBER",
             dataType: "AN",
             required: true,
-            minLength: 1,
-            maxLength: 10,
-            definition:
-              "Total number of segments included in a transaction set including ST and SE segments"
+            minLength: 0,
+            maxLength: 14,
+            definition: "Unique message reference assigned by the sender."
           },
           {
-            key: "SE02",
+            key: "UNH02",
             type: "Data Element",
-            value: "0001",
-            id: "329",
-            desc: "Transaction Set Control Number",
+            value: "ORDERS:D:96A:UN:EAN008",
+            components: [
+              {
+                key: "UNH0201",
+                type: "Component Element",
+                value: "ORDERS",
+                id: "0065",
+                desc: "Message type identifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 6,
+                qualifierRef: "Message type identifier",
+                definition:
+                  "Code identifying a type of message and assigned by its controlling agency."
+              },
+              {
+                key: "UNH0202",
+                type: "Component Element",
+                value: "D",
+                id: "0052",
+                desc: "Message type version number",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                definition: "Version number of a message type."
+              },
+              {
+                key: "UNH0203",
+                type: "Component Element",
+                value: "96A",
+                id: "0054",
+                desc: "Message type release number",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                definition: "Release number within the current message type version number (0052)."
+              },
+              {
+                key: "UNH0204",
+                type: "Component Element",
+                value: "UN",
+                id: "0051",
+                desc: "Controlling agency",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 2,
+                qualifierRef: "Controlling agency",
+                definition:
+                  "Code to identify the agency controlling the specification, maintenance and publication of the message type."
+              },
+              {
+                key: "UNH0205",
+                type: "Component Element",
+                value: "EAN008",
+                id: "0057",
+                desc: "Association assigned code",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 6,
+                definition:
+                  "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message."
+              }
+            ],
+            id: "S009",
+            desc: "MESSAGE IDENTIFIER",
+            required: true,
+            definition:
+              "Identification of the type, version etc. of the message being interchanged."
+          }
+        ]
+      },
+      {
+        key: 113,
+        id: "BGM",
+        desc: "BEGINNING OF MESSAGE",
+        purpose:
+          "To indicate the type and function of a message and to transmit the identifying number.",
+        elements: [
+          {
+            key: "BGM01",
+            type: "Data Element",
+            value: "220",
+            components: [
+              {
+                key: "BGM0101",
+                type: "Component Element",
+                value: "220",
+                id: "1001",
+                desc: "Document/message name, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Document/message name, coded",
+                definition: "Document/message identifier expressed in code."
+              }
+            ],
+            id: "C002",
+            desc: "DOCUMENT/MESSAGE NAME",
+            required: false,
+            definition:
+              "Identification of a type of document/message by code or name. Code preferred."
+          },
+          {
+            key: "BGM02",
+            type: "Data Element",
+            value: "1AA1TEST",
+            id: "1004",
+            desc: "DOCUMENT/MESSAGE NUMBER",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 35,
+            definition: "Reference number assigned to the document/message by the issuer."
+          },
+          {
+            key: "BGM03",
+            type: "Data Element",
+            value: "9",
+            id: "1225",
+            desc: "MESSAGE FUNCTION, CODED",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Message function, coded",
+            definition: "Code indicating the function of the message."
+          }
+        ]
+      },
+      {
+        key: 134,
+        id: "DTM",
+        desc: "DATE/TIME/PERIOD",
+        purpose: "To specify date, and/or time, or period.",
+        elements: [
+          {
+            key: "DTM01",
+            type: "Data Element",
+            value: "137:20140407:102",
+            components: [
+              {
+                key: "DTM0101",
+                type: "Component Element",
+                value: "137",
+                id: "2005",
+                desc: "Date/time/period qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Date/time/period qualifier",
+                definition: "Code giving specific meaning to a date, time or period."
+              },
+              {
+                key: "DTM0102",
+                type: "Component Element",
+                value: "20140407",
+                id: "2380",
+                desc: "Date/time/period",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "The value of a date, a date and time, a time or of a period in a specified representation."
+              },
+              {
+                key: "DTM0103",
+                type: "Component Element",
+                value: "102",
+                id: "2379",
+                desc: "Date/time/period format qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Date/time/period format qualifier",
+                definition:
+                  "Specification of the representation of a date, a date and time or of a period."
+              }
+            ],
+            id: "C507",
+            desc: "DATE/TIME/PERIOD",
+            required: true,
+            definition:
+              "Date and/or time, or period relevant to the specified date/time/period type."
+          }
+        ]
+      },
+      {
+        key: 157,
+        id: "DTM",
+        desc: "DATE/TIME/PERIOD",
+        purpose: "To specify date, and/or time, or period.",
+        elements: [
+          {
+            key: "DTM01",
+            type: "Data Element",
+            value: "63:20140421:102",
+            components: [
+              {
+                key: "DTM0101",
+                type: "Component Element",
+                value: "63",
+                id: "2005",
+                desc: "Date/time/period qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Date/time/period qualifier",
+                definition: "Code giving specific meaning to a date, time or period."
+              },
+              {
+                key: "DTM0102",
+                type: "Component Element",
+                value: "20140421",
+                id: "2380",
+                desc: "Date/time/period",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "The value of a date, a date and time, a time or of a period in a specified representation."
+              },
+              {
+                key: "DTM0103",
+                type: "Component Element",
+                value: "102",
+                id: "2379",
+                desc: "Date/time/period format qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Date/time/period format qualifier",
+                definition:
+                  "Specification of the representation of a date, a date and time or of a period."
+              }
+            ],
+            id: "C507",
+            desc: "DATE/TIME/PERIOD",
+            required: true,
+            definition:
+              "Date and/or time, or period relevant to the specified date/time/period type."
+          }
+        ]
+      },
+      {
+        key: 179,
+        id: "DTM",
+        desc: "DATE/TIME/PERIOD",
+        purpose: "To specify date, and/or time, or period.",
+        elements: [
+          {
+            key: "DTM01",
+            type: "Data Element",
+            value: "64:20140414:102",
+            components: [
+              {
+                key: "DTM0101",
+                type: "Component Element",
+                value: "64",
+                id: "2005",
+                desc: "Date/time/period qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Date/time/period qualifier",
+                definition: "Code giving specific meaning to a date, time or period."
+              },
+              {
+                key: "DTM0102",
+                type: "Component Element",
+                value: "20140414",
+                id: "2380",
+                desc: "Date/time/period",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "The value of a date, a date and time, a time or of a period in a specified representation."
+              },
+              {
+                key: "DTM0103",
+                type: "Component Element",
+                value: "102",
+                id: "2379",
+                desc: "Date/time/period format qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Date/time/period format qualifier",
+                definition:
+                  "Specification of the representation of a date, a date and time or of a period."
+              }
+            ],
+            id: "C507",
+            desc: "DATE/TIME/PERIOD",
+            required: true,
+            definition:
+              "Date and/or time, or period relevant to the specified date/time/period type."
+          }
+        ]
+      },
+      {
+        key: 201,
+        id: "RFF",
+        desc: "REFERENCE",
+        purpose: "To specify a reference.",
+        elements: [
+          {
+            key: "RFF01",
+            type: "Data Element",
+            value: "ADE:FIRSTORDER",
+            components: [
+              {
+                key: "RFF0101",
+                type: "Component Element",
+                value: "ADE",
+                id: "1153",
+                desc: "Reference qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Reference qualifier",
+                definition:
+                  "Code giving specific meaning to a reference segment or a reference number."
+              },
+              {
+                key: "RFF0102",
+                type: "Component Element",
+                value: "FIRSTORDER",
+                id: "1154",
+                desc: "Reference number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier."
+              }
+            ],
+            id: "C506",
+            desc: "REFERENCE",
+            required: true,
+            definition: "Identification of a reference."
+          }
+        ]
+      },
+      {
+        key: 222,
+        id: "RFF",
+        desc: "REFERENCE",
+        purpose: "To specify a reference.",
+        elements: [
+          {
+            key: "RFF01",
+            type: "Data Element",
+            value: "PD:1704",
+            components: [
+              {
+                key: "RFF0101",
+                type: "Component Element",
+                value: "PD",
+                id: "1153",
+                desc: "Reference qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Reference qualifier",
+                definition:
+                  "Code giving specific meaning to a reference segment or a reference number."
+              },
+              {
+                key: "RFF0102",
+                type: "Component Element",
+                value: "1704",
+                id: "1154",
+                desc: "Reference number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier."
+              }
+            ],
+            id: "C506",
+            desc: "REFERENCE",
+            required: true,
+            definition: "Identification of a reference."
+          }
+        ]
+      },
+      {
+        key: 236,
+        id: "RFF",
+        desc: "REFERENCE",
+        purpose: "To specify a reference.",
+        elements: [
+          {
+            key: "RFF01",
+            type: "Data Element",
+            value: "CR:ABCD5",
+            components: [
+              {
+                key: "RFF0101",
+                type: "Component Element",
+                value: "CR",
+                id: "1153",
+                desc: "Reference qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Reference qualifier",
+                definition:
+                  "Code giving specific meaning to a reference segment or a reference number."
+              },
+              {
+                key: "RFF0102",
+                type: "Component Element",
+                value: "ABCD5",
+                id: "1154",
+                desc: "Reference number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier."
+              }
+            ],
+            id: "C506",
+            desc: "REFERENCE",
+            required: true,
+            definition: "Identification of a reference."
+          }
+        ]
+      },
+      {
+        key: 251,
+        id: "NAD",
+        desc: "NAME AND ADDRESS",
+        purpose:
+          "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+        elements: [
+          {
+            key: "NAD01",
+            type: "Data Element",
+            value: "BY",
+            id: "3035",
+            desc: "PARTY QUALIFIER",
             dataType: "AN",
             required: true,
-            minLength: 4,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Party qualifier",
+            definition: "Code giving specific meaning to a party."
+          },
+          {
+            key: "NAD02",
+            type: "Data Element",
+            value: "5450534000024::9",
+            components: [
+              {
+                key: "NAD0201",
+                type: "Component Element",
+                value: "5450534000024",
+                id: "3039",
+                desc: "Party id. identification",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Code identifying a party involved in a transaction."
+              },
+              {
+                key: "NAD0202",
+                type: "Component Element",
+                value: "",
+                id: "1131",
+                desc: "Code list qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list qualifier",
+                definition: "Identification of a code list."
+              },
+              {
+                key: "NAD0203",
+                type: "Component Element",
+                value: "9",
+                id: "3055",
+                desc: "Code list responsible agency, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list responsible agency, coded",
+                definition: "Code identifying the agency responsible for a code list."
+              }
+            ],
+            id: "C082",
+            desc: "PARTY IDENTIFICATION DETAILS",
+            required: false,
+            definition: "Identification of a transaction party by code."
+          }
+        ]
+      },
+      {
+        key: 277,
+        id: "NAD",
+        desc: "NAME AND ADDRESS",
+        purpose:
+          "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+        elements: [
+          {
+            key: "NAD01",
+            type: "Data Element",
+            value: "SU",
+            id: "3035",
+            desc: "PARTY QUALIFIER",
+            dataType: "AN",
+            required: true,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Party qualifier",
+            definition: "Code giving specific meaning to a party."
+          },
+          {
+            key: "NAD02",
+            type: "Data Element",
+            value: "<Supplier GLN>::9",
+            components: [
+              {
+                key: "NAD0201",
+                type: "Component Element",
+                value: "<Supplier GLN>",
+                id: "3039",
+                desc: "Party id. identification",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Code identifying a party involved in a transaction."
+              },
+              {
+                key: "NAD0202",
+                type: "Component Element",
+                value: "",
+                id: "1131",
+                desc: "Code list qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list qualifier",
+                definition: "Identification of a code list."
+              },
+              {
+                key: "NAD0203",
+                type: "Component Element",
+                value: "9",
+                id: "3055",
+                desc: "Code list responsible agency, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list responsible agency, coded",
+                definition: "Code identifying the agency responsible for a code list."
+              }
+            ],
+            id: "C082",
+            desc: "PARTY IDENTIFICATION DETAILS",
+            required: false,
+            definition: "Identification of a transaction party by code."
+          }
+        ]
+      },
+      {
+        key: 304,
+        id: "NAD",
+        desc: "NAME AND ADDRESS",
+        purpose:
+          "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+        elements: [
+          {
+            key: "NAD01",
+            type: "Data Element",
+            value: "DP",
+            id: "3035",
+            desc: "PARTY QUALIFIER",
+            dataType: "AN",
+            required: true,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Party qualifier",
+            definition: "Code giving specific meaning to a party."
+          },
+          {
+            key: "NAD02",
+            type: "Data Element",
+            value: "5450534000109::9",
+            components: [
+              {
+                key: "NAD0201",
+                type: "Component Element",
+                value: "5450534000109",
+                id: "3039",
+                desc: "Party id. identification",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Code identifying a party involved in a transaction."
+              },
+              {
+                key: "NAD0202",
+                type: "Component Element",
+                value: "",
+                id: "1131",
+                desc: "Code list qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list qualifier",
+                definition: "Identification of a code list."
+              },
+              {
+                key: "NAD0203",
+                type: "Component Element",
+                value: "9",
+                id: "3055",
+                desc: "Code list responsible agency, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list responsible agency, coded",
+                definition: "Code identifying the agency responsible for a code list."
+              }
+            ],
+            id: "C082",
+            desc: "PARTY IDENTIFICATION DETAILS",
+            required: false,
+            definition: "Identification of a transaction party by code."
+          },
+          {
+            key: "NAD03",
+            type: "Data Element",
+            value: "",
+            id: "C058",
+            desc: "NAME AND ADDRESS",
+            required: false,
+            definition: "Unstructured name and address: one to five lines."
+          },
+          {
+            key: "NAD04",
+            type: "Data Element",
+            value: "",
+            id: "C080",
+            desc: "PARTY NAME",
+            required: false,
+            definition:
+              "Identification of a transaction party by name, one to five lines. Party name may be formatted."
+          },
+          {
+            key: "NAD05",
+            type: "Data Element",
+            value: "",
+            id: "C059",
+            desc: "STREET",
+            required: false,
+            definition:
+              "Street address and/or PO Box number in a structured address: one to three lines."
+          },
+          {
+            key: "NAD06",
+            type: "Data Element",
+            value: "",
+            id: "3164",
+            desc: "CITY NAME",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 35,
+            definition: "Name of a city (a town, a village) for addressing purposes."
+          },
+          {
+            key: "NAD07",
+            type: "Data Element",
+            value: "",
+            id: "3229",
+            desc: "COUNTRY SUB-ENTITY IDENTIFICATION",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
             maxLength: 9,
             definition:
-              "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set"
+              "Identification of the name of sub-entities (state, province) defined by appropriate governmental agencies."
+          },
+          {
+            key: "NAD08",
+            type: "Data Element",
+            value: "",
+            id: "3251",
+            desc: "POSTCODE IDENTIFICATION",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 9,
+            definition: "Code defining postal zones or addresses."
+          },
+          {
+            key: "NAD09",
+            type: "Data Element",
+            value: "GB",
+            id: "3207",
+            desc: "COUNTRY, CODED",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 3,
+            definition:
+              "Identification of the name of a country or other geographical entity as specified in ISO 3166."
           }
         ]
       },
       {
-        key: 280,
-        id: "GE",
-        desc: "Functional Group Trailer",
-        purpose: "To indicate the end of a functional group and to provide control information",
+        key: 339,
+        id: "NAD",
+        desc: "NAME AND ADDRESS",
+        purpose:
+          "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
         elements: [
           {
-            key: "GE01",
+            key: "NAD01",
+            type: "Data Element",
+            value: "IV",
+            id: "3035",
+            desc: "PARTY QUALIFIER",
+            dataType: "AN",
+            required: true,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Party qualifier",
+            definition: "Code giving specific meaning to a party."
+          },
+          {
+            key: "NAD02",
+            type: "Data Element",
+            value: "5450534007139::9",
+            components: [
+              {
+                key: "NAD0201",
+                type: "Component Element",
+                value: "5450534007139",
+                id: "3039",
+                desc: "Party id. identification",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Code identifying a party involved in a transaction."
+              },
+              {
+                key: "NAD0202",
+                type: "Component Element",
+                value: "",
+                id: "1131",
+                desc: "Code list qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list qualifier",
+                definition: "Identification of a code list."
+              },
+              {
+                key: "NAD0203",
+                type: "Component Element",
+                value: "9",
+                id: "3055",
+                desc: "Code list responsible agency, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Code list responsible agency, coded",
+                definition: "Code identifying the agency responsible for a code list."
+              }
+            ],
+            id: "C082",
+            desc: "PARTY IDENTIFICATION DETAILS",
+            required: false,
+            definition: "Identification of a transaction party by code."
+          },
+          {
+            key: "NAD03",
+            type: "Data Element",
+            value: "",
+            id: "C058",
+            desc: "NAME AND ADDRESS",
+            required: false,
+            definition: "Unstructured name and address: one to five lines."
+          },
+          {
+            key: "NAD04",
+            type: "Data Element",
+            value: "Test:Name2",
+            components: [
+              {
+                key: "NAD0401",
+                type: "Component Element",
+                value: "Test",
+                id: "3036",
+                desc: "Party name",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Name of a party involved in a transaction."
+              },
+              {
+                key: "NAD0402",
+                type: "Component Element",
+                value: "Name2",
+                id: "3036",
+                desc: "Party name",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Name of a party involved in a transaction."
+              }
+            ],
+            id: "C080",
+            desc: "PARTY NAME",
+            required: false,
+            definition:
+              "Identification of a transaction party by name, one to five lines. Party name may be formatted."
+          },
+          {
+            key: "NAD05",
+            type: "Data Element",
+            value: "Test Street:Steet2",
+            components: [
+              {
+                key: "NAD0501",
+                type: "Component Element",
+                value: "Test Street",
+                id: "3042",
+                desc: "Street and number/p.o. box",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Street and number in plain language, or Post Office Box No."
+              },
+              {
+                key: "NAD0502",
+                type: "Component Element",
+                value: "Steet2",
+                id: "3042",
+                desc: "Street and number/p.o. box",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition: "Street and number in plain language, or Post Office Box No."
+              }
+            ],
+            id: "C059",
+            desc: "STREET",
+            required: false,
+            definition:
+              "Street address and/or PO Box number in a structured address: one to three lines."
+          },
+          {
+            key: "NAD06",
+            type: "Data Element",
+            value: "Beijing",
+            id: "3164",
+            desc: "CITY NAME",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 35,
+            definition: "Name of a city (a town, a village) for addressing purposes."
+          },
+          {
+            key: "NAD07",
+            type: "Data Element",
+            value: "",
+            id: "3229",
+            desc: "COUNTRY SUB-ENTITY IDENTIFICATION",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 9,
+            definition:
+              "Identification of the name of sub-entities (state, province) defined by appropriate governmental agencies."
+          },
+          {
+            key: "NAD08",
+            type: "Data Element",
+            value: "EC2A 2FA",
+            id: "3251",
+            desc: "POSTCODE IDENTIFICATION",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 9,
+            definition: "Code defining postal zones or addresses."
+          },
+          {
+            key: "NAD09",
+            type: "Data Element",
+            value: "GB",
+            id: "3207",
+            desc: "COUNTRY, CODED",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 3,
+            definition:
+              "Identification of the name of a country or other geographical entity as specified in ISO 3166."
+          }
+        ]
+      },
+      {
+        key: 417,
+        id: "RFF",
+        desc: "REFERENCE",
+        purpose: "To specify a reference.",
+        elements: [
+          {
+            key: "RFF01",
+            type: "Data Element",
+            value: "VA:GB727255821",
+            components: [
+              {
+                key: "RFF0101",
+                type: "Component Element",
+                value: "VA",
+                id: "1153",
+                desc: "Reference qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Reference qualifier",
+                definition:
+                  "Code giving specific meaning to a reference segment or a reference number."
+              },
+              {
+                key: "RFF0102",
+                type: "Component Element",
+                value: "GB727255821",
+                id: "1154",
+                desc: "Reference number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition:
+                  "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier."
+              }
+            ],
+            id: "C506",
+            desc: "REFERENCE",
+            required: true,
+            definition: "Identification of a reference."
+          }
+        ]
+      },
+      {
+        key: 438,
+        id: "CUX",
+        desc: "CURRENCIES",
+        purpose:
+          "To specify currencies used in the transaction and relevant details for the rate of exchange.",
+        elements: [
+          {
+            key: "CUX01",
+            type: "Data Element",
+            value: "2:EUR:9",
+            components: [
+              {
+                key: "CUX0101",
+                type: "Component Element",
+                value: "2",
+                id: "6347",
+                desc: "Currency details qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Currency details qualifier",
+                definition: "Specification of the usage to which the currency relates."
+              },
+              {
+                key: "CUX0102",
+                type: "Component Element",
+                value: "EUR",
+                id: "6345",
+                desc: "Currency, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                definition:
+                  "Identification of the name or symbol of the monetary unit involved in the transaction."
+              },
+              {
+                key: "CUX0103",
+                type: "Component Element",
+                value: "9",
+                id: "6343",
+                desc: "Currency qualifier",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Currency qualifier",
+                definition: "Code giving specific meaning to data element 6345 Currency."
+              }
+            ],
+            id: "C504",
+            desc: "CURRENCY DETAILS",
+            required: false,
+            definition: "The usage to which a currency relates."
+          }
+        ]
+      },
+      {
+        key: 452,
+        id: "LIN",
+        desc: "LINE ITEM",
+        purpose: "To identify a line item and configuration.",
+        elements: [
+          {
+            key: "LIN01",
             type: "Data Element",
             value: "1",
-            id: "97",
-            desc: "Number of Transaction Sets Included",
+            id: "1082",
+            desc: "LINE ITEM NUMBER",
+            dataType: "N",
+            required: false,
+            minLength: 0,
+            maxLength: 6,
+            definition: "Serial number designating each separate item within a series of articles."
+          },
+          {
+            key: "LIN02",
+            type: "Data Element",
+            value: "",
+            id: "1229",
+            desc: "ACTION REQUEST/NOTIFICATION, CODED",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Action request/notification, coded",
+            definition: "Code specifying the action to be taken or already taken."
+          },
+          {
+            key: "LIN03",
+            type: "Data Element",
+            value: "9783898307529:EN",
+            components: [
+              {
+                key: "LIN0301",
+                type: "Component Element",
+                value: "9783898307529",
+                id: "7140",
+                desc: "Item number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition: "A number allocated to a group or item."
+              },
+              {
+                key: "LIN0302",
+                type: "Component Element",
+                value: "EN",
+                id: "7143",
+                desc: "Item number type, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Item number type, coded",
+                definition: "Identification of the type of item number."
+              }
+            ],
+            id: "C212",
+            desc: "ITEM NUMBER IDENTIFICATION",
+            required: false,
+            definition: "Goods identification for a specified source."
+          }
+        ]
+      },
+      {
+        key: 478,
+        id: "PIA",
+        desc: "ADDITIONAL PRODUCT ID",
+        purpose: "To specify additional or substitutional item identification codes.",
+        elements: [
+          {
+            key: "PIA01",
+            type: "Data Element",
+            value: "5",
+            id: "4347",
+            desc: "PRODUCT ID. FUNCTION QUALIFIER",
+            dataType: "AN",
+            required: true,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Product id. function qualifier",
+            definition: "Indication of the function of the product code."
+          },
+          {
+            key: "PIA02",
+            type: "Data Element",
+            value: "3899408268X-39:SA",
+            components: [
+              {
+                key: "PIA0201",
+                type: "Component Element",
+                value: "3899408268X-39",
+                id: "7140",
+                desc: "Item number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition: "A number allocated to a group or item."
+              },
+              {
+                key: "PIA0202",
+                type: "Component Element",
+                value: "SA",
+                id: "7143",
+                desc: "Item number type, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Item number type, coded",
+                definition: "Identification of the type of item number."
+              }
+            ],
+            id: "C212",
+            desc: "ITEM NUMBER IDENTIFICATION",
+            required: true,
+            definition: "Goods identification for a specified source."
+          }
+        ]
+      },
+      {
+        key: 504,
+        id: "QTY",
+        desc: "QUANTITY",
+        purpose: "To specify a pertinent quantity.",
+        elements: [
+          {
+            key: "QTY01",
+            type: "Data Element",
+            value: "21:5",
+            components: [
+              {
+                key: "QTY0101",
+                type: "Component Element",
+                value: "21",
+                id: "6063",
+                desc: "Quantity qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Quantity qualifier",
+                definition: "Code giving specific meaning to a quantity."
+              },
+              {
+                key: "QTY0102",
+                type: "Component Element",
+                value: "5",
+                id: "6060",
+                desc: "Quantity",
+                dataType: "N",
+                required: true,
+                minLength: 0,
+                maxLength: 15,
+                definition: "Numeric value of a quantity."
+              }
+            ],
+            id: "C186",
+            desc: "QUANTITY DETAILS",
+            required: true,
+            definition: "Quantity information in a transaction, qualified when relevant."
+          }
+        ]
+      },
+      {
+        key: 515,
+        id: "PRI",
+        desc: "PRICE DETAILS",
+        purpose: "To specify price information.",
+        elements: [
+          {
+            key: "PRI01",
+            type: "Data Element",
+            value: "AAA:27.5",
+            components: [
+              {
+                key: "PRI0101",
+                type: "Component Element",
+                value: "AAA",
+                id: "5125",
+                desc: "Price qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Price qualifier",
+                definition: "Identification of a type of price."
+              },
+              {
+                key: "PRI0102",
+                type: "Component Element",
+                value: "27.5",
+                id: "5118",
+                desc: "Price",
+                dataType: "N",
+                required: false,
+                minLength: 0,
+                maxLength: 15,
+                definition:
+                  "The monetary value associated with a purchase or sale of an article, product or service."
+              }
+            ],
+            id: "C509",
+            desc: "PRICE INFORMATION",
+            required: false,
+            definition: "Identification of price type, price and related details."
+          }
+        ]
+      },
+      {
+        key: 530,
+        id: "LIN",
+        desc: "LINE ITEM",
+        purpose: "To identify a line item and configuration.",
+        elements: [
+          {
+            key: "LIN01",
+            type: "Data Element",
+            value: "2",
+            id: "1082",
+            desc: "LINE ITEM NUMBER",
+            dataType: "N",
+            required: false,
+            minLength: 0,
+            maxLength: 6,
+            definition: "Serial number designating each separate item within a series of articles."
+          },
+          {
+            key: "LIN02",
+            type: "Data Element",
+            value: "",
+            id: "1229",
+            desc: "ACTION REQUEST/NOTIFICATION, CODED",
+            dataType: "AN",
+            required: false,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Action request/notification, coded",
+            definition: "Code specifying the action to be taken or already taken."
+          },
+          {
+            key: "LIN03",
+            type: "Data Element",
+            value: "390787706322:UP",
+            components: [
+              {
+                key: "LIN0301",
+                type: "Component Element",
+                value: "390787706322",
+                id: "7140",
+                desc: "Item number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition: "A number allocated to a group or item."
+              },
+              {
+                key: "LIN0302",
+                type: "Component Element",
+                value: "UP",
+                id: "7143",
+                desc: "Item number type, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Item number type, coded",
+                definition: "Identification of the type of item number."
+              }
+            ],
+            id: "C212",
+            desc: "ITEM NUMBER IDENTIFICATION",
+            required: false,
+            definition: "Goods identification for a specified source."
+          }
+        ]
+      },
+      {
+        key: 555,
+        id: "QTY",
+        desc: "QUANTITY",
+        purpose: "To specify a pertinent quantity.",
+        elements: [
+          {
+            key: "QTY01",
+            type: "Data Element",
+            value: "21:1",
+            components: [
+              {
+                key: "QTY0101",
+                type: "Component Element",
+                value: "21",
+                id: "6063",
+                desc: "Quantity qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Quantity qualifier",
+                definition: "Code giving specific meaning to a quantity."
+              },
+              {
+                key: "QTY0102",
+                type: "Component Element",
+                value: "1",
+                id: "6060",
+                desc: "Quantity",
+                dataType: "N",
+                required: true,
+                minLength: 0,
+                maxLength: 15,
+                definition: "Numeric value of a quantity."
+              }
+            ],
+            id: "C186",
+            desc: "QUANTITY DETAILS",
+            required: true,
+            definition: "Quantity information in a transaction, qualified when relevant."
+          }
+        ]
+      },
+      {
+        key: 566,
+        id: "PRI",
+        desc: "PRICE DETAILS",
+        purpose: "To specify price information.",
+        elements: [
+          {
+            key: "PRI01",
+            type: "Data Element",
+            value: "AAA:10.87",
+            components: [
+              {
+                key: "PRI0101",
+                type: "Component Element",
+                value: "AAA",
+                id: "5125",
+                desc: "Price qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Price qualifier",
+                definition: "Identification of a type of price."
+              },
+              {
+                key: "PRI0102",
+                type: "Component Element",
+                value: "10.87",
+                id: "5118",
+                desc: "Price",
+                dataType: "N",
+                required: false,
+                minLength: 0,
+                maxLength: 15,
+                definition:
+                  "The monetary value associated with a purchase or sale of an article, product or service."
+              }
+            ],
+            id: "C509",
+            desc: "PRICE INFORMATION",
+            required: false,
+            definition: "Identification of price type, price and related details."
+          }
+        ]
+      },
+      {
+        key: 582,
+        id: "LIN",
+        desc: "LINE ITEM",
+        purpose: "To identify a line item and configuration.",
+        elements: [
+          {
+            key: "LIN01",
+            type: "Data Element",
+            value: "3",
+            id: "1082",
+            desc: "LINE ITEM NUMBER",
+            dataType: "N",
+            required: false,
+            minLength: 0,
+            maxLength: 6,
+            definition: "Serial number designating each separate item within a series of articles."
+          }
+        ]
+      },
+      {
+        key: 590,
+        id: "PIA",
+        desc: "ADDITIONAL PRODUCT ID",
+        purpose: "To specify additional or substitutional item identification codes.",
+        elements: [
+          {
+            key: "PIA01",
+            type: "Data Element",
+            value: "5",
+            id: "4347",
+            desc: "PRODUCT ID. FUNCTION QUALIFIER",
+            dataType: "AN",
+            required: true,
+            minLength: 0,
+            maxLength: 3,
+            qualifierRef: "Product id. function qualifier",
+            definition: "Indication of the function of the product code."
+          },
+          {
+            key: "PIA02",
+            type: "Data Element",
+            value: "3899408268X-39:SA",
+            components: [
+              {
+                key: "PIA0201",
+                type: "Component Element",
+                value: "3899408268X-39",
+                id: "7140",
+                desc: "Item number",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 35,
+                definition: "A number allocated to a group or item."
+              },
+              {
+                key: "PIA0202",
+                type: "Component Element",
+                value: "SA",
+                id: "7143",
+                desc: "Item number type, coded",
+                dataType: "AN",
+                required: false,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Item number type, coded",
+                definition: "Identification of the type of item number."
+              }
+            ],
+            id: "C212",
+            desc: "ITEM NUMBER IDENTIFICATION",
+            required: true,
+            definition: "Goods identification for a specified source."
+          }
+        ]
+      },
+      {
+        key: 616,
+        id: "QTY",
+        desc: "QUANTITY",
+        purpose: "To specify a pertinent quantity.",
+        elements: [
+          {
+            key: "QTY01",
+            type: "Data Element",
+            value: "21:3",
+            components: [
+              {
+                key: "QTY0101",
+                type: "Component Element",
+                value: "21",
+                id: "6063",
+                desc: "Quantity qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Quantity qualifier",
+                definition: "Code giving specific meaning to a quantity."
+              },
+              {
+                key: "QTY0102",
+                type: "Component Element",
+                value: "3",
+                id: "6060",
+                desc: "Quantity",
+                dataType: "N",
+                required: true,
+                minLength: 0,
+                maxLength: 15,
+                definition: "Numeric value of a quantity."
+              }
+            ],
+            id: "C186",
+            desc: "QUANTITY DETAILS",
+            required: true,
+            definition: "Quantity information in a transaction, qualified when relevant."
+          }
+        ]
+      },
+      {
+        key: 627,
+        id: "PRI",
+        desc: "PRICE DETAILS",
+        purpose: "To specify price information.",
+        elements: [
+          {
+            key: "PRI01",
+            type: "Data Element",
+            value: "AAA:3.85",
+            components: [
+              {
+                key: "PRI0101",
+                type: "Component Element",
+                value: "AAA",
+                id: "5125",
+                desc: "Price qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Price qualifier",
+                definition: "Identification of a type of price."
+              },
+              {
+                key: "PRI0102",
+                type: "Component Element",
+                value: "3.85",
+                id: "5118",
+                desc: "Price",
+                dataType: "N",
+                required: false,
+                minLength: 0,
+                maxLength: 15,
+                definition:
+                  "The monetary value associated with a purchase or sale of an article, product or service."
+              }
+            ],
+            id: "C509",
+            desc: "PRICE INFORMATION",
+            required: false,
+            definition: "Identification of price type, price and related details."
+          }
+        ]
+      },
+      {
+        key: 642,
+        id: "UNS",
+        purpose: "To separate header, detail and summary sections of a message.",
+        elements: [
+          {
+            key: "UNS01",
+            type: "Data Element",
+            value: "S",
+            id: "0081",
+            desc: "SECTION IDENTIFICATION",
+            dataType: "A",
+            required: true,
+            minLength: 1,
+            maxLength: 1,
+            qualifierRef: "Section identification",
+            definition: "Separates sections in a message."
+          }
+        ]
+      },
+      {
+        key: 650,
+        id: "CNT",
+        desc: "CONTROL TOTAL",
+        purpose: "To provide control total.",
+        elements: [
+          {
+            key: "CNT01",
+            type: "Data Element",
+            value: "2:3",
+            components: [
+              {
+                key: "CNT0101",
+                type: "Component Element",
+                value: "2",
+                id: "6069",
+                desc: "Control qualifier",
+                dataType: "AN",
+                required: true,
+                minLength: 0,
+                maxLength: 3,
+                qualifierRef: "Control qualifier",
+                definition:
+                  "Determines the source data elements in the message which forms the basis for 6066 Control value."
+              },
+              {
+                key: "CNT0102",
+                type: "Component Element",
+                value: "3",
+                id: "6066",
+                desc: "Control value",
+                dataType: "N",
+                required: true,
+                minLength: 0,
+                maxLength: 18,
+                definition:
+                  "Value obtained from summing the values specified by the Control Qualifier throughout the message (Hash total)."
+              }
+            ],
+            id: "C270",
+            desc: "CONTROL",
+            required: true,
+            definition: "Control total for checking integrity of a message or part of a message."
+          }
+        ]
+      },
+      {
+        key: 660,
+        id: "UNT",
+        desc: "Message trailer",
+        purpose: "To end and check the completeness of a message.",
+        elements: [
+          {
+            key: "UNT01",
+            type: "Data Element",
+            value: "28",
+            id: "0074",
+            desc: "NUMBER OF SEGMENTS IN A MESSAGE",
+            dataType: "N",
+            required: true,
+            minLength: 0,
+            maxLength: 6,
+            definition: "Control count of number of segments in a message."
+          },
+          {
+            key: "UNT02",
+            type: "Data Element",
+            value: "1",
+            id: "0062",
+            desc: "MESSAGE REFERENCE NUMBER",
+            dataType: "AN",
+            required: true,
+            minLength: 0,
+            maxLength: 14,
+            definition: "Unique message reference assigned by the sender."
+          }
+        ]
+      },
+      {
+        key: 671,
+        id: "UNZ",
+        desc: "Interchange trailer",
+        purpose: "To end and check the completeness of an interchange.",
+        elements: [
+          {
+            key: "UNZ01",
+            type: "Data Element",
+            value: "1",
+            id: "0036",
+            desc: "Interchange control count",
             required: true,
             minLength: 1,
             maxLength: 6
           },
           {
-            key: "GE02",
+            key: "UNZ02",
             type: "Data Element",
-            value: "7080",
-            id: "28",
-            desc: "Group Control Number",
+            value: "5",
+            id: "0020",
+            desc: "Interchange control reference",
             required: true,
             minLength: 1,
-            maxLength: 9
-          }
-        ]
-      },
-      {
-        key: 292,
-        id: "IEA",
-        desc: "Interchange Control Trailer",
-        purpose:
-          "To define the end of an interchange of zero or more functional groups and interchange-related control segments",
-        elements: [
-          {
-            key: "IEA01",
-            type: "Data Element",
-            value: "1",
-            id: "I16",
-            desc: "Number of Transaction Sets Included",
-            required: true,
-            minLength: 1,
-            maxLength: 5
-          },
-          {
-            key: "IEA02",
-            type: "Data Element",
-            value: "000007080",
-            id: "I12",
-            desc: "Group Control Number",
-            required: true,
-            minLength: 9,
-            maxLength: 9
+            maxLength: 14
           }
         ]
       }

@@ -40,7 +40,7 @@ interface IEdiSegment {
 
   id: string;
   elements: Array<IEdiElement>;
-  desc: string;
+  desc?: string;
   purpose: string;
 }
 
