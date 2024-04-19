@@ -13,12 +13,11 @@ export function createWebview(context: vscode.ExtensionContext) {
   const fileName = currentDocument.fileName;
   let webviewProvider = webviewsProvidersMap.get(fileName);
   if (webviewProvider) {
-    // TODO: show existing webview
     return;
   }
 
   webviewProvider = new WebviewProvider(fileName, context);
-  webviewProvider.create();
+  webviewProvider.create(currentDocument);
   webviewProvider.onDidDispose(() => {
     webviewsProvidersMap.delete(fileName);
   });

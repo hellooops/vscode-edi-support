@@ -14,7 +14,7 @@ export default class WebviewProvider {
     this.extensionContext = extensionContext;
   }
 
-  create() {
+  create(document: vscode.TextDocument) {
     const panel = vscode.window.createWebviewPanel(
       constants.webviews.previewViewType,
       `Preview ${this.fileName}`,
@@ -25,7 +25,8 @@ export default class WebviewProvider {
           vscode.Uri.file(
             path.join(this.extensionContext.extensionPath, "edi-preview-dist", "assets")
           )
-        ]
+        ],
+        retainContextWhenHidden: true
       }
     );
     
@@ -73,6 +74,8 @@ export default class WebviewProvider {
     this.panel = panel;
 
     this.receiveMessages();
+
+    this.update(document)
     return panel;
   }
 
