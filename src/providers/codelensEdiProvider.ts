@@ -42,6 +42,15 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
       {
+        title: constants.commands.previewDocumentCommand.label,
+        tooltip: constants.commands.previewDocumentCommand.label,
+        command: constants.commands.previewDocumentCommand.name,
+        arguments: []
+      }
+    ));
+    codeLenses.push(new vscode.CodeLens(
+      new vscode.Range(0, 0, 0, 0),
+      {
         title: constants.common.kasoftware.allRightsReserved,
         tooltip: constants.common.kasoftware.allRightsReserved,
         command: constants.nativeCommands.open,
