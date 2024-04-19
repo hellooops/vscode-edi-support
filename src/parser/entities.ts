@@ -289,7 +289,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
         if (elementValueCode) {
           codeValue = elementValueCode.desc;
         } else {
-          codeValue = "Invalid code value: " + this.value;
+          codeValue = "Invalid code value";
         }
       }
     }

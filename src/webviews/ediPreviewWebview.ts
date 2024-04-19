@@ -5,16 +5,17 @@ import { EdiUtils } from "../utils/ediUtils";
 
 export function createWebview(context: vscode.ExtensionContext) {
   const currentDocument = vscode.window.activeTextEditor?.document;
-  const panel = prepareWebView(context);
+  if (!currentDocument) return;
+  const panel = prepareWebView(context, currentDocument);
   sendAndReceiveMessages(panel.webview);
 
   handleFileChange(panel.webview, currentDocument);
 }
 
-function prepareWebView(context: vscode.ExtensionContext) {
+function prepareWebView(context: vscode.ExtensionContext, document: vscode.TextDocument) {
   const panel = vscode.window.createWebviewPanel(
     constants.webviews.previewViewType,
-    "Preview",
+    `Preview ${document.fileName}`,
     vscode.ViewColumn.Two,
     {
       enableScripts: true,
