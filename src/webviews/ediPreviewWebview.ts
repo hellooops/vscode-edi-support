@@ -7,7 +7,7 @@ export function createWebview(context: vscode.ExtensionContext) {
   const currentDocument = vscode.window.activeTextEditor?.document;
   if (!currentDocument) return;
   const panel = prepareWebView(context, currentDocument);
-  sendAndReceiveMessages(panel.webview);
+  sendAndReceiveMessages(panel);
 
   handleFileChange(panel.webview, currentDocument);
 }
@@ -65,17 +65,20 @@ function prepareWebView(context: vscode.ExtensionContext, document: vscode.TextD
   return panel;
 }
 
-function sendAndReceiveMessages(webview: vscode.Webview) {
-  receiveMessages(webview);
-  sendMessages(webview);
+function sendAndReceiveMessages(panel: vscode.WebviewPanel) {
+  receiveMessages(panel);
+  sendMessages(panel);
 }
 
-function receiveMessages(webview: vscode.Webview) {
-  webview.onDidReceiveMessage(async (message) => {
+function receiveMessages(panel: vscode.WebviewPanel) {
+  const e = panel.webview.onDidReceiveMessage(async (message) => {
     if (message.name === "log") {
       console.log(message.data);
       await vscode.window.showInformationMessage(message.data);
     }
+  });
+  panel.onDidDispose(() => {
+    e.dispose();
   });
 }
 
@@ -96,9 +99,12 @@ async function handleFileChange(webview: vscode.Webview, document: vscode.TextDo
   await webview.postMessage(vcmMessage);
 }
 
-function sendMessages(webview: vscode.Webview) {
-  vscode.workspace.onDidChangeTextDocument(async editor => {
+function sendMessages(panel: vscode.WebviewPanel) {
+  const e = vscode.workspace.onDidChangeTextDocument(async editor => {
     if (!editor) return;
-    await handleFileChange(webview, editor.document);
+    await handleFileChange(panel.webview, editor.document);
+  });
+  panel.onDidDispose(() => {
+    e.dispose();
   });
 }
