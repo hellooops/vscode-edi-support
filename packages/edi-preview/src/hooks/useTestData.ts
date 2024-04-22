@@ -42,7 +42,9 @@ export default function useTestData(): IEdiMessage {
             ],
             id: "S001",
             desc: "Syntax identifier",
-            required: true
+            required: true,
+            definition:
+              "Identification of the agency controlling the syntax and indication of syntax level."
           },
           {
             key: "ele-UNB02-0-10",
@@ -77,7 +79,8 @@ export default function useTestData(): IEdiMessage {
             ],
             id: "S002",
             desc: "Interchange sender",
-            required: true
+            required: true,
+            definition: "Identification of the sender of the interchange."
           },
           {
             key: "ele-UNB03-0-26",
@@ -112,7 +115,8 @@ export default function useTestData(): IEdiMessage {
             ],
             id: "S003",
             desc: "Interchange recipient",
-            required: true
+            required: true,
+            definition: "Identification of the recipient of the interchange."
           },
           {
             key: "ele-UNB04-0-44",
@@ -147,7 +151,8 @@ export default function useTestData(): IEdiMessage {
             ],
             id: "S004",
             desc: "Date/time of preparation",
-            required: true
+            required: true,
+            definition: "Date and time of preparation of the interchange."
           },
           {
             key: "ele-UNB05-0-56",
@@ -182,7 +187,8 @@ export default function useTestData(): IEdiMessage {
             ],
             id: "S005",
             desc: "Recipient's reference, password",
-            required: true
+            required: true,
+            definition: "Reference or password as agreed between the communicating partners."
           },
           {
             key: "ele-UNB07-0-68",
@@ -1955,7 +1961,9 @@ export default function useTestData(): IEdiMessage {
             desc: "Interchange control count",
             required: true,
             minLength: 1,
-            maxLength: 6
+            maxLength: 6,
+            definition:
+              "Count either of the number of messages or, if used, of the number of functional groups in an interchange."
           },
           {
             key: "ele-UNZ02-671-5",
@@ -1965,7 +1973,8 @@ export default function useTestData(): IEdiMessage {
             desc: "Interchange control reference",
             required: true,
             minLength: 1,
-            maxLength: 14
+            maxLength: 14,
+            definition: "Unique reference assigned by the sender to an interchange."
           }
         ]
       }

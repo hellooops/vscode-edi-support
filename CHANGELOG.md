@@ -6,6 +6,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Added
+
+- Add mock segment and element definitions.
+
+
+## [1.4.1] - 2024-04-19
+
+### Added
+
+- Add codelens for preview.
+
 
 ## [1.4.0] - 2024-04-19
 
