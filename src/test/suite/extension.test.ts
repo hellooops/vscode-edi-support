@@ -246,4 +246,13 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(separators.dataElementSeparator, "*");
     assert.strictEqual(separators.componentElementSeparator, ">");
   });
+
+  test("X12 Parse Separators 3", async () => {
+    const documentStr = `ISA*00**00* *ZZ*1234567890*ZZ*ABCDEFGH*230705*1100*U*00400*000000001*0*P*>\nGS*PO*1234567890*ABCDEFGH*20030705*1100*1*X*004010\n`;
+    const parser: X12Parser = new X12Parser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "\n");
+    assert.strictEqual(separators.dataElementSeparator, "*");
+    assert.strictEqual(separators.componentElementSeparator, ">");
+  });
 });

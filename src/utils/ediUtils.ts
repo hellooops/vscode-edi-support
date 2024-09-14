@@ -129,7 +129,7 @@ export class EdiUtils {
   }
 
   static getSegmentDelimiterRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range | null {
-    if (segment.endingDelimiter === "\r") {
+    if (segment.endingDelimiter === "\r" || segment.endingDelimiter === "\n") {
       return null;
     }
 
