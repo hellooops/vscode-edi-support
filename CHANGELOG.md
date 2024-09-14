@@ -8,10 +8,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
-- Add mock segment and element definitions.
+
+## [1.4.3] - 2024-09-14
+
+### Fixed
+
+- Fix semantic tokens support for segment delimiter \n in x12.
 
 
-## [1.4.1] - 2024-04-19
+## [1.4.2] - 2024-04-22
 
 ### Added
 
