@@ -44,7 +44,10 @@ interface IEdiSegment {
   purpose: string;
 }
 
+type IEdiType = "x12" | "edifact" | "unknown";
+
 interface IEdiMessage {
+  ediType?: IEdiType;
   ediVersion: IEdiVersion;
   segments: IEdiSegment[];
 }

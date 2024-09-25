@@ -2,6 +2,7 @@
   <InspectorResultLine
     v-if="element.components && element.components.length > 0"
     v-model:visible="visible"
+    :isSegment="false"
     :name="element.id?.toUpperCase()"
     :description="element.desc"
     :isRequired="element.required"

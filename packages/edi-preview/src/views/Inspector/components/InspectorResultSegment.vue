@@ -1,6 +1,7 @@
 <template>
   <InspectorResultLine
     v-model:visible="visible"
+    :isSegment="true"
     :name="segment.id!.toUpperCase()"
     :isRequired="undefined"
     :description="segment.desc"

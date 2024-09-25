@@ -1,10 +1,25 @@
 <template>
-  <div class="p-2">
-    <InspectorResult
-      v-if="ediMessage"
-      :ediMessage="ediMessage"
-      :errormsg="errormsg"
-    />
+  <div class="px-2">
+    <div class="fixed top-0 z-[1000] bg-editor w-full px-2 text-xs h-[48px] leading-[48px] font-semibold">
+      <p class="space-x-2">
+        <template v-if="ediMessage?.ediType">
+          <span>{{ ediMessage?.ediType?.toUpperCase() }}</span>
+          <span>/</span>
+        </template>
+        <template v-if="ediMessage?.ediVersion.release">
+          <span>{{ ediMessage?.ediVersion.release }}</span>
+          <span>/</span>
+        </template>
+        <span>{{ ediMessage?.ediVersion.version }}</span>
+      </p>
+    </div>
+    <div class="mt-[48px]">
+      <InspectorResult
+        v-if="ediMessage"
+        :ediMessage="ediMessage"
+        :errormsg="errormsg"
+      />
+    </div>
   </div>
 </template>
 
@@ -44,7 +59,7 @@ function setActiveId(id: string) {
 
 onMounted(() => {
   // Test
-  ediMessage.value = useTestData();
-  setActiveId("ele-UNB0201");
+  // ediMessage.value = useTestData();
+  // setActiveId("ele-UNB0201");
 });
 </script>

@@ -75,10 +75,12 @@ export class EdiSegment {
 
 
 export class EdiMessage {
+  ediType?: IEdiType;
   ediVersion: IEdiVersion;
   segments: EdiSegment[];
 
   constructor(json: IEdiMessage) {
+    this.ediType = json.ediType;
     this.ediVersion = json.ediVersion;
     this.segments = json.segments?.map(i => new EdiSegment(i));
   }

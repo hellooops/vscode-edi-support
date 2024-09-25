@@ -1,3 +1,23 @@
+:root {
+  /* Light modern */
+  --vscode-editor-background: #FFFFFF;
+  --vscode-editor-foreground: #3b3b3b;
+
+  /* Dark modern */
+  /* --vscode-editor-background: #1F1F1F;
+  --vscode-editor-foreground: #cccccc; */
+}
+
+body {
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  font-family: var(--vscode-font-family);
+  font-weight: var(--vscode-font-weight);
+  font-size: var(--vscode-font-size);
+  margin: 0;
+  padding: 0 20px;
+}
+
 .invert-color {
   color: var(--vscode-editor-background);
   background-color: var(--vscode-editor-foreground);
@@ -6,4 +26,8 @@
 .active-fragment {
   border-left: 4px;
   border-style: solid;
+}
+
+.bg-editor {
+  background-color: var(--vscode-editor-background);
 }

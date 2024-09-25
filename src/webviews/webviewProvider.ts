@@ -94,7 +94,7 @@ export default class WebviewProvider {
   }
 
   async update(document: vscode.TextDocument) {
-    const { parser } = EdiUtils.getEdiParser(document)!;
+    const { parser, ediType } = EdiUtils.getEdiParser(document)!;
     if (!parser) {
       return [];
     }
@@ -102,6 +102,7 @@ export default class WebviewProvider {
     const result = await parser.parse();
     this.parsedResult = result;
     const iEdiMessage = result.getIResult();
+    iEdiMessage.ediType = ediType as IEdiType;
     const vcm: VcmMessage = {
       name: "fileChange",
       data: iEdiMessage

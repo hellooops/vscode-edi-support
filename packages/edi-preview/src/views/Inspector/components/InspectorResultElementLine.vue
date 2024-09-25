@@ -1,15 +1,13 @@
 <template>
   <div class="border-t py-2 pl-2">
     <div class="flex justify-between gap-1" :class="{'active-fragment': element.key === activeId}">
-      <div class="flex-1">
-        <div>
-          <span class="inline-flex items-center py-1 gap-2 rounded text-sm">
-            <span class="w-4"></span>
-            <ElementIcon />
-            <span class="bg-neutral-800 text-white px-1 rounded-sm">{{ element.id.toUpperCase() }}</span>
-            <span class="opacity-80">{{ element.desc }}</span>
-          </span>
-        </div>
+      <div class="flex-1 flex flex-col">
+        <span class="inline-flex items-center gap-2 rounded text-sm leading-5">
+          <span class="w-4"></span>
+          <ElementIcon />
+          <span class="invert-color px-1 rounded-sm">{{ element.id.toUpperCase() }}</span>
+          <span class="opacity-80">{{ element.desc }}</span>
+        </span>
       </div>
       <div class="flex-1 space-y-1">
         <div class="flex items-center gap-4 text-sm">

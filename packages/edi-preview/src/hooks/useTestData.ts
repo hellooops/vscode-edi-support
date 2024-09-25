@@ -2,6 +2,7 @@ import { EdiMessage } from "@/entities";
 
 export default function useTestData(): EdiMessage {
   const testData: IEdiMessage = {
+    ediType: "edifact",
     ediVersion: { release: "D96A", version: "ORDERS" },
     segments: [
       {
