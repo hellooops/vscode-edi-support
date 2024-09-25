@@ -8,6 +8,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
+- Preview tree nested sticky.
+
 
 ## [1.4.3] - 2024-09-14
 
