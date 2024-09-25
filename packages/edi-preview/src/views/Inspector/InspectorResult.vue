@@ -1,7 +1,7 @@
 <template>
   <InspectorResultSegmentList
     v-if="!errormsg"
-    :segments="iEdiMessage.segments"
+    :segments="ediMessage.segments"
   />
   <InspectorResultError
     v-else
@@ -11,9 +11,10 @@
 <script setup lang="ts">
 import InspectorResultSegmentList from "@/views/Inspector/components/InspectorResultSegmentList.vue";
 import InspectorResultError from "@/views/Inspector/components/InspectorResultError.vue";
+import { EdiMessage } from "@/entities";
 
 defineProps<{
-  iEdiMessage: IEdiMessage
+  ediMessage: EdiMessage
   errormsg: string|undefined
 }>();
 

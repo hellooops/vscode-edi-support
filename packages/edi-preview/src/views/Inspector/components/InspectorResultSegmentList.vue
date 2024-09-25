@@ -4,13 +4,13 @@
     :key="segment.key"
     :segment="segment"
     class="mb-6"
-  >
-  </InspectorResultSegment>
+  />
 </template>
 <script setup lang="ts">
 import InspectorResultSegment from "@/views/Inspector/components/InspectorResultSegment.vue";
+import { EdiSegment } from "@/entities";
 
 defineProps<{
-  segments: IEdiSegment[]
+  segments: EdiSegment[]
 }>();
 </script>

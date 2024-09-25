@@ -18,7 +18,7 @@ interface IEdiVersion {
 type IElementType = "Data Element" | "Component Element";
 
 interface IEdiElement {
-  key: any,
+  key: any;
 
   type: IElementType;
   value?: string;
@@ -36,7 +36,7 @@ interface IEdiElement {
 }
 
 interface IEdiSegment {
-  key: any,
+  key: any;
 
   id: string;
   elements: Array<IEdiElement>;

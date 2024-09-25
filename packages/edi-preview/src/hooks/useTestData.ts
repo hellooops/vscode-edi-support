@@ -1,5 +1,7 @@
-export default function useTestData(): IEdiMessage {
-  return {
+import { EdiMessage } from "@/entities";
+
+export default function useTestData(): EdiMessage {
+  const testData: IEdiMessage = {
     ediVersion: { release: "D96A", version: "ORDERS" },
     segments: [
       {
@@ -1980,4 +1982,6 @@ export default function useTestData(): IEdiMessage {
       }
     ]
   };
+
+  return new EdiMessage(testData);
 }

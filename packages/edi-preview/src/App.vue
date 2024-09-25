@@ -1,8 +1,8 @@
 <template>
   <div class="p-2">
     <InspectorResult
-      v-if="iEdiMessage"
-      :iEdiMessage="iEdiMessage"
+      v-if="ediMessage"
+      :ediMessage="ediMessage"
       :errormsg="errormsg"
     />
   </div>
@@ -13,16 +13,17 @@ import { ref, provide, onMounted } from "vue";
 import useVcm from "@/hooks/useVscodeMessage";
 import InspectorResult from "@/views/Inspector/InspectorResult.vue";
 import useTestData from "./hooks/useTestData";
+import { EdiMessage } from "@/entities";
 
 const { onReceiveMessage } = useVcm();
 
-const iEdiMessage = ref<IEdiMessage>();
+const ediMessage = ref<EdiMessage>();
 const activeId = ref<string>();
 provide("activeId", activeId);
 const errormsg = ref("");
 
 onReceiveMessage("fileChange", (data) => {
-  iEdiMessage.value = data;
+  ediMessage.value = data ? new EdiMessage(data) : undefined;
 });
 
 onReceiveMessage("active", (data) => {
@@ -43,7 +44,7 @@ function setActiveId(id: string) {
 
 onMounted(() => {
   // Test
-  // iEdiMessage.value = useTestData();
-  // setActiveId("ele-UNB0201");
+  ediMessage.value = useTestData();
+  setActiveId("ele-UNB0201");
 });
 </script>
