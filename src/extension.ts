@@ -12,6 +12,7 @@ import { HoverEdifactProvider } from "./providers/hoverEdifactProvider";
 import { DocumentFormattingEditEdiProvider } from "./providers/documentFormattingEdiProvider";
 import { CodelensEdiProvider } from "./providers/codelensEdiProvider";
 import { InlayHintsEdiProvider } from "./providers/inlayHintsEdiProvider";
+import { CompletionItemEdiProvider } from "./providers/completionItemEdiProvider";
 import { TreeEdiProvider } from "./providers/treeEdiProvider";
 import { DocumentSymbolsEdiProvider } from "./providers/documentSymbolsEdiProvider";
 import { SemanticTokensProvider } from "./providers/semanticTokensProvider";
@@ -30,6 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new DocumentFormattingEditEdiProvider());
   registerProvider(context, new CodelensEdiProvider());
   registerProvider(context, new InlayHintsEdiProvider());
+  registerProvider(context, new CompletionItemEdiProvider());
   registerDiagnostics(context, new EdiDiagnosticsMgr());
 
   const treeEdiProvider = new TreeEdiProvider();
