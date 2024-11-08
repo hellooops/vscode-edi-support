@@ -1,5 +1,5 @@
 import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta } from './entities';
-import { EdiSchema } from "../schemas/schemas";
+import { EdiSchema, EdiVersionSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
 
@@ -40,6 +40,10 @@ export abstract class EdiParserBase {
   protected abstract parseInterchangeMeta(interchangeSegment: EdiSegment | undefined): EdiInterchangeMeta;
   protected abstract parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta;
   protected abstract parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta;
+  private fitSegmentsToVersion(segments: EdiSegment[]): EdiSegment[] {
+    const versionSegmentsContext = new SchemaVersionSegmentsContext(this.schema!.ediVersionSchema!.TransactionSet);
+    return versionSegmentsContext.build(segments);
+  }
 
   private async parseDocument(force: boolean = false): Promise<EdiDocument> {
     return await this.parseDocumentInternal();
@@ -284,6 +288,7 @@ export abstract class EdiParserBase {
   async loadSchema(meta: EdiTransactionSetMeta): Promise<void> {
     if (!meta.release || !meta.version) return;
     let releaseSchema = null;
+    let versionSchema = null;
     try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/RSSBus_${meta.release}.json`);
     } catch (ex) {
@@ -291,7 +296,13 @@ export abstract class EdiParserBase {
       return;
     }
 
-    const ediSchema = new EdiSchema(releaseSchema);
+    try {
+      versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/RSSBus_${meta.release}_${meta.version}.json`);
+    } catch (ex) {
+      console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
+    }
+
+    const ediSchema = new EdiSchema(releaseSchema, versionSchema);
     this.schema = ediSchema;
   }
 
@@ -313,4 +324,77 @@ export abstract class EdiParserBase {
   }
 
   protected abstract getStardardOptions(): EdiStandardOptions;
+}
+
+class SchemaVersionSegmentsContext {
+  ediVersionSegments: EdiVersionSegment[];
+  isLoop: boolean;
+
+  constructor(ediVersionSegments: EdiVersionSegment[], isLoop: boolean = false) {
+    this.ediVersionSegments = ediVersionSegments;
+    this.isLoop = isLoop;
+  }
+
+  build(segments: EdiSegment[]): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    for(let i = 0; i < this.ediVersionSegments.length; i++) {
+      const ediVersionSegment = this.ediVersionSegments[i];
+      let segmentMatchTimes = 0;
+      while (true) {
+        if (segments.length === 0) {
+          return result;
+        }
+        
+        if (segments[0].isTransactionSetOrGroupSetSegment()) {
+          result.push(segments.shift()!);
+          continue;
+        }
+
+        if (ediVersionSegment.isLoop()) {
+          // loop
+          const loopContext = new SchemaVersionSegmentsContext(ediVersionSegment.Loop!, true);
+          const loopResult = loopContext.build(segments);
+          if (!loopResult || loopResult.length <= 0) {
+            break;
+          }
+
+          const loopFirstChild = loopResult[0];
+          const loopLastChild = loopResult[loopResult.length - 1];
+          const loopSegment = new EdiSegment(
+            ediVersionSegment.Id,
+            loopFirstChild.startIndex,
+            loopLastChild.endIndex,
+            loopResult.reduce((acc, cur) => { return acc + cur.length }, 0),
+            loopLastChild.endingDelimiter
+          );
+          loopSegment.Loop = loopResult;
+          result.push(loopSegment);
+          segmentMatchTimes++;
+          if (segmentMatchTimes >= ediVersionSegment.getMax()) {
+            break;
+          }
+        } else {
+          // non loop
+          if (ediVersionSegment.Id === segments[0].id) {
+            // segment match
+            result.push(segments.shift()!);
+            segmentMatchTimes++;
+            if (segmentMatchTimes >= ediVersionSegment.getMax()) {
+              break;
+            }
+          } else {
+            // segment not match
+            if (i === 0 && this.isLoop) {
+              // if the first child segment in loop does not match, break
+              return result;
+            }
+
+            break;
+          }
+        }
+      }
+    }
+
+    return result;
+  }
 }

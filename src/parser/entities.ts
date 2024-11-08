@@ -19,6 +19,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   public endingDelimiter: string;
   public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
   public isInvalidSegment: boolean;
+  public Loop?: EdiSegment[];
 
   segmentStr?: string;
 
@@ -87,6 +88,14 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
       purpose: this.ediReleaseSchemaSegment!.purpose,
       elements: this.elements.map(e => e.getIResult())
     };
+  }
+
+  public isLoop(): boolean {
+    return this.Loop !== undefined;
+  }
+
+  public isTransactionSetOrGroupSetSegment(): boolean {
+    return !this.transactionSetParent;
   }
 }
 
