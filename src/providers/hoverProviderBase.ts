@@ -11,25 +11,26 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableHover) !== true) {
       return null;
     }
-    const { parser, ediType } = EdiUtils.getEdiParser(document);
-    if (!parser) {
-      return null;
-    }
+    return null;
+    // const { parser, ediType } = EdiUtils.getEdiParser(document);
+    // if (!parser) {
+    //   return null;
+    // }
 
-    let ediVersion = parser.parseReleaseAndVersion();
-    if (!ediVersion) return;
-    const { segments } = await parser.parse();
-    let realPosition = document.offsetAt(
-      new vscode.Position(position.line, position.character)
-    );
-    const { element, segment } = EdiUtils.getSegmentOrElementByPosition(realPosition, segments);
-    if (!segment) return;
+    // let ediVersion = parser.parseReleaseAndVersion();
+    // if (!ediVersion) return;
+    // const { segments } = await parser.parse();
+    // let realPosition = document.offsetAt(
+    //   new vscode.Position(position.line, position.character)
+    // );
+    // const { element, segment } = EdiUtils.getSegmentOrElementByPosition(realPosition, segments);
+    // if (!segment) return;
 
-    if (element) {
-      return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, segment, element));
-    } else {
-      return new vscode.Hover(this.buildSegmentMarkdownString(ediType, ediVersion, segment));
-    }
+    // if (element) {
+    //   return new vscode.Hover(this.buildElementMarkdownString(ediType, ediVersion, segment, element));
+    // } else {
+    //   return new vscode.Hover(this.buildSegmentMarkdownString(ediType, ediVersion, segment));
+    // }
   }
 
   public abstract getLanguageName(): string;

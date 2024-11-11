@@ -8,12 +8,11 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
   async provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Promise<vscode.TextEdit[] | null | undefined> {
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return;
-    const { segments } = await parser.parse();
-    if (!segments || segments.length <= 0) {
+
+    const ediDocument = await parser.parse();
+    if (!ediDocument) {
       return;
     }
-
-    const formattedDocumentText = segments.join(constants.ediDocument.lineBreak);
 
     const result: vscode.TextEdit[] = [];
     result.push(new vscode.TextEdit(
@@ -21,7 +20,7 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
         document.positionAt(0),
         document.positionAt(document.getText().length)
       ),
-      formattedDocumentText
+      ediDocument.toString()
     ));
     return result;
   }

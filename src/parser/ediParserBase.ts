@@ -1,22 +1,20 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiMessage } from "./entities";
+import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, EdiDocumentSeparators, type EdiStandardOptions, EdiDocumentBuilder } from './entities';
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
 
 export abstract class EdiParserBase {
-  private _segments?: EdiSegment[];
-  private _ediVersion?: EdiVersion;
   document: string;
   schema?: EdiSchema;
   _separators?: EdiMessageSeparators | null;
-  private parseResult?: EdiMessage;
-  private parsingPromise?: Promise<EdiMessage>;
+  private parseResult?: EdiDocument;
+  private parsingPromise?: Promise<EdiDocument>;
 
   public constructor(document: string) {
     this.document = document;
   }
 
-  public async parse(): Promise<EdiMessage> {
+  public async parse(): Promise<EdiDocument> {
     if (this.parsingPromise) {
       return this.parsingPromise;
     }
@@ -31,54 +29,49 @@ export abstract class EdiParserBase {
     return parsingPromise;
   }
 
-  private async parseInternal(): Promise<EdiMessage> {
+  private async parseInternal(): Promise<EdiDocument> {
     if (!this.parseResult) {
-      const separators = this.getMessageSeparators();
-      const releaseAndVersion = this.parseReleaseAndVersion();
-      const segments = await this.parseSegments();
-      this.parseResult = new EdiMessage(separators, releaseAndVersion, segments);
+      this.parseResult = await this.parseDocument();
     }
 
     return this.parseResult;
   }
 
-  public parseReleaseAndVersion(): EdiVersion {
-    if (!this._ediVersion) {
-      this._ediVersion = this.parseReleaseAndVersionInternal();
-    }
-
-    return this._ediVersion;
+  public parseReleaseAndVersion(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion {
+    return this.parseReleaseAndVersionInternal(interchangeSegment, functionalGroupSegment, transactionSetSegment);
   }
 
-  protected abstract parseReleaseAndVersionInternal(): EdiVersion;
+  protected abstract parseReleaseAndVersionInternal(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion;
 
-  private async parseSegments(force: boolean = false): Promise<EdiSegment[]> {
-    if (force) {
-      return await this.parseSegmentsInternal();
-    }
-    
-    if (!this._segments) {
-      this._segments = await this.parseSegmentsInternal();
-    }
-
-    return this._segments;
+  private async parseDocument(force: boolean = false): Promise<EdiDocument> {
+    // TODO(Deric): force?
+    return await this.parseDocumentInternal();
   }
 
-  private async parseSegmentsInternal(): Promise<EdiSegment[]> {
+  private async parseDocumentInternal(): Promise<EdiDocument> {
     const regex = this.getSegmentRegex();
-    const results: EdiSegment[] = [];
     let match: RegExpExecArray | null;
-    while ((match = regex.exec(this.document)) !== null) {
-      try {
+    const separators = this.getMessageSeparators();
+    const standardOptions = this.getStardardOptions();
+    const ediDocumentBuilder: EdiDocumentBuilder = new EdiDocumentBuilder(separators, standardOptions);
+    ediDocumentBuilder.onParseReleaseAndVersion((interchangeSegment, funcitonalGroupSegment, transactionSetSegment) => {
+      const releaseAndVersion = this.parseReleaseAndVersion(interchangeSegment, funcitonalGroupSegment, transactionSetSegment);
+      return releaseAndVersion;
+    });
+    ediDocumentBuilder.onLoadSchema(async (ediVersion: EdiVersion) => {
+      await this.loadSchema(ediVersion);
+    });
+    try {
+      while ((match = regex.exec(this.document)) !== null) {
         const ediSegment = await this.parseSegment(match[0], match.index, match.index + match[0].length - 1, match[2]);
-        if (ediSegment) {
-          results.push(ediSegment);
-        }
-      } catch (ex: any) {
-        console.error(constants.errors.ediSupportError, ex);
+        await ediDocumentBuilder.addSegment(ediSegment);
       }
+
+      return ediDocumentBuilder.buildEdiDocument();
+    } catch (ex: any) {
+      console.error(constants.errors.ediSupportError, ex);
+      throw ex;
     }
-    return results;
   }
 
   protected getSegmentByRegex(segmentId: string): string | null {
@@ -104,7 +97,7 @@ export abstract class EdiParserBase {
   }
 
   public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
-    await this.loadSchema();
+    // await this.loadSchema();
 
     const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length - 1;
     const segment = new EdiSegment(
@@ -222,10 +215,6 @@ export abstract class EdiParserBase {
 
   protected abstract getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined;
 
-  public setEdiVersion(ediVersion: EdiVersion) {
-    this._ediVersion = ediVersion;
-  }
-
   public getMessageSeparators(): EdiMessageSeparators {
     if (!this._separators) {
       this._separators = this.parseSeparators();
@@ -248,16 +237,8 @@ export abstract class EdiParserBase {
 
   protected abstract getSchemaRootPath(): string;
 
-  protected async loadSchema(): Promise<void> {
-    if (this.schema) {
-      return;
-    }
-
-    const ediVersion = this.parseReleaseAndVersion();
-    if (!ediVersion || !ediVersion.release) {
-      return;
-    }
-
+  protected async loadSchema(ediVersion: EdiVersion): Promise<void> {
+    if (!ediVersion.release || !ediVersion.version) return;
     let releaseSchema = null;
     try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
@@ -285,4 +266,6 @@ export abstract class EdiParserBase {
       let nStr = n.toString() + '';
       return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
   }
+
+  protected abstract getStardardOptions(): EdiStandardOptions;
 }

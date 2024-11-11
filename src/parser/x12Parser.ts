@@ -1,4 +1,4 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
+import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
@@ -43,7 +43,7 @@ export class X12Parser extends EdiParserBase {
     return separators;
   }
 
-  protected parseReleaseAndVersionInternal(): EdiVersion {
+  protected parseReleaseAndVersionInternal(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion {
     // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     // GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     // ST*850*0001~
@@ -52,21 +52,13 @@ export class X12Parser extends EdiParserBase {
     // see https://stackoverflow.com/questions/55401075/edi-headers-why-would-isa12-and-gs8-both-have-a-version-number
     // Eg: ISA segment version is 00400 while GS segment version is 00401
     const ediVersion = new EdiVersion();
-    const gsSegmentStr = this.getSegmentByRegex(constants.ediDocument.x12.segment.GS);
-    if (gsSegmentStr) {
-      const gsEdiRelease = this.getElementValueByIndex(gsSegmentStr, 7);
-      if (gsEdiRelease && gsEdiRelease?.length >= 5) {
-        ediVersion.release = gsEdiRelease.substring(0, 5);
-      }
+    if (functionalGroupSegment && functionalGroupSegment.elements.length > 7) {
+      ediVersion.release = this.normalizeRelease(functionalGroupSegment.elements[7].value);
     }
-    
+
     if (!ediVersion.release) {
-      const isaSegmentStr = this.getSegmentByRegex(constants.ediDocument.x12.segment.ISA);
-      if (isaSegmentStr) {
-        const isaEdiRelease = this.getElementValueByIndex(isaSegmentStr, 11);
-        if (isaEdiRelease) {
-          ediVersion.release = isaEdiRelease;
-        }
+      if (interchangeSegment && interchangeSegment.elements.length > 11) {
+        ediVersion.release = this.normalizeRelease(interchangeSegment.elements[11].value);
       }
     }
 
@@ -74,12 +66,8 @@ export class X12Parser extends EdiParserBase {
       return ediVersion;
     }
 
-    const stSegmentStr = this.getSegmentByRegex(constants.ediDocument.x12.segment.ST);
-    if (stSegmentStr) {
-      const stEdiVersion = this.getElementValueByIndex(stSegmentStr, 0);
-      if (stEdiVersion) {
-        ediVersion.version = stEdiVersion;
-      }
+    if (transactionSetSegment && transactionSetSegment.elements.length > 0) {
+      ediVersion.version = transactionSetSegment.elements[0].value;
     }
 
     return ediVersion;
@@ -121,7 +109,6 @@ export class X12Parser extends EdiParserBase {
   }
 
   private async parseSegmentISA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
-    await this.loadSchema();
     segment.elements = [];
     let cIndex = 3;
 
@@ -148,12 +135,31 @@ export class X12Parser extends EdiParserBase {
         segment.startIndex,
         this.pad(i + 1, 2, "0")
       );
-      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.x12.segment.ISA)?.elements[i];
+      element.ediReleaseSchemaElement = EdiReleaseSchemaSegment.ISA.elements[i];
       element.value = segmentStr.substring(cIndex + 1, cIndex + elementLength);
       segment.elements.push(element);
       cIndex += elementLength;
     }
 
     return segment;
+  }
+
+  protected getStardardOptions(): EdiStandardOptions {
+    return {
+      interchangeStartSegmentName: "ISA",
+      interchangeEndSegmentName: "IEA",
+
+      isFunctionalGroupSupport: true,
+      functionalGroupStartSegmentName: "GS",
+      functionalGroupEndSegmentName: "GE",
+
+      transactionSetStartSegmentName: "ST",
+      transactionSetEndSegmentName: "SE",
+    };
+  }
+
+  private normalizeRelease(value: string | undefined) {
+    if (!value) return value;
+    return value.substring(0, 5);
   }
 }

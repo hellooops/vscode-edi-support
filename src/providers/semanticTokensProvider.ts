@@ -21,14 +21,15 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
   async provideDocumentSemanticTokens(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.SemanticTokens | undefined> {
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return;
-    const { separators, segments } = await parser.parse();
+    const ediDocument = await parser.parse();
+    const segments = ediDocument.getSegments();
     if (!segments || segments.length <= 0) {
       return;
     }
 
     const tokensBuilder = new vscode.SemanticTokensBuilder(legend);
     for (const segment of segments) {
-      this.buildSegmentSemanticTokens(document, tokensBuilder, segment, separators);
+      this.buildSegmentSemanticTokens(document, tokensBuilder, segment, ediDocument.separators);
     }
 
     return tokensBuilder.build();

@@ -15,12 +15,13 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     if (!parser) {
       return;
     }
-    
+
     if (ediType === EdiType.UNKNOWN) {
       return;
     }
 
-    const { segments } = await parser.parse();
+    const ediDocument = await parser.parse();
+    const segments = ediDocument.getSegments();
     let diagnoscticsContext: VscodeDiagnoscticsContext;
     for (let segment of segments) {
       diagnoscticsContext = {

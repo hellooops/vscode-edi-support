@@ -36,72 +36,74 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       return;
     }
 
-    if (!element) {
-      const { parser, ediType } = EdiUtils.getEdiParser(document);
-      if (!parser || ediType === EdiType.UNKNOWN) {
-        return;
-      }
+    return;
 
-      const { segments } = await parser.parse();
-      return segments.map((segment) => {
-        return {
-          key: segment.id,
-          type: TreeItemType.Segment,
-          segment
-        };
-      });
-    }
+    // if (!element) {
+    //   const { parser, ediType } = EdiUtils.getEdiParser(document);
+    //   if (!parser || ediType === EdiType.UNKNOWN) {
+    //     return;
+    //   }
 
-    if (element.type === TreeItemType.Segment) {
-      return element.segment!.elements.map((el) => {
-        return {
-          key: el.getDesignator(),
-          type: TreeItemType.DataElement,
-          element: el,
-          segment: element.segment
-        };
-      });
-    } else if (element.type === TreeItemType.DataElement && element.element!.isComposite()) {
-      return element.element!.components!.map((el) => {
-        return {
-          key: el.getDesignator(),
-          type: TreeItemType.CompositeElement,
-          element: el,
-          segment: element.segment
-        };
-      });
-    } else if (element.type === TreeItemType.CompositeElement || (element.type === TreeItemType.DataElement && !element.element!.isComposite())) {
-      const attrKeys: { key: string, label: string }[] = [
-        {key: "id", label: "Id"},
-        {key: "desc", label: "Description"},
-        {key: "dataType", label: "Data Type"},
-        {key: "required", label: "Required"},
-        {key: "minLength", label: "Min Length"},
-        {key: "maxLength", label: "Max Length"},
-        {key: "qualifierRef", label: "Qualifier Ref"},
-        {key: "definition", label: "Definition"},
-      ];
-      const children: TreeItemElement[] = [];
-      for (let attrKey of attrKeys) {
-        const attrValue = Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key as keyof EdiReleaseSchemaElement]);
-        if (attrValue === null || attrValue === undefined || attrValue === "") {
-          continue;
-        }
+    //   const { segments } = await parser.parse();
+    //   return segments.map((segment) => {
+    //     return {
+    //       key: segment.id,
+    //       type: TreeItemType.Segment,
+    //       segment
+    //     };
+    //   });
+    // }
 
-        children.push({
-          key: `${element.element!.getDesignator()}-${attrKey.key}`,
-          type: TreeItemType.ElementAttribute,
-          elementAttribute: {
-            key: attrKey.label,
-            value: Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key as keyof EdiReleaseSchemaElement])!
-          }
-        });
-      }
+    // if (element.type === TreeItemType.Segment) {
+    //   return element.segment!.elements.map((el) => {
+    //     return {
+    //       key: el.getDesignator(),
+    //       type: TreeItemType.DataElement,
+    //       element: el,
+    //       segment: element.segment
+    //     };
+    //   });
+    // } else if (element.type === TreeItemType.DataElement && element.element!.isComposite()) {
+    //   return element.element!.components!.map((el) => {
+    //     return {
+    //       key: el.getDesignator(),
+    //       type: TreeItemType.CompositeElement,
+    //       element: el,
+    //       segment: element.segment
+    //     };
+    //   });
+    // } else if (element.type === TreeItemType.CompositeElement || (element.type === TreeItemType.DataElement && !element.element!.isComposite())) {
+    //   const attrKeys: { key: string, label: string }[] = [
+    //     {key: "id", label: "Id"},
+    //     {key: "desc", label: "Description"},
+    //     {key: "dataType", label: "Data Type"},
+    //     {key: "required", label: "Required"},
+    //     {key: "minLength", label: "Min Length"},
+    //     {key: "maxLength", label: "Max Length"},
+    //     {key: "qualifierRef", label: "Qualifier Ref"},
+    //     {key: "definition", label: "Definition"},
+    //   ];
+    //   const children: TreeItemElement[] = [];
+    //   for (let attrKey of attrKeys) {
+    //     const attrValue = Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key as keyof EdiReleaseSchemaElement]);
+    //     if (attrValue === null || attrValue === undefined || attrValue === "") {
+    //       continue;
+    //     }
 
-      return children;
-    } else {
-      return;
-    }
+    //     children.push({
+    //       key: `${element.element!.getDesignator()}-${attrKey.key}`,
+    //       type: TreeItemType.ElementAttribute,
+    //       elementAttribute: {
+    //         key: attrKey.label,
+    //         value: Utils.toString(element.element!.ediReleaseSchemaElement?.[attrKey.key as keyof EdiReleaseSchemaElement])!
+    //       }
+    //     });
+    //   }
+
+    //   return children;
+    // } else {
+    //   return;
+    // }
   }
 
   getParent?(element: TreeItemElement): vscode.ProviderResult<TreeItemElement> {

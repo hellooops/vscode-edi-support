@@ -11,20 +11,22 @@ export class CompletionItemEdiProvider implements vscode.CompletionItemProvider,
       return [];
     }
 
-    let ediVersion = parser.parseReleaseAndVersion();
-    if (!ediVersion) return [];
-    const { segments } = await parser.parse();
-    let realPosition = document.offsetAt(
-      new vscode.Position(position.line, position.character)
-    );
-    const { element, segment } = EdiUtils.getSegmentOrElementByPosition(realPosition, segments);
-    if (!segment) return [];
+    return [];
 
-    if (element) {
-      return this.getElementCompletionItems(element);
-    } else {
-      return this.getSegmentCompletionItems(parser.schema);
-    }
+    // let ediVersion = parser.parseReleaseAndVersion();
+    // if (!ediVersion) return [];
+    // const { segments } = await parser.parse();
+    // let realPosition = document.offsetAt(
+    //   new vscode.Position(position.line, position.character)
+    // );
+    // const { element, segment } = EdiUtils.getSegmentOrElementByPosition(realPosition, segments);
+    // if (!segment) return [];
+
+    // if (element) {
+    //   return this.getElementCompletionItems(element);
+    // } else {
+    //   return this.getSegmentCompletionItems(parser.schema);
+    // }
   }
   resolveCompletionItem?(item: vscode.CompletionItem, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem> {
     throw new Error("Method not implemented.");

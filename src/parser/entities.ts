@@ -1,3 +1,5 @@
+/// <reference path="../../env.d.ts" />
+
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 
@@ -334,13 +336,14 @@ export class EdiType {
   static UNKNOWN = "unknown";
 }
 
-export class EdiMessage implements IEdiMessageResult<IEdiMessage> {
-  separators: EdiMessageSeparators;
+export class EdiTransactionSet {
   ediVersion: EdiVersion;
   segments: EdiSegment[];
 
-  constructor(separators: EdiMessageSeparators, ediVersion: EdiVersion, segments: EdiSegment[]) {
-    this.separators = separators;
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  constructor(ediVersion: EdiVersion, segments: EdiSegment[] = []) {
     this.ediVersion = ediVersion;
     this.segments = segments;
   }
@@ -351,4 +354,311 @@ export class EdiMessage implements IEdiMessageResult<IEdiMessage> {
       segments: this.segments.map(segment => segment.getIResult())
     };
   }
+
+  addSegment(segment: EdiSegment): void {
+    this.segments.push(segment);
+  }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.segments);
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
+
+  public toString() {
+    return formatEdiDocumentPartsSegment(
+      this.startSegment,
+      this.endSegment,
+      this.segments,
+      1
+    );
+  }
+}
+
+export class EdiFunctionalGroup {
+  transactionSets: EdiTransactionSet[];
+
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  private hasActiveTransactionSet: boolean = false;
+
+  constructor(transactionSets?: EdiTransactionSet[]) {
+    this.transactionSets = transactionSets ?? [];
+  }
+
+  getActiveTransactionSet() {
+    return this.transactionSets[this.transactionSets.length - 1];
+  }
+
+  startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
+    const ediTransactionSet = new EdiTransactionSet(ediVersion);
+    ediTransactionSet.startSegment = startSegment;
+    this.transactionSets.push(ediTransactionSet);
+    this.hasActiveTransactionSet = true;
+  }
+
+  endTransactionSet(endSegment: EdiSegment): void {
+    this.hasActiveTransactionSet = false;
+    this.getActiveTransactionSet().endSegment = endSegment;
+  }
+
+  addSegment(segment: EdiSegment): void {
+    if (!this.hasActiveTransactionSet) {
+      throw new Error("Functional Group is invalid");
+    }
+
+    this.transactionSets[this.transactionSets.length - 1].addSegment(segment);
+  }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.transactionSets.flatMap(i => i.getSegments()));
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
+
+  public toString() {
+    return formatEdiDocumentPartsSegment(
+      this.startSegment,
+      this.endSegment,
+      this.transactionSets,
+      2
+    );
+  }
+}
+
+export class EdiInterchange {
+  // TODO(Deric): Meta info
+  functionalGroups: EdiFunctionalGroup[];
+
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  private hasActiveFunctionalGroup: boolean = false;
+
+  constructor(functionalGroups?: EdiFunctionalGroup[]) {
+    this.functionalGroups = functionalGroups ?? [];
+  }
+
+  ensureActiveFunctionalGroup(): void {
+    if (!this.hasActiveFunctionalGroup) {
+      this.startFunctionalGroup(undefined);
+    }
+  }
+
+  getActiveFunctionalGroup() {
+    return this.functionalGroups[this.functionalGroups.length - 1];
+  }
+
+  startFunctionalGroup(startSegment: EdiSegment | undefined): void {
+    const ediFunctionalGroup = new EdiFunctionalGroup();
+    ediFunctionalGroup.startSegment = startSegment;
+    this.functionalGroups.push(ediFunctionalGroup);
+    this.hasActiveFunctionalGroup = true;
+  }
+
+  endFunctionalGroup(endSegment: EdiSegment): void {
+    this.hasActiveFunctionalGroup = false;
+    this.getActiveFunctionalGroup().endSegment = endSegment;
+  }
+
+  startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
+    this.ensureActiveFunctionalGroup();
+    this.getActiveFunctionalGroup().startTransactionSet(ediVersion, startSegment);
+  }
+
+  endTransactionSet(endSegment: EdiSegment): void {
+    this.getActiveFunctionalGroup().endTransactionSet(endSegment);
+  }
+
+  addSegment(segment: EdiSegment): void {
+    this.ensureActiveFunctionalGroup();
+    this.getActiveFunctionalGroup().addSegment(segment);
+  }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.functionalGroups.flatMap(i => i.getSegments()));
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
+
+  public toString() {
+    return formatEdiDocumentPartsSegment(
+      this.startSegment,
+      this.endSegment,
+      this.functionalGroups,
+      2
+    );
+  }
+}
+
+export class EdiDocumentSeparators {
+  public segmentSeparator?: string;
+  public dataElementSeparator?: string;
+  public componentElementSeparator?: string;
+  public releaseCharacter?: string; // escape char
+}
+
+export class EdiDocument {
+  separators: EdiDocumentSeparators;
+  interchanges: EdiInterchange[];
+
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  private hasActiveInterchange: boolean = false;
+
+  constructor(separators: EdiDocumentSeparators, interchanges?: EdiInterchange[]) {
+    this.separators = separators;
+    this.interchanges = interchanges ?? [];
+  }
+
+  ensureActiveInterchange(): void {
+    if (!this.hasActiveInterchange) {
+      this.startInterchange(undefined);
+    }
+  }
+
+  getActiveInterchange() {
+    return this.interchanges[this.interchanges.length - 1];
+  }
+
+  startInterchange(startSegment: EdiSegment | undefined): void {
+    const ediInterchange = new EdiInterchange();
+    ediInterchange.startSegment = startSegment;
+    this.interchanges.push(ediInterchange);
+    this.hasActiveInterchange = true;
+  }
+
+  endInterchange(endSegment: EdiSegment): void {
+    this.hasActiveInterchange = false;
+    this.getActiveInterchange().endSegment = endSegment;
+  }
+
+  startFunctionalGroup(startSegment: EdiSegment | undefined): void {
+    this.ensureActiveInterchange();
+    this.getActiveInterchange().startFunctionalGroup(startSegment);
+  }
+
+  endFunctionalGroup(endSegment: EdiSegment): void {
+    this.getActiveInterchange().endFunctionalGroup(endSegment);
+  }
+
+  startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
+    this.ensureActiveInterchange();
+    this.getActiveInterchange().startTransactionSet(ediVersion, startSegment);
+  }
+
+  endTransactionSet(endSegment: EdiSegment): void {
+    this.getActiveInterchange().endTransactionSet(endSegment);
+  }
+
+  addSegment(segment: EdiSegment): void {
+    this.ensureActiveInterchange();
+    this.getActiveInterchange().addSegment(segment);
+  }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.interchanges.flatMap(i => i.getSegments()));
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
+
+  public toString() {
+    return formatEdiDocumentPartsSegment(
+      this.startSegment,
+      this.endSegment,
+      this.interchanges,
+      2
+    );
+  }
+}
+
+export interface EdiStandardOptions {
+  interchangeStartSegmentName: string;
+  interchangeEndSegmentName?: string;
+
+  isFunctionalGroupSupport: boolean;
+  functionalGroupStartSegmentName?: string;
+  functionalGroupEndSegmentName?: string;
+
+  transactionSetStartSegmentName: string;
+  transactionSetEndSegmentName: string;
+}
+
+type ParseReleaseAndVersionFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment) => EdiVersion;
+type LoadSchemaFunc = (ediVersion: EdiVersion) => Promise<void>;
+
+export class EdiDocumentBuilder {
+  private options: EdiStandardOptions;
+  private ediDocument: EdiDocument;
+  private interchangeSegment?: EdiSegment;
+  private functionalGroupSegment?: EdiSegment;
+
+  parseReleaseAndVersionFunc?: ParseReleaseAndVersionFunc;
+  loadSchemaFunc?: LoadSchemaFunc;
+
+  constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions) {
+    this.ediDocument = new EdiDocument(separators);
+    this.options = options;
+  }
+
+  async addSegment(segment: EdiSegment): Promise<void> {
+    if (segment.id === this.options.interchangeStartSegmentName) {
+      this.interchangeSegment = segment;
+      this.ediDocument.startInterchange(segment);
+    } else if (this.options.interchangeEndSegmentName && segment.id === this.options.interchangeEndSegmentName) {
+      this.ediDocument.endInterchange(segment);
+      this.interchangeSegment = undefined;
+    } else if (segment.id === this.options.functionalGroupStartSegmentName) {
+      this.functionalGroupSegment = segment;
+      this.ediDocument.startFunctionalGroup(segment);
+    } else if (segment.id === this.options.functionalGroupEndSegmentName) {
+      this.ediDocument.endFunctionalGroup(segment);
+      this.functionalGroupSegment = undefined;
+    } else if (segment.id === this.options.transactionSetStartSegmentName) {
+      const ediReleaseAndVersion = this.parseReleaseAndVersionFunc!(this.interchangeSegment, this.functionalGroupSegment!, segment);
+      this.loadSchemaFunc && await this.loadSchemaFunc(ediReleaseAndVersion);
+      this.ediDocument.startTransactionSet(ediReleaseAndVersion, segment);
+    } else if (segment.id === this.options.transactionSetEndSegmentName) {
+      this.ediDocument.endTransactionSet(segment);
+    } else {
+      this.ediDocument.addSegment(segment);
+    }
+  }
+
+  buildEdiDocument(): EdiDocument {
+    return this.ediDocument;
+  }
+
+  onParseReleaseAndVersion(parseReleaseAndVersionFunc: ParseReleaseAndVersionFunc) {
+    this.parseReleaseAndVersionFunc = parseReleaseAndVersionFunc;
+  }
+
+  onLoadSchema(loadSchemaFunc: LoadSchemaFunc) {
+    this.loadSchemaFunc = loadSchemaFunc;
+  }
+}
+
+function formatEdiDocumentPartsSegment<T extends any>(startSegment: EdiSegment | undefined, endSegment: EdiSegment | undefined, children: T[], lineBreakCount: number): string {
+  if (!children) return "";
+  let lineBreaks: string;
+  if (children.length === 1) {
+    lineBreaks = constants.ediDocument.lineBreak;
+  } else {
+    lineBreaks = Array(lineBreakCount).fill(constants.ediDocument.lineBreak).join("");
+  }
+  return [
+    startSegment,
+    ...children,
+    endSegment,
+  ].filter(i => i).join(lineBreaks);
 }

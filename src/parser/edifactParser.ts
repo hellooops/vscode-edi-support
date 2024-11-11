@@ -1,4 +1,4 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators } from "./entities";
+import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
@@ -94,7 +94,6 @@ export class EdifactParser extends EdiParserBase {
   }
 
   private async parseSegmentUNA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
-    await this.loadSchema();
     segment.elements = [];
     const ediMessageSeparators = new EdiMessageSeparators();
     ediMessageSeparators.segmentSeparator = segmentStr[8];
@@ -114,10 +113,24 @@ export class EdifactParser extends EdiParserBase {
         this.pad(i + 1, 2, "0")
       );
       element.value = segmentStr[i + 3];
-      element.ediReleaseSchemaElement = this.schema?.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNA)?.elements[i];
+      element.ediReleaseSchemaElement = EdiReleaseSchemaSegment.UNA.elements[i];
       segment.elements.push(element);
     }
 
     return segment;
+  }
+
+  protected getStardardOptions(): EdiStandardOptions {
+    return {
+      interchangeStartSegmentName: "UNB",
+      interchangeEndSegmentName: "UNZ",
+
+      isFunctionalGroupSupport: false,
+      functionalGroupStartSegmentName: undefined,
+      functionalGroupEndSegmentName: undefined,
+
+      transactionSetStartSegmentName: "UNH",
+      transactionSetEndSegmentName: "UNT",
+    };
   }
 }

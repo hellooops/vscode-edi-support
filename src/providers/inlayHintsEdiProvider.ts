@@ -12,35 +12,35 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
     if (!segmentNamesInlayHintsEnabled && !elementsInlayHintsEnabled) {
       return [];
     }
-    
-    const { parser } = EdiUtils.getEdiParser(document)!;
-    if (!parser) {
-      return [];
-    }
+    return [];
+    // const { parser } = EdiUtils.getEdiParser(document)!;
+    // if (!parser) {
+    //   return [];
+    // }
 
-    const inlayHints: vscode.InlayHint[] = [];
-    const { segments } = await parser.parse();
-    for (let segment of segments) {
-      if (segmentNamesInlayHintsEnabled) {
-        const segmentInlayHint = this.getSegmentNameInlayHint(segment, document);
-        if (segmentInlayHint) {
-          inlayHints.push(segmentInlayHint);
-        }
-      }
+    // const inlayHints: vscode.InlayHint[] = [];
+    // const { segments } = await parser.parse();
+    // for (let segment of segments) {
+    //   if (segmentNamesInlayHintsEnabled) {
+    //     const segmentInlayHint = this.getSegmentNameInlayHint(segment, document);
+    //     if (segmentInlayHint) {
+    //       inlayHints.push(segmentInlayHint);
+    //     }
+    //   }
 
-      if (elementsInlayHintsEnabled) {
-        if (!segment.elements) {
-          continue;
-        }
+    //   if (elementsInlayHintsEnabled) {
+    //     if (!segment.elements) {
+    //       continue;
+    //     }
   
-        for (let ele of segment.elements) {
-          inlayHints.push(...this.getElementInlayHints(segment, ele, document));
-        }
-      }
+    //     for (let ele of segment.elements) {
+    //       inlayHints.push(...this.getElementInlayHints(segment, ele, document));
+    //     }
+    //   }
 
-    }
+    // }
 
-    return inlayHints;
+    // return inlayHints;
   }
 
   private getSegmentNameInlayHint(segment: EdiSegment, document: vscode.TextDocument): vscode.InlayHint | undefined {

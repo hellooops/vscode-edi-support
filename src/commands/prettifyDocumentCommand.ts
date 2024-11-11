@@ -17,12 +17,10 @@ export class PrettifyDocumentCommand implements ICommandable {
     const { parser, ediType } = EdiUtils.getEdiParser(document);
     if (!parser) return;
 
-    const { segments } = await parser.parse();
-    if (!segments || segments.length <= 0) {
+    const ediDocument = await parser.parse();
+    if (!ediDocument) {
       return;
     }
-
-    let text = segments.join(constants.ediDocument.lineBreak);
 
     vscode.window.activeTextEditor.edit((builder) => {
       if (!vscode.window.activeTextEditor) {
@@ -32,7 +30,7 @@ export class PrettifyDocumentCommand implements ICommandable {
       builder.replace(new vscode.Range(
         vscode.window.activeTextEditor.document.positionAt(0), 
         vscode.window.activeTextEditor.document.positionAt(documentContent.length)
-        ), text);
+        ), ediDocument.toString());
     });
   }
 }
