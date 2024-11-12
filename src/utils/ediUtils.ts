@@ -1,6 +1,6 @@
 import { EdiParserBase } from "../parser/ediParserBase";
 import { EdifactParser } from "../parser/edifactParser";
-import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
+import { EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
 import { X12Parser } from "../parser/x12Parser";
 import * as vscode from "vscode";
 import * as constants from "../constants";
@@ -104,6 +104,51 @@ export class EdiUtils {
       parser,
       ediType
     };
+  }
+
+  static getInterchangeStartPosition(document: vscode.TextDocument, interchange: EdiInterchange): vscode.Position {
+    return document.positionAt(interchange.startSegment!.startIndex);
+  }
+
+  static getInterchangeEndPosition(document: vscode.TextDocument, interchange: EdiInterchange): vscode.Position {
+    return document.positionAt(interchange.endSegment!.endIndex + 1);
+  }
+
+  static getInterchangeRange(document: vscode.TextDocument, interchange: EdiInterchange): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getInterchangeStartPosition(document, interchange),
+      EdiUtils.getInterchangeEndPosition(document, interchange),
+    );
+  }
+
+  static getFunctionalGroupStartPosition(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.Position {
+    return document.positionAt(functionalGroup.startSegment!.startIndex);
+  }
+
+  static getFunctionalGroupEndPosition(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.Position {
+    return document.positionAt(functionalGroup.endSegment!.endIndex + 1);
+  }
+
+  static getFunctionalGroupRange(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getFunctionalGroupStartPosition(document, functionalGroup),
+      EdiUtils.getFunctionalGroupEndPosition(document, functionalGroup),
+    );
+  }
+
+  static getTransactionSetStartPosition(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.Position {
+    return document.positionAt(transactionSet.startSegment!.startIndex);
+  }
+
+  static getTransactionSetEndPosition(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.Position {
+    return document.positionAt(transactionSet.endSegment!.endIndex + 1);
+  }
+
+  static getTransactionSetRange(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.Range {
+    return new vscode.Range(
+      EdiUtils.getTransactionSetStartPosition(document, transactionSet),
+      EdiUtils.getTransactionSetEndPosition(document, transactionSet),
+    );
   }
 
   static getSegmentStartPosition(document: vscode.TextDocument, segment: EdiSegment): vscode.Position {

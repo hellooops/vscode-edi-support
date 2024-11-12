@@ -122,6 +122,8 @@ export class EdifactParser extends EdiParserBase {
 
   protected getStardardOptions(): EdiStandardOptions {
     return {
+      separatorsSegmentName: "UNA",
+
       interchangeStartSegmentName: "UNB",
       interchangeEndSegmentName: "UNZ",
 

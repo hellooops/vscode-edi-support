@@ -19,6 +19,18 @@ export class EdiVersion implements IEdiMessageResult<IEdiVersion> {
   getIResult(): IEdiVersion {
     return this;
   }
+
+  getFormattedString(): string {
+    if (this.release && this.version) {
+      return `${this.release} ${this.version}`;
+    } else if (this.release && !this.version) {
+      return this.release;
+    } else if (!this.release && this.version) {
+      return this.version;
+    } else {
+      return "";
+    }
+  }
 }
 
 export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
@@ -367,6 +379,16 @@ export class EdiTransactionSet {
     return result;
   }
 
+  getId(): string | undefined {
+    if (this.startSegment?.id === "ST" && this.startSegment.elements.length >= 2) {
+      return this.startSegment.elements[1].value;
+    } else if (this.startSegment?.id === "UNH" && this.startSegment.elements.length >= 1) {
+      return this.startSegment.elements[0].value;
+    } else {
+      return undefined;
+    }
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -419,6 +441,20 @@ export class EdiFunctionalGroup {
     result.push(...this.transactionSets.flatMap(i => i.getSegments()));
     if (this.endSegment) result.push(this.endSegment);
     return result;
+  }
+
+  getId(): string | undefined {
+    if (this.startSegment?.id === "GS" && this.startSegment.elements.length >= 6) {
+      return this.startSegment.elements[5].value;
+    } else if (!this.startSegment) {
+      return "";
+    } else {
+      return undefined
+    }
+  }
+
+  isFake(): boolean {
+    return !this.startSegment;
   }
 
   public toString() {
@@ -488,6 +524,16 @@ export class EdiInterchange {
     return result;
   }
 
+  getId(): string | undefined {
+    if (this.startSegment?.id === "ISA" && this.startSegment.elements.length >= 13) {
+      return this.startSegment.elements[12].value;
+    } else if (this.startSegment?.id === "UNB" && this.startSegment.elements.length >= 5) {
+      return this.startSegment.elements[4].value;
+    } else {
+      return undefined;
+    }
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -509,6 +555,7 @@ export class EdiDocument {
   separators: EdiDocumentSeparators;
   interchanges: EdiInterchange[];
 
+  separatorsSegment?: EdiSegment; // ISA
   startSegment?: EdiSegment;
   endSegment?: EdiSegment;
 
@@ -527,6 +574,10 @@ export class EdiDocument {
 
   getActiveInterchange() {
     return this.interchanges[this.interchanges.length - 1];
+  }
+
+  addSeparatorsSegment(separatorsSegment: EdiSegment): void {
+    this.separatorsSegment = separatorsSegment;
   }
 
   startInterchange(startSegment: EdiSegment | undefined): void {
@@ -566,6 +617,7 @@ export class EdiDocument {
 
   getSegments(): EdiSegment[] {
     const result: EdiSegment[] = [];
+    if (this.separatorsSegment) result.push(this.separatorsSegment);
     if (this.startSegment) result.push(this.startSegment);
     result.push(...this.interchanges.flatMap(i => i.getSegments()));
     if (this.endSegment) result.push(this.endSegment);
@@ -577,12 +629,15 @@ export class EdiDocument {
       this.startSegment,
       this.endSegment,
       this.interchanges,
-      2
+      2,
+      this.separatorsSegment
     );
   }
 }
 
 export interface EdiStandardOptions {
+  separatorsSegmentName?: string;
+
   interchangeStartSegmentName: string;
   interchangeEndSegmentName?: string;
 
@@ -612,7 +667,9 @@ export class EdiDocumentBuilder {
   }
 
   async addSegment(segment: EdiSegment): Promise<void> {
-    if (segment.id === this.options.interchangeStartSegmentName) {
+    if (this.options.separatorsSegmentName && segment.id === this.options.separatorsSegmentName) {
+      this.ediDocument.addSeparatorsSegment(segment);
+    } else if (segment.id === this.options.interchangeStartSegmentName) {
       this.interchangeSegment = segment;
       this.ediDocument.startInterchange(segment);
     } else if (this.options.interchangeEndSegmentName && segment.id === this.options.interchangeEndSegmentName) {
@@ -648,7 +705,7 @@ export class EdiDocumentBuilder {
   }
 }
 
-function formatEdiDocumentPartsSegment<T extends any>(startSegment: EdiSegment | undefined, endSegment: EdiSegment | undefined, children: T[], lineBreakCount: number): string {
+function formatEdiDocumentPartsSegment<T extends any>(startSegment: EdiSegment | undefined, endSegment: EdiSegment | undefined, children: T[], lineBreakCount: number, separatorsSegment?: EdiSegment): string {
   if (!children) return "";
   let lineBreaks: string;
   if (children.length === 1) {
@@ -657,6 +714,7 @@ function formatEdiDocumentPartsSegment<T extends any>(startSegment: EdiSegment |
     lineBreaks = Array(lineBreakCount).fill(constants.ediDocument.lineBreak).join("");
   }
   return [
+    separatorsSegment,
     startSegment,
     ...children,
     endSegment,
