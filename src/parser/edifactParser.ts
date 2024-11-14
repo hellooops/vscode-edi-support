@@ -1,6 +1,6 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
-import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
+import { EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class EdifactParser extends EdiParserBase {
@@ -13,6 +13,32 @@ export class EdifactParser extends EdiParserBase {
   
         return await this.parseSegmentUNA(segment, segmentStr);
       };
+    }
+  }
+
+  protected getCustomSegmentSchemaBuilder(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<void>) | undefined {
+    if (segmentId === constants.ediDocument.edifact.segment.UNA) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNA;
+      };
+    } else if (segmentId === constants.ediDocument.edifact.segment.UNB) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNB;
+      };
+    } else if (segmentId === constants.ediDocument.edifact.segment.UNZ) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNZ;
+      };
+    } else if (segmentId === constants.ediDocument.edifact.segment.UNH) {
+      return async (segment) => {
+        if (segment.ediReleaseSchemaSegment) segment.ediReleaseSchemaSegment.desc = "Message header";
+      };
+    } else if (segmentId === constants.ediDocument.edifact.segment.UNT) {
+      return async (segment) => {
+        if (segment.ediReleaseSchemaSegment) segment.ediReleaseSchemaSegment.desc = "Message trailer";
+      };
+    } else {
+      return undefined;
     }
   }
 
@@ -73,24 +99,6 @@ export class EdifactParser extends EdiParserBase {
 
   protected getSchemaRootPath(): string {
     return "../schemas/edifact";
-  }
-
-  async afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void> {
-    const unh = schema.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNH);
-    if (unh) {
-      unh.desc = "Message header";
-    }
-
-    const unt = schema.ediReleaseSchema?.getSegment(constants.ediDocument.edifact.segment.UNT);
-    if (unt) {
-      unt.desc = "Message trailer";
-    }
-
-    if (schema.ediReleaseSchema?.segments) {
-      schema.ediReleaseSchema.segments[constants.ediDocument.edifact.segment.UNA] = EdiReleaseSchemaSegment.UNA;
-      schema.ediReleaseSchema.segments[constants.ediDocument.edifact.segment.UNB] = EdiReleaseSchemaSegment.UNB;
-      schema.ediReleaseSchema.segments[constants.ediDocument.edifact.segment.UNZ] = EdiReleaseSchemaSegment.UNZ;
-    }
   }
 
   private async parseSegmentUNA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {

@@ -1,6 +1,6 @@
 import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
-import { EdiReleaseSchemaSegment, EdiSchema } from "../schemas/schemas";
+import { EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class X12Parser extends EdiParserBase {
@@ -13,6 +13,36 @@ export class X12Parser extends EdiParserBase {
   
         return await this.parseSegmentISA(segment, segmentStr);
       };
+    }
+  }
+
+  protected getCustomSegmentSchemaBuilder(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<void>) | undefined {
+    if (segmentId === constants.ediDocument.x12.segment.ISA) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.ISA;
+      };
+    } else if (segmentId === constants.ediDocument.x12.segment.IEA) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.IEA;
+      };
+    } else if (segmentId === constants.ediDocument.x12.segment.GS) {
+      return async (segment, segmentStr) => {
+        const { segmentSeparator, dataElementSeparator } = <Required<EdiMessageSeparators>>this.getMessageSeparators();
+        if (segmentStr.endsWith(segmentSeparator)) segmentStr = segmentStr.substring(0, segmentStr.length - segmentSeparator.length);
+        const elementStrs = segmentStr.split(dataElementSeparator);
+        const release = elementStrs.length >= 9 ? elementStrs[8] : undefined;
+        if (this.isReleaseLt(release, "00401")) {
+          segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.GS_lt_00401;
+        } else {
+          segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.GS_ge_00401;
+        }
+      };
+    } else if (segmentId === constants.ediDocument.x12.segment.GE) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.GE;
+      };
+    } else {
+      return undefined;
     }
   }
 
@@ -87,20 +117,6 @@ export class X12Parser extends EdiParserBase {
   
   protected getSchemaRootPath(): string {
     return "../schemas/x12";
-  }
-
-  async afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void> {
-    if (schema.ediReleaseSchema?.segments) {
-      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.ISA] = EdiReleaseSchemaSegment.ISA;
-      if (this.isReleaseLt(ediVersion.release, "00401")) {
-        schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GS] = EdiReleaseSchemaSegment.GS_lt_00401;
-      } else {
-        schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GS] = EdiReleaseSchemaSegment.GS_ge_00401;
-      }
-
-      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.GE] = EdiReleaseSchemaSegment.GE;
-      schema.ediReleaseSchema.segments[constants.ediDocument.x12.segment.IEA] = EdiReleaseSchemaSegment.IEA;
-    }
   }
 
   private isReleaseLt(release: string | undefined, compareTo: string): boolean {

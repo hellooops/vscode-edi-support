@@ -44,7 +44,6 @@ export abstract class EdiParserBase {
   protected abstract parseReleaseAndVersionInternal(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion;
 
   private async parseDocument(force: boolean = false): Promise<EdiDocument> {
-    // TODO(Deric): force?
     return await this.parseDocumentInternal();
   }
 
@@ -59,7 +58,14 @@ export abstract class EdiParserBase {
       return releaseAndVersion;
     });
     ediDocumentBuilder.onLoadSchema(async (ediVersion: EdiVersion) => {
+      // TODO(Deric): Don't load schema here, in parseSegment
       await this.loadSchema(ediVersion);
+    });
+    ediDocumentBuilder.onUnloadSchema(() => {
+      this.unloadSchema();
+    });
+    ediDocumentBuilder.onLoadTransactionSetStartSegmentSchema(async (segment) => {
+      return await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endIndex, segment.endingDelimiter);
     });
     try {
       while ((match = regex.exec(this.document)) !== null) {
@@ -97,8 +103,6 @@ export abstract class EdiParserBase {
   }
 
   public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
-    // await this.loadSchema();
-
     const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length - 1;
     const segment = new EdiSegment(
       segmentStr.substring(0, firstElementSeparatorIndex),
@@ -107,18 +111,21 @@ export abstract class EdiParserBase {
       segmentStr.length,
       endingDelimiter
     );
-    if (this.schema?.ediReleaseSchema) {
-      segment.ediReleaseSchemaSegment = this.schema.ediReleaseSchema.getSegment(segment.id);
-      if (!segment.ediReleaseSchemaSegment) {
-        segment.isInvalidSegment = true;
-      }
-    }
+
+    segment.segmentStr = segmentStr;
+
+    this.assembleSegmentReleaseSchema(segment, segmentStr);
 
     const customSegmentParser = this.getCustomSegmentParser(segment.id);
     if (customSegmentParser) {
       return await customSegmentParser(segment, segmentStr);
     }
 
+    const parsedSegment = await this.parseSegmentInternal(segmentStr, segment);
+    return parsedSegment;
+  }
+
+  public async parseSegmentInternal(segmentStr: string, segment: EdiSegment): Promise<EdiSegment> {
     let element: EdiElement | undefined = undefined;
     let subElement: EdiElement | undefined = undefined;
     let elementIndex = 0;
@@ -204,6 +211,20 @@ export abstract class EdiParserBase {
     return segment;
   }
 
+  private async assembleSegmentReleaseSchema(segment: EdiSegment, segmentStr: string): Promise<void> {
+    if (this.schema?.ediReleaseSchema) {
+      segment.ediReleaseSchemaSegment = this.schema.ediReleaseSchema.getSegment(segment.id);
+      if (!segment.ediReleaseSchemaSegment) {
+        segment.isInvalidSegment = true;
+      }
+    }
+
+    const customSegmentSchemaBuilder = this.getCustomSegmentSchemaBuilder(segment.id);
+    if (customSegmentSchemaBuilder) {
+      await customSegmentSchemaBuilder(segment, segmentStr);
+    }
+  }
+
   private static isCharWithoutEscape(str: string, i: number, char: string, escapeChar: string): boolean {
     if (i < 0 || i >= str.length) return false;
     if (i === 0 || !escapeChar) {
@@ -212,6 +233,8 @@ export abstract class EdiParserBase {
 
     return str[i] === char && str[i - 1] !== escapeChar;
   }
+
+  protected abstract getCustomSegmentSchemaBuilder(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<void>) | undefined;
 
   protected abstract getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined;
 
@@ -248,11 +271,12 @@ export abstract class EdiParserBase {
     }
 
     const ediSchema = new EdiSchema(releaseSchema);
-    await this.afterSchemaLoaded(ediSchema, ediVersion);
     this.schema = ediSchema;
   }
 
-  protected abstract afterSchemaLoaded(schema: EdiSchema, ediVersion: EdiVersion): Promise<void>;
+  protected unloadSchema(): void {
+    this.schema = undefined;
+  }
 
   protected escapeCharRegex(str: string | undefined | null): string | undefined | null {
     if (str === undefined || str === null) {

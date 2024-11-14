@@ -43,6 +43,8 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
   public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
   public isInvalidSegment: boolean;
 
+  segmentStr?: string;
+
   transactionSetParent?: EdiTransactionSet;
   functionalGroupParent?: EdiFunctionalGroup;
   interchangeParent?: EdiInterchange;
@@ -709,6 +711,8 @@ export interface EdiStandardOptions {
 
 type ParseReleaseAndVersionFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment) => EdiVersion;
 type LoadSchemaFunc = (ediVersion: EdiVersion) => Promise<void>;
+type UnloadSchemaFunc = () => void;
+type LoadTransactionSetStartSegmentSchemaFunc = (segment: EdiSegment) => Promise<EdiSegment>;
 
 export class EdiDocumentBuilder {
   private options: EdiStandardOptions;
@@ -718,6 +722,8 @@ export class EdiDocumentBuilder {
 
   parseReleaseAndVersionFunc?: ParseReleaseAndVersionFunc;
   loadSchemaFunc?: LoadSchemaFunc;
+  unloadSchemaFunc?: UnloadSchemaFunc;
+  loadTransactionSetStartSegmentSchemaFunc?: LoadTransactionSetStartSegmentSchemaFunc;
 
   constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions) {
     this.ediDocument = new EdiDocument(separators);
@@ -741,10 +747,16 @@ export class EdiDocumentBuilder {
       this.functionalGroupSegment = undefined;
     } else if (segment.id === this.options.transactionSetStartSegmentName) {
       const ediReleaseAndVersion = this.parseReleaseAndVersionFunc!(this.interchangeSegment, this.functionalGroupSegment!, segment);
-      this.loadSchemaFunc && await this.loadSchemaFunc(ediReleaseAndVersion);
+      if (this.loadSchemaFunc) {
+        await this.loadSchemaFunc(ediReleaseAndVersion);
+        if (this.loadTransactionSetStartSegmentSchemaFunc) {
+          segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
+        }
+      }
       this.ediDocument.startTransactionSet(ediReleaseAndVersion, segment);
     } else if (segment.id === this.options.transactionSetEndSegmentName) {
       this.ediDocument.endTransactionSet(segment);
+      this.unloadSchemaFunc && this.unloadSchemaFunc();
     } else {
       this.ediDocument.addSegment(segment);
     }
@@ -760,6 +772,14 @@ export class EdiDocumentBuilder {
 
   onLoadSchema(loadSchemaFunc: LoadSchemaFunc) {
     this.loadSchemaFunc = loadSchemaFunc;
+  }
+
+  onUnloadSchema(unloadSchemaFunc: UnloadSchemaFunc) {
+    this.unloadSchemaFunc = unloadSchemaFunc;
+  }
+
+  onLoadTransactionSetStartSegmentSchema(loadTransactionSetStartSegmentSchemaFunc: LoadTransactionSetStartSegmentSchemaFunc) {
+    this.loadTransactionSetStartSegmentSchemaFunc = loadTransactionSetStartSegmentSchemaFunc;
   }
 }
 
