@@ -107,4 +107,6 @@ export namespace themeIcons {
   export const symbolParameter = "symbol-parameter";
   export const recordSmall = "record-small";
   export const mention = "mention";
+  export const symbolNumber = "symbol-number";
+  export const outputViewIcon = "output-view-icon";
 }

@@ -43,6 +43,11 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
   public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
   public isInvalidSegment: boolean;
 
+  transactionSetParent?: EdiTransactionSet;
+  functionalGroupParent?: EdiFunctionalGroup;
+  interchangeParent?: EdiInterchange;
+  documentParent?: EdiDocument;
+
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
     this.id = id;
     this.startIndex = startIndex;
@@ -355,9 +360,12 @@ export class EdiTransactionSet {
   startSegment?: EdiSegment;
   endSegment?: EdiSegment;
 
-  constructor(ediVersion: EdiVersion, segments: EdiSegment[] = []) {
+  functionalGroup: EdiFunctionalGroup;
+
+  constructor(ediVersion: EdiVersion, functionalGroup: EdiFunctionalGroup) {
     this.ediVersion = ediVersion;
-    this.segments = segments;
+    this.segments = [];
+    this.functionalGroup = functionalGroup;
   }
 
   getIResult(): IEdiMessage {
@@ -368,6 +376,7 @@ export class EdiTransactionSet {
   }
 
   addSegment(segment: EdiSegment): void {
+    segment.transactionSetParent = this;
     this.segments.push(segment);
   }
 
@@ -405,10 +414,13 @@ export class EdiFunctionalGroup {
   startSegment?: EdiSegment;
   endSegment?: EdiSegment;
 
+  interchange: EdiInterchange;
+
   private hasActiveTransactionSet: boolean = false;
 
-  constructor(transactionSets?: EdiTransactionSet[]) {
-    this.transactionSets = transactionSets ?? [];
+  constructor(interchange: EdiInterchange) {
+    this.transactionSets = [];
+    this.interchange = interchange;
   }
 
   getActiveTransactionSet() {
@@ -416,7 +428,8 @@ export class EdiFunctionalGroup {
   }
 
   startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
-    const ediTransactionSet = new EdiTransactionSet(ediVersion);
+    const ediTransactionSet = new EdiTransactionSet(ediVersion, this);
+    if (startSegment) startSegment.functionalGroupParent = this;
     ediTransactionSet.startSegment = startSegment;
     this.transactionSets.push(ediTransactionSet);
     this.hasActiveTransactionSet = true;
@@ -424,6 +437,7 @@ export class EdiFunctionalGroup {
 
   endTransactionSet(endSegment: EdiSegment): void {
     this.hasActiveTransactionSet = false;
+    endSegment.functionalGroupParent = this;
     this.getActiveTransactionSet().endSegment = endSegment;
   }
 
@@ -474,10 +488,13 @@ export class EdiInterchange {
   startSegment?: EdiSegment;
   endSegment?: EdiSegment;
 
+  document: EdiDocument;
+
   private hasActiveFunctionalGroup: boolean = false;
 
-  constructor(functionalGroups?: EdiFunctionalGroup[]) {
-    this.functionalGroups = functionalGroups ?? [];
+  constructor(document: EdiDocument) {
+    this.functionalGroups = [];
+    this.document = document;
   }
 
   ensureActiveFunctionalGroup(): void {
@@ -491,7 +508,8 @@ export class EdiInterchange {
   }
 
   startFunctionalGroup(startSegment: EdiSegment | undefined): void {
-    const ediFunctionalGroup = new EdiFunctionalGroup();
+    const ediFunctionalGroup = new EdiFunctionalGroup(this);
+    if (startSegment) startSegment.interchangeParent = this;
     ediFunctionalGroup.startSegment = startSegment;
     this.functionalGroups.push(ediFunctionalGroup);
     this.hasActiveFunctionalGroup = true;
@@ -499,6 +517,7 @@ export class EdiInterchange {
 
   endFunctionalGroup(endSegment: EdiSegment): void {
     this.hasActiveFunctionalGroup = false;
+    endSegment.interchangeParent = this;
     this.getActiveFunctionalGroup().endSegment = endSegment;
   }
 
@@ -577,11 +596,13 @@ export class EdiDocument {
   }
 
   addSeparatorsSegment(separatorsSegment: EdiSegment): void {
+    separatorsSegment.documentParent = this;
     this.separatorsSegment = separatorsSegment;
   }
 
   startInterchange(startSegment: EdiSegment | undefined): void {
-    const ediInterchange = new EdiInterchange();
+    const ediInterchange = new EdiInterchange(this);
+    if (startSegment) startSegment.documentParent = this;
     ediInterchange.startSegment = startSegment;
     this.interchanges.push(ediInterchange);
     this.hasActiveInterchange = true;
@@ -589,6 +610,7 @@ export class EdiDocument {
 
   endInterchange(endSegment: EdiSegment): void {
     this.hasActiveInterchange = false;
+    endSegment.documentParent = this;
     this.getActiveInterchange().endSegment = endSegment;
   }
 
