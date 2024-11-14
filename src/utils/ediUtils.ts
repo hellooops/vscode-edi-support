@@ -7,10 +7,12 @@ import * as constants from "../constants";
 
 export class EdiUtils {
   static icons = {
+    interchange: new vscode.ThemeIcon(constants.themeIcons.notebookOpenAsText),
+    functionalGroup: new vscode.ThemeIcon(constants.themeIcons.openEditorsViewIcon),
     transactionSet: new vscode.ThemeIcon(constants.themeIcons.outputViewIcon),
     segment: new vscode.ThemeIcon(constants.themeIcons.symbolParameter),
     element: new vscode.ThemeIcon(constants.themeIcons.recordSmall),
-    elementAttribute: new vscode.ThemeIcon(constants.themeIcons.symbolNumber),
+    elementAttribute: new vscode.ThemeIcon(constants.themeIcons.mention),
   };
 
   static isX12(document: vscode.TextDocument): boolean {

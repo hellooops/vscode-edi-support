@@ -398,6 +398,18 @@ export class EdiTransactionSet {
     }
   }
 
+  getFirstSegment(): EdiSegment | undefined {
+    const segments = this.getSegments();
+    if (segments.length === 0) return undefined;
+    return segments[0];
+  }
+
+  getLastSegment(): EdiSegment | undefined {
+    const segments = this.getSegments();
+    if (segments.length === 0) return undefined;
+    return segments[segments.length - 1];
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -469,6 +481,18 @@ export class EdiFunctionalGroup {
 
   isFake(): boolean {
     return !this.startSegment;
+  }
+
+  getFirstSegment(): EdiSegment | undefined {
+    const segments = this.getSegments();
+    if (segments.length === 0) return undefined;
+    return segments[0];
+  }
+
+  getLastSegment(): EdiSegment | undefined {
+    const segments = this.getSegments();
+    if (segments.length === 0) return undefined;
+    return segments[segments.length - 1];
   }
 
   public toString() {
@@ -551,6 +575,18 @@ export class EdiInterchange {
     } else {
       return undefined;
     }
+  }
+
+  getFirstSegment(): EdiSegment | undefined {
+    const segments = this.getSegments();
+    if (segments.length === 0) return undefined;
+    return segments[0];
+  }
+
+  getLastSegment(): EdiSegment | undefined {
+    const segments = this.getSegments();
+    if (segments.length === 0) return undefined;
+    return segments[segments.length - 1];
   }
 
   public toString() {

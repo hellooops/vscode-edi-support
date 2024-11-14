@@ -109,4 +109,6 @@ export namespace themeIcons {
   export const mention = "mention";
   export const symbolNumber = "symbol-number";
   export const outputViewIcon = "output-view-icon";
+  export const openEditorsViewIcon = "open-editors-view-icon";
+  export const notebookOpenAsText = "notebook-open-as-text";
 }
