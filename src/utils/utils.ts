@@ -45,6 +45,19 @@ export default class Utils {
       return args[index] || "";
     });
   }
+
+  static getStringAsInt(value: string | number | undefined) {
+    if (typeof value === 'number') {
+      return Math.floor(value);
+    } else if (typeof value ==='string') {
+      const num = parseInt(value, 10);
+      if (!isNaN(num)) {
+        return num;
+      }
+    }
+
+    return undefined;
+  }
 }
 
 export class StringBuilder {

@@ -112,6 +112,7 @@ export class EdifactParser extends EdiParserBase {
 
     for (let i = 0; i < 5; i++) {
       const element = new EdiElement(
+        segment,
         ElementType.dataElement,
         i + 3,
         i + 3,

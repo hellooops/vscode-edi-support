@@ -2,6 +2,7 @@
 
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
+import Utils from "../utils/utils";
 
 interface IEdiMessageResult<T> {
   getIResult(): T;
@@ -33,7 +34,7 @@ export class EdiVersion implements IEdiMessageResult<IEdiVersion> {
   }
 }
 
-export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
+export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
   public id: string;
   public startIndex: number;
   public endIndex: number;
@@ -91,17 +92,17 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment> {
 
   public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
-    
     if (this.isInvalidSegment) {
-      errors.push(
-        new DiagnosticError(
-          `Segment ${this.id} not found.`,
-          "Invalid value"
-        )
-      );
+      errors.push({
+        error: `Segment ${this.id} not found.`,
+        code: DiagnosticErrors.INVALID_VALUE,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorSegment: this,
+      });
     }
 
-    return errors;
+    if (!this.elements) return errors;
+    return errors.concat(this.elements.flatMap(el => el.getErrors(context)));
   }
 
   getIResult(): IEdiSegment {
@@ -120,23 +121,39 @@ export enum ElementType {
   componentElement = "Component Element"
 }
 
-export class DiagnosticError {
+interface IDiagnosticErrorAble {
+  getErrors(context: DiagnoscticsContext): DiagnosticError[];
+}
+
+export enum DiagnosticErrorSeverity {
+  ERROR, WARNING,
+}
+
+export interface DiagnosticError {
   error: string;
   code: string;
-  constructor(error: string, code: string) {
-    this.error = error;
-    this.code = `Edi Support: ${code}`;
-  }
+  errorSegment?: EdiSegment;
+  errorElement?: EdiElement;
+  severity: DiagnosticErrorSeverity;
+}
+
+export namespace DiagnosticErrors {
+  export const INVALID_VALUE = "Edi Support: Invalid value";
+  export const VALUE_TOO_LONG = "Edi Support: Value too long";
+  export const VALUE_TOO_SHORT = "Edi Support: Value too short";
+  export const VALUE_REQUIRED = "Edi Support: Value required";
+  export const QUALIFIER_INVALID_CODE = "Edi Support: Qualifier invalid code";
+  export const SEGMENT_NOT_FOUND = "Edi Support: Segment not found";
 }
 
 export interface DiagnoscticsContext {
-  segment: EdiSegment;
+  segment?: EdiSegment;
   element?: EdiElement;
   ediType: string;
-  segments: EdiSegment[]
+  standardOptions: EdiStandardOptions;
 }
 
-export class EdiElement implements IEdiMessageResult<IEdiElement> {
+export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticErrorAble {
   public type: ElementType;
   public value?: string;
   public startIndex: number;
@@ -148,7 +165,10 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
   public components?: EdiElement[];
   public ediReleaseSchemaElement?: EdiReleaseSchemaElement;
 
-  constructor(type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, segmentStartIndex: number, designatorIndex: string) {
+  public segment: EdiSegment;
+
+  constructor(segment: EdiSegment, type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, segmentStartIndex: number, designatorIndex: string) {
+    this.segment = segment;
     this.type = type;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
@@ -177,10 +197,9 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
 
   public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
     const errors = this.getCustomElementErrors(context);
-
     if (this.components && this.components.length > 0) {
       return this.components.reduce((errors: DiagnosticError[], component: EdiElement) => {
-        return errors.concat(component.getErrors(context));
+        return errors.concat(component.getErrors(context).filter(i => i));
       }, errors);
     }
 
@@ -189,30 +208,30 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
     }
 
     if (this.value && this.value.length > this.ediReleaseSchemaElement.maxLength) {
-      errors.push(
-        new DiagnosticError(
-          `Element ${this.ediReleaseSchemaElement?.id} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}, got ${this.value.length}.`,
-          "Value too long"
-        )
-      );
+      errors.push({
+        error: `Element ${this.ediReleaseSchemaElement?.id} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}, got ${this.value.length}.`,
+        code: DiagnosticErrors.VALUE_TOO_LONG,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorElement: this,
+      });
     }
 
     if (this.value && this.value.length < this.ediReleaseSchemaElement.minLength) {
-      errors.push(
-        new DiagnosticError(
-          `Element ${this.ediReleaseSchemaElement?.id} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}, got ${this.value.length}.`,
-          "Value too short"
-        )
-      );
+      errors.push({
+        error: `Element ${this.ediReleaseSchemaElement?.id} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}, got ${this.value.length}.`,
+        code: DiagnosticErrors.VALUE_TOO_SHORT,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorElement: this,
+      });
     }
 
     if (this.ediReleaseSchemaElement?.required && !this.value) {
-      errors.push(
-        new DiagnosticError(
-          `Element ${this.ediReleaseSchemaElement?.id} is required.`,
-          "Value required"
-        )
-      );
+      errors.push({
+        error: `Element ${this.ediReleaseSchemaElement?.id} is required.`,
+        code: DiagnosticErrors.VALUE_REQUIRED,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorElement: this,
+      });
     }
 
     if (this.ediReleaseSchemaElement.qualifierRef && this.value) {
@@ -220,12 +239,12 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
       if (codes) {
         const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(this.value);
         if (!elementValueCode) {
-          errors.push(
-            new DiagnosticError(
-              `Invalid code value '${this.value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
-              "Qualifier invalid code"
-            )
-          );
+          errors.push({
+            error: `Invalid code value '${this.value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
+            code: DiagnosticErrors.QUALIFIER_INVALID_CODE,
+            severity: DiagnosticErrorSeverity.ERROR,
+            errorElement: this,
+          });
         }
       }
     }
@@ -235,73 +254,71 @@ export class EdiElement implements IEdiMessageResult<IEdiElement> {
 
   getCustomElementErrors(context: DiagnoscticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
-    if (context.ediType === EdiType.X12) {
-      if (context.element!.getDesignator() === "SE01") {
-        errors.push(...this.getErrors_SE01(context));
-      }
-    } else if (context.ediType === EdiType.EDIFACT) {
-      if (context.element!.getDesignator() === "UNT01") {
-        errors.push(...this.getErrors_UNT01(context));
-      }
-    }
+    // if (context.ediType === EdiType.X12) {
+    //   if (context.element!.getDesignator() === "SE01") {
+    //     errors.push(...this.getErrors_SE01(context));
+    //   }
+    // } else if (context.ediType === EdiType.EDIFACT) {
+    //   if (context.element!.getDesignator() === "UNT01") {
+    //     errors.push(...this.getErrors_UNT01(context));
+    //   }
+    // }
 
     return errors;
   }
 
-  getErrors_SE01(context: DiagnoscticsContext): DiagnosticError[] {
-    const errors: DiagnosticError[] = [];
-    const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
-    let startSegmentIndex = -1;
-    context.segments.forEach((segment, i) => {
-      if (i >= endSegmentIndex) return;
-      if (segment.id === "ST") {
-        startSegmentIndex = i;
-      }
-    });
-    if (startSegmentIndex === -1) {
-      return errors;
-    }
-    // To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)
-    const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
-    if (context.element!.value !== valueExpected) {
-      errors.push(
-        new DiagnosticError(
-          `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
-          "Wrong SE01 value"
-        )
-      );
-    }
+  // getErrors_SE01(context: DiagnoscticsContext): DiagnosticError[] {
+  //   const errors: DiagnosticError[] = [];
+  //   const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
+  //   let startSegmentIndex = -1;
+  //   context.segments.forEach((segment, i) => {
+  //     if (i >= endSegmentIndex) return;
+  //     if (segment.id === "ST") {
+  //       startSegmentIndex = i;
+  //     }
+  //   });
+  //   if (startSegmentIndex === -1) {
+  //     return errors;
+  //   }
+  //   // To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)
+  //   const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
+  //   if (context.element!.value !== valueExpected) {
+  //     errors.push({
+  //       error: `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
+  //       code: DiagnosticErrors.WRONG_SE01,
+  //       severity: DiagnosticErrorSeverity.ERROR
+  //     });
+  //   }
 
-    return errors;
-  }
+  //   return errors;
+  // }
 
-  getErrors_UNT01(context: DiagnoscticsContext): DiagnosticError[] {
-    const errors: DiagnosticError[] = [];
-    const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
-    let startSegmentIndex = -1;
-    context.segments.forEach((segment, i) => {
-      if (i >= endSegmentIndex) return;
-      if (segment.id === "UNH") {
-        startSegmentIndex = i;
-      }
-    });
+  // getErrors_UNT01(context: DiagnoscticsContext): DiagnosticError[] {
+  //   const errors: DiagnosticError[] = [];
+  //   const endSegmentIndex = context.segments.findIndex(segment => segment === context.segment);
+  //   let startSegmentIndex = -1;
+  //   context.segments.forEach((segment, i) => {
+  //     if (i >= endSegmentIndex) return;
+  //     if (segment.id === "UNH") {
+  //       startSegmentIndex = i;
+  //     }
+  //   });
 
-    if (startSegmentIndex === -1) {
-      return errors;
-    }
-    // Control count of number of segments in a message.
-    const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
-    if (context.element!.value !== valueExpected) {
-      errors.push(
-        new DiagnosticError(
-          `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
-          "Wrong UNT01 value"
-        )
-      );
-    }
+  //   if (startSegmentIndex === -1) {
+  //     return errors;
+  //   }
+  //   // Control count of number of segments in a message.
+  //   const valueExpected = (endSegmentIndex - startSegmentIndex + 1).toString();
+  //   if (context.element!.value !== valueExpected) {
+  //     errors.push({
+  //       error: `${valueExpected} is expected, got ${this.value}. There are ${valueExpected} transmitted segments in the message.`,
+  //       code: DiagnosticErrors.WRONG_UNT01,
+  //       severity: DiagnosticErrorSeverity.ERROR
+  //     });
+  //   }
 
-    return errors;
-  }
+  //   return errors;
+  // }
 
   public isComposite(): boolean {
     return !!this.components && this.components.length > 0;
@@ -355,7 +372,7 @@ export class EdiType {
   static UNKNOWN = "unknown";
 }
 
-export class EdiTransactionSet {
+export class EdiTransactionSet implements IDiagnosticErrorAble {
   ediVersion: EdiVersion;
   segments: EdiSegment[];
 
@@ -412,6 +429,15 @@ export class EdiTransactionSet {
     return segments[segments.length - 1];
   }
 
+  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    return [];
+  }
+
+  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors = this.getSelfErrors(context);
+    return errors.concat(this.segments.flatMap((segment) => segment.getErrors(context)).filter(i => i));
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -422,7 +448,7 @@ export class EdiTransactionSet {
   }
 }
 
-export class EdiFunctionalGroup {
+export class EdiFunctionalGroup implements IDiagnosticErrorAble {
   transactionSets: EdiTransactionSet[];
 
   startSegment?: EdiSegment;
@@ -497,6 +523,15 @@ export class EdiFunctionalGroup {
     return segments[segments.length - 1];
   }
 
+  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    return [];
+  }
+
+  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors = this.getSelfErrors(context);
+    return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(context)).filter(i => i));
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -507,7 +542,7 @@ export class EdiFunctionalGroup {
   }
 }
 
-export class EdiInterchange {
+export class EdiInterchange implements IDiagnosticErrorAble {
   // TODO(Deric): Meta info
   functionalGroups: EdiFunctionalGroup[];
 
@@ -579,6 +614,42 @@ export class EdiInterchange {
     }
   }
 
+  getEndId(): string | undefined {
+    return this.getEndIdElement()?.value;
+  }
+
+  getEndIdElement(): EdiElement | undefined {
+    if (this.endSegment?.id === "IEA" && this.endSegment.elements.length >= 2) {
+      return this.endSegment.elements[1];
+    } else if (this.endSegment?.id === "UNZ" && this.endSegment.elements.length >= 2) {
+      return this.endSegment.elements[1];
+    } else {
+      return undefined;
+    }
+  }
+
+  getControlCount(): number | undefined {
+    return Utils.getStringAsInt(this.getInterchangeControlElement()?.value);
+  }
+
+  getInterchangeControlElement(): EdiElement | undefined {
+    if (this.endSegment?.id === "IEA" && this.endSegment.elements.length >= 1) {
+      return this.endSegment.elements[0];
+    } else if (this.endSegment?.id === "UNZ" && this.endSegment.elements.length >= 1) {
+      return this.endSegment.elements[0];
+    } else {
+      return undefined;
+    }
+  }
+
+  getRealControlCount(): number | undefined {
+    if (this.functionalGroups.length > 0 && this.functionalGroups[0].isFake()) {
+      return this.functionalGroups.reduce((s, cur) => s + cur.transactionSets.length, 0)
+    } else {
+      return this.functionalGroups.length;
+    }
+  }
+
   getFirstSegment(): EdiSegment | undefined {
     const segments = this.getSegments();
     if (segments.length === 0) return undefined;
@@ -589,6 +660,53 @@ export class EdiInterchange {
     const segments = this.getSegments();
     if (segments.length === 0) return undefined;
     return segments[segments.length - 1];
+  }
+
+  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors: DiagnosticError[] = [];
+    if (context.standardOptions.interchangeStartSegmentName && !this.startSegment) {
+      errors.push({
+        error: `Segment ${context.standardOptions.interchangeStartSegmentName} not found.`,
+        code: DiagnosticErrors.SEGMENT_NOT_FOUND,
+        severity: DiagnosticErrorSeverity.ERROR,
+      });
+    }
+    if (context.standardOptions.interchangeEndSegmentName && !this.endSegment) {
+      errors.push({
+        error: `Segment ${context.standardOptions.interchangeEndSegmentName} not found.`,
+        code: DiagnosticErrors.SEGMENT_NOT_FOUND,
+        severity: DiagnosticErrorSeverity.ERROR,
+      });
+    }
+
+    const startId = this.getId();
+    const endId = this.getEndId();
+    if (startId && startId !== endId) {
+      errors.push({
+        error: `Wrong interchange control reference, supposed to be ${startId}, got ${endId}`,
+        code: DiagnosticErrors.INVALID_VALUE,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorElement: this.getEndIdElement()
+      });
+    }
+
+    const controlCount = this.getControlCount();
+    const realControlCount = this.getRealControlCount();
+    if (controlCount !== realControlCount) {
+      errors.push({
+        error: `Wrong interchange control count, supposed to be ${realControlCount}, got ${controlCount}`,
+        code: DiagnosticErrors.INVALID_VALUE,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorElement: this.getInterchangeControlElement()
+      });
+    }
+
+    return errors;
+  }
+
+  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors = this.getSelfErrors(context);
+    return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(context)).filter(i => i));
   }
 
   public toString() {
@@ -608,7 +726,7 @@ export class EdiDocumentSeparators {
   public releaseCharacter?: string; // escape char
 }
 
-export class EdiDocument {
+export class EdiDocument implements IDiagnosticErrorAble {
   separators: EdiDocumentSeparators;
   interchanges: EdiInterchange[];
 
@@ -616,11 +734,14 @@ export class EdiDocument {
   startSegment?: EdiSegment;
   endSegment?: EdiSegment;
 
+  standardOptions: EdiStandardOptions;
+
   private hasActiveInterchange: boolean = false;
 
-  constructor(separators: EdiDocumentSeparators, interchanges?: EdiInterchange[]) {
+  constructor(separators: EdiDocumentSeparators, standardOptions: EdiStandardOptions) {
     this.separators = separators;
-    this.interchanges = interchanges ?? [];
+    this.standardOptions = standardOptions;
+    this.interchanges = [];
   }
 
   ensureActiveInterchange(): void {
@@ -684,6 +805,24 @@ export class EdiDocument {
     return result;
   }
 
+  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors: DiagnosticError[] = [];
+    if (this.standardOptions.separatorsSegmentName && !this.separatorsSegment) {
+      errors.push({
+        error: `Segment ${this.standardOptions.separatorsSegmentName} not found.`,
+        code: DiagnosticErrors.SEGMENT_NOT_FOUND,
+        severity: DiagnosticErrorSeverity.WARNING,
+      });
+    }
+
+    return errors;
+  }
+
+  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+    const errors = this.getSelfErrors(context);
+    return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(context)).filter(i => i));
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -726,7 +865,7 @@ export class EdiDocumentBuilder {
   loadTransactionSetStartSegmentSchemaFunc?: LoadTransactionSetStartSegmentSchemaFunc;
 
   constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions) {
-    this.ediDocument = new EdiDocument(separators);
+    this.ediDocument = new EdiDocument(separators, options);
     this.options = options;
   }
 

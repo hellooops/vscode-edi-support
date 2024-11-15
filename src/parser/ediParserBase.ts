@@ -161,6 +161,7 @@ export abstract class EdiParserBase {
       if (isDataElementSeparator) {
         elementIndex++;
         element = new EdiElement(
+          segment,
           ElementType.dataElement,
           i,
           -1, // endIndex will be set later
@@ -178,6 +179,7 @@ export abstract class EdiParserBase {
           if (!isElementValueEmpty) {
             subElementIndex++;
             subElement = new EdiElement(
+              segment,
               ElementType.componentElement,
               i,
               -1, // endIndex will be set later
@@ -194,6 +196,7 @@ export abstract class EdiParserBase {
       } else if (isComponentElementSeparator) {
         subElementIndex++;
         subElement = new EdiElement(
+          segment,
           ElementType.componentElement,
           i,
           -1, // endIndex will be set later

@@ -143,6 +143,7 @@ export class X12Parser extends EdiParserBase {
       const segmentFrag = segmentFrags[i];
       const elementLength = segmentFrag.length + 1;
       const element = new EdiElement(
+        segment,
         ElementType.dataElement,
         cIndex,
         cIndex + elementLength - 1,
