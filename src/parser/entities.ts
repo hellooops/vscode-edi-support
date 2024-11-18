@@ -410,26 +410,28 @@ export class EdiTransactionSet implements IDiagnosticErrorAble {
       });
     }
 
-    const startId = this.getId();
-    const endId = this.getEndId();
-    if (startId && startId !== endId) {
-      errors.push({
-        error: `Wrong transaction set control number, supposed to be ${startId}, got ${endId}`,
-        code: DiagnosticErrors.INVALID_VALUE,
-        severity: DiagnosticErrorSeverity.ERROR,
-        errorElement: this.getEndIdElement()
-      });
-    }
-
-    const controlCount = this.getControlCount();
-    const realControlCount = this.getRealControlCount();
-    if (controlCount !== realControlCount) {
-      errors.push({
-        error: `Wrong transaction set segments count, supposed to be ${realControlCount}, got ${controlCount}`,
-        code: DiagnosticErrors.INVALID_VALUE,
-        severity: DiagnosticErrorSeverity.ERROR,
-        errorElement: this.getControlCountElement()
-      });
+    if (this.startSegment && this.endSegment) {
+      const startId = this.getId();
+      const endId = this.getEndId();
+      if (startId && startId !== endId) {
+        errors.push({
+          error: `Wrong transaction set control number, supposed to be ${startId}, got ${endId}`,
+          code: DiagnosticErrors.INVALID_VALUE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this.getEndIdElement()
+        });
+      }
+  
+      const controlCount = this.getControlCount();
+      const realControlCount = this.getRealControlCount();
+      if (controlCount !== realControlCount) {
+        errors.push({
+          error: `Wrong transaction set segments count, supposed to be ${realControlCount}, got ${controlCount}`,
+          code: DiagnosticErrors.INVALID_VALUE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this.getControlCountElement()
+        });
+      }
     }
 
     if (this.startSegment) {
@@ -579,26 +581,28 @@ export class EdiFunctionalGroup implements IDiagnosticErrorAble {
       });
     }
 
-    const startId = this.getId();
-    const endId = this.getEndId();
-    if (startId && startId !== endId) {
-      errors.push({
-        error: `Wrong functional group control number, supposed to be ${startId}, got ${endId}`,
-        code: DiagnosticErrors.INVALID_VALUE,
-        severity: DiagnosticErrorSeverity.ERROR,
-        errorElement: this.getEndIdElement()
-      });
-    }
-
-    const controlCount = this.getControlCount();
-    const realControlCount = this.getRealControlCount();
-    if (controlCount !== realControlCount) {
-      errors.push({
-        error: `Wrong functional group control count, supposed to be ${realControlCount}, got ${controlCount}`,
-        code: DiagnosticErrors.INVALID_VALUE,
-        severity: DiagnosticErrorSeverity.ERROR,
-        errorElement: this.getControlCountElement()
-      });
+    if (this.startSegment && this.endSegment) {
+      const startId = this.getId();
+      const endId = this.getEndId();
+      if (startId && startId !== endId) {
+        errors.push({
+          error: `Wrong functional group control number, supposed to be ${startId}, got ${endId}`,
+          code: DiagnosticErrors.INVALID_VALUE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this.getEndIdElement()
+        });
+      }
+  
+      const controlCount = this.getControlCount();
+      const realControlCount = this.getRealControlCount();
+      if (controlCount !== realControlCount) {
+        errors.push({
+          error: `Wrong functional group control count, supposed to be ${realControlCount}, got ${controlCount}`,
+          code: DiagnosticErrors.INVALID_VALUE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this.getControlCountElement()
+        });
+      }
     }
 
     if (this.startSegment) {
@@ -764,26 +768,28 @@ export class EdiInterchange implements IDiagnosticErrorAble {
       });
     }
 
-    const startId = this.getId();
-    const endId = this.getEndId();
-    if (startId && startId !== endId) {
-      errors.push({
-        error: `Wrong interchange control reference, supposed to be ${startId}, got ${endId}`,
-        code: DiagnosticErrors.INVALID_VALUE,
-        severity: DiagnosticErrorSeverity.ERROR,
-        errorElement: this.getEndIdElement()
-      });
-    }
-
-    const controlCount = this.getControlCount();
-    const realControlCount = this.getRealControlCount();
-    if (controlCount !== realControlCount) {
-      errors.push({
-        error: `Wrong interchange control count, supposed to be ${realControlCount}, got ${controlCount}`,
-        code: DiagnosticErrors.INVALID_VALUE,
-        severity: DiagnosticErrorSeverity.ERROR,
-        errorElement: this.getControlCountElement()
-      });
+    if (this.startSegment && this.endSegment) {
+      const startId = this.getId();
+      const endId = this.getEndId();
+      if (startId && startId !== endId) {
+        errors.push({
+          error: `Wrong interchange control reference, supposed to be ${startId}, got ${endId}`,
+          code: DiagnosticErrors.INVALID_VALUE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this.getEndIdElement()
+        });
+      }
+  
+      const controlCount = this.getControlCount();
+      const realControlCount = this.getRealControlCount();
+      if (controlCount !== realControlCount) {
+        errors.push({
+          error: `Wrong interchange control count, supposed to be ${realControlCount}, got ${controlCount}`,
+          code: DiagnosticErrors.INVALID_VALUE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this.getControlCountElement()
+        });
+      }
     }
 
     if (this.startSegment) {
