@@ -235,7 +235,6 @@ export class EdiReleaseSchemaSegment {
     Purpose: "To end and check the completeness of an interchange.",
     mock: true
   }, undefined);
-  // TODO: Add UNT
   // TODO: Id is supposed to be a number
   // X12
   public static ISA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({

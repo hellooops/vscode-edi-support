@@ -263,7 +263,7 @@ export abstract class EdiParserBase {
 
   protected abstract getSchemaRootPath(): string;
 
-  protected async loadSchema(ediVersion: EdiVersion): Promise<void> {
+  async loadSchema(ediVersion: EdiVersion): Promise<void> {
     if (!ediVersion.release || !ediVersion.version) return;
     let releaseSchema = null;
     try {
