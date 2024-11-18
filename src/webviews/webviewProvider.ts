@@ -2,14 +2,14 @@ import * as vscode from "vscode";
 import * as constants from "../constants";
 import * as path from "path";
 import { EdiUtils } from "../utils/ediUtils";
-// import { EdiMessage } from "../parser/entities";
+import { EdiDocument } from "../parser/entities";
 
 export default class WebviewProvider {
   fileName: string;
   extensionContext: vscode.ExtensionContext;
   panel?: vscode.WebviewPanel;
   disposeCallback?: () => any;
-  // parsedResult?: EdiMessage;
+  ediDocument?: EdiDocument;
 
   constructor(fileName: string, extensionContext: vscode.ExtensionContext) {
     this.fileName = fileName;
@@ -94,32 +94,32 @@ export default class WebviewProvider {
   }
 
   async update(document: vscode.TextDocument) {
-    // const { parser, ediType } = EdiUtils.getEdiParser(document)!;
-    // if (!parser) {
-    //   return [];
-    // }
+    const { parser, ediType } = EdiUtils.getEdiParser(document)!;
+    if (!parser) {
+      return [];
+    }
   
-    // const result = await parser.parse();
-    // this.parsedResult = result;
-    // const iEdiMessage = result.getIResult();
-    // iEdiMessage.ediType = ediType as IEdiType;
-    // const vcm: VcmMessage = {
-    //   name: "fileChange",
-    //   data: iEdiMessage
-    // };
-    // await this.panel!.webview.postMessage(vcm);
+    const ediDocument = await parser.parse();
+    this.ediDocument = ediDocument;
+    const iEdiDocument = ediDocument.getIResult();
+    iEdiDocument.ediType = ediType as IEdiType;
+    const vcm: VcmDocument = {
+      name: "fileChange",
+      data: iEdiDocument
+    };
+    await this.panel!.webview.postMessage(vcm);
   }
 
   async onSelectionChange(startOffset: number) {
-    // const { element, segment } = EdiUtils.getSegmentOrElementByPosition(startOffset, this.parsedResult!.segments);
-    // const vcm: VcmActiveContext = {
-    //   name: "active",
-    //   data: {
-    //     segmentKey: segment?.getIResult()?.key,
-    //     elementKey: element?.getIResult()?.key
-    //   }
-    // };
-    // await this.panel!.webview.postMessage(vcm);
+    const { element, segment } = EdiUtils.getSegmentOrElementByPosition(startOffset, this.ediDocument?.getSegments()!);
+    const vcm: VcmActiveContext = {
+      name: "active",
+      data: {
+        segmentKey: segment?.getIResult()?.key,
+        elementKey: element?.getIResult()?.key
+      }
+    };
+    await this.panel!.webview.postMessage(vcm);
   }
 
   onDidDispose(callback: () => any) {

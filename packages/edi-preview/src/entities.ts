@@ -1,9 +1,10 @@
-export abstract class TreeItemBase {
-  abstract getLevel(): number;
+export interface TreeItemBase {
+  getHeight(): number;
+  getParentHeight(): number;
 }
 
-export class EdiElement {
-  key: any;
+export class EdiElement implements TreeItemBase {
+  key: string;
 
   type: IElementType;
   value?: string;
@@ -43,16 +44,20 @@ export class EdiElement {
     this.parentElement = parentElement;
   }
 
-  getLevel(): number {
+  getHeight(): number {
+    return 77;
+  }
+
+  getParentHeight(): number {
     if (this.parentElement) {
-      return this.parentElement.getLevel() + 1;
+      return this.parentElement.getHeight() + this.parentElement.getParentHeight();
     } else {
-      return this.segment.getLevel() + 1;
+      return this.segment.getHeight() + this.segment.getParentHeight();
     }
   }
 }
 
-export class EdiSegment {
+export class EdiSegment implements TreeItemBase {
   key: any;
 
   id: string;
@@ -60,28 +65,153 @@ export class EdiSegment {
   desc?: string;
   purpose: string;
 
-  constructor(json: IEdiSegment) {
+  parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet;
+
+  constructor(json: IEdiSegment, parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet) {
     this.key = json.key;
     this.id = json.id;
     this.desc = json.desc;
     this.purpose = json.purpose;
     this.elements = json.elements?.map(i => new EdiElement(i, this));
+
+    this.parent = parent;
   }
 
-  getLevel(): number {
-    return 1;
+  getHeight(): number {
+    return 48;
+  }
+
+  getParentHeight(): number {
+    return this.parent.getHeight() + this.parent.getParentHeight();
   }
 }
 
-
-export class EdiMessage {
-  ediType?: IEdiType;
+export class EdiTransactionSet implements TreeItemBase {
+  key: string;
+  id?: string;
+  
   ediVersion: IEdiVersion;
   segments: EdiSegment[];
 
-  constructor(json: IEdiMessage) {
-    this.ediType = json.ediType;
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  functionalGroup: EdiFunctionalGroup;
+
+  constructor(json: IEdiTransactionSet, functionalGroup: EdiFunctionalGroup) {
+    this.key = json.key;
+    this.id = json.id;
+
     this.ediVersion = json.ediVersion;
-    this.segments = json.segments?.map(i => new EdiSegment(i));
+    this.segments = json.segments?.map(i => new EdiSegment(i, this));
+
+    if (json.startSegment) this.startSegment = new EdiSegment(json.startSegment, this);
+    if (json.endSegment) this.endSegment = new EdiSegment(json.endSegment, this);
+
+    this.functionalGroup = functionalGroup;
+  }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.segments);
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  } 
+
+  getHeight(): number {
+    return 28;
+  }
+
+  getParentHeight(): number {
+    return this.functionalGroup.getHeight() + this.functionalGroup.getParentHeight();
+  }
+}
+
+export class EdiFunctionalGroup implements TreeItemBase {
+  key: string;
+  id?: string;
+  
+  transactionSets: EdiTransactionSet[];
+
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  interchange: EdiInterchange;
+
+  constructor(json: IEdiFunctionalGroup, interchange: EdiInterchange) {
+    this.key = json.key;
+    this.id = json.id;
+
+    this.transactionSets = json.transactionSets?.map(i => new EdiTransactionSet(i, this));
+
+    if (json.startSegment) this.startSegment = new EdiSegment(json.startSegment, this);
+    if (json.endSegment) this.endSegment = new EdiSegment(json.endSegment, this);
+
+    this.interchange = interchange;
+  }
+
+  getHeight(): number {
+    return 28;
+  }
+
+  getParentHeight(): number {
+    return this.interchange.getHeight() + this.interchange.getParentHeight();
+  }
+}
+
+export class EdiInterchange implements TreeItemBase {
+  key: string;
+  id?: string;
+
+  functionalGroups: EdiFunctionalGroup[];
+
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  ediDocument: EdiDocument;
+
+  constructor(json: IEdiInterchange, ediDocument: EdiDocument) {
+    this.key = json.key;
+    this.id = json.id;
+
+    this.functionalGroups = json.functionalGroups?.map(i => new EdiFunctionalGroup(i, this));
+
+    if (json.startSegment) this.startSegment = new EdiSegment(json.startSegment, this);
+    if (json.endSegment) this.endSegment = new EdiSegment(json.endSegment, this);
+
+    this.ediDocument = ediDocument;
+  }
+
+  getHeight(): number {
+    return 28;
+  }
+
+  getParentHeight(): number {
+    return this.ediDocument.getHeight() + this.ediDocument.getParentHeight();
+  }
+}
+
+export class EdiDocument implements TreeItemBase {
+  interchanges: EdiInterchange[];
+
+  separatorsSegment?: EdiSegment; // ISA
+  startSegment?: EdiSegment;
+  endSegment?: EdiSegment;
+
+  constructor(json: IEdiDocument) {
+    this.interchanges = json.interchanges?.map(i => new EdiInterchange(i, this));
+
+    if (json.separatorsSegment) this.separatorsSegment = new EdiSegment(json.separatorsSegment, this);
+    if (json.startSegment) this.startSegment = new EdiSegment(json.startSegment, this);
+    if (json.endSegment) this.endSegment = new EdiSegment(json.endSegment, this);
+  }
+
+  getHeight(): number {
+    return 0;
+  }
+
+  getParentHeight(): number {
+    return 0;
   }
 }

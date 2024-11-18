@@ -1,5 +1,6 @@
 import MessageInfo from "../interfaces/messageInfo";
 import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
+import { nanoid } from "nanoid";
 
 export type Nullable<T> = T | null | undefined;
 
@@ -57,6 +58,10 @@ export default class Utils {
     }
 
     return undefined;
+  }
+
+  static randomId(): string {
+    return nanoid();
   }
 }
 

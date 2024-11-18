@@ -18,7 +18,7 @@ interface IEdiVersion {
 type IElementType = "Data Element" | "Component Element";
 
 interface IEdiElement {
-  key: any;
+  key: string;
 
   type: IElementType;
   value?: string;
@@ -36,7 +36,7 @@ interface IEdiElement {
 }
 
 interface IEdiSegment {
-  key: any;
+  key: string;
 
   id: string;
   elements: Array<IEdiElement>;
@@ -46,17 +46,52 @@ interface IEdiSegment {
 
 type IEdiType = "x12" | "edifact" | "unknown";
 
-interface IEdiMessage {
-  ediType?: IEdiType;
+interface IEdiTransactionSet {
+  key: string;
+  id?: string;
+
   ediVersion: IEdiVersion;
   segments: IEdiSegment[];
+
+  startSegment?: IEdiSegment;
+  endSegment?: IEdiSegment;
 }
 
-type VcmMessage = VcmTemplate<IEdiMessage>;
+interface IEdiFunctionalGroup {
+  key: string;
+  id?: string;
+
+  transactionSets: IEdiTransactionSet[];
+
+  startSegment?: IEdiSegment;
+  endSegment?: IEdiSegment;
+}
+
+interface IEdiInterchange {
+  key: string;
+  id?: string;
+
+  functionalGroups: IEdiFunctionalGroup[];
+
+  startSegment?: IEdiSegment;
+  endSegment?: IEdiSegment;
+}
+
+interface IEdiDocument {
+  interchanges: IEdiInterchange[];
+
+  separatorsSegment?: IEdiSegment; // ISA
+  startSegment?: IEdiSegment;
+  endSegment?: IEdiSegment;
+
+  ediType?: IEdiType;
+}
+
+type VcmDocument = VcmTemplate<IEdiDocument>;
 
 type IActiveContext = {
-  segmentKey: any;
-  elementKey: any;
+  segmentKey: string | undefined;
+  elementKey: string | undefined;
 }
 
 type VcmActiveContext = VcmTemplate<IActiveContext>;

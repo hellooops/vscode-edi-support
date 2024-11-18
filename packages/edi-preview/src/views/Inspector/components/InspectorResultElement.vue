@@ -2,14 +2,14 @@
   <InspectorResultLine
     v-if="element.components && element.components.length > 0"
     v-model:visible="visible"
-    :isSegment="false"
+    type="Element"
     :name="element.id?.toUpperCase()"
     :description="element.desc"
     :isRequired="element.required"
     :content="element.definition"
     :id="element.key"
     :class="{'active-fragment': element.key === activeId}"
-    :level="element.getLevel()"
+    :parent-height="element.getParentHeight()"
   >
     <InspectorResultElementList
       v-if="element.components"

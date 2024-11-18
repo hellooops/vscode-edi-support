@@ -1,14 +1,14 @@
 <template>
   <InspectorResultLine
     v-model:visible="visible"
-    :isSegment="true"
+    type="Segment"
     :name="segment.id!.toUpperCase()"
     :isRequired="undefined"
     :description="segment.desc"
     :content="segment.purpose" 
     :id="segment.key"
     :class="{'active-fragment': segment.key === activeId}"
-    :level="segment.getLevel()"
+    :parent-height="segment.getParentHeight()"
   >
     <InspectorResultElementList
       v-if="segment.elements && segment.elements.length > 0"

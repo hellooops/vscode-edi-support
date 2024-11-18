@@ -100,7 +100,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     const interchange = item.interchange!;
     if (interchange.startSegment) {
       result.push({
-        key: `${interchange.getId()!}-${interchange.startSegment.getKey()}`,
+        key: `${interchange.getId()!}-${interchange.startSegment.key}`,
         type: TreeItemType.Segment,
         interchange: item.interchange,
         segment: interchange.startSegment,
@@ -117,7 +117,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     result.push(...children);
     if (interchange.endSegment) {
       result.push({
-        key: `${interchange.getId()!}-${interchange.endSegment.getKey()}`,
+        key: `${interchange.getId()!}-${interchange.endSegment.key}`,
         type: TreeItemType.Segment,
         interchange: item.interchange,
         segment: interchange.endSegment,
@@ -132,7 +132,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     const functionalGroup = item.functionalGroup!;
     if (functionalGroup.startSegment) {
       result.push({
-        key: `${functionalGroup.getId()!}-${functionalGroup.startSegment.getKey()}`,
+        key: `${functionalGroup.getId()!}-${functionalGroup.startSegment.key}`,
         type: TreeItemType.Segment,
         interchange: item.interchange,
         functionalGroup: functionalGroup,
@@ -151,7 +151,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     result.push(...children);
     if (functionalGroup.endSegment) {
       result.push({
-        key: `${functionalGroup.getId()!}-${functionalGroup.endSegment.getKey()}`,
+        key: `${functionalGroup.getId()!}-${functionalGroup.endSegment.key}`,
         type: TreeItemType.Segment,
         interchange: item.interchange,
         segment: functionalGroup.endSegment,
@@ -164,7 +164,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
   private getTransactionSetChildren(item: TreeItemElement): TreeItemElement[] {
     return item.transactionSet!.getSegments().map((el) => {
       return {
-        key: `${item.transactionSet!.getId()!}-${el.getKey()}`,
+        key: `${item.transactionSet!.getId()!}-${el.key}`,
         type: TreeItemType.Segment,
         interchange: item.interchange,
         functionalGroup: item.functionalGroup,
@@ -178,7 +178,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     return item.segment!.elements.map((el) => {
       const parent = item.transactionSet ?? item.functionalGroup ?? item.interchange;
       return {
-        key: `${parent?.getId() ?? ""}-${el.getKey()}`,
+        key: `${parent?.getId() ?? ""}-${el.key}`,
         type: TreeItemType.DataElement,
         interchange: item.interchange,
         functionalGroup: item.functionalGroup,
@@ -193,7 +193,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     return item.element!.components!.map((el) => {
       const parent = item.transactionSet ?? item.functionalGroup ?? item.interchange;
       return {
-        key: `${parent?.getId() ?? ""}-${el.getKey()}`,
+        key: `${parent?.getId() ?? ""}-${el.key}`,
         type: TreeItemType.CompositeElement,
         interchange: item.interchange,
         functionalGroup: item.functionalGroup,

@@ -35,6 +35,8 @@ export class EdiVersion implements IEdiMessageResult<IEdiVersion> {
 }
 
 export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
+  key: string;
+
   public id: string;
   public startIndex: number;
   public endIndex: number;
@@ -52,6 +54,8 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   documentParent?: EdiDocument;
 
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
+    this.key = Utils.randomId();
+
     this.id = id;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
@@ -59,10 +63,6 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     this.endingDelimiter = endingDelimiter;
     this.elements = [];
     this.isInvalidSegment = false;
-  }
-
-  public getKey(): string {
-    return `seg-${this.id}-${this.startIndex}`
   }
 
   public toString() {
@@ -107,7 +107,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
 
   getIResult(): IEdiSegment {
     return {
-      key: this.getKey(),
+      key: this.key,
       id: this.id,
       desc: this.ediReleaseSchemaSegment!.desc,
       purpose: this.ediReleaseSchemaSegment!.purpose,
@@ -154,6 +154,8 @@ export interface DiagnoscticsContext {
 }
 
 export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticErrorAble {
+  key: string;
+
   public type: ElementType;
   public value?: string;
   public startIndex: number;
@@ -168,6 +170,8 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
   public segment: EdiSegment;
 
   constructor(segment: EdiSegment, type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, segmentStartIndex: number, designatorIndex: string) {
+    this.key = Utils.randomId();
+
     this.segment = segment;
     this.type = type;
     this.startIndex = startIndex;
@@ -176,10 +180,6 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     this.segmentName = segmentName;
     this.segmentStartIndex = segmentStartIndex;
     this.designatorIndex = designatorIndex;
-  }
-
-  public getKey(): string {
-    return `ele-${this.getDesignator()}-${this.segmentStartIndex}-${this.startIndex}`;
   }
 
   public getDesignator() : string {
@@ -275,7 +275,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     }
 
     return {
-      key: this.getKey(),
+      key: this.key,
       type: this.type,
       value: this.value,
       components: this.components?.map(e => e.getIResult()),
@@ -304,7 +304,9 @@ export class EdiType {
   static UNKNOWN = "unknown";
 }
 
-export class EdiTransactionSet implements IDiagnosticErrorAble {
+export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>, IDiagnosticErrorAble {
+  key: string;
+
   ediVersion: EdiVersion;
   segments: EdiSegment[];
 
@@ -314,16 +316,28 @@ export class EdiTransactionSet implements IDiagnosticErrorAble {
   functionalGroup: EdiFunctionalGroup;
 
   constructor(ediVersion: EdiVersion, functionalGroup: EdiFunctionalGroup) {
+    this.key = Utils.randomId();
+
     this.ediVersion = ediVersion;
     this.segments = [];
     this.functionalGroup = functionalGroup;
   }
 
-  getIResult(): IEdiMessage {
+  getIResult(): IEdiTransactionSet {
     return {
+      key: this.key,
+      id: this.getId(),
+
       ediVersion: this.ediVersion.getIResult(),
-      segments: this.segments.map(segment => segment.getIResult())
+      segments: this.segments.map(segment => segment.getIResult()),
+
+      startSegment: this.startSegment?.getIResult(),
+      endSegment: this.endSegment?.getIResult(),
     };
+  }
+
+  getKey(): string {
+    return "";
   }
 
   addSegment(segment: EdiSegment): void {
@@ -460,7 +474,9 @@ export class EdiTransactionSet implements IDiagnosticErrorAble {
   }
 }
 
-export class EdiFunctionalGroup implements IDiagnosticErrorAble {
+export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup>, IDiagnosticErrorAble {
+  key: string;
+
   transactionSets: EdiTransactionSet[];
 
   startSegment?: EdiSegment;
@@ -471,8 +487,22 @@ export class EdiFunctionalGroup implements IDiagnosticErrorAble {
   private hasActiveTransactionSet: boolean = false;
 
   constructor(interchange: EdiInterchange) {
+    this.key = Utils.randomId();
+
     this.transactionSets = [];
     this.interchange = interchange;
+  }
+
+  getIResult(): IEdiFunctionalGroup {
+    return {
+      key: this.key,
+      id: this.getId(),
+
+      transactionSets: this.transactionSets.map(transactionSet => transactionSet.getIResult()),
+
+      startSegment: this.startSegment?.getIResult(),
+      endSegment: this.endSegment?.getIResult(),
+    };
   }
 
   getActiveTransactionSet() {
@@ -631,7 +661,9 @@ export class EdiFunctionalGroup implements IDiagnosticErrorAble {
   }
 }
 
-export class EdiInterchange implements IDiagnosticErrorAble {
+export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiagnosticErrorAble {
+  key: string;
+
   // TODO(Deric): Meta info
   functionalGroups: EdiFunctionalGroup[];
 
@@ -643,8 +675,21 @@ export class EdiInterchange implements IDiagnosticErrorAble {
   private hasActiveFunctionalGroup: boolean = false;
 
   constructor(document: EdiDocument) {
+    this.key = Utils.randomId();
     this.functionalGroups = [];
     this.document = document;
+  }
+
+  getIResult(): IEdiInterchange {
+    return {
+      key: this.key,
+      id: this.getId(),
+
+      functionalGroups: this.functionalGroups.map(functionalGroup => functionalGroup.getIResult()),
+
+      startSegment: this.startSegment?.getIResult(),
+      endSegment: this.endSegment?.getIResult(),
+    };
   }
 
   ensureActiveFunctionalGroup(): void {
@@ -825,7 +870,7 @@ export class EdiDocumentSeparators {
   public releaseCharacter?: string; // escape char
 }
 
-export class EdiDocument implements IDiagnosticErrorAble {
+export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnosticErrorAble {
   separators: EdiDocumentSeparators;
   interchanges: EdiInterchange[];
 
@@ -841,6 +886,16 @@ export class EdiDocument implements IDiagnosticErrorAble {
     this.separators = separators;
     this.standardOptions = standardOptions;
     this.interchanges = [];
+  }
+
+  getIResult(): IEdiDocument {
+    return {
+      interchanges: this.interchanges.map(interchange => interchange.getIResult()),
+
+      separatorsSegment: this.separatorsSegment?.getIResult(),
+      startSegment: this.startSegment?.getIResult(),
+      endSegment: this.endSegment?.getIResult(),
+    };
   }
 
   ensureActiveInterchange(): void {
