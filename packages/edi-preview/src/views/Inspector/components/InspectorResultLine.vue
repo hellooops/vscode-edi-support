@@ -14,7 +14,14 @@
         <span class="invert-color px-1 rounded-sm">{{ name }}</span>
         <span class="opacity-80">{{ description }}</span>
       </div>
-      <p class="pl-[52px] opacity-70 overflow-ellipsis line-clamp-1 leading-5" :title="content">{{ content }}</p>
+      <p
+        v-if="$slots.content || content"
+        class="pl-[52px] opacity-70 overflow-ellipsis line-clamp-1 leading-5"
+        :title="content"
+      >
+        <template v-if="$slots.content"><slot name="content"></slot></template>
+        <template v-else>{{ content }}</template>
+      </p>
     </div>
     <div v-show="visible" class="pl-8 mt-2">
       <slot></slot>

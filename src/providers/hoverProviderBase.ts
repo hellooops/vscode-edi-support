@@ -55,7 +55,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
     ];
 
     if (segment.transactionSetParent) {
-      const segmentSchemaViewerUrl: string = SchemaViewerUtils.getSegmentUrl(ediType, segment.transactionSetParent.ediVersion.release, segment.id);
+      const segmentSchemaViewerUrl: string = SchemaViewerUtils.getSegmentUrl(ediType, segment.transactionSetParent.meta.release, segment.id);
       mdStrings.push(new vscode.MarkdownString(
         `[EDI Schema Reference](${segmentSchemaViewerUrl})\n`
       ));
@@ -97,7 +97,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
 
     let elementSchemaViewerUrl: string | undefined = undefined;
     if (segment.transactionSetParent) {
-      elementSchemaViewerUrl = SchemaViewerUtils.getElementUrl(ediType, segment.transactionSetParent.ediVersion.release, segment.id, element.getDesignator());
+      elementSchemaViewerUrl = SchemaViewerUtils.getElementUrl(ediType, segment.transactionSetParent.meta.release, segment.id, element.getDesignator());
     }
 
     if (element?.ediReleaseSchemaElement?.qualifierRef) {

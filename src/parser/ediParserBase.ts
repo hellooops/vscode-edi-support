@@ -1,4 +1,4 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, EdiDocumentSeparators, type EdiStandardOptions, EdiDocumentBuilder } from './entities';
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta } from './entities';
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
@@ -37,11 +37,9 @@ export abstract class EdiParserBase {
     return this.parseResult;
   }
 
-  public parseReleaseAndVersion(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion {
-    return this.parseReleaseAndVersionInternal(interchangeSegment, functionalGroupSegment, transactionSetSegment);
-  }
-
-  protected abstract parseReleaseAndVersionInternal(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion;
+  protected abstract parseInterchangeMeta(interchangeSegment: EdiSegment | undefined): EdiInterchangeMeta;
+  protected abstract parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta;
+  protected abstract parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta;
 
   private async parseDocument(force: boolean = false): Promise<EdiDocument> {
     return await this.parseDocumentInternal();
@@ -53,13 +51,18 @@ export abstract class EdiParserBase {
     const separators = this.getMessageSeparators();
     const standardOptions = this.getStardardOptions();
     const ediDocumentBuilder: EdiDocumentBuilder = new EdiDocumentBuilder(separators, standardOptions);
-    ediDocumentBuilder.onParseReleaseAndVersion((interchangeSegment, funcitonalGroupSegment, transactionSetSegment) => {
-      const releaseAndVersion = this.parseReleaseAndVersion(interchangeSegment, funcitonalGroupSegment, transactionSetSegment);
-      return releaseAndVersion;
+    ediDocumentBuilder.onParseInterchangeMeta((interchangeSegment) => {
+      return this.parseInterchangeMeta(interchangeSegment);
     });
-    ediDocumentBuilder.onLoadSchema(async (ediVersion: EdiVersion) => {
+    ediDocumentBuilder.onParseFunctionalGroupMeta((interchangeSegment, funcitonalGroupSegment) => {
+      return this.parseFunctionalGroupMeta(interchangeSegment, funcitonalGroupSegment);
+    });
+    ediDocumentBuilder.onParseTransactionSetMeta((interchangeSegment, funcitonalGroupSegment, transactionSetSegment) => {
+      return this.parseTransactionSetMeta(interchangeSegment, funcitonalGroupSegment, transactionSetSegment);
+    });
+    ediDocumentBuilder.onLoadSchema(async (meta: EdiTransactionSetMeta) => {
       // TODO(Deric): Don't load schema here, in parseSegment
-      await this.loadSchema(ediVersion);
+      await this.loadSchema(meta);
     });
     ediDocumentBuilder.onUnloadSchema(() => {
       this.unloadSchema();
@@ -173,7 +176,7 @@ export abstract class EdiParserBase {
         element.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1];
         elementDesignator = element.designatorIndex;
         segment.elements.push(element);
-        if (element.ediReleaseSchemaElement?.isComposite()) {
+        if (this.isElementComposite(segmentStr, element, i, segmentSeparator, dataElementSeparator, componentElementSeparator)) {
           const nextC: string | undefined = i < segmentStr.length - 1 ? segmentStr[i + 1] : undefined;
           const isElementValueEmpty = nextC === dataElementSeparator || nextC === segmentSeparator || nextC === undefined;
           if (!isElementValueEmpty) {
@@ -212,6 +215,21 @@ export abstract class EdiParserBase {
     }
 
     return segment;
+  }
+
+  private isElementComposite(segmentStr: string, element: EdiElement, elementStartIndex: number, segmentSeparator: string, dataElementSeparator: string, componentElementSeparator: string): boolean {
+    if (element.ediReleaseSchemaElement) return element.ediReleaseSchemaElement.isComposite();
+    if (elementStartIndex >= segmentStr.length) return false;
+    for (let i = elementStartIndex + 1; i < segmentStr.length; i++) {
+      const c = segmentStr[i];
+      const isSegmentSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, segmentSeparator, c);
+      const isDataElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, dataElementSeparator, c);
+      const isComponentElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, componentElementSeparator, c);
+      if (isDataElementSeparator || isSegmentSeparator) return false;
+      else if (isComponentElementSeparator) return true;
+    }
+
+    return false;
   }
 
   private async assembleSegmentReleaseSchema(segment: EdiSegment, segmentStr: string): Promise<void> {
@@ -263,13 +281,13 @@ export abstract class EdiParserBase {
 
   protected abstract getSchemaRootPath(): string;
 
-  async loadSchema(ediVersion: EdiVersion): Promise<void> {
-    if (!ediVersion.release || !ediVersion.version) return;
+  async loadSchema(meta: EdiTransactionSetMeta): Promise<void> {
+    if (!meta.release || !meta.version) return;
     let releaseSchema = null;
     try {
-      releaseSchema = await import(`${this.getSchemaRootPath()}/${ediVersion.release}/RSSBus_${ediVersion.release}.json`);
+      releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/RSSBus_${meta.release}.json`);
     } catch (ex) {
-      console.error(Utils.formatString(constants.errors.importSchemaError, ediVersion.release), ex);
+      console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
       return;
     }
 

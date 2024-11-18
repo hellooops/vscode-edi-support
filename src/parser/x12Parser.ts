@@ -1,4 +1,4 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions } from "./entities";
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
@@ -73,7 +73,32 @@ export class X12Parser extends EdiParserBase {
     return separators;
   }
 
-  protected parseReleaseAndVersionInternal(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiVersion {
+  protected parseInterchangeMeta(interchangeSegment: EdiSegment | undefined): EdiInterchangeMeta {
+    // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
+    const meta: EdiInterchangeMeta = {};
+    if (!interchangeSegment) return meta;
+    if (interchangeSegment.elements.length > 4) meta.senderQualifer = interchangeSegment.elements[4].value;
+    if (interchangeSegment.elements.length > 5) meta.senderID = interchangeSegment.elements[5].value;
+    if (interchangeSegment.elements.length > 6) meta.receiverQualifer = interchangeSegment.elements[6].value;
+    if (interchangeSegment.elements.length > 7) meta.receiverID = interchangeSegment.elements[7].value;
+    if (interchangeSegment.elements.length > 8) meta.date = interchangeSegment.elements[8].value;
+    if (interchangeSegment.elements.length > 9) meta.time = interchangeSegment.elements[9].value;
+    if (interchangeSegment.elements.length > 12) meta.id = interchangeSegment.elements[12].value;
+    return meta;
+  }
+
+  protected parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta {
+    // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
+    // GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
+    const meta: EdiFunctionalGroupMeta = {};
+    if (!functionalGroupSegment) return meta;
+    if (functionalGroupSegment.elements.length > 3) meta.date = functionalGroupSegment.elements[3].value;
+    if (functionalGroupSegment.elements.length > 4) meta.time = functionalGroupSegment.elements[4].value;
+    if (functionalGroupSegment.elements.length > 5) meta.id = functionalGroupSegment.elements[5].value;
+    return meta;
+  }
+
+  protected parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta {
     // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     // GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     // ST*850*0001~
@@ -81,26 +106,26 @@ export class X12Parser extends EdiParserBase {
     // Use GS segment to get edi release because ISA12 is a backward compatible release
     // see https://stackoverflow.com/questions/55401075/edi-headers-why-would-isa12-and-gs8-both-have-a-version-number
     // Eg: ISA segment version is 00400 while GS segment version is 00401
-    const ediVersion = new EdiVersion();
+    const meta: EdiTransactionSetMeta = {};
     if (functionalGroupSegment && functionalGroupSegment.elements.length > 7) {
-      ediVersion.release = this.normalizeRelease(functionalGroupSegment.elements[7].value);
+      meta.release = this.normalizeRelease(functionalGroupSegment.elements[7].value);
     }
 
-    if (!ediVersion.release) {
+    if (!meta.release) {
       if (interchangeSegment && interchangeSegment.elements.length > 11) {
-        ediVersion.release = this.normalizeRelease(interchangeSegment.elements[11].value);
+        meta.release = this.normalizeRelease(interchangeSegment.elements[11].value);
       }
     }
 
-    if (!ediVersion.release) {
-      return ediVersion;
-    }
-
     if (transactionSetSegment && transactionSetSegment.elements.length > 0) {
-      ediVersion.version = transactionSetSegment.elements[0].value;
+      meta.version = transactionSetSegment.elements[0].value;
     }
 
-    return ediVersion;
+    if (transactionSetSegment && transactionSetSegment.elements.length > 1) {
+      meta.id = transactionSetSegment.elements[1].value;
+    }
+
+    return meta;
   }
 
   private getElementValueByIndex(segmentStr: string, index: number): string | null {

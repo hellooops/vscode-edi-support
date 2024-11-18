@@ -10,11 +10,6 @@ type VcmFileChange = VcmTemplate<{
   text: string;
 }>;
 
-interface IEdiVersion {
-  release?: string; // D96A
-  version?: string; // ORDERS
-}
-
 type IElementType = "Data Element" | "Component Element";
 
 interface IEdiElement {
@@ -46,19 +41,32 @@ interface IEdiSegment {
 
 type IEdiType = "x12" | "edifact" | "unknown";
 
+interface IEdiTransactionSetMeta {
+  release?: string;
+  version?: string;
+  id?: string;
+}
+
 interface IEdiTransactionSet {
   key: string;
+  meta: IEdiTransactionSetMeta;
   id?: string;
 
-  ediVersion: IEdiVersion;
   segments: IEdiSegment[];
 
   startSegment?: IEdiSegment;
   endSegment?: IEdiSegment;
 }
 
+interface IEdiFunctionalGroupMeta {
+  date?: string;
+  time?: string;
+  id?: string;
+}
+
 interface IEdiFunctionalGroup {
   key: string;
+  meta: IEdiFunctionalGroupMeta;
   id?: string;
 
   transactionSets: IEdiTransactionSet[];
@@ -67,8 +75,19 @@ interface IEdiFunctionalGroup {
   endSegment?: IEdiSegment;
 }
 
+interface IEdiInterchangeMeta {
+  senderQualifer?: string;
+  senderID?: string;
+  receiverQualifer?: string;
+  receiverID?: string;
+  date?: string;
+  time?: string;
+  id?: string;
+}
+
 interface IEdiInterchange {
   key: string;
+  meta: IEdiInterchangeMeta;
   id?: string;
 
   functionalGroups: IEdiFunctionalGroup[];

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-[calc(100vh-28px)]">
     <InspectorResultInterchange
       v-for="(interchange, i) in ediDocument.interchanges"
       :key="i"

@@ -2,12 +2,12 @@ import * as assert from "assert";
 
 import { EdifactParser } from "../../parser/edifactParser";
 import { X12Parser } from "../../parser/x12Parser";
-import { EdiVersion, EdiSegment, ElementType, EdiDocument } from "../../parser/entities";
+import { EdiSegment, ElementType, EdiDocument } from "../../parser/entities";
 import { EdiReleaseSchema } from "../../schemas/schemas";
 
 suite("Extension Test Suite", () => {
 
-  test("Edifact Parse Version", async () => {
+  test("Edifact Parse Meta", async () => {
     const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
     const parser: EdifactParser = new EdifactParser(documentStr);
     const ediDocument: EdiDocument = await parser.parse()!;
@@ -16,9 +16,10 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
 
-    const ediVersion = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].ediVersion;
-    assert.strictEqual(ediVersion.release, "D96A");
-    assert.strictEqual(ediVersion.version, "ORDERS");
+    const meta = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta;
+    assert.strictEqual(meta.release, "D96A");
+    assert.strictEqual(meta.version, "ORDERS");
+    assert.strictEqual(meta.id, "1");
   });
 
   test("Edifact Parse Segment", async () => {
@@ -137,9 +138,10 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
 
-    const ediVersion = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].ediVersion;
-    assert.strictEqual(ediVersion.release, "00401");
-    assert.strictEqual(ediVersion.version, "850");
+    const meta = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta;
+    assert.strictEqual(meta.release, "00401");
+    assert.strictEqual(meta.version, "850");
+    assert.strictEqual(meta.id, "0001");
   });
 
   test("X12 Parse Version 2", async () => {
@@ -154,9 +156,10 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
 
-    const ediVersion = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].ediVersion;
-    assert.strictEqual(ediVersion.release, "00401");
-    assert.strictEqual(ediVersion.version, "850");
+    const meta = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta;
+    assert.strictEqual(meta.release, "00401");
+    assert.strictEqual(meta.version, "850");
+    assert.strictEqual(meta.id, "0001");
   });
 
   test("X12 Parse Version 3", async () => {
@@ -171,16 +174,17 @@ suite("Extension Test Suite", () => {
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
     assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
 
-    const ediVersion = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].ediVersion;
-    assert.strictEqual(ediVersion.release, "00401");
-    assert.strictEqual(ediVersion.version, "850");
+    const meta = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta;
+    assert.strictEqual(meta.release, "00401");
+    assert.strictEqual(meta.version, "850");
+    assert.strictEqual(meta.id, "0001");
   });
 
   test("X12 Parse Segment", async () => {
     const documentStr = "SV2*0730*HC>93010*76.56*UN*3~";
     const parser: X12Parser = new X12Parser(documentStr);
     parser.setMessageSeparators({ segmentSeparator: "~", dataElementSeparator: "*", componentElementSeparator: ">" });
-    await parser.loadSchema(new EdiVersion("00401", "850"))
+    await parser.loadSchema({release: "00401", version: "850"})
 
     const segment: EdiSegment = await parser.parseSegment(documentStr, 0, documentStr.length - 1, "~");
 

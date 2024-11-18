@@ -8,32 +8,6 @@ interface IEdiMessageResult<T> {
   getIResult(): T;
 }
 
-export class EdiVersion implements IEdiMessageResult<IEdiVersion> {
-  public release?: string; // D96A
-  public version?: string; // ORDERS
-
-  constructor(release?: string, version?: string) {
-    this.release = release;
-    this.version = version;
-  }
-
-  getIResult(): IEdiVersion {
-    return this;
-  }
-
-  getFormattedString(): string {
-    if (this.release && this.version) {
-      return `${this.release} ${this.version}`;
-    } else if (this.release && !this.version) {
-      return this.release;
-    } else if (!this.release && this.version) {
-      return this.version;
-    } else {
-      return "";
-    }
-  }
-}
-
 export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
   key: string;
 
@@ -304,10 +278,16 @@ export class EdiType {
   static UNKNOWN = "unknown";
 }
 
+export interface EdiTransactionSetMeta {
+  release?: string;
+  version?: string;
+  id?: string;
+}
+
 export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>, IDiagnosticErrorAble {
   key: string;
+  meta: EdiTransactionSetMeta;
 
-  ediVersion: EdiVersion;
   segments: EdiSegment[];
 
   startSegment?: EdiSegment;
@@ -315,10 +295,10 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
 
   functionalGroup: EdiFunctionalGroup;
 
-  constructor(ediVersion: EdiVersion, functionalGroup: EdiFunctionalGroup) {
+  constructor(meta: EdiTransactionSetMeta, functionalGroup: EdiFunctionalGroup) {
     this.key = Utils.randomId();
+    this.meta = meta;
 
-    this.ediVersion = ediVersion;
     this.segments = [];
     this.functionalGroup = functionalGroup;
   }
@@ -326,9 +306,9 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   getIResult(): IEdiTransactionSet {
     return {
       key: this.key,
+      meta: this.meta,
       id: this.getId(),
 
-      ediVersion: this.ediVersion.getIResult(),
       segments: this.segments.map(segment => segment.getIResult()),
 
       startSegment: this.startSegment?.getIResult(),
@@ -464,6 +444,18 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     return errors.concat(this.segments.flatMap((segment) => segment.getErrors(context)).filter(i => i));
   }
 
+  getFormattedReleaseAndSchemaString(): string {
+    if (this.meta.release && this.meta.version) {
+      return `${this.meta.release} ${this.meta.version}`;
+    } else if (this.meta.release && !this.meta.version) {
+      return this.meta.release;
+    } else if (!this.meta.release && this.meta.version) {
+      return this.meta.version;
+    } else {
+      return "";
+    }
+  }
+
   public toString() {
     return formatEdiDocumentPartsSegment(
       this.startSegment,
@@ -474,8 +466,15 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   }
 }
 
+export interface EdiFunctionalGroupMeta {
+  date?: string;
+  time?: string;
+  id?: string;
+}
+
 export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup>, IDiagnosticErrorAble {
   key: string;
+  meta: EdiFunctionalGroupMeta;
 
   transactionSets: EdiTransactionSet[];
 
@@ -486,8 +485,9 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
 
   private hasActiveTransactionSet: boolean = false;
 
-  constructor(interchange: EdiInterchange) {
+  constructor(meta: EdiFunctionalGroupMeta, interchange: EdiInterchange) {
     this.key = Utils.randomId();
+    this.meta = meta;
 
     this.transactionSets = [];
     this.interchange = interchange;
@@ -496,6 +496,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
   getIResult(): IEdiFunctionalGroup {
     return {
       key: this.key,
+      meta: this.meta,
       id: this.getId(),
 
       transactionSets: this.transactionSets.map(transactionSet => transactionSet.getIResult()),
@@ -509,8 +510,8 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return this.transactionSets[this.transactionSets.length - 1];
   }
 
-  startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
-    const ediTransactionSet = new EdiTransactionSet(ediVersion, this);
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): void {
+    const ediTransactionSet = new EdiTransactionSet(meta, this);
     if (startSegment) startSegment.functionalGroupParent = this;
     ediTransactionSet.startSegment = startSegment;
     this.transactionSets.push(ediTransactionSet);
@@ -661,8 +662,19 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
   }
 }
 
+export interface EdiInterchangeMeta {
+  senderQualifer?: string;
+  senderID?: string;
+  receiverQualifer?: string;
+  receiverID?: string;
+  date?: string;
+  time?: string;
+  id?: string;
+}
+
 export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiagnosticErrorAble {
   key: string;
+  meta: EdiInterchangeMeta;
 
   // TODO(Deric): Meta info
   functionalGroups: EdiFunctionalGroup[];
@@ -674,8 +686,9 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
 
   private hasActiveFunctionalGroup: boolean = false;
 
-  constructor(document: EdiDocument) {
+  constructor(meta: EdiInterchangeMeta, document: EdiDocument) {
     this.key = Utils.randomId();
+    this.meta = meta;
     this.functionalGroups = [];
     this.document = document;
   }
@@ -683,6 +696,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
   getIResult(): IEdiInterchange {
     return {
       key: this.key,
+      meta: this.meta,
       id: this.getId(),
 
       functionalGroups: this.functionalGroups.map(functionalGroup => functionalGroup.getIResult()),
@@ -694,7 +708,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
 
   ensureActiveFunctionalGroup(): void {
     if (!this.hasActiveFunctionalGroup) {
-      this.startFunctionalGroup(undefined);
+      this.startFunctionalGroup({}, undefined);
     }
   }
 
@@ -702,8 +716,8 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return this.functionalGroups[this.functionalGroups.length - 1];
   }
 
-  startFunctionalGroup(startSegment: EdiSegment | undefined): void {
-    const ediFunctionalGroup = new EdiFunctionalGroup(this);
+  startFunctionalGroup(meta: EdiFunctionalGroupMeta, startSegment: EdiSegment | undefined): void {
+    const ediFunctionalGroup = new EdiFunctionalGroup(meta, this);
     if (startSegment) startSegment.interchangeParent = this;
     ediFunctionalGroup.startSegment = startSegment;
     this.functionalGroups.push(ediFunctionalGroup);
@@ -716,9 +730,9 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     this.getActiveFunctionalGroup().endSegment = endSegment;
   }
 
-  startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): void {
     this.ensureActiveFunctionalGroup();
-    this.getActiveFunctionalGroup().startTransactionSet(ediVersion, startSegment);
+    this.getActiveFunctionalGroup().startTransactionSet(meta, startSegment);
   }
 
   endTransactionSet(endSegment: EdiSegment): void {
@@ -900,7 +914,7 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
 
   ensureActiveInterchange(): void {
     if (!this.hasActiveInterchange) {
-      this.startInterchange(undefined);
+      this.startInterchange({}, undefined);
     }
   }
 
@@ -913,8 +927,8 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     this.separatorsSegment = separatorsSegment;
   }
 
-  startInterchange(startSegment: EdiSegment | undefined): void {
-    const ediInterchange = new EdiInterchange(this);
+  startInterchange(meta: EdiInterchangeMeta, startSegment: EdiSegment | undefined): void {
+    const ediInterchange = new EdiInterchange(meta, this);
     if (startSegment) startSegment.documentParent = this;
     ediInterchange.startSegment = startSegment;
     this.interchanges.push(ediInterchange);
@@ -927,18 +941,18 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     this.getActiveInterchange().endSegment = endSegment;
   }
 
-  startFunctionalGroup(startSegment: EdiSegment | undefined): void {
+  startFunctionalGroup(meta: EdiFunctionalGroupMeta, startSegment: EdiSegment | undefined): void {
     this.ensureActiveInterchange();
-    this.getActiveInterchange().startFunctionalGroup(startSegment);
+    this.getActiveInterchange().startFunctionalGroup(meta, startSegment);
   }
 
   endFunctionalGroup(endSegment: EdiSegment): void {
     this.getActiveInterchange().endFunctionalGroup(endSegment);
   }
 
-  startTransactionSet(ediVersion: EdiVersion, startSegment: EdiSegment): void {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): void {
     this.ensureActiveInterchange();
-    this.getActiveInterchange().startTransactionSet(ediVersion, startSegment);
+    this.getActiveInterchange().startTransactionSet(meta, startSegment);
   }
 
   endTransactionSet(endSegment: EdiSegment): void {
@@ -1002,8 +1016,10 @@ export interface EdiStandardOptions {
   transactionSetEndSegmentName: string;
 }
 
-type ParseReleaseAndVersionFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment) => EdiVersion;
-type LoadSchemaFunc = (ediVersion: EdiVersion) => Promise<void>;
+type ParseInterchangeMetaFunc = (interchangeSegment: EdiSegment | undefined) => EdiInterchangeMeta;
+type ParseFunctionalGroupMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment) => EdiFunctionalGroupMeta;
+type ParseTransactionSetMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment) => EdiTransactionSetMeta;
+type LoadSchemaFunc = (meta: EdiTransactionSetMeta) => Promise<void>;
 type UnloadSchemaFunc = () => void;
 type LoadTransactionSetStartSegmentSchemaFunc = (segment: EdiSegment) => Promise<EdiSegment>;
 
@@ -1013,7 +1029,9 @@ export class EdiDocumentBuilder {
   private interchangeSegment?: EdiSegment;
   private functionalGroupSegment?: EdiSegment;
 
-  parseReleaseAndVersionFunc?: ParseReleaseAndVersionFunc;
+  parseInterchangeMetaFunc?: ParseInterchangeMetaFunc;
+  parseFunctionalGroupMetaFunc?: ParseFunctionalGroupMetaFunc;
+  parseTransactionSetMetaFunc?: ParseTransactionSetMetaFunc;
   loadSchemaFunc?: LoadSchemaFunc;
   unloadSchemaFunc?: UnloadSchemaFunc;
   loadTransactionSetStartSegmentSchemaFunc?: LoadTransactionSetStartSegmentSchemaFunc;
@@ -1028,25 +1046,29 @@ export class EdiDocumentBuilder {
       this.ediDocument.addSeparatorsSegment(segment);
     } else if (segment.id === this.options.interchangeStartSegmentName) {
       this.interchangeSegment = segment;
-      this.ediDocument.startInterchange(segment);
+      // TODO(Deric): register func
+      const interchangeMeta = this.parseInterchangeMetaFunc!(segment);
+      this.ediDocument.startInterchange(interchangeMeta, segment);
     } else if (this.options.interchangeEndSegmentName && segment.id === this.options.interchangeEndSegmentName) {
       this.ediDocument.endInterchange(segment);
       this.interchangeSegment = undefined;
     } else if (segment.id === this.options.functionalGroupStartSegmentName) {
       this.functionalGroupSegment = segment;
-      this.ediDocument.startFunctionalGroup(segment);
+      // TODO(Deric): register func
+      const functionalGroupMeta = this.parseFunctionalGroupMetaFunc!(this.interchangeSegment, segment);
+      this.ediDocument.startFunctionalGroup(functionalGroupMeta, segment);
     } else if (segment.id === this.options.functionalGroupEndSegmentName) {
       this.ediDocument.endFunctionalGroup(segment);
       this.functionalGroupSegment = undefined;
     } else if (segment.id === this.options.transactionSetStartSegmentName) {
-      const ediReleaseAndVersion = this.parseReleaseAndVersionFunc!(this.interchangeSegment, this.functionalGroupSegment!, segment);
+      const transactionSetMeta = this.parseTransactionSetMetaFunc!(this.interchangeSegment, this.functionalGroupSegment!, segment);
       if (this.loadSchemaFunc) {
-        await this.loadSchemaFunc(ediReleaseAndVersion);
+        await this.loadSchemaFunc(transactionSetMeta);
         if (this.loadTransactionSetStartSegmentSchemaFunc) {
           segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
         }
       }
-      this.ediDocument.startTransactionSet(ediReleaseAndVersion, segment);
+      this.ediDocument.startTransactionSet(transactionSetMeta, segment);
     } else if (segment.id === this.options.transactionSetEndSegmentName) {
       this.ediDocument.endTransactionSet(segment);
       this.unloadSchemaFunc && this.unloadSchemaFunc();
@@ -1059,8 +1081,16 @@ export class EdiDocumentBuilder {
     return this.ediDocument;
   }
 
-  onParseReleaseAndVersion(parseReleaseAndVersionFunc: ParseReleaseAndVersionFunc) {
-    this.parseReleaseAndVersionFunc = parseReleaseAndVersionFunc;
+  onParseInterchangeMeta(parseInterchangeMetaFunc: ParseInterchangeMetaFunc) {
+    this.parseInterchangeMetaFunc = parseInterchangeMetaFunc;
+  }
+
+  onParseFunctionalGroupMeta(parseFunctionalGroupMetaFunc: ParseFunctionalGroupMetaFunc) {
+    this.parseFunctionalGroupMetaFunc = parseFunctionalGroupMetaFunc;
+  }
+
+  onParseTransactionSetMeta(parseTransactionSetMetaFunc: ParseTransactionSetMetaFunc) {
+    this.parseTransactionSetMetaFunc = parseTransactionSetMetaFunc;
   }
 
   onLoadSchema(loadSchemaFunc: LoadSchemaFunc) {

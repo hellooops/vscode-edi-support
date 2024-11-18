@@ -1,4 +1,4 @@
-import { EdiVersion, EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions } from "./entities";
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
@@ -67,34 +67,54 @@ export class EdifactParser extends EdiParserBase {
     return separators;
   }
 
-  protected parseReleaseAndVersionInternal(): EdiVersion {
-    const ediVersion = new EdiVersion();
-    let separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
-    let regex = new RegExp(`\\b([\\s\\S]*?)(${separater})`, "g");
-    let unhStr: string | undefined = undefined;
-    let match: RegExpExecArray | null;
-    while ((match = regex.exec(this.document)) !== null) {
-      if (match[0].startsWith(constants.ediDocument.edifact.segment.UNH)) {
-        unhStr = match[0];
-        break;
+  protected parseInterchangeMeta(interchangeSegment: EdiSegment | undefined): EdiInterchangeMeta {
+    // UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+0001'
+    const meta: EdiInterchangeMeta = {};
+    if (!interchangeSegment) return meta;
+    if (interchangeSegment.elements.length > 1) {
+      const dataEle = interchangeSegment.elements[1];
+      if (dataEle.components) {
+        if (dataEle.components.length > 0) meta.senderID = dataEle.components[0].value;
+        if (dataEle.components.length > 1) meta.senderQualifer = dataEle.components[1].value;
       }
     }
+    if (interchangeSegment.elements.length > 2) {
+      const dataEle = interchangeSegment.elements[2];
+      if (dataEle.components) {
+        if (dataEle.components.length > 0) meta.receiverID = dataEle.components[0].value;
+        if (dataEle.components.length > 1) meta.receiverQualifer = dataEle.components[1].value;
+      }
+    }
+    if (interchangeSegment.elements.length > 3) {
+      const dataEle = interchangeSegment.elements[3];
+      if (dataEle.components) {
+        if (dataEle.components.length > 0) meta.date = dataEle.components[0].value;
+        if (dataEle.components.length > 1) meta.time = dataEle.components[1].value;
+      }
+    }
+    if (interchangeSegment.elements.length > 4) meta.id = interchangeSegment.elements[4].value;
+    return meta;
+  }
 
-    if (!unhStr) {
-      return ediVersion;
+  protected parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta {
+    // Fake
+    return {};
+  }
+
+  protected parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta {
+    // UNH+003+ORDERS:D:96A:UN:EAN001'
+    const meta: EdiTransactionSetMeta = {};
+    if (transactionSetSegment && transactionSetSegment.elements.length > 0) {
+      meta.id = transactionSetSegment.elements[0].value;
     }
 
-    // UNH+1+ORDERS:D:96A:UN:EAN008'
-    const segmentFrags: string[] = unhStr.split(/[+:]/);
-    if (segmentFrags.length >= 3) {
-      ediVersion.version = segmentFrags[2];
+    if (transactionSetSegment && transactionSetSegment.elements.length > 1) {
+      const eles = transactionSetSegment.elements[1].components!;
+      if (eles.length > 0) meta.version = eles[0].value;
+      if (eles.length > 2) meta.release = `${eles[1].value}${eles[2].value}`;
     }
 
-    if (segmentFrags.length >= 5) {
-      ediVersion.release = segmentFrags[3] + segmentFrags[4];
-    }
-
-    return ediVersion;
+    return meta;
   }
 
   protected getSchemaRootPath(): string {

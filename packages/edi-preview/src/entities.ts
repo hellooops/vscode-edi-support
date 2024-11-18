@@ -45,7 +45,7 @@ export class EdiElement implements TreeItemBase {
   }
 
   getHeight(): number {
-    return 77;
+    return 48;
   }
 
   getParentHeight(): number {
@@ -88,9 +88,9 @@ export class EdiSegment implements TreeItemBase {
 
 export class EdiTransactionSet implements TreeItemBase {
   key: string;
+  meta: IEdiTransactionSetMeta;
   id?: string;
   
-  ediVersion: IEdiVersion;
   segments: EdiSegment[];
 
   startSegment?: EdiSegment;
@@ -100,9 +100,9 @@ export class EdiTransactionSet implements TreeItemBase {
 
   constructor(json: IEdiTransactionSet, functionalGroup: EdiFunctionalGroup) {
     this.key = json.key;
+    this.meta = json.meta;
     this.id = json.id;
 
-    this.ediVersion = json.ediVersion;
     this.segments = json.segments?.map(i => new EdiSegment(i, this));
 
     if (json.startSegment) this.startSegment = new EdiSegment(json.startSegment, this);
@@ -130,6 +130,7 @@ export class EdiTransactionSet implements TreeItemBase {
 
 export class EdiFunctionalGroup implements TreeItemBase {
   key: string;
+  meta: IEdiFunctionalGroupMeta;
   id?: string;
   
   transactionSets: EdiTransactionSet[];
@@ -141,6 +142,7 @@ export class EdiFunctionalGroup implements TreeItemBase {
 
   constructor(json: IEdiFunctionalGroup, interchange: EdiInterchange) {
     this.key = json.key;
+    this.meta = json.meta;
     this.id = json.id;
 
     this.transactionSets = json.transactionSets?.map(i => new EdiTransactionSet(i, this));
@@ -151,7 +153,12 @@ export class EdiFunctionalGroup implements TreeItemBase {
     this.interchange = interchange;
   }
 
+  isFake(): boolean {
+    return !this.startSegment;
+  }
+
   getHeight(): number {
+    if (this.isFake()) return 0;
     return 28;
   }
 
@@ -162,6 +169,7 @@ export class EdiFunctionalGroup implements TreeItemBase {
 
 export class EdiInterchange implements TreeItemBase {
   key: string;
+  meta: IEdiInterchangeMeta;
   id?: string;
 
   functionalGroups: EdiFunctionalGroup[];
@@ -173,6 +181,7 @@ export class EdiInterchange implements TreeItemBase {
 
   constructor(json: IEdiInterchange, ediDocument: EdiDocument) {
     this.key = json.key;
+    this.meta = json.meta;
     this.id = json.id;
 
     this.functionalGroups = json.functionalGroups?.map(i => new EdiFunctionalGroup(i, this));

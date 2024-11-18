@@ -70,11 +70,8 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
 
   getTransactionSetSymbols(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.DocumentSymbol {
     const transactionSetSegmentRange = EdiUtils.getTransactionSetRange(document, transactionSet);
-    if (transactionSet.ediVersion.release) {
-
-    }
     const transactionSetSymbol = new vscode.DocumentSymbol(
-      `${transactionSet.ediVersion.getFormattedString()}[ID=${transactionSet.getId() ?? "Unknown"}]`,
+      `${transactionSet.getFormattedReleaseAndSchemaString()}[ID=${transactionSet.getId() ?? "Unknown"}]`,
       "FunctionalGroup",
       vscode.SymbolKind.Package,
       transactionSetSegmentRange,
