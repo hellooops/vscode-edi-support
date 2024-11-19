@@ -165,6 +165,14 @@ export class EdiFunctionalGroup implements TreeItemBase {
   getParentHeight(): number {
     return this.interchange.getHeight() + this.interchange.getParentHeight();
   }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.transactionSets.flatMap(i => i.getSegments()));
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
 }
 
 export class EdiInterchange implements TreeItemBase {
@@ -199,6 +207,14 @@ export class EdiInterchange implements TreeItemBase {
   getParentHeight(): number {
     return this.ediDocument.getHeight() + this.ediDocument.getParentHeight();
   }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.functionalGroups.flatMap(i => i.getSegments()));
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
 }
 
 export class EdiDocument implements TreeItemBase {
@@ -222,5 +238,33 @@ export class EdiDocument implements TreeItemBase {
 
   getParentHeight(): number {
     return 0;
+  }
+
+  getSegments(): EdiSegment[] {
+    const result: EdiSegment[] = [];
+    if (this.separatorsSegment) result.push(this.separatorsSegment);
+    if (this.startSegment) result.push(this.startSegment);
+    result.push(...this.interchanges.flatMap(i => i.getSegments()));
+    if (this.endSegment) result.push(this.endSegment);
+    return result;
+  }
+
+  getSegmentOrElementByKey(key: string): EdiSegment | EdiElement | undefined {
+    const segments = this.getSegments();
+    for (const segment of segments) {
+      if (segment.key === key) return segment;
+      if (segment.elements) {
+        for (const dataEle of segment.elements) {
+          if (dataEle.key === key) return dataEle;
+          if (dataEle.components) {
+            for (const compEle of dataEle.components) {
+              if (compEle.key === key) return compEle;
+            }
+          }
+        }
+      }
+    }
+
+    return undefined;
   }
 }
