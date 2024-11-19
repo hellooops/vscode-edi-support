@@ -74,6 +74,9 @@ export abstract class EdiParserBase {
     ediDocumentBuilder.onLoadTransactionSetStartSegmentSchema(async (segment) => {
       return await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endIndex, segment.endingDelimiter);
     });
+    ediDocumentBuilder.onAfterEndTransactionSet(async (transactionSet) => {
+      transactionSet.segments = this.fitSegmentsToVersion(transactionSet.segments);
+    });
     try {
       while ((match = regex.exec(this.document)) !== null) {
         const ediSegment = await this.parseSegment(match[0], match.index, match.index + match[0].length - 1, match[2]);
@@ -345,7 +348,7 @@ class SchemaVersionSegmentsContext {
           return result;
         }
         
-        if (segments[0].isTransactionSetOrGroupSetSegment()) {
+        if (segments[0].isHeaderSegment()) {
           result.push(segments.shift()!);
           continue;
         }
@@ -368,6 +371,7 @@ class SchemaVersionSegmentsContext {
             loopLastChild.endingDelimiter
           );
           loopSegment.Loop = loopResult;
+          loopResult.forEach(i => i.parentSegment = loopSegment);
           result.push(loopSegment);
           segmentMatchTimes++;
           if (segmentMatchTimes >= ediVersionSegment.getMax()) {

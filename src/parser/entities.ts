@@ -28,6 +28,8 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   interchangeParent?: EdiInterchange;
   documentParent?: EdiDocument;
 
+  parentSegment?: EdiSegment;
+
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
     this.key = Utils.randomId();
 
@@ -40,8 +42,27 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     this.isInvalidSegment = false;
   }
 
+  getLevel(): number {
+    if (!this.parentSegment) return 0;
+    if (this === this.parentSegment.Loop![0]) return this.parentSegment.getLevel();
+    return this.parentSegment.getLevel() + 1;
+  }
+
+  getFormatString(indent: number): string {
+    if (this.isLoop()) {
+      return formatEdiDocumentPartsSegment({
+        children: this.Loop!,
+        lineBreakCount: 1,
+        indent,
+      });
+    } else {
+      const indentString = Array(indent).fill(" ").join("");
+      return `${Array(this.getLevel()).fill(indentString).join("")}${this.id}${this.elements.join("")}${this.endingDelimiter}`;
+    }
+  }
+
   public toString() {
-    return `${this.id}${this.elements.join("")}${this.endingDelimiter}`;
+    return this.getFormatString(0);
   }
 
   public getElement(elementIndex: number, componentIndex: number | undefined = undefined): EdiElement | null {
@@ -94,7 +115,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return this.Loop !== undefined;
   }
 
-  public isTransactionSetOrGroupSetSegment(): boolean {
+  public isHeaderSegment(): boolean {
     return !this.transactionSetParent;
   }
 }
@@ -465,13 +486,18 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     }
   }
 
+  getFormatString(indent: number): string {
+    return formatEdiDocumentPartsSegment({
+      startSegment: this.startSegment,
+      endSegment: this.endSegment,
+      children: this.segments,
+      lineBreakCount: 1,
+      indent,
+    });
+  }
+
   public toString() {
-    return formatEdiDocumentPartsSegment(
-      this.startSegment,
-      this.endSegment,
-      this.segments,
-      1
-    );
+    return this.getFormatString(0);
   }
 }
 
@@ -519,18 +545,21 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return this.transactionSets[this.transactionSets.length - 1];
   }
 
-  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): void {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): EdiTransactionSet {
     const ediTransactionSet = new EdiTransactionSet(meta, this);
     if (startSegment) startSegment.functionalGroupParent = this;
     ediTransactionSet.startSegment = startSegment;
     this.transactionSets.push(ediTransactionSet);
     this.hasActiveTransactionSet = true;
+    return ediTransactionSet;
   }
 
-  endTransactionSet(endSegment: EdiSegment): void {
+  endTransactionSet(endSegment: EdiSegment): EdiTransactionSet {
     this.hasActiveTransactionSet = false;
     endSegment.functionalGroupParent = this;
-    this.getActiveTransactionSet().endSegment = endSegment;
+    const activeTransactionSet = this.getActiveTransactionSet();
+    activeTransactionSet.endSegment = endSegment;
+    return activeTransactionSet;
   }
 
   addSegment(segment: EdiSegment): void {
@@ -661,13 +690,18 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(context)).filter(i => i));
   }
 
+  getFormatString(indent: number): string {
+    return formatEdiDocumentPartsSegment({
+      startSegment: this.startSegment,
+      endSegment: this.endSegment,
+      children: this.transactionSets,
+      lineBreakCount: 2,
+      indent,
+    });
+  }
+
   public toString() {
-    return formatEdiDocumentPartsSegment(
-      this.startSegment,
-      this.endSegment,
-      this.transactionSets,
-      2
-    );
+    return this.getFormatString(0);
   }
 }
 
@@ -725,27 +759,30 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return this.functionalGroups[this.functionalGroups.length - 1];
   }
 
-  startFunctionalGroup(meta: EdiFunctionalGroupMeta, startSegment: EdiSegment | undefined): void {
+  startFunctionalGroup(meta: EdiFunctionalGroupMeta, startSegment: EdiSegment | undefined): EdiFunctionalGroup {
     const ediFunctionalGroup = new EdiFunctionalGroup(meta, this);
     if (startSegment) startSegment.interchangeParent = this;
     ediFunctionalGroup.startSegment = startSegment;
     this.functionalGroups.push(ediFunctionalGroup);
     this.hasActiveFunctionalGroup = true;
+    return ediFunctionalGroup;
   }
 
-  endFunctionalGroup(endSegment: EdiSegment): void {
+  endFunctionalGroup(endSegment: EdiSegment): EdiFunctionalGroup {
     this.hasActiveFunctionalGroup = false;
     endSegment.interchangeParent = this;
-    this.getActiveFunctionalGroup().endSegment = endSegment;
+    const activeFunctionalGroup = this.getActiveFunctionalGroup();
+    activeFunctionalGroup.endSegment = endSegment;
+    return activeFunctionalGroup;
   }
 
-  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): void {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): EdiTransactionSet {
     this.ensureActiveFunctionalGroup();
-    this.getActiveFunctionalGroup().startTransactionSet(meta, startSegment);
+    return this.getActiveFunctionalGroup().startTransactionSet(meta, startSegment);
   }
 
-  endTransactionSet(endSegment: EdiSegment): void {
-    this.getActiveFunctionalGroup().endTransactionSet(endSegment);
+  endTransactionSet(endSegment: EdiSegment): EdiTransactionSet {
+    return this.getActiveFunctionalGroup().endTransactionSet(endSegment);
   }
 
   addSegment(segment: EdiSegment): void {
@@ -876,13 +913,18 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(context)).filter(i => i));
   }
 
+  getFormatString(indent: number): string {
+    return formatEdiDocumentPartsSegment({
+      startSegment: this.startSegment,
+      endSegment: this.endSegment,
+      children: this.functionalGroups,
+      lineBreakCount: 2,
+      indent,
+    });
+  }
+
   public toString() {
-    return formatEdiDocumentPartsSegment(
-      this.startSegment,
-      this.endSegment,
-      this.functionalGroups,
-      2
-    );
+    return this.getFormatString(0);
   }
 }
 
@@ -936,36 +978,39 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     this.separatorsSegment = separatorsSegment;
   }
 
-  startInterchange(meta: EdiInterchangeMeta, startSegment: EdiSegment | undefined): void {
+  startInterchange(meta: EdiInterchangeMeta, startSegment: EdiSegment | undefined): EdiInterchange {
     const ediInterchange = new EdiInterchange(meta, this);
     if (startSegment) startSegment.documentParent = this;
     ediInterchange.startSegment = startSegment;
     this.interchanges.push(ediInterchange);
     this.hasActiveInterchange = true;
+    return ediInterchange;
   }
 
-  endInterchange(endSegment: EdiSegment): void {
+  endInterchange(endSegment: EdiSegment): EdiInterchange {
     this.hasActiveInterchange = false;
     endSegment.documentParent = this;
-    this.getActiveInterchange().endSegment = endSegment;
+    const activeInterchange = this.getActiveInterchange();
+    activeInterchange.endSegment = endSegment;
+    return activeInterchange;
   }
 
-  startFunctionalGroup(meta: EdiFunctionalGroupMeta, startSegment: EdiSegment | undefined): void {
+  startFunctionalGroup(meta: EdiFunctionalGroupMeta, startSegment: EdiSegment | undefined): EdiFunctionalGroup {
     this.ensureActiveInterchange();
-    this.getActiveInterchange().startFunctionalGroup(meta, startSegment);
+    return this.getActiveInterchange().startFunctionalGroup(meta, startSegment);
   }
 
-  endFunctionalGroup(endSegment: EdiSegment): void {
-    this.getActiveInterchange().endFunctionalGroup(endSegment);
+  endFunctionalGroup(endSegment: EdiSegment): EdiFunctionalGroup {
+    return this.getActiveInterchange().endFunctionalGroup(endSegment);
   }
 
-  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): void {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): EdiTransactionSet {
     this.ensureActiveInterchange();
-    this.getActiveInterchange().startTransactionSet(meta, startSegment);
+    return this.getActiveInterchange().startTransactionSet(meta, startSegment);
   }
 
-  endTransactionSet(endSegment: EdiSegment): void {
-    this.getActiveInterchange().endTransactionSet(endSegment);
+  endTransactionSet(endSegment: EdiSegment): EdiTransactionSet {
+    return this.getActiveInterchange().endTransactionSet(endSegment);
   }
 
   addSegment(segment: EdiSegment): void {
@@ -1000,14 +1045,19 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(context)).filter(i => i));
   }
 
+  getFormatString(indent: number): string {
+    return formatEdiDocumentPartsSegment({
+      startSegment: this.startSegment,
+      endSegment: this.endSegment,
+      children: this.interchanges,
+      lineBreakCount: 2,
+      indent,
+      separatorsSegment: this.separatorsSegment,
+    });
+  }
+
   public toString() {
-    return formatEdiDocumentPartsSegment(
-      this.startSegment,
-      this.endSegment,
-      this.interchanges,
-      2,
-      this.separatorsSegment
-    );
+    return this.getFormatString(0);
   }
 }
 
@@ -1031,6 +1081,7 @@ type ParseTransactionSetMetaFunc = (interchangeSegment: EdiSegment | undefined, 
 type LoadSchemaFunc = (meta: EdiTransactionSetMeta) => Promise<void>;
 type UnloadSchemaFunc = () => void;
 type LoadTransactionSetStartSegmentSchemaFunc = (segment: EdiSegment) => Promise<EdiSegment>;
+type AfterEndTransactionSetFunc = (transactionSet: EdiTransactionSet) => Promise<void>;
 
 export class EdiDocumentBuilder {
   private options: EdiStandardOptions;
@@ -1044,6 +1095,7 @@ export class EdiDocumentBuilder {
   loadSchemaFunc?: LoadSchemaFunc;
   unloadSchemaFunc?: UnloadSchemaFunc;
   loadTransactionSetStartSegmentSchemaFunc?: LoadTransactionSetStartSegmentSchemaFunc;
+  afterEndTransactionSetFunc?: AfterEndTransactionSetFunc;
 
   constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions) {
     this.ediDocument = new EdiDocument(separators, options);
@@ -1079,7 +1131,8 @@ export class EdiDocumentBuilder {
       }
       this.ediDocument.startTransactionSet(transactionSetMeta, segment);
     } else if (segment.id === this.options.transactionSetEndSegmentName) {
-      this.ediDocument.endTransactionSet(segment);
+      const transactionSet = this.ediDocument.endTransactionSet(segment);
+      if (this.afterEndTransactionSetFunc) await this.afterEndTransactionSetFunc(transactionSet);
       this.unloadSchemaFunc && this.unloadSchemaFunc();
     } else {
       this.ediDocument.addSegment(segment);
@@ -1113,10 +1166,28 @@ export class EdiDocumentBuilder {
   onLoadTransactionSetStartSegmentSchema(loadTransactionSetStartSegmentSchemaFunc: LoadTransactionSetStartSegmentSchemaFunc) {
     this.loadTransactionSetStartSegmentSchemaFunc = loadTransactionSetStartSegmentSchemaFunc;
   }
+
+  onAfterEndTransactionSet(afterEndTransactionSetFunc: AfterEndTransactionSetFunc) {
+    this.afterEndTransactionSetFunc = afterEndTransactionSetFunc;
+  }
 }
 
-function formatEdiDocumentPartsSegment<T extends any>(startSegment: EdiSegment | undefined, endSegment: EdiSegment | undefined, children: T[], lineBreakCount: number, separatorsSegment?: EdiSegment): string {
-  if (!children) return "";
+function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalGroup | EdiTransactionSet | EdiSegment>({
+  startSegment,
+  endSegment,
+  children,
+  lineBreakCount,
+  indent,
+  separatorsSegment,
+}: {
+  startSegment?: EdiSegment,
+  endSegment?: EdiSegment,
+  children: T[],
+  lineBreakCount: number,
+  indent: number,
+  separatorsSegment?: EdiSegment
+}): string {
+  if (!children) children = [];
   let lineBreaks: string;
   if (children.length === 1) {
     lineBreaks = constants.ediDocument.lineBreak;
@@ -1126,7 +1197,7 @@ function formatEdiDocumentPartsSegment<T extends any>(startSegment: EdiSegment |
   return [
     separatorsSegment,
     startSegment,
-    ...children,
+    ...children.map(i => i.getFormatString(indent)),
     endSegment,
   ].filter(i => i).join(lineBreaks);
 }
