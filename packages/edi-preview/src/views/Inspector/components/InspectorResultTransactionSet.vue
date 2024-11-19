@@ -6,6 +6,12 @@
     :description="'ID: ' + (transactionSet.id ?? 'Unkown')"
     :parent-height="transactionSet.getParentHeight()"
   >
+    <template #content>
+      <p class="line-clamp-1">
+        {{ transactionSet.meta.release }}
+        {{ transactionSet.meta.version }}
+      </p>
+    </template>
     <InspectorResultSegmentList
       :segments="transactionSet.getSegments()"
     />

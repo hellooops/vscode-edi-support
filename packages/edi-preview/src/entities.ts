@@ -120,7 +120,7 @@ export class EdiTransactionSet implements TreeItemBase {
   } 
 
   getHeight(): number {
-    return 28;
+    return 48;
   }
 
   getParentHeight(): number {
@@ -159,7 +159,7 @@ export class EdiFunctionalGroup implements TreeItemBase {
 
   getHeight(): number {
     if (this.isFake()) return 0;
-    return 28;
+    return 48;
   }
 
   getParentHeight(): number {
@@ -193,7 +193,7 @@ export class EdiInterchange implements TreeItemBase {
   }
 
   getHeight(): number {
-    return 28;
+    return 48;
   }
 
   getParentHeight(): number {

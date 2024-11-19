@@ -16,11 +16,11 @@
       </div>
       <p
         v-if="$slots.content || content"
-        class="pl-[52px] opacity-70 overflow-ellipsis line-clamp-1 leading-5"
+        class="pl-[52px] opacity-70 overflow-ellipsis leading-5"
         :title="content"
       >
         <template v-if="$slots.content"><slot name="content"></slot></template>
-        <template v-else>{{ content }}</template>
+        <span class="line-clamp-1" v-else>{{ content }}</span>
       </p>
     </div>
     <div v-show="visible" class="pl-8 mt-2">

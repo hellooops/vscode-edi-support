@@ -1946,5 +1946,5 @@ export default function useTestData(): EdiDocument {
     "ediType": "edifact"
   }
 
-  return new EdiDocument(edifactTestData);
+  return new EdiDocument(x12TestData);
 }
