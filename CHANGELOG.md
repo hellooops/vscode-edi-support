@@ -8,6 +8,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
+
+
+## [1.5.0] - 2024-11-19
+
+### Fixed
+
+- Fully support multiple interchange/functional group/transaction set.
 - Preview tree nested sticky.
 
 
