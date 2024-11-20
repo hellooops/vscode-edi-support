@@ -48,21 +48,21 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return this.parentSegment.getLevel() + 1;
   }
 
-  getFormatString(indent: number): string {
+  getFormatString(options: EdiFormattingOptions): string {
     if (this.isLoop()) {
       return formatEdiDocumentPartsSegment({
         children: this.Loop!,
         lineBreakCount: 1,
-        indent,
+        options,
       });
     } else {
-      const indentString = Array(indent).fill(" ").join("");
+      const indentString = options.getFormatString();
       return `${Array(this.getLevel()).fill(indentString).join("")}${this.id}${this.elements.join("")}${this.endingDelimiter}`;
     }
   }
 
   public toString() {
-    return this.getFormatString(0);
+    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
   }
 
   public getElement(elementIndex: number, componentIndex: number | undefined = undefined): EdiElement | null {
@@ -486,18 +486,18 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     }
   }
 
-  getFormatString(indent: number): string {
+  getFormatString(options: EdiFormattingOptions): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.segments,
       lineBreakCount: 1,
-      indent,
+      options,
     });
   }
 
   public toString() {
-    return this.getFormatString(0);
+    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
   }
 }
 
@@ -690,18 +690,18 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(context)).filter(i => i));
   }
 
-  getFormatString(indent: number): string {
+  getFormatString(options: EdiFormattingOptions): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.transactionSets,
       lineBreakCount: 2,
-      indent,
+      options,
     });
   }
 
   public toString() {
-    return this.getFormatString(0);
+    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
   }
 }
 
@@ -913,18 +913,18 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(context)).filter(i => i));
   }
 
-  getFormatString(indent: number): string {
+  getFormatString(options: EdiFormattingOptions): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.functionalGroups,
       lineBreakCount: 2,
-      indent,
+      options,
     });
   }
 
   public toString() {
-    return this.getFormatString(0);
+    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
   }
 }
 
@@ -1045,19 +1045,19 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(context)).filter(i => i));
   }
 
-  getFormatString(indent: number): string {
+  getFormatString(options: EdiFormattingOptions): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.interchanges,
       lineBreakCount: 2,
-      indent,
+      options,
       separatorsSegment: this.separatorsSegment,
     });
   }
 
   public toString() {
-    return this.getFormatString(0);
+    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
   }
 }
 
@@ -1172,19 +1172,39 @@ export class EdiDocumentBuilder {
   }
 }
 
+export class EdiFormattingOptions {
+  tabSize: number;
+  insertSpaces: boolean;
+
+  static TAB_SIZE_0: EdiFormattingOptions = new EdiFormattingOptions(0, true);
+
+  constructor(tabSize: number, insertSpaces: boolean) {
+    this.tabSize = tabSize;
+    this.insertSpaces = insertSpaces;
+  }
+
+  getFormatString() {
+    if (this.insertSpaces) {
+      return Array(this.tabSize).fill(" ").join("");
+    } else {
+      return "\t";
+    }
+  }
+}
+
 function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalGroup | EdiTransactionSet | EdiSegment>({
   startSegment,
   endSegment,
   children,
   lineBreakCount,
-  indent,
+  options,
   separatorsSegment,
 }: {
   startSegment?: EdiSegment,
   endSegment?: EdiSegment,
   children: T[],
   lineBreakCount: number,
-  indent: number,
+  options: EdiFormattingOptions,
   separatorsSegment?: EdiSegment
 }): string {
   if (!children) children = [];
@@ -1197,7 +1217,7 @@ function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalG
   return [
     separatorsSegment,
     startSegment,
-    ...children.map(i => i.getFormatString(indent)),
+    ...children.map(i => i.getFormatString(options)),
     endSegment,
   ].filter(i => i).join(lineBreaks);
 }

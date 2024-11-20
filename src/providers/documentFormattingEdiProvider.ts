@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiType } from "../parser/entities";
+import { EdiFormattingOptions, EdiType } from "../parser/entities";
 import { EdiUtils } from "../utils/ediUtils";
 
 export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {
@@ -19,7 +19,7 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
         document.positionAt(0),
         document.positionAt(document.getText().length)
       ),
-      ediDocument.getFormatString(2)
+      ediDocument.getFormatString(new EdiFormattingOptions(options.tabSize, options.insertSpaces))
     ));
     return result;
   }
