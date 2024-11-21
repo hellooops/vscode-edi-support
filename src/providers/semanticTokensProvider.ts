@@ -22,7 +22,7 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return;
     const ediDocument = await parser.parse();
-    const segments = ediDocument.getSegments();
+    const segments = ediDocument.getSegments(true);
     if (!segments || segments.length <= 0) {
       return;
     }

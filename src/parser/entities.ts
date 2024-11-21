@@ -42,6 +42,14 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     this.isInvalidSegment = false;
   }
 
+  getSegment(withoutLoop?: boolean): EdiSegment[] {
+    if (this.isLoop() && withoutLoop) {
+      return this.Loop!.flatMap(i => i.getSegment(withoutLoop));
+    } else {
+      return [this];
+    }
+  }
+
   getLevel(): number {
     if (!this.parentSegment) return 0;
     if (this === this.parentSegment.Loop![0]) return this.parentSegment.getLevel();
@@ -355,10 +363,10 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     this.segments.push(segment);
   }
 
-  getSegments(): EdiSegment[] {
+  getSegments(withoutLoop?: boolean): EdiSegment[] {
     const result: EdiSegment[] = [];
     if (this.startSegment) result.push(this.startSegment);
-    result.push(...this.segments);
+    result.push(...this.segments.flatMap(s => s.getSegment(withoutLoop)));
     if (this.endSegment) result.push(this.endSegment);
     return result;
   }
@@ -570,10 +578,10 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     this.transactionSets[this.transactionSets.length - 1].addSegment(segment);
   }
 
-  getSegments(): EdiSegment[] {
+  getSegments(withoutLoop?: boolean): EdiSegment[] {
     const result: EdiSegment[] = [];
     if (this.startSegment) result.push(this.startSegment);
-    result.push(...this.transactionSets.flatMap(i => i.getSegments()));
+    result.push(...this.transactionSets.flatMap(i => i.getSegments(withoutLoop)));
     if (this.endSegment) result.push(this.endSegment);
     return result;
   }
@@ -790,10 +798,10 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     this.getActiveFunctionalGroup().addSegment(segment);
   }
 
-  getSegments(): EdiSegment[] {
+  getSegments(withoutLoop?: boolean): EdiSegment[] {
     const result: EdiSegment[] = [];
     if (this.startSegment) result.push(this.startSegment);
-    result.push(...this.functionalGroups.flatMap(i => i.getSegments()));
+    result.push(...this.functionalGroups.flatMap(i => i.getSegments(withoutLoop)));
     if (this.endSegment) result.push(this.endSegment);
     return result;
   }
@@ -1018,11 +1026,11 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     this.getActiveInterchange().addSegment(segment);
   }
 
-  getSegments(): EdiSegment[] {
+  getSegments(withoutLoop?: boolean): EdiSegment[] {
     const result: EdiSegment[] = [];
     if (this.separatorsSegment) result.push(this.separatorsSegment);
     if (this.startSegment) result.push(this.startSegment);
-    result.push(...this.interchanges.flatMap(i => i.getSegments()));
+    result.push(...this.interchanges.flatMap(i => i.getSegments(withoutLoop)));
     if (this.endSegment) result.push(this.endSegment);
     return result;
   }
