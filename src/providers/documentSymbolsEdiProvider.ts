@@ -90,7 +90,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
     const segmentRange = EdiUtils.getSegmentRange(document, segment);
     const segmentSymbol = new vscode.DocumentSymbol(
       segment.id,
-      segment?.ediReleaseSchemaSegment?.desc || segment.id,
+      segment?.getDesc() || segment.id,
       vscode.SymbolKind.Class,
       segmentRange,
       segmentRange, 

@@ -42,6 +42,14 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     this.isInvalidSegment = false;
   }
 
+  getDesc(): string | undefined {
+    if (this.isLoop() && this.Loop!.length > 0) {
+      return this.Loop![0].getDesc();
+    } else {
+      return this.ediReleaseSchemaSegment?.desc;
+    }
+  }
+
   getSegment(withoutLoop?: boolean): EdiSegment[] {
     if (this.isLoop() && withoutLoop) {
       return this.Loop!.flatMap(i => i.getSegment(withoutLoop));

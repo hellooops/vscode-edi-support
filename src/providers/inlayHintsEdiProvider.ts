@@ -45,13 +45,13 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
   }
 
   private getSegmentNameInlayHint(segment: EdiSegment, document: vscode.TextDocument): vscode.InlayHint | undefined {
-    if (!segment.ediReleaseSchemaSegment?.desc) {
+    if (!segment.getDesc()) {
       return;
     }
 
     const inlayHint = new vscode.InlayHint(
       document.positionAt(segment.startIndex),
-      segment.ediReleaseSchemaSegment.desc
+      segment.getDesc()!
     );
 
     return inlayHint;
