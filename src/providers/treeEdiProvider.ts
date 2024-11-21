@@ -311,7 +311,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       iconPath: EdiUtils.icons.segment,
       description: segmentDesc,
       tooltip: segmentDesc,
-      collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+      collapsibleState: segment.isLoop() ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed,
       command: {
         command: constants.commands.selectTextByPositionCommand.name,
         title: "",
