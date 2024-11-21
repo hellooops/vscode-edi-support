@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
+import { EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
 import { EdiUtils } from "../utils/ediUtils";
 
 export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider, IProvidable {
@@ -63,7 +63,6 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
     );
 
     const transactionSetSymbols = functionalGroup.transactionSets.map(transactionSet => this.getTransactionSetSymbols(document, transactionSet));
-
     functionalGroupSymbol.children = transactionSetSymbols || [];
     return functionalGroupSymbol;
   }
@@ -79,9 +78,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
     );
 
     const segments = transactionSet.getSegments();
-
     const segmentSymbols = segments.map(segment => this.getSegmentSymbols(document, segment));
-
     transactionSetSymbol.children = segmentSymbols || [];
     return transactionSetSymbol;
   }
@@ -96,35 +93,42 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
       segmentRange, 
     );
 
-    const elementSymbols = segment?.elements?.map(element => {
-      const elementRange = EdiUtils.getElementRange(document, segment, element);
-      const elementSymbol = new vscode.DocumentSymbol(
-        element.getDesignatorWithId(),
-        element?.ediReleaseSchemaElement?.desc || element.getDesignatorWithId(),
-        vscode.SymbolKind.Field,
-        elementRange,
-        elementRange, 
+    if (segment.isLoop()) {
+      const loopSegmentsSymbols = segment.Loop!.map(s => this.getSegmentSymbols(document, s));
+      segmentSymbol.children = loopSegmentsSymbols;
+    } else {
+      const elementSymbols = segment?.elements?.map(element => this.getElementSymbols(document, element));
+      segmentSymbol.children = elementSymbols;
+    }
+
+    return segmentSymbol;
+  }
+
+  getElementSymbols(document: vscode.TextDocument, element: EdiElement): vscode.DocumentSymbol {
+    const elementRange = EdiUtils.getElementRange(document, element.segment, element);
+    const elementSymbol = new vscode.DocumentSymbol(
+      element.getDesignatorWithId(),
+      element?.ediReleaseSchemaElement?.desc || element.getDesignatorWithId(),
+      vscode.SymbolKind.Field,
+      elementRange,
+      elementRange, 
+    );
+
+    const componentSymbols = element?.components?.map(componentElement => {
+      const componentElementRange = EdiUtils.getElementRange(document, element.segment, componentElement);
+      const componentSymbol = new vscode.DocumentSymbol(
+        componentElement.getDesignatorWithId(),
+        componentElement?.ediReleaseSchemaElement?.desc || componentElement.getDesignatorWithId(),
+        vscode.SymbolKind.Property,
+        componentElementRange,
+        componentElementRange, 
       );
 
-      const componentSymbols = element?.components?.map(componentElement => {
-        const componentElementRange = EdiUtils.getElementRange(document, segment, componentElement);
-        const componentSymbol = new vscode.DocumentSymbol(
-          componentElement.getDesignatorWithId(),
-          componentElement?.ediReleaseSchemaElement?.desc || componentElement.getDesignatorWithId(),
-          vscode.SymbolKind.Property,
-          componentElementRange,
-          componentElementRange, 
-        );
-
-        return componentSymbol;
-      });
-
-      elementSymbol.children = componentSymbols || [];
-      return elementSymbol;
+      return componentSymbol;
     });
 
-    segmentSymbol.children = elementSymbols;
-    return segmentSymbol;
+    elementSymbol.children = componentSymbols || [];
+    return elementSymbol;
   }
   
   registerFunctions(): vscode.Disposable[] {
