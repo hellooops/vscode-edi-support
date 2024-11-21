@@ -418,17 +418,17 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   }
 
   getRealControlCount(): number | undefined {
-    return this.getSegments().length;
+    return this.getSegments(true).length;
   }
 
   getFirstSegment(): EdiSegment | undefined {
-    const segments = this.getSegments();
+    const segments = this.getSegments(true);
     if (segments.length === 0) return undefined;
     return segments[0];
   }
 
   getLastSegment(): EdiSegment | undefined {
-    const segments = this.getSegments();
+    const segments = this.getSegments(true);
     if (segments.length === 0) return undefined;
     return segments[segments.length - 1];
   }
@@ -637,13 +637,13 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
   }
 
   getFirstSegment(): EdiSegment | undefined {
-    const segments = this.getSegments();
+    const segments = this.getSegments(true);
     if (segments.length === 0) return undefined;
     return segments[0];
   }
 
   getLastSegment(): EdiSegment | undefined {
-    const segments = this.getSegments();
+    const segments = this.getSegments(true);
     if (segments.length === 0) return undefined;
     return segments[segments.length - 1];
   }
@@ -861,13 +861,13 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
   }
 
   getFirstSegment(): EdiSegment | undefined {
-    const segments = this.getSegments();
+    const segments = this.getSegments(true);
     if (segments.length === 0) return undefined;
     return segments[0];
   }
 
   getLastSegment(): EdiSegment | undefined {
-    const segments = this.getSegments();
+    const segments = this.getSegments(true);
     if (segments.length === 0) return undefined;
     return segments[segments.length - 1];
   }
