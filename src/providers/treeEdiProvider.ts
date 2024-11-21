@@ -3,7 +3,7 @@ import { IProvidable } from "../interfaces/providable";
 import Utils from "../utils/utils";
 import { EdiUtils } from "../utils/ediUtils";
 import { EdiDocument, EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
-import { EdiReleaseSchemaElement } from "../schemas/schemas"
+import { EdiReleaseSchemaElement } from "../schemas/schemas";
 import { ICommandable } from "../interfaces/commandable";
 import * as constants from "../constants";
 

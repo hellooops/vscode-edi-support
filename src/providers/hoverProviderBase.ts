@@ -22,7 +22,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       return;
     }
 
-    const segments = ediDocument.getSegments();
+    const segments = ediDocument.getSegments(true);
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)
     );

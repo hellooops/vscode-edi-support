@@ -399,7 +399,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     } else if (this.endSegment?.id === "UNT" && this.endSegment.elements.length >= 2) {
       return this.endSegment.elements[1];
     } else {
-      return undefined
+      return undefined;
     }
   }
 
@@ -600,7 +600,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     } else if (!this.startSegment) {
       return "";
     } else {
-      return undefined
+      return undefined;
     }
   }
 
@@ -612,7 +612,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     if (this.endSegment?.id === "GE" && this.endSegment.elements.length >= 2) {
       return this.endSegment.elements[1];
     } else {
-      return undefined
+      return undefined;
     }
   }
 
@@ -854,7 +854,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
 
   getRealControlCount(): number | undefined {
     if (this.functionalGroups.length > 0 && this.functionalGroups[0].isFake()) {
-      return this.functionalGroups.reduce((s, cur) => s + cur.transactionSets.length, 0)
+      return this.functionalGroups.reduce((s, cur) => s + cur.transactionSets.length, 0);
     } else {
       return this.functionalGroups.length;
     }

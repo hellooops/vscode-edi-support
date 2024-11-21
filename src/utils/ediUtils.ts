@@ -75,11 +75,11 @@ export class EdiUtils {
 
   static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
     const documentContent = document.getText();
-    if (!EdiUtils.ediParserCache || documentContent != EdiUtils.ediParserCache.document) {
+    if (!EdiUtils.ediParserCache || documentContent !== EdiUtils.ediParserCache.document) {
       EdiUtils.ediParserCache = {
         document: documentContent,
         result: EdiUtils.getEdiParserInternal(document)
-      }
+      };
     }
 
     return EdiUtils.ediParserCache.result!;

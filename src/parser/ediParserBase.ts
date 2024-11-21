@@ -24,7 +24,7 @@ export abstract class EdiParserBase {
     const that = this;
     parsingPromise.finally(() => {
       that.parsingPromise = undefined;
-    })
+    });
 
     return parsingPromise;
   }
@@ -367,7 +367,7 @@ class SchemaVersionSegmentsContext {
             ediVersionSegment.Id,
             loopFirstChild.startIndex,
             loopLastChild.endIndex,
-            loopResult.reduce((acc, cur) => { return acc + cur.length }, 0),
+            loopResult.reduce((acc, cur) => acc + cur.length, 0),
             loopLastChild.endingDelimiter
           );
           loopSegment.Loop = loopResult;

@@ -12,7 +12,7 @@ const TokenTypes = {
   EdiValueTypeDatetime: "edisupportvaluetypedatetime",
   EdiValueTypeQualifer: "edisupportvaluetypequalifer",
   EdiValueTypeOther: "edisupportvaluetypeother",
-}
+};
 
 const legend = new vscode.SemanticTokensLegend(Object.values(TokenTypes));
 
