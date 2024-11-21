@@ -25,7 +25,13 @@ export class PrettifyDocumentCommand implements ICommandable {
       return;
     }
 
-    const formattingOptions = new EdiFormattingOptions(Utils.getStringAsInt(vscodeEditorOptions.tabSize) ?? 2, Utils.getValueAsBoolean(vscodeEditorOptions.insertSpaces, true));
+    let formattingOptions: EdiFormattingOptions;
+    if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.formatting.indentSegmentsInLoop)) {
+      formattingOptions = new EdiFormattingOptions(Utils.getStringAsInt(vscodeEditorOptions.tabSize) ?? 2, Utils.getValueAsBoolean(vscodeEditorOptions.insertSpaces, true));
+    } else {
+      formattingOptions = EdiFormattingOptions.TAB_SIZE_0;
+    }
+
     vscode.window.activeTextEditor.edit((builder) => {
       if (!vscode.window.activeTextEditor) {
         return;

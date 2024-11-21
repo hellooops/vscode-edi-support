@@ -116,6 +116,11 @@
     "configuration": {
       "title": "EDI Support",
       "properties": {
+        "ediSupport.formatting.indentSegmentsInLoop": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indent segments in loop"
+        },
         "ediSupport.enableCodelens": {
           "type": "boolean",
           "default": true,

@@ -70,6 +70,9 @@ export namespace configuration {
   };
   export const enableCodelens = "enableCodelens";
   export const enableHover = "enableHover";
+  export const formatting = {
+    indentSegmentsInLoop: "formatting.indentSegmentsInLoop",
+  };
 }
 
 export namespace diagnostic {
