@@ -22,7 +22,7 @@ export class MinifyDocumentCommand implements ICommandable {
       return;
     }
 
-    let text = ediDocument.getSegments().join("");
+    let text = ediDocument.getSegments(true).join("");
 
     vscode.window.activeTextEditor.edit((builder) => {
       if (!vscode.window.activeTextEditor) {

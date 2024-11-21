@@ -16,7 +16,7 @@ export class CompletionItemEdiProvider implements vscode.CompletionItemProvider,
       return [];
     }
 
-    const segments = ediDocument.getSegments();
+    const segments = ediDocument.getSegments(true);
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)
     );
