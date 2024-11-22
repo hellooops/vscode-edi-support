@@ -246,4 +246,13 @@ export class EdiUtils {
     active.element = selectedElement;
     return active;
   }
+
+  static isOnlySegmentInLine(document: vscode.TextDocument, segment: EdiSegment): boolean {
+    const segmentStartPosition = EdiUtils.getSegmentStartPosition(document, segment);
+    const segmentEndPosition = EdiUtils.getSegmentEndPosition(document, segment);
+    if (segmentStartPosition.line !== segmentEndPosition.line) return false;
+    const segmentLineNumber = segmentStartPosition.line;
+    const documentContentInLine = document.lineAt(segmentLineNumber).text;
+    return documentContentInLine.trim() === segment.segmentStr;
+  }
 }
