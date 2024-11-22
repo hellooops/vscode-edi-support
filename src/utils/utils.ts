@@ -49,9 +49,9 @@ export default class Utils {
 
   static getStringAsInt(value: string | number | undefined, defaultValue?: number) {
     if ((value === undefined || value === "") && defaultValue !== undefined) return defaultValue;
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return Math.floor(value);
-    } else if (typeof value ==='string') {
+    } else if (typeof value ==="string") {
       const num = parseInt(value, 10);
       if (!isNaN(num)) {
         return num;

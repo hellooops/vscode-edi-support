@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new DocumentSymbolsEdiProvider());
   registerProvider(context, new SemanticTokensProvider());
 
-  console.log('Extension "edi-support" is now active!');
+  console.log("Extension \"edi-support\" is now active!");
 }
 
 function registerCommand(context: vscode.ExtensionContext, command: ICommandable, callback?: (...args: any[]) => any) {

@@ -1,4 +1,4 @@
-import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta } from './entities';
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta } from "./entities";
 import { EdiSchema, EdiVersionSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
@@ -321,9 +321,9 @@ export abstract class EdiParserBase {
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   }
 
-  protected pad(n: number, width: number, z: string = '0') {
-      let nStr = n.toString() + '';
-      return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
+  protected pad(n: number, width: number, z: string = "0") {
+    let nStr = n.toString();
+    return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
   }
 
   protected abstract getStardardOptions(): EdiStandardOptions;

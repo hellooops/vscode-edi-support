@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiSegment, EdiElement, EdiType, EdiMessageSeparators } from '../parser/entities';
+import { EdiSegment, EdiElement, EdiType, EdiMessageSeparators } from "../parser/entities";
 import { EdiUtils } from "../utils/ediUtils";
 
 const TokenTypes = {
