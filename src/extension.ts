@@ -16,6 +16,7 @@ import { CompletionItemEdiProvider } from "./providers/completionItemEdiProvider
 import { TreeEdiProvider } from "./providers/treeEdiProvider";
 import { DocumentSymbolsEdiProvider } from "./providers/documentSymbolsEdiProvider";
 import { SemanticTokensProvider } from "./providers/semanticTokensProvider";
+import { FoldingRangeEdiProvider } from "./providers/foldingRangeEdiProvider";
 import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 
@@ -40,6 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerProvider(context, new DocumentSymbolsEdiProvider());
   registerProvider(context, new SemanticTokensProvider());
+  registerProvider(context, new FoldingRangeEdiProvider());
 
   console.log("Extension \"edi-support\" is now active!");
 }
