@@ -50,6 +50,14 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     }
   }
 
+  getPurpose(): string | undefined {
+    if (this.isLoop() && this.Loop!.length > 0) {
+      return this.Loop![0].getPurpose();
+    } else {
+      return this.ediReleaseSchemaSegment?.purpose;
+    }
+  }
+
   getSegment(withoutLoop?: boolean): EdiSegment[] {
     if (this.isLoop() && withoutLoop) {
       return this.Loop!.flatMap(i => i.getSegment(withoutLoop));
@@ -121,9 +129,10 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return {
       key: this.key,
       id: this.id,
-      desc: this.ediReleaseSchemaSegment!.desc,
-      purpose: this.ediReleaseSchemaSegment!.purpose,
-      elements: this.elements.map(e => e.getIResult())
+      desc: this.getDesc(),
+      purpose: this.getPurpose(),
+      elements: this.elements.map(e => e.getIResult()),
+      Loop: this.Loop?.map(i => i.getIResult())
     };
   }
 

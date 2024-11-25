@@ -10,8 +10,12 @@
     :class="{'active-fragment': segment.key === activeId}"
     :parent-height="segment.getParentHeight()"
   >
+    <InspectorResultSegmentList
+      v-if="segment.isLoop()"
+      :segments="segment.Loop!"
+    />
     <InspectorResultElementList
-      v-if="segment.elements && segment.elements.length > 0"
+      v-else-if="segment.elements && segment.elements.length > 0"
       :elements="segment.elements"
     />
   </InspectorResultLine>
@@ -20,6 +24,7 @@
 import { ref, inject } from "vue";
 import InspectorResultLine from "@/views/Inspector/components/InspectorResultLine.vue";
 import InspectorResultElementList from "@/views/Inspector/components/InspectorResultElementList.vue";
+import InspectorResultSegmentList from "@/views/Inspector/components/InspectorResultSegmentList.vue";
 import { EdiSegment } from "@/entities";
 
 defineProps<{

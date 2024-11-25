@@ -63,9 +63,11 @@ export class EdiSegment implements TreeItemBase {
   id: string;
   elements: EdiElement[];
   desc?: string;
-  purpose: string;
+  purpose?: string;
+  Loop?: EdiSegment[];
 
   parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet;
+  parentSegment?: EdiSegment;
 
   constructor(json: IEdiSegment, parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet) {
     this.key = json.key;
@@ -73,8 +75,18 @@ export class EdiSegment implements TreeItemBase {
     this.desc = json.desc;
     this.purpose = json.purpose;
     this.elements = json.elements?.map(i => new EdiElement(i, this));
+    this.Loop = json.Loop?.map(i => new EdiSegment(i, parent).withParentSegment(this));
 
     this.parent = parent;
+  }
+
+  public isLoop(): boolean {
+    return this.Loop !== undefined;
+  }
+
+  withParentSegment(parentSegment: EdiSegment): EdiSegment {
+    this.parentSegment = parentSegment;
+    return this;
   }
 
   getHeight(): number {
@@ -82,7 +94,11 @@ export class EdiSegment implements TreeItemBase {
   }
 
   getParentHeight(): number {
-    return this.parent.getHeight() + this.parent.getParentHeight();
+    if (this.parentSegment) {
+      return this.parentSegment.getHeight() + this.parentSegment.getParentHeight();
+    } else {
+      return this.parent.getHeight() + this.parent.getParentHeight();
+    }
   }
 }
 

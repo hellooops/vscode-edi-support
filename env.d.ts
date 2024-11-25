@@ -36,7 +36,8 @@ interface IEdiSegment {
   id: string;
   elements: Array<IEdiElement>;
   desc?: string;
-  purpose: string;
+  purpose?: string;
+  Loop?: IEdiSegment[];
 }
 
 type IEdiType = "x12" | "edifact" | "unknown";
