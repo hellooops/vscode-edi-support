@@ -1,0 +1,1 @@
+{"Release":"00302","DocumentType":"350","TransactionSet":[{"Id":"ST"},{"Id":"M10"},{"Id":"LSLoop1","Loop":[{"Id":"LS"},{"Id":"P4Loop1","Max":20,"Loop":[{"Id":"P4"},{"Id":"LSLoop2","Min":0,"Loop":[{"Id":"LS"},{"Id":"X4Loop1","Min":0,"Max":999,"Loop":[{"Id":"X4"},{"Id":"K1","Min":0,"Max":4}]},{"Id":"LE"}]}]},{"Id":"LE"}]},{"Id":"SE"}]}

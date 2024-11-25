@@ -1,0 +1,1 @@
+{"Release":"00602","DocumentType":"216","TransactionSet":[{"Id":"ST"},{"Id":"PUN"},{"Id":"G61","Min":0},{"Id":"TEM","Min":0},{"Id":"PRF","Min":0,"Max":"unbounded"},{"Id":"AT5","Min":0,"Max":10},{"Id":"K2","Min":0},{"Id":"N1Loop1","Max":2,"Loop":[{"Id":"N1"},{"Id":"N2","Min":0},{"Id":"N3","Min":0,"Max":2},{"Id":"N4","Min":0}]},{"Id":"SE"}]}

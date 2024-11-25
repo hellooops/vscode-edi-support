@@ -1,0 +1,1 @@
+{"Release":"00404","DocumentType":"815","TransactionSet":[{"Id":"ST"},{"Id":"CSM"},{"Id":"CSB","Min":0,"Max":"unbounded"},{"Id":"CSCLoop1","Min":0,"Max":"unbounded","Loop":[{"Id":"CSC"},{"Id":"DTP","Min":0,"Max":9}]},{"Id":"SE"}]}

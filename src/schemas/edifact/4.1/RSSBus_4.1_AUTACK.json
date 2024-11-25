@@ -1,0 +1,1 @@
+{"Release":4.1,"DocumentType":"AUTACK","TransactionSet":[{"Id":"UNH"},{"Id":"USHLoop1","Max":99,"Loop":[{"Id":"USH"},{"Id":"USA","Min":0,"Max":3},{"Id":"USCLoop1","Min":0,"Max":2,"Loop":[{"Id":"USC"},{"Id":"USA","Min":0,"Max":3}]}]},{"Id":"USB"},{"Id":"USXLoop1","Max":9999,"Loop":[{"Id":"USX"},{"Id":"USY","Max":9}]},{"Id":"USTLoop1","Max":99,"Loop":[{"Id":"UST"}]},{"Id":"UNT"}]}

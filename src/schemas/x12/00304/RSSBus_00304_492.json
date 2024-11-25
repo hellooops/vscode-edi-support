@@ -1,0 +1,1 @@
+{"Release":"00304","DocumentType":"492","TransactionSet":[{"Id":"ST"},{"Id":"DK"},{"Id":"PRI"},{"Id":"DM","Min":0},{"Id":"SCLoop1","Min":0,"Max":10,"Loop":[{"Id":"SC"},{"Id":"DM","Min":0}]},{"Id":"SE"}]}
