@@ -255,8 +255,9 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "buildPreview": "cd packages/edi-preview && npm run build",
-    "package": "npm run buildPreview && vsce package",
-    "publish": "npm run buildPreview && vsce publish",
+    "copySchema": "node scripts/copySchema.js",
+    "package": "npm run buildPreview && npm run copySchema && vsce package",
+    "publish": "npm run buildPreview && npm run copySchema && vsce publish",
     "pre-release-publish": "npm run buildPreview && vsce publish --pre-release"
   },
   "devDependencies": {
