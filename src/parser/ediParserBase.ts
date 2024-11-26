@@ -399,6 +399,10 @@ class SchemaVersionSegmentsContext {
       }
     }
 
+    if (segments.length > 0 && !this.isLoop) {
+      result.push(...segments);
+    }
+
     return result;
   }
 }
