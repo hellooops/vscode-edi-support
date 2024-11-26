@@ -343,6 +343,7 @@ class SchemaVersionSegmentsContext {
     for(let i = 0; i < this.ediVersionSegments.length; i++) {
       const ediVersionSegment = this.ediVersionSegments[i];
       let segmentMatchTimes = 0;
+      const isFirstSegmentInLoop = i === 0 && this.isLoop;
       while (true) {
         if (segments.length === 0) {
           return result;
@@ -381,14 +382,25 @@ class SchemaVersionSegmentsContext {
           // non loop
           if (ediVersionSegment.Id === segments[0].id) {
             // segment match
-            result.push(segments.shift()!);
+            const segment = segments.shift()!;
+            result.push(segment);
             segmentMatchTimes++;
+            
             if (segmentMatchTimes >= ediVersionSegment.getMax()) {
-              break;
+              if (isFirstSegmentInLoop) {
+                break;
+              }
+            }
+
+            if (segmentMatchTimes > ediVersionSegment.getMax()) {
+              segment.segmentMaximumOccurrencesExceed = {
+                expect: ediVersionSegment.getMax(),
+                actual: segmentMatchTimes
+              };
             }
           } else {
             // segment not match
-            if (i === 0 && this.isLoop) {
+            if (isFirstSegmentInLoop) {
               // if the first child segment in loop does not match, break
               return result;
             }

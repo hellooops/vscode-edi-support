@@ -8,6 +8,11 @@ interface IEdiMessageResult<T> {
   getIResult(): T;
 }
 
+interface SegmentMaximumOccurrencesExceed {
+  expect: number;
+  actual: number;
+}
+
 export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
   key: string;
 
@@ -20,6 +25,8 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   public ediReleaseSchemaSegment?: EdiReleaseSchemaSegment;
   public isInvalidSegment: boolean;
   public Loop?: EdiSegment[];
+
+  segmentMaximumOccurrencesExceed?: SegmentMaximumOccurrencesExceed;
 
   segmentStr?: string;
 
@@ -121,6 +128,19 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
       });
     }
 
+    if (this.segmentMaximumOccurrencesExceed) {
+      errors.push({
+        error: `Segment ${this.id} maximum occurrences exceed, expect ${this.segmentMaximumOccurrencesExceed.expect}, got ${this.segmentMaximumOccurrencesExceed.actual}`,
+        code: DiagnosticErrors.SEGMENT_MAXIMUM_OCCURRENCES_EXCEED,
+        severity: DiagnosticErrorSeverity.ERROR,
+        errorSegment: this,
+      });
+    }
+
+    if (this.isLoop()) {
+      errors.push(...this.Loop!.flatMap(i => i.getErrors(context)));
+    }
+
     if (!this.elements) return errors;
     return errors.concat(this.elements.flatMap(el => el.getErrors(context)));
   }
@@ -173,6 +193,7 @@ export namespace DiagnosticErrors {
   export const VALUE_REQUIRED = "Edi Support: Value required";
   export const QUALIFIER_INVALID_CODE = "Edi Support: Qualifier invalid code";
   export const SEGMENT_NOT_FOUND = "Edi Support: Segment not found";
+  export const SEGMENT_MAXIMUM_OCCURRENCES_EXCEED = "Edi Support: Segment maximum occurrences exceed";
 }
 
 export interface DiagnoscticsContext {
