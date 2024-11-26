@@ -10,20 +10,25 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.6.0] - 2024-11-26
+
+### Added
+
+- Support loop.
+- Support trailing annotations.
+
+### Changed
+
+- Remove elements inlay hints.
+- Don't prettify document when toggle inlay hints.
+
+
 ## [1.5.0] - 2024-11-19
 
 ### Added
 
 - Fully support multiple interchange/functional group/transaction set.
 - Preview tree nested sticky.
-
-### Changed
-
-- Remove elements inlay hints.
-
-### Fixed
-
-- Don't prettify document when toggle inlay hints.
 
 
 ## [1.4.3] - 2024-09-14

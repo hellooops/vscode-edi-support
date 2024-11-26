@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "EDI Support",
   "description": "Language support for X12/HIPAA and EDIFACT",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "publisher": "DericLee",
   "author": {
     "email": "slxs1415@163.com",
