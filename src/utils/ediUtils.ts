@@ -66,11 +66,11 @@ export class EdiUtils {
   }
 
   private static ediParserCache: {
-    document?: string,
+    document?: string;
     result: {
-      parser: EdiParserBase | undefined,
+      parser: EdiParserBase | undefined;
       ediType: string,
-    } | undefined
+    };
   } | undefined = undefined;
 
   static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
@@ -80,6 +80,11 @@ export class EdiUtils {
         document: documentContent,
         result: EdiUtils.getEdiParserInternal(document)
       };
+    }
+
+    const ediType = EdiUtils.ediParserCache.result.ediType;
+    if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
+      vscode.languages.setTextDocumentLanguage(document, ediType);
     }
 
     return EdiUtils.ediParserCache.result!;
@@ -97,10 +102,6 @@ export class EdiUtils {
       ediType = EdiType.EDIFACT;
     } else {
       ediType = EdiType.UNKNOWN;
-    }
-
-    if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
-      vscode.languages.setTextDocumentLanguage(document, ediType);
     }
 
     return {

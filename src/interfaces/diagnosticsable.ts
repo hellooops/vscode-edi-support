@@ -1,3 +1,5 @@
+import { Disposable } from "vscode";
+
 export interface IDiagnosticsable {
-  registerDiagnostics(): any[];
+  registerDiagnostics(): Disposable[];
 }
