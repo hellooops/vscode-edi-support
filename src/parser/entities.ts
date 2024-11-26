@@ -58,9 +58,9 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     }
   }
 
-  getSegment(withoutLoop?: boolean): EdiSegment[] {
+  getSegments(withoutLoop?: boolean): EdiSegment[] {
     if (this.isLoop() && withoutLoop) {
-      return this.Loop!.flatMap(i => i.getSegment(withoutLoop));
+      return this.Loop!.flatMap(i => i.getSegments(withoutLoop));
     } else {
       return [this];
     }
@@ -383,7 +383,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   getSegments(withoutLoop?: boolean): EdiSegment[] {
     const result: EdiSegment[] = [];
     if (this.startSegment) result.push(this.startSegment);
-    result.push(...this.segments.flatMap(s => s.getSegment(withoutLoop)));
+    result.push(...this.segments.flatMap(s => s.getSegments(withoutLoop)));
     if (this.endSegment) result.push(this.endSegment);
     return result;
   }

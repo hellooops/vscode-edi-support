@@ -219,14 +219,23 @@ export class EdiUtils {
   static getSegmentOrElementByPosition(position: number, segments: EdiSegment[]): {segment?: EdiSegment, element?: EdiElement} {
     const active: {segment?: EdiSegment, element?: EdiElement} = {};
     let selectedSegment = segments.find(x => position >= x.startIndex && position <= (x.endIndex + 1));
-    if (!selectedSegment?.elements || selectedSegment?.elements?.length <= 0) {
+    if (!selectedSegment) {
       return active;
     }
 
+    if (selectedSegment.isLoop()) {
+      const childResult = EdiUtils.getSegmentOrElementByPosition(position, selectedSegment.Loop!);
+      if (childResult.segment) {
+        return childResult;
+      }
+    }
+
     active.segment = selectedSegment;
+    if (!selectedSegment.elements || selectedSegment.elements?.length <= 0) {
+      return active;
+    }
 
-    let selectedElement = selectedSegment?.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position <= (selectedSegment!.startIndex + x.endIndex + 1));
-
+    let selectedElement = selectedSegment.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position <= (selectedSegment!.startIndex + x.endIndex + 1));
     if (!selectedElement) {
       return active;
     }

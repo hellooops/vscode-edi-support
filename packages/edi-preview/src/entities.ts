@@ -1,3 +1,5 @@
+import { Utils } from "./utils";
+
 export interface TreeItemBase {
   getHeight(): number;
   getParentHeight(): number;
@@ -267,7 +269,8 @@ export class EdiDocument implements TreeItemBase {
 
   getSegmentOrElementByKey(key: string): EdiSegment | EdiElement | undefined {
     const segments = this.getSegments();
-    for (const segment of segments) {
+    const flatSegments = Utils.flatSegments(segments); // Loop and nonloop segments are in the same level
+    for (const segment of flatSegments) {
       if (segment.key === key) return segment;
       if (segment.elements) {
         for (const dataEle of segment.elements) {
