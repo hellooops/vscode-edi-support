@@ -235,7 +235,7 @@ export class EdiUtils {
       return active;
     }
 
-    let selectedElement = selectedSegment.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position <= (selectedSegment!.startIndex + x.endIndex + 1));
+    let selectedElement = selectedSegment.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position < (selectedSegment!.startIndex + x.endIndex + 1));
     if (!selectedElement) {
       return active;
     }
