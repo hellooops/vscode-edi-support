@@ -6,7 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-### Added
+### Changed
+
+- Set inlay hints default configuration to false.
 
 
 

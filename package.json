@@ -158,7 +158,7 @@
         },
         "ediSupport.inlayHints.segmentNames": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Show inlay hints for segment names."
         },
         "ediSupport.menu.icon": {
