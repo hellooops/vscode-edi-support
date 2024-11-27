@@ -107,6 +107,11 @@
         "category": "EDI Support"
       },
       {
+        "command": "edi-support.toggleIndentSegmentsInLoopCommand",
+        "title": "Toggle segments indentation in loop",
+        "category": "EDI Support"
+      },
+      {
         "command": "edi-support.refreshEdiExplorer",
         "title": "Refresh Edi Explorer",
         "category": "EDI Support",
@@ -140,6 +145,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable/disable annotations for loop segments."
+        },
+        "ediSupport.enableSegmentIndent": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable indentation for segments in loops."
         },
         "ediSupport.enableHover": {
           "type": "boolean",

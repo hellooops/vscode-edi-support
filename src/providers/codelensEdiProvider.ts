@@ -62,6 +62,7 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
     const codeLenses: vscode.CodeLens[] = [];
     codeLenses.push(CodelensEdiProvider.CODE_LENSE_MINIFY);
     codeLenses.push(CodelensEdiProvider.CODE_LENSE_PRETTIFY);
+
     const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.inlayHints.segmentNames);
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
@@ -72,6 +73,7 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
         arguments: []
       }
     ));
+
     const loopAnnotationsEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableLoopAnnotations);
     codeLenses.push(new vscode.CodeLens(
       new vscode.Range(0, 0, 0, 0),
@@ -82,6 +84,18 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
         arguments: []
       }
     ));
+
+    const indentSegmentsInLoopEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.formatting.indentSegmentsInLoop);
+    codeLenses.push(new vscode.CodeLens(
+      new vscode.Range(0, 0, 0, 0),
+      {
+        title: `${constants.commands.toggleIndentSegmentsInLoopCommand.label}(${indentSegmentsInLoopEnabled ? "on" : "off"})`,
+        tooltip: constants.commands.toggleIndentSegmentsInLoopCommand.label,
+        command: constants.commands.toggleIndentSegmentsInLoopCommand.name,
+        arguments: []
+      }
+    ));
+
     codeLenses.push(CodelensEdiProvider.CODE_LENSE_PREVIEW);
     codeLenses.push(CodelensEdiProvider.CODE_LENSE_COMPANY);
 

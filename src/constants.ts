@@ -25,6 +25,10 @@ export namespace commands {
     name: "edi-support.toggleLoopAnnotationsCommand",
     label: "Loop annotations"
   };
+  export const toggleIndentSegmentsInLoopCommand = {
+    name: "edi-support.toggleIndentSegmentsInLoopCommand",
+    label: "Segment indent"
+  };
   export const previewDocumentCommand = {
     name: "edi-support.preview",
     label: "Preview"
@@ -73,10 +77,10 @@ export namespace configuration {
   };
   export const enableCodelens = "enableCodelens";
   export const enableLoopAnnotations = "enableLoopAnnotations";
-  export const enableHover = "enableHover";
   export const formatting = {
     indentSegmentsInLoop: "formatting.indentSegmentsInLoop",
   };
+  export const enableHover = "enableHover";
   export const enableTrailingAnnotations = "enableTrailingAnnotations";
 }
 
