@@ -22,17 +22,20 @@ export class MinifyDocumentCommand implements ICommandable {
       return;
     }
 
-    let text = ediDocument.getSegments().join("");
+    let text = ediDocument.getSegments(true).join("");
 
     vscode.window.activeTextEditor.edit((builder) => {
       if (!vscode.window.activeTextEditor) {
         return;
       }
 
-      builder.replace(new vscode.Range(
-        vscode.window.activeTextEditor.document.positionAt(0), 
-        vscode.window.activeTextEditor.document.positionAt(documentContent.length)
-        ), text);
+      builder.replace(
+        new vscode.Range(
+          vscode.window.activeTextEditor.document.positionAt(0), 
+          vscode.window.activeTextEditor.document.positionAt(documentContent.length)
+        ),
+        text
+      );
     });
   }
 }

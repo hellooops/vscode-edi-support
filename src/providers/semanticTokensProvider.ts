@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiSegment, EdiElement, EdiType, EdiMessageSeparators } from '../parser/entities';
+import { EdiSegment, EdiElement, EdiType, EdiMessageSeparators } from "../parser/entities";
 import { EdiUtils } from "../utils/ediUtils";
 
 const TokenTypes = {
@@ -12,7 +12,7 @@ const TokenTypes = {
   EdiValueTypeDatetime: "edisupportvaluetypedatetime",
   EdiValueTypeQualifer: "edisupportvaluetypequalifer",
   EdiValueTypeOther: "edisupportvaluetypeother",
-}
+};
 
 const legend = new vscode.SemanticTokensLegend(Object.values(TokenTypes));
 
@@ -22,7 +22,7 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return;
     const ediDocument = await parser.parse();
-    const segments = ediDocument.getSegments();
+    const segments = ediDocument.getSegments(true);
     if (!segments || segments.length <= 0) {
       return;
     }

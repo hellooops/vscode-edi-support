@@ -77,7 +77,7 @@ export default class WebviewProvider {
 
     this.receiveMessages();
 
-    this.update(document)
+    this.update(document);
     return panel;
   }
 

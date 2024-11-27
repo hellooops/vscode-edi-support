@@ -1,6 +1,5 @@
-import * as path from "path";
 import * as vscode from "vscode";
-import WebviewProvider from './webviewProvider';
+import WebviewProvider from "./webviewProvider";
 
 // TODO: change to existing webview if already exists
 // TODO: only update relative webview if edi file is changed.

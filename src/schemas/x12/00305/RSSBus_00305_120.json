@@ -1,0 +1,1 @@
+{"Release":"00305","DocumentType":"120","TransactionSet":[{"Id":"ST"},{"Id":"BVP"},{"Id":"G62Loop1","Max":99,"Loop":[{"Id":"G62"},{"Id":"VCLoop1","Max":999,"Loop":[{"Id":"VC"},{"Id":"VC1","Min":0},{"Id":"DTM","Min":0},{"Id":"N1","Min":0},{"Id":"N2","Min":0,"Max":2},{"Id":"N3","Min":0,"Max":2},{"Id":"N4","Min":0},{"Id":"REF","Min":0}]}]},{"Id":"SE"}]}

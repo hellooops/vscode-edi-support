@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiElement, EdiSegment, EdiType } from "../parser/entities";
+import { EdiSegment, EdiType } from "../parser/entities";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 
@@ -8,8 +8,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
   onDidChangeInlayHints?: vscode.Event<void> | undefined;
   async provideInlayHints(document: vscode.TextDocument, range: vscode.Range, token: vscode.CancellationToken): Promise<vscode.InlayHint[] | null | undefined> {
     const segmentNamesInlayHintsEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.inlayHints.segmentNames) ?? false;
-    const elementsInlayHintsEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.inlayHints.elements) ?? false;
-    if (!segmentNamesInlayHintsEnabled && !elementsInlayHintsEnabled) {
+    if (!segmentNamesInlayHintsEnabled) {
       return [];
     }
     const { parser } = EdiUtils.getEdiParser(document)!;
@@ -18,7 +17,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
     }
 
     const ediDocument = await parser.parse();
-    const segments = ediDocument.getSegments();
+    const segments = ediDocument.getSegments(true);
 
     const inlayHints: vscode.InlayHint[] = [];
     for (let segment of segments) {
@@ -28,58 +27,22 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
           inlayHints.push(segmentInlayHint);
         }
       }
-
-      if (elementsInlayHintsEnabled) {
-        if (!segment.elements) {
-          continue;
-        }
-  
-        for (let ele of segment.elements) {
-          inlayHints.push(...this.getElementInlayHints(segment, ele, document));
-        }
-      }
-
     }
 
     return inlayHints;
   }
 
   private getSegmentNameInlayHint(segment: EdiSegment, document: vscode.TextDocument): vscode.InlayHint | undefined {
-    if (!segment.ediReleaseSchemaSegment?.desc) {
+    if (!segment.getDesc()) {
       return;
     }
 
     const inlayHint = new vscode.InlayHint(
-      document.positionAt(segment.startIndex),
-      segment.ediReleaseSchemaSegment.desc
+      document.positionAt(segment.startIndex + segment.id.length),
+      segment.getDesc()!
     );
 
     return inlayHint;
-  }
-
-  private getElementInlayHints(segment: EdiSegment, element: EdiElement, document: vscode.TextDocument): vscode.InlayHint[] {
-    if (!segment.ediReleaseSchemaSegment) {
-      return [];
-    }
-
-    if (element.components) {
-      const subElementsInlayHints: vscode.InlayHint[] = [];
-      for (let subEle of element.components) {
-        subElementsInlayHints.push(...this.getElementInlayHints(segment, subEle, document));
-      }
-      return subElementsInlayHints;
-    } else {
-      if (!element.ediReleaseSchemaElement?.desc) {
-        return [];
-      }
-
-      const inlayHint = new vscode.InlayHint(
-        document.positionAt(segment.startIndex + element.startIndex),
-        element.ediReleaseSchemaElement.desc
-      );
-      inlayHint.paddingLeft = true;
-      return [inlayHint];
-    }
   }
 
   resolveInlayHint?(hint: vscode.InlayHint, token: vscode.CancellationToken): vscode.ProviderResult<vscode.InlayHint> {

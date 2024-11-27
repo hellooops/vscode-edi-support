@@ -1,3 +1,5 @@
+import { Utils } from "./utils";
+
 export interface TreeItemBase {
   getHeight(): number;
   getParentHeight(): number;
@@ -63,9 +65,11 @@ export class EdiSegment implements TreeItemBase {
   id: string;
   elements: EdiElement[];
   desc?: string;
-  purpose: string;
+  purpose?: string;
+  Loop?: EdiSegment[];
 
   parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet;
+  parentSegment?: EdiSegment;
 
   constructor(json: IEdiSegment, parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet) {
     this.key = json.key;
@@ -73,8 +77,18 @@ export class EdiSegment implements TreeItemBase {
     this.desc = json.desc;
     this.purpose = json.purpose;
     this.elements = json.elements?.map(i => new EdiElement(i, this));
+    this.Loop = json.Loop?.map(i => new EdiSegment(i, parent).withParentSegment(this));
 
     this.parent = parent;
+  }
+
+  public isLoop(): boolean {
+    return this.Loop !== undefined;
+  }
+
+  withParentSegment(parentSegment: EdiSegment): EdiSegment {
+    this.parentSegment = parentSegment;
+    return this;
   }
 
   getHeight(): number {
@@ -82,7 +96,11 @@ export class EdiSegment implements TreeItemBase {
   }
 
   getParentHeight(): number {
-    return this.parent.getHeight() + this.parent.getParentHeight();
+    if (this.parentSegment) {
+      return this.parentSegment.getHeight() + this.parentSegment.getParentHeight();
+    } else {
+      return this.parent.getHeight() + this.parent.getParentHeight();
+    }
   }
 }
 
@@ -251,7 +269,8 @@ export class EdiDocument implements TreeItemBase {
 
   getSegmentOrElementByKey(key: string): EdiSegment | EdiElement | undefined {
     const segments = this.getSegments();
-    for (const segment of segments) {
+    const flatSegments = Utils.flatSegments(segments); // Loop and nonloop segments are in the same level
+    for (const segment of flatSegments) {
       if (segment.key === key) return segment;
       if (segment.elements) {
         for (const dataEle of segment.elements) {

@@ -1,0 +1,1 @@
+{"Release":"00306","DocumentType":"242","TransactionSet":[{"Id":"ST"},{"Id":"BGN"},{"Id":"IISLoop1","Max":"unbounded","Loop":[{"Id":"IIS"},{"Id":"N1Loop1","Max":10,"Loop":[{"Id":"N1"},{"Id":"REF","Min":0,"Max":10},{"Id":"STSLoop1","Max":"unbounded","Loop":[{"Id":"STS"},{"Id":"REF","Min":0,"Max":10},{"Id":"QTY","Min":0,"Max":"unbounded"}]}]}]},{"Id":"SE"}]}

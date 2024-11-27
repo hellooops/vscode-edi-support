@@ -66,10 +66,17 @@ export namespace configuration {
   export const ediSupport = "ediSupport";
   export const inlayHints = {
     segmentNames: "inlayHints.segmentNames",
-    elements: "inlayHints.elements"
   };
   export const enableCodelens = "enableCodelens";
   export const enableHover = "enableHover";
+  export const formatting = {
+    indentSegmentsInLoop: "formatting.indentSegmentsInLoop",
+  };
+  export const enableTrailingAnnotations = "enableTrailingAnnotations";
+}
+
+export namespace colors {
+  export const trailingLineForegroundColor = "ediSupport.trailingLineForegroundColor";
 }
 
 export namespace diagnostic {

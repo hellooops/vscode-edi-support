@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "EDI Support",
   "description": "Language support for X12/HIPAA and EDIFACT",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "publisher": "DericLee",
   "author": {
     "email": "slxs1415@163.com",
@@ -116,6 +116,16 @@
     "configuration": {
       "title": "EDI Support",
       "properties": {
+        "ediSupport.enableTrailingAnnotations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable trailing annotations"
+        },
+        "ediSupport.formatting.indentSegmentsInLoop": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indent segments in loop"
+        },
         "ediSupport.enableCodelens": {
           "type": "boolean",
           "default": true,
@@ -130,11 +140,6 @@
           "type": "boolean",
           "default": true,
           "description": "Show inlay hints for segment names."
-        },
-        "ediSupport.inlayHints.elements": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show inlay hints for elements."
         },
         "ediSupport.menu.icon": {
           "type": "boolean",
@@ -240,6 +245,17 @@
           ]
         }
       }
+    ],
+    "colors": [
+      {
+        "id": "ediSupport.trailingLineForegroundColor",
+        "description": "Specifies the foreground color of the inline segment / element description",
+        "defaults": {
+          "dark": "#99999959",
+          "light": "#99999959",
+          "highContrast": "#99999999"
+        }
+      }
     ]
   },
   "scripts": {
@@ -250,8 +266,9 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "buildPreview": "cd packages/edi-preview && npm run build",
-    "package": "npm run buildPreview && vsce package",
-    "publish": "npm run buildPreview && vsce publish",
+    "copySchema": "node scripts/copySchema.js",
+    "package": "npm run buildPreview && npm run copySchema && vsce package",
+    "publish": "npm run buildPreview && npm run copySchema && vsce publish",
     "pre-release-publish": "npm run buildPreview && vsce publish --pre-release"
   },
   "devDependencies": {

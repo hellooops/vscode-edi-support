@@ -1,3 +1,5 @@
+import type { EdiSegment } from "./entities";
+
 export class Utils {
   static normalizeMetaDateAndTime(date: string | undefined, time: string | undefined): string {
     if (!date && !time) return "";
@@ -34,5 +36,15 @@ export class Utils {
     }
 
     return resultFrags.join(" ");
+  }
+
+  static flatSegments(segments: EdiSegment[]): EdiSegment[] {
+    return segments.flatMap(i => {
+      if (i.isLoop()) {
+        return [i, ...Utils.flatSegments(i.Loop!)];
+      } else {
+        return [i];
+      }
+    });
   }
 }

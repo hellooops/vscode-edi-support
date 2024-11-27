@@ -1,0 +1,1 @@
+{"Release":"00505","DocumentType":"884","TransactionSet":[{"Id":"ST"},{"Id":"BMP"},{"Id":"N1","Max":5},{"Id":"G61","Min":0,"Max":3},{"Id":"NTE","Min":0,"Max":10},{"Id":"QTY","Min":0},{"Id":"BAL","Min":0},{"Id":"N9Loop1","Min":0,"Max":999,"Loop":[{"Id":"N9"},{"Id":"AMT","Min":0},{"Id":"N1","Min":0}]},{"Id":"SE"}]}

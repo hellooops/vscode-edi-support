@@ -57,6 +57,6 @@ const props = defineProps<{
 const visible = ref(true);
 
 const isFunctionalGroupFake = computed(() => {
-  return props.interchange.functionalGroups.length === 1 && props.interchange.functionalGroups[0].isFake()
+  return props.interchange.functionalGroups.length === 1 && props.interchange.functionalGroups[0].isFake();
 });
 </script>

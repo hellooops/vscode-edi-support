@@ -11,14 +11,15 @@
     "rules": {
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/semi": "warn",
-        "curly": "warn",
+        "curly": ["warn", "multi-line"],
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
-        "semi": "off"
+        "semi": "warn"
     },
     "ignorePatterns": [
         "out",
         "dist",
-        "**/*.d.ts"
+        "**/*.d.ts",
+        "*.json"
     ]
 }

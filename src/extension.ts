@@ -16,8 +16,11 @@ import { CompletionItemEdiProvider } from "./providers/completionItemEdiProvider
 import { TreeEdiProvider } from "./providers/treeEdiProvider";
 import { DocumentSymbolsEdiProvider } from "./providers/documentSymbolsEdiProvider";
 import { SemanticTokensProvider } from "./providers/semanticTokensProvider";
+import { FoldingRangeEdiProvider } from "./providers/foldingRangeEdiProvider";
 import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
+import { EdiDecorationsMgr } from "./decorations/ediDecorations";
+import { IDecorationable } from "./interfaces/decorationable";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
@@ -33,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new InlayHintsEdiProvider());
   registerProvider(context, new CompletionItemEdiProvider());
   registerDiagnostics(context, new EdiDiagnosticsMgr());
+  registerDecorations(context, new EdiDecorationsMgr());
 
   const treeEdiProvider = new TreeEdiProvider();
   registerProvider(context, treeEdiProvider);
@@ -40,8 +44,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerProvider(context, new DocumentSymbolsEdiProvider());
   registerProvider(context, new SemanticTokensProvider());
+  registerProvider(context, new FoldingRangeEdiProvider());
 
-  console.log('Extension "edi-support" is now active!');
+  console.log("Extension \"edi-support\" is now active!");
 }
 
 function registerCommand(context: vscode.ExtensionContext, command: ICommandable, callback?: (...args: any[]) => any) {
@@ -55,6 +60,10 @@ function registerProvider(context: vscode.ExtensionContext, provider: IProvidabl
 
 function registerDiagnostics(context: vscode.ExtensionContext, diagnostics: IDiagnosticsable) {
   context.subscriptions.push(...diagnostics.registerDiagnostics());
+}
+
+function registerDecorations(context: vscode.ExtensionContext, diagnostics: IDecorationable) {
+  context.subscriptions.push(...diagnostics.registerDecorations());
 }
 
 export function deactivate() {}

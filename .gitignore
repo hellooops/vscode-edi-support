@@ -4,3 +4,4 @@ node_modules
 .vscode-test/
 *.vsix
 edi-preview-dist/
+edi-edifact-support-*/

@@ -2,9 +2,11 @@ export class EdiSchema {
   public ediReleaseSchema: EdiReleaseSchema;
   public ediVersionSchema?: EdiVersionSchema;
 
-  constructor(rawReleaseSchema: any) {
+  constructor(rawReleaseSchema: any, rawVersionSchema: any) {
     this.ediReleaseSchema = new EdiReleaseSchema(rawReleaseSchema);
-    this.ediVersionSchema = undefined;  // TODO(Deric): May implement message schemas in the future.
+    if (rawVersionSchema) {
+      this.ediVersionSchema = new EdiVersionSchema(rawVersionSchema);
+    }
   }
 }
 
@@ -318,6 +320,49 @@ export class EdiReleaseSchemaSegment {
   }
 }
 
+export class EdiVersionSegment {
+  Id: string;
+  Min?: number;
+  Max?: number | "unbounded";
+  Loop?: EdiVersionSegment[];
+
+  constructor (raw: any) {
+    this.Id = raw.Id;
+    this.Min = raw.Min;
+    this.Max = raw.Max;
+    if (raw.Loop) {
+      this.Loop = raw.Loop.map((i: any) => new EdiVersionSegment(i));
+    }
+  }
+
+  isLoop(): boolean {
+    return this.Loop !== undefined;
+  }
+
+  getMax(): number {
+    if (this.Max === undefined) {
+      return 1;
+    } else if (this.Max === "unbounded") {
+      return 99999;
+    } else {
+      return this.Max;
+    }
+  }
+}
+
 export class EdiVersionSchema {
-  // TODO(Deric): May implement message schemas in the future.
+  public Release: string;
+  public DocumentType: string;
+  public Introduction: string;
+  public name: string;
+  public TransactionSet: EdiVersionSegment[];
+
+  constructor (raw: any) {
+    this.Release = raw.Release;
+    this.DocumentType = raw.DocumentType;
+    this.Introduction = raw.Introduction;
+    this.name = raw.name;
+
+    this.TransactionSet = raw.TransactionSet.map((i: any) => new EdiVersionSegment(i));
+  }
 }

@@ -1,0 +1,1 @@
+{"Release":"00306","DocumentType":"827","TransactionSet":[{"Id":"ST"},{"Id":"RIC"},{"Id":"TRN","Min":0,"Max":2},{"Id":"REF","Min":0,"Max":"unbounded"},{"Id":"DTM","Min":0,"Max":"unbounded"},{"Id":"N1Loop1","Min":0,"Max":10,"Loop":[{"Id":"N1"},{"Id":"PER","Min":0,"Max":3}]},{"Id":"SE"}]}

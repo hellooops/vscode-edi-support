@@ -55,7 +55,7 @@ export class EdiUtils {
     }
 
     content = content.trim();
-    if (content.startsWith(`${constants.ediDocument.edifact.segment.UNA}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) || // UNA*
+    if (content.startsWith(`${constants.ediDocument.edifact.segment.UNA}${constants.ediDocument.edifact.defaultSeparators.componentElementSeparator}`) || // UNA:
         content.startsWith(`${constants.ediDocument.edifact.segment.UNB}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) || // UNB*
         content.startsWith(`${constants.ediDocument.edifact.segment.UNH}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) // UNH*
     ) {
@@ -66,20 +66,25 @@ export class EdiUtils {
   }
 
   private static ediParserCache: {
-    document?: string,
+    document?: string;
     result: {
-      parser: EdiParserBase | undefined,
+      parser: EdiParserBase | undefined;
       ediType: string,
-    } | undefined
+    };
   } | undefined = undefined;
 
   static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
     const documentContent = document.getText();
-    if (!EdiUtils.ediParserCache || documentContent != EdiUtils.ediParserCache.document) {
+    if (!EdiUtils.ediParserCache || documentContent !== EdiUtils.ediParserCache.document) {
       EdiUtils.ediParserCache = {
         document: documentContent,
         result: EdiUtils.getEdiParserInternal(document)
-      }
+      };
+    }
+
+    const ediType = EdiUtils.ediParserCache.result.ediType;
+    if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
+      vscode.languages.setTextDocumentLanguage(document, ediType);
     }
 
     return EdiUtils.ediParserCache.result!;
@@ -97,10 +102,6 @@ export class EdiUtils {
       ediType = EdiType.EDIFACT;
     } else {
       ediType = EdiType.UNKNOWN;
-    }
-
-    if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
-      vscode.languages.setTextDocumentLanguage(document, ediType);
     }
 
     return {
@@ -219,14 +220,23 @@ export class EdiUtils {
   static getSegmentOrElementByPosition(position: number, segments: EdiSegment[]): {segment?: EdiSegment, element?: EdiElement} {
     const active: {segment?: EdiSegment, element?: EdiElement} = {};
     let selectedSegment = segments.find(x => position >= x.startIndex && position <= (x.endIndex + 1));
-    if (!selectedSegment?.elements || selectedSegment?.elements?.length <= 0) {
+    if (!selectedSegment) {
       return active;
     }
 
+    if (selectedSegment.isLoop()) {
+      const childResult = EdiUtils.getSegmentOrElementByPosition(position, selectedSegment.Loop!);
+      if (childResult.segment) {
+        return childResult;
+      }
+    }
+
     active.segment = selectedSegment;
+    if (!selectedSegment.elements || selectedSegment.elements?.length <= 0) {
+      return active;
+    }
 
-    let selectedElement = selectedSegment?.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position <= (selectedSegment!.startIndex + x.endIndex + 1));
-
+    let selectedElement = selectedSegment.elements.find(x => position >= (selectedSegment!.startIndex + x.startIndex) && position < (selectedSegment!.startIndex + x.endIndex + 1));
     if (!selectedElement) {
       return active;
     }
@@ -245,5 +255,14 @@ export class EdiUtils {
 
     active.element = selectedElement;
     return active;
+  }
+
+  static isOnlySegmentInLine(document: vscode.TextDocument, segment: EdiSegment): boolean {
+    const segmentStartPosition = EdiUtils.getSegmentStartPosition(document, segment);
+    const segmentEndPosition = EdiUtils.getSegmentEndPosition(document, segment);
+    if (segmentStartPosition.line !== segmentEndPosition.line) return false;
+    const segmentLineNumber = segmentStartPosition.line;
+    const documentContentInLine = document.lineAt(segmentLineNumber).text;
+    return documentContentInLine.trim() === segment.segmentStr;
   }
 }

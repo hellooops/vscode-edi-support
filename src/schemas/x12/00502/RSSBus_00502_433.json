@@ -1,0 +1,1 @@
+{"Release":"00502","DocumentType":"433","TransactionSet":[{"Id":"ST"},{"Id":"BGN"},{"Id":"DTM","Max":10},{"Id":"SMS"},{"Id":"N1Loop1","Max":2,"Loop":[{"Id":"N1"},{"Id":"PI","Min":0},{"Id":"CD","Min":0,"Max":50}]},{"Id":"SE"}]}

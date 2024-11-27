@@ -22,7 +22,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       return;
     }
 
-    const segments = ediDocument.getSegments();
+    const segments = ediDocument.getSegments(true);
     let realPosition = document.offsetAt(
       new vscode.Position(position.line, position.character)
     );
@@ -40,8 +40,8 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
 
   private buildSegmentMarkdownString(ediType: EdiType, segment: EdiSegment) : vscode.MarkdownString[] {
     const part2MdSb = new StringBuilder();
-    if (segment?.ediReleaseSchemaSegment?.desc) {
-      part2MdSb.append(`**${segment.ediReleaseSchemaSegment.desc}**\n\n`);
+    if (segment?.getDesc()) {
+      part2MdSb.append(`**${segment.getDesc()}**\n\n`);
     }
     if (segment?.ediReleaseSchemaSegment?.purpose) {
       part2MdSb.append(`${segment.ediReleaseSchemaSegment.purpose}\n\n`);
