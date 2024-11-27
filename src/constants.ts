@@ -66,7 +66,6 @@ export namespace configuration {
   export const ediSupport = "ediSupport";
   export const inlayHints = {
     segmentNames: "inlayHints.segmentNames",
-    elements: "inlayHints.elements"
   };
   export const enableCodelens = "enableCodelens";
   export const enableHover = "enableHover";
