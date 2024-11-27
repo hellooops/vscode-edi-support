@@ -138,7 +138,7 @@ export class EdiTransactionSet implements TreeItemBase {
   } 
 
   getHeight(): number {
-    return 48;
+    return 48 + (this.meta.messageInfo?.introduction ? 40 : 0);
   }
 
   getParentHeight(): number {

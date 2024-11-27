@@ -3,6 +3,7 @@
 import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
+import MessageInfo from "../interfaces/messageInfo";
 
 interface IEdiMessageResult<T> {
   getIResult(): T;
@@ -358,6 +359,7 @@ export interface EdiTransactionSetMeta {
   release?: string;
   version?: string;
   id?: string;
+  messageInfo?: MessageInfo;
 }
 
 export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>, IDiagnosticErrorAble {

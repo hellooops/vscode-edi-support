@@ -1,5 +1,5 @@
-export default interface MessagesInfo {
-  documentType?: string;
-  name?: string;
-  introduction?: string;
+export default interface MessageInfo {
+  version: string;
+  name: string;
+  introduction: string;
 }

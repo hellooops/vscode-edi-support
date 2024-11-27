@@ -1,6 +1,6 @@
 import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
-import { EdiReleaseSchemaSegment } from "../schemas/schemas";
+import { EdiReleaseSchemaSegment, getMessageInfo } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class EdifactParser extends EdiParserBase {
@@ -110,7 +110,10 @@ export class EdifactParser extends EdiParserBase {
 
     if (transactionSetSegment && transactionSetSegment.elements.length > 1) {
       const eles = transactionSetSegment.elements[1].components!;
-      if (eles.length > 0) meta.version = eles[0].value;
+      if (eles.length > 0) {
+        meta.version = eles[0].value;
+        meta.messageInfo = getMessageInfo(meta.version);
+      }
       if (eles.length > 2) meta.release = `${eles[1].value}${eles[2].value}`;
     }
 

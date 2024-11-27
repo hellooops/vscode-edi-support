@@ -42,10 +42,17 @@ interface IEdiSegment {
 
 type IEdiType = "x12" | "edifact" | "unknown";
 
+interface IMessageInfo {
+  version: string;
+  name: string;
+  introduction: string;
+}
+
 interface IEdiTransactionSetMeta {
   release?: string;
   version?: string;
   id?: string;
+  messageInfo?: IMessageInfo;
 }
 
 interface IEdiTransactionSet {

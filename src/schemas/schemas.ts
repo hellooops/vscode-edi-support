@@ -1,3 +1,7 @@
+import MessageInfo from "../interfaces/messageInfo";
+import { d96a_message_infos } from "./edifact_d96a_meta";
+import { r00401_message_infos } from "./x12_00401_meta";
+
 export class EdiSchema {
   public ediReleaseSchema: EdiReleaseSchema;
   public ediVersionSchema?: EdiVersionSchema;
@@ -365,4 +369,14 @@ export class EdiVersionSchema {
 
     this.TransactionSet = raw.TransactionSet.map((i: any) => new EdiVersionSegment(i));
   }
+}
+
+const versionMessageInfos: Record<string, MessageInfo> = [...r00401_message_infos, ...d96a_message_infos].reduce((infos, cur) => {
+  infos[cur.version] = cur;
+  return infos;
+}, {} as Record<string, MessageInfo>);
+
+export function getMessageInfo(version: string | undefined): MessageInfo | undefined {
+  if (!version) return undefined;
+  return versionMessageInfos[version];
 }

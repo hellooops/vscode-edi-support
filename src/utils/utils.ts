@@ -1,5 +1,3 @@
-import MessageInfo from "../interfaces/messageInfo";
-import { d96a_message_infos } from "../schemas/edifact_d96a_meta";
 import { nanoid } from "nanoid";
 
 export type Nullable<T> = T | null | undefined;
@@ -27,10 +25,6 @@ export default class Utils {
       return `${time.substring(0, 2)}:${time.substring(2, 4)}`;
     }
     return `${time.substring(0, 2)}:${time.substring(2, 4)}:${time.substring(4, 6)}`;
-  }
-
-  static getMessageInfoByDocumentType(documentType: string): MessageInfo | null {
-    return d96a_message_infos.find(m => m.documentType === documentType) || null;
   }
 
   static toString(value: Nullable<any>): string | null | undefined {

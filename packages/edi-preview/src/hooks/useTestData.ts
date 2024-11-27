@@ -23,7 +23,16 @@ export default function useTestData(): EdiDocument {
             "transactionSets": [
               {
                 "key": "paFyPmBA97FewHd--Xsvl",
-                "meta": { "release": "00401", "version": "850", "id": "0001" },
+                "meta": {
+                  "release": "00401",
+                  "version": "850",
+                  "messageInfo": {
+                    "name": "Purchase Order",
+                    "version": "850",
+                    "introduction": "This Draft Standard for Trial Use contains the format and establishes the data contents of the Purchase Order Transaction Set (850) for use within the context of an Electronic Data Interchange (EDI) environment. The transaction set can be used to provide for customary and established business and industry practice relative to the placement of purchase orders for goods and services. This transaction set should not be used to convey purchase order changes or purchase order acknowledgment information."
+                  },
+                  "id": "0001"
+                },
                 "id": "0001",
                 "segments": [
                   {
@@ -2218,7 +2227,16 @@ export default function useTestData(): EdiDocument {
             "transactionSets": [
               {
                 "key": "SzlDL2qC5idJzc5fh1s_p",
-                "meta": { "id": "001", "version": "ORDERS", "release": "D96A" },
+                "meta": {
+                  "id": "001",
+                  "version": "ORDERS",
+                  "messageInfo": {
+                    "name": "Purchase order",
+                    "version": "ORDERS",
+                    "introduction": "A message specifying details for goods or services ordered under conditions agreed between the seller and the buyer."
+                  },
+                  "release": "D96A"
+                },
                 "id": "001",
                 "segments": [
                   {
@@ -2407,7 +2425,16 @@ export default function useTestData(): EdiDocument {
               },
               {
                 "key": "VTiXglY3833yy4CNeCEwf",
-                "meta": { "id": "002", "version": "DESADV", "release": "D96A" },
+                "meta": {
+                  "id": "002",
+                  "version": "DESADV",
+                  "messageInfo": {
+                    "name": "Despatch advice",
+                    "version": "DESADV",
+                    "introduction": "A message specifying details for goods despatched or ready for despatch under agreed conditions.\\nThe United Nations Despatch Advice Message serves both as a specification for Delivery Despatch Advice and also as a Returns Despatch Advice message. Throughout this document, the reference to 'Despatch Advice' may be interpreted as conveying the wider meaning of 'Delivery Despatch Advice/Returns Despatch Advice'."
+                  },
+                  "release": "D96A"
+                },
                 "id": "002",
                 "segments": [
                   {
@@ -2795,7 +2822,16 @@ export default function useTestData(): EdiDocument {
             "transactionSets": [
               {
                 "key": "8Ecj3OHJuPREQ2cJ_FrJZ",
-                "meta": { "id": "003", "version": "ORDERS", "release": "D96A" },
+                "meta": {
+                  "id": "003",
+                  "version": "ORDERS",
+                  "messageInfo": {
+                    "name": "Purchase order",
+                    "version": "ORDERS",
+                    "introduction": "A message specifying details for goods or services ordered under conditions agreed between the seller and the buyer."
+                  },
+                  "release": "D96A"
+                },
                 "id": "003",
                 "segments": [
                   {

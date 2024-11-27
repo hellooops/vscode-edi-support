@@ -1,6 +1,6 @@
 import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
-import { EdiReleaseSchemaSegment } from "../schemas/schemas";
+import { EdiReleaseSchemaSegment, getMessageInfo } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class X12Parser extends EdiParserBase {
@@ -119,6 +119,7 @@ export class X12Parser extends EdiParserBase {
 
     if (transactionSetSegment && transactionSetSegment.elements.length > 0) {
       meta.version = transactionSetSegment.elements[0].value;
+      meta.messageInfo = getMessageInfo(meta.version);
     }
 
     if (transactionSetSegment && transactionSetSegment.elements.length > 1) {
