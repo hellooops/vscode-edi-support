@@ -10,6 +10,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.6.1] - 2024-11-27
+
+### Added
+
+- Add MessageInfo to transaction set info section in preview.
+
+
+
 ## [1.6.0] - 2024-11-26
 
 ### Added
