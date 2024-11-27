@@ -6,6 +6,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+
+
+
+## [1.6.1] - 2024-11-27
+
+### Added
+
+- Add MessageInfo to transaction set info section in preview.
+
 ### Changed
 
 - Set inlay hints default configuration to false.
