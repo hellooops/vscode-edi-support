@@ -12,10 +12,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [1.5.0] - 2024-11-19
 
-### Fixed
+### Added
 
 - Fully support multiple interchange/functional group/transaction set.
 - Preview tree nested sticky.
+
+### Changed
+
+- Remove elements inlay hints.
+
+### Fixed
+
+- Don't prettify document when toggle inlay hints.
 
 
 ## [1.4.3] - 2024-09-14

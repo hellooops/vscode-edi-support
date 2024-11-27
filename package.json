@@ -116,6 +116,11 @@
     "configuration": {
       "title": "EDI Support",
       "properties": {
+        "ediSupport.enableTrailingAnnotations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable trailing annotations"
+        },
         "ediSupport.formatting.indentSegmentsInLoop": {
           "type": "boolean",
           "default": true,
@@ -243,6 +248,17 @@
             "variable",
             "variable.other.constant"
           ]
+        }
+      }
+    ],
+    "colors": [
+      {
+        "id": "ediSupport.trailingLineForegroundColor",
+        "description": "Specifies the foreground color of the inline segment / element description",
+        "defaults": {
+          "dark": "#99999959",
+          "light": "#99999959",
+          "highContrast": "#99999999"
         }
       }
     ]

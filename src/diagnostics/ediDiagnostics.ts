@@ -55,7 +55,7 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     }
   }
 
-  registerDiagnostics(): any[] {
+  registerDiagnostics(): vscode.Disposable[] {
     const ediDiagnostics = vscode.languages.createDiagnosticCollection(constants.diagnostic.diagnosticCollectionId);
     if (vscode.window.activeTextEditor) {
       this.refreshDiagnostics(vscode.window.activeTextEditor.document, ediDiagnostics);

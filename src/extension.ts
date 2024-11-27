@@ -19,6 +19,8 @@ import { SemanticTokensProvider } from "./providers/semanticTokensProvider";
 import { FoldingRangeEdiProvider } from "./providers/foldingRangeEdiProvider";
 import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
+import { EdiDecorationsMgr } from "./decorations/ediDecorations";
+import { IDecorationable } from "./interfaces/decorationable";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
@@ -34,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new InlayHintsEdiProvider());
   registerProvider(context, new CompletionItemEdiProvider());
   registerDiagnostics(context, new EdiDiagnosticsMgr());
+  registerDecorations(context, new EdiDecorationsMgr());
 
   const treeEdiProvider = new TreeEdiProvider();
   registerProvider(context, treeEdiProvider);
@@ -57,6 +60,10 @@ function registerProvider(context: vscode.ExtensionContext, provider: IProvidabl
 
 function registerDiagnostics(context: vscode.ExtensionContext, diagnostics: IDiagnosticsable) {
   context.subscriptions.push(...diagnostics.registerDiagnostics());
+}
+
+function registerDecorations(context: vscode.ExtensionContext, diagnostics: IDecorationable) {
+  context.subscriptions.push(...diagnostics.registerDecorations());
 }
 
 export function deactivate() {}

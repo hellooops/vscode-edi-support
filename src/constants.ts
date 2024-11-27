@@ -73,6 +73,11 @@ export namespace configuration {
   export const formatting = {
     indentSegmentsInLoop: "formatting.indentSegmentsInLoop",
   };
+  export const enableTrailingAnnotations = "enableTrailingAnnotations";
+}
+
+export namespace colors {
+  export const trailingLineForegroundColor = "ediSupport.trailingLineForegroundColor";
 }
 
 export namespace diagnostic {
