@@ -19,7 +19,11 @@ export namespace commands {
   };
   export const toggleInlayHintsCommand = {
     name: "edi-support.toggleInlayHints",
-    label: "Toggle inlay hints"
+    label: "Inlay hints"
+  };
+  export const toggleLoopAnnotationsCommand = {
+    name: "edi-support.toggleLoopAnnotationsCommand",
+    label: "Loop annotations"
   };
   export const previewDocumentCommand = {
     name: "edi-support.preview",
@@ -68,6 +72,7 @@ export namespace configuration {
     segmentNames: "inlayHints.segmentNames",
   };
   export const enableCodelens = "enableCodelens";
+  export const enableLoopAnnotations = "enableLoopAnnotations";
   export const enableHover = "enableHover";
   export const formatting = {
     indentSegmentsInLoop: "formatting.indentSegmentsInLoop",

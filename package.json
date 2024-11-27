@@ -97,9 +97,14 @@
       },
       {
         "command": "edi-support.toggleInlayHints",
-        "title": "Toggle inlay hints of segments and elements",
+        "title": "Toggle inlay hints of segments",
         "category": "EDI Support",
         "icon": "$(radio-tower)"
+      },
+      {
+        "command": "edi-support.toggleLoopAnnotations",
+        "title": "Toggle annotations for segments",
+        "category": "EDI Support"
       },
       {
         "command": "edi-support.refreshEdiExplorer",
@@ -130,6 +135,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable/disable codelens for EDI messages."
+        },
+        "ediSupport.enableLoopAnnotations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable annotations for loop segments."
         },
         "ediSupport.enableHover": {
           "type": "boolean",

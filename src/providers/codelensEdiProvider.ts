@@ -44,16 +44,18 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
 
   onDidChangeCodeLenses?: vscode.Event<void>;
   async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[] | null | undefined> {
-    if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableCodelens) !== true) {
-      return [];
+    const codeLenses: vscode.CodeLens[] = [];
+    if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableCodelens)) {
+      const headerCodeLenses = this.getHeaderCodeLenses();
+      codeLenses.push(...headerCodeLenses);
     }
 
-    const headerCodeLenses = this.getHeaderCodeLenses();
-    const documentCodeLenses = await this.getDocumentCodeLenses(document);
-    return [
-      ...headerCodeLenses,
-      ...documentCodeLenses,
-    ];
+    if (vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableLoopAnnotations)) {
+      const documentCodeLenses = await this.getDocumentCodeLenses(document);
+      codeLenses.push(...documentCodeLenses);
+    }
+
+    return codeLenses;
   }
 
   getHeaderCodeLenses(): vscode.CodeLens[] {
@@ -67,6 +69,16 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
         title: `${constants.commands.toggleInlayHintsCommand.label}(${segmentNamesInlayHintsEnabled ? "on" : "off"})`,
         tooltip: constants.commands.toggleInlayHintsCommand.label,
         command: constants.commands.toggleInlayHintsCommand.name,
+        arguments: []
+      }
+    ));
+    const loopAnnotationsEnabled = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableLoopAnnotations);
+    codeLenses.push(new vscode.CodeLens(
+      new vscode.Range(0, 0, 0, 0),
+      {
+        title: `${constants.commands.toggleLoopAnnotationsCommand.label}(${loopAnnotationsEnabled ? "on" : "off"})`,
+        tooltip: constants.commands.toggleLoopAnnotationsCommand.label,
+        command: constants.commands.toggleLoopAnnotationsCommand.name,
         arguments: []
       }
     ));
@@ -87,7 +99,6 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
       return [];
     }
 
-    const codeLenses: vscode.CodeLens[] = [];
     const segments = ediDocument.getSegments();
     return this.getSegmentsCodeLenses(document, segments);
   }
