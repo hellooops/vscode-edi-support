@@ -38,7 +38,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
     }
 
     const inlayHint = new vscode.InlayHint(
-      document.positionAt(segment.startIndex),
+      document.positionAt(segment.startIndex + segment.id.length),
       segment.getDesc()!
     );
 
