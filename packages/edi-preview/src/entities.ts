@@ -21,6 +21,7 @@ export class EdiElement implements TreeItemBase {
   maxLength?: number;
   codeValue?: string;
   definition?: string;
+  designator: string;
 
   segment: EdiSegment;
   parentElement?: EdiElement;
@@ -38,6 +39,7 @@ export class EdiElement implements TreeItemBase {
     this.maxLength = json.maxLength;
     this.codeValue = json.codeValue;
     this.definition = json.definition;
+    this.designator = json.designator;
     if (json.components) {
       this.components = json.components.map(i => new EdiElement(i, segment, this));
     }

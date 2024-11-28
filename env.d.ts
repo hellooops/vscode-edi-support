@@ -28,6 +28,8 @@ interface IEdiElement {
   maxLength?: number;
   codeValue?: string;
   definition?: string;
+
+  designator: string;
 }
 
 interface IEdiSegment {

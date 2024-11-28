@@ -5,7 +5,7 @@
         <span class="inline-flex items-center gap-2 rounded text-sm leading-5">
           <span class="w-4"></span>
           <ElementIcon />
-          <span class="invert-color px-1 rounded-sm">{{ element.id?.toUpperCase() }}</span>
+          <span class="invert-color px-1 rounded-sm">{{ element.id?.toUpperCase() ?? element.designator }}</span>
           <span class="opacity-80">{{ element.desc }}</span>
         </span>
       </div>

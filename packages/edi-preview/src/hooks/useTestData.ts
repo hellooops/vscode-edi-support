@@ -4,7 +4,7 @@ export default function useTestData(): EdiDocument {
   const x12TestData: IEdiDocument = {
     "interchanges": [
       {
-        "key": "R7lB06KyAUfdoM80JM1IZ",
+        "key": "rqvGj9TmqEjv2Wy7YW6Kl",
         "meta": {
           "senderQualifer": "ZZ",
           "senderID": "DERICL         ",
@@ -17,12 +17,12 @@ export default function useTestData(): EdiDocument {
         "id": "000007080",
         "functionalGroups": [
           {
-            "key": "Shyi21NpX5ey35RbUnGGd",
+            "key": "6fQ-NyFTp-JP_3apWSPhO",
             "meta": { "date": "20210517", "time": "0643", "id": "7080" },
             "id": "7080",
             "transactionSets": [
               {
-                "key": "paFyPmBA97FewHd--Xsvl",
+                "key": "VedUI77nm1ttfBq9S4_vV",
                 "meta": {
                   "release": "00401",
                   "version": "850",
@@ -36,33 +36,35 @@ export default function useTestData(): EdiDocument {
                 "id": "0001",
                 "segments": [
                   {
-                    "key": "1DJxeqK760D7SnfvsxVNj",
+                    "key": "9ECkRhq0IGhp5I8ucynwx",
                     "id": "BEG",
                     "desc": "Beginning Segment for Purchase Order",
                     "purpose": "To indicate the beginning of the Purchase Order Transaction Set and transmit identifying numbers and dates",
                     "elements": [
                       {
-                        "key": "RYm9U7thGqcHGFs--DveL",
+                        "key": "RrtoET_NMgZdYBJVQlR68",
                         "type": "Data Element",
                         "value": "00",
                         "id": "353",
                         "desc": "Transaction Set Purpose Code",
                         "required": true,
                         "codeValue": "Original",
-                        "definition": "Code identifying purpose of transaction set"
+                        "definition": "Code identifying purpose of transaction set",
+                        "designator": "BEG01"
                       },
                       {
-                        "key": "NvYX02Cyyxyx44qsb6BWE",
+                        "key": "tjJGNe7aRcZXG3T_ezENt",
                         "type": "Data Element",
                         "value": "BK",
                         "id": "92",
                         "desc": "Purchase Order Type Code",
                         "required": true,
                         "codeValue": "Blanket Order (Quantity Firm)",
-                        "definition": "Code specifying the type of Purchase Order"
+                        "definition": "Code specifying the type of Purchase Order",
+                        "designator": "BEG02"
                       },
                       {
-                        "key": "kxR0FnTmnXxFFfhuspDtU",
+                        "key": "ctg8x8BhHShXOoHKULb8K",
                         "type": "Data Element",
                         "value": "0019-1234567-1234",
                         "id": "324",
@@ -71,10 +73,11 @@ export default function useTestData(): EdiDocument {
                         "required": true,
                         "minLength": 1,
                         "maxLength": 22,
-                        "definition": "Identifying number for Purchase Order assigned by the orderer/purchaser"
+                        "definition": "Identifying number for Purchase Order assigned by the orderer/purchaser",
+                        "designator": "BEG03"
                       },
                       {
-                        "key": "UZ5qZtqpPM7eLE3c7AKwA",
+                        "key": "2lD4wmke0yFLnPGM_CeLE",
                         "type": "Data Element",
                         "value": "",
                         "id": "328",
@@ -83,10 +86,11 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 1,
                         "maxLength": 30,
-                        "definition": "Number identifying a release against a Purchase Order previously placed by the parties involved in the transaction"
+                        "definition": "Number identifying a release against a Purchase Order previously placed by the parties involved in the transaction",
+                        "designator": "BEG04"
                       },
                       {
-                        "key": "AuQLLi66hZ01vxKGsTuKj",
+                        "key": "EtsRUulRPPIWuQH9RxfOw",
                         "type": "Data Element",
                         "value": "20000130",
                         "id": "373",
@@ -95,28 +99,30 @@ export default function useTestData(): EdiDocument {
                         "required": true,
                         "minLength": 8,
                         "maxLength": 8,
-                        "definition": "Date expressed as CCYYMMDD"
+                        "definition": "Date expressed as CCYYMMDD",
+                        "designator": "BEG05"
                       }
                     ]
                   },
                   {
-                    "key": "pMlH76mdMeesNnt22YXN4",
+                    "key": "jfSyqsRZibArIsSba5pfq",
                     "id": "REF",
                     "desc": "Reference Identification",
                     "purpose": "To specify identifying information",
                     "elements": [
                       {
-                        "key": "3BR-OYzRPy4VswakKmgRZ",
+                        "key": "K0kv7EFee1qK2eNlkE9D7",
                         "type": "Data Element",
                         "value": "IA",
                         "id": "128",
                         "desc": "Reference Identification Qualifier",
                         "required": true,
                         "codeValue": "Internal Vendor Number",
-                        "definition": "Code qualifying the Reference Identification"
+                        "definition": "Code qualifying the Reference Identification",
+                        "designator": "REF01"
                       },
                       {
-                        "key": "pAqv-A524ZEWW0ii5qBVl",
+                        "key": "sWM94TvDgg5folx-DQxSd",
                         "type": "Data Element",
                         "value": "3688063",
                         "id": "127",
@@ -125,10 +131,11 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 1,
                         "maxLength": 30,
-                        "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
+                        "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier",
+                        "designator": "REF02"
                       },
                       {
-                        "key": "5Ydz7hIRocNHbpj86buse",
+                        "key": "FMcLcQzkrIC6Y9alihoyy",
                         "type": "Data Element",
                         "value": "VENDOR NAME",
                         "id": "352",
@@ -137,28 +144,30 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 1,
                         "maxLength": 80,
-                        "definition": "A free-form description to clarify the related data elements and their content"
+                        "definition": "A free-form description to clarify the related data elements and their content",
+                        "designator": "REF03"
                       }
                     ]
                   },
                   {
-                    "key": "kzIt3OtW4a3Dy66BHkvqq",
+                    "key": "ezZqPM8NP2dTfNfQdjN63",
                     "id": "REF",
                     "desc": "Reference Identification",
                     "purpose": "To specify identifying information",
                     "elements": [
                       {
-                        "key": "CvamKLWnSR_GRy-87HFnh",
+                        "key": "AvbJR1ixnUWlZG3cQYuPk",
                         "type": "Data Element",
                         "value": "2H",
                         "id": "128",
                         "desc": "Reference Identification Qualifier",
                         "required": true,
                         "codeValue": "Assigned by transaction set sender",
-                        "definition": "Code qualifying the Reference Identification"
+                        "definition": "Code qualifying the Reference Identification",
+                        "designator": "REF01"
                       },
                       {
-                        "key": "X5W2ZHHgiSDn7jP86Qv8i",
+                        "key": "uHW-x5ky14lcJf45jHBgc",
                         "type": "Data Element",
                         "value": "AD",
                         "id": "127",
@@ -167,10 +176,11 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 1,
                         "maxLength": 30,
-                        "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
+                        "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier",
+                        "designator": "REF02"
                       },
                       {
-                        "key": "eCoWxoF40lKaND7W6Qzn_",
+                        "key": "VSdVwUCQxXqTyETAqLRgj",
                         "type": "Data Element",
                         "value": "Ad",
                         "id": "352",
@@ -179,53 +189,57 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 1,
                         "maxLength": 80,
-                        "definition": "A free-form description to clarify the related data elements and their content"
+                        "definition": "A free-form description to clarify the related data elements and their content",
+                        "designator": "REF03"
                       }
                     ]
                   },
                   {
-                    "key": "0HClYSBrTn2i9_fX9tsti",
+                    "key": "Fl3pY4JfwZ5YeVoJpnRWh",
                     "id": "SACLoop1",
                     "desc": "Service, Promotion, Allowance, or Charge Information",
                     "purpose": "To request or identify a service, promotion, allowance, or charge; to specify the amount or percentage for the service, promotion, allowance, or charge",
                     "elements": [],
                     "Loop": [
                       {
-                        "key": "B2GJbZPOfq074ue2WZIaN",
+                        "key": "7eGveLEC4x8yUOVS5Es5Y",
                         "id": "SAC",
                         "desc": "Service, Promotion, Allowance, or Charge Information",
                         "purpose": "To request or identify a service, promotion, allowance, or charge; to specify the amount or percentage for the service, promotion, allowance, or charge",
                         "elements": [
                           {
-                            "key": "lUCO1iHAqEGWvMWoyrqHr",
+                            "key": "J88lTMwhnUxOK9cx_k-d7",
                             "type": "Data Element",
                             "value": "A",
                             "id": "248",
                             "desc": "Allowance or Charge Indicator",
                             "required": true,
                             "codeValue": "",
-                            "definition": "Code which indicates an allowance or charge for the service specified"
+                            "definition": "Code which indicates an allowance or charge for the service specified",
+                            "designator": "SAC01"
                           },
                           {
-                            "key": "lICaICYndRRYVM1YSOH7G",
+                            "key": "FQawXL1Ci5pED5xFbj_uc",
                             "type": "Data Element",
                             "value": "",
                             "id": "1300",
                             "desc": "Service, Promotion, Allowance, or Charge Code",
                             "required": false,
-                            "definition": "Code identifying the service, promotion, allowance, or charge"
+                            "definition": "Code identifying the service, promotion, allowance, or charge",
+                            "designator": "SAC02"
                           },
                           {
-                            "key": "NlzB3MMzEXFXwGxlbkqnD",
+                            "key": "JBVG0-CTIboxfo-ohqtp-",
                             "type": "Data Element",
                             "value": "",
                             "id": "559",
                             "desc": "Agency Qualifier Code",
                             "required": false,
-                            "definition": "Code identifying the agency assigning the code values"
+                            "definition": "Code identifying the agency assigning the code values",
+                            "designator": "SAC03"
                           },
                           {
-                            "key": "L1sjvPMVFPIR4Fh7a9ssz",
+                            "key": "A5kir-p-VnbcsiHfTDuw1",
                             "type": "Data Element",
                             "value": "100.00",
                             "id": "1301",
@@ -234,28 +248,30 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 10,
-                            "definition": "Agency maintained code identifying the service, promotion, allowance, or charge"
+                            "definition": "Agency maintained code identifying the service, promotion, allowance, or charge",
+                            "designator": "SAC04"
                           }
                         ]
                       },
                       {
-                        "key": "stl-rxpTaCKrZw7iZgvnZ",
+                        "key": "gdAXAGEyRBjy7HTj-Klj1",
                         "id": "CUR",
                         "desc": "Currency",
                         "purpose": "To specify the currency (dollars, pounds, francs, etc.) used in a transaction",
                         "elements": [
                           {
-                            "key": "UEVoAvrgnflRsrNGqR7nk",
+                            "key": "GOYvP41vPq-31LNRDoBxW",
                             "type": "Data Element",
                             "value": "LZ",
                             "id": "98",
                             "desc": "Entity Identifier Code",
                             "required": true,
                             "codeValue": "Local Chain",
-                            "definition": "Code identifying an organizational entity, a physical location, property or an individual"
+                            "definition": "Code identifying an organizational entity, a physical location, property or an individual",
+                            "designator": "CUR01"
                           },
                           {
-                            "key": "ogQdFimqOXgbhbokZJE2m",
+                            "key": "6GU3co6DHcX_-TLbWTF_h",
                             "type": "Data Element",
                             "value": "USD",
                             "id": "100",
@@ -264,10 +280,11 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 3,
                             "maxLength": 3,
-                            "definition": "Code (Standard ISO) for country in whose currency the charges are specified"
+                            "definition": "Code (Standard ISO) for country in whose currency the charges are specified",
+                            "designator": "CUR02"
                           },
                           {
-                            "key": "HR0xCzj32jpC62nIh08_o",
+                            "key": "3Evj-H9zZv3K3BosMMgbQ",
                             "type": "Data Element",
                             "value": "",
                             "id": "280",
@@ -276,20 +293,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 4,
                             "maxLength": 10,
-                            "definition": "Value to be used as a multiplier conversion factor to convert monetary value from one currency to another"
+                            "definition": "Value to be used as a multiplier conversion factor to convert monetary value from one currency to another",
+                            "designator": "CUR03"
                           },
                           {
-                            "key": "qX0ynQR_cfjnG79UjhyZW",
+                            "key": "hEwOKduU2aCm3Xvw6365w",
                             "type": "Data Element",
                             "value": "VN",
                             "id": "98",
                             "desc": "Entity Identifier Code",
                             "required": false,
                             "codeValue": "Vendor",
-                            "definition": "Code identifying an organizational entity, a physical location, property or an individual"
+                            "definition": "Code identifying an organizational entity, a physical location, property or an individual",
+                            "designator": "CUR04"
                           },
                           {
-                            "key": "yKhI1tAg39GfNh3_nyZtA",
+                            "key": "xHKxjMmGP8l_VawA_fS4_",
                             "type": "Data Element",
                             "value": "USD",
                             "id": "100",
@@ -298,37 +317,39 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 3,
                             "maxLength": 3,
-                            "definition": "Code (Standard ISO) for country in whose currency the charges are specified"
+                            "definition": "Code (Standard ISO) for country in whose currency the charges are specified",
+                            "designator": "CUR05"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "key": "NJuZ-PdRzbQ1KUsupzh8W",
+                    "key": "oWe083ycq4_c7VFqmVocH",
                     "id": "N1Loop1",
                     "desc": "Name",
                     "purpose": "To identify a party by type of organization, name, and code",
                     "elements": [],
                     "Loop": [
                       {
-                        "key": "CN2EOgmtQDuJEUgKEH-sP",
+                        "key": "DltT2GehNQrn8otfaCfE_",
                         "id": "N1",
                         "desc": "Name",
                         "purpose": "To identify a party by type of organization, name, and code",
                         "elements": [
                           {
-                            "key": "TDkQ0io93NRiqpa-DWCK5",
+                            "key": "22CzyX35wC99ueQynxfZL",
                             "type": "Data Element",
                             "value": "BT",
                             "id": "98",
                             "desc": "Entity Identifier Code",
                             "required": true,
                             "codeValue": "Bill-to-Party",
-                            "definition": "Code identifying an organizational entity, a physical location, property or an individual"
+                            "definition": "Code identifying an organizational entity, a physical location, property or an individual",
+                            "designator": "N101"
                           },
                           {
-                            "key": "ktzzRzA6LqTrLnRikDTbz",
+                            "key": "cN94xlX3F-AAAef-xvZeq",
                             "type": "Data Element",
                             "value": "Example.com Accounts Payable",
                             "id": "93",
@@ -337,18 +358,19 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 60,
-                            "definition": "Free-form name"
+                            "definition": "Free-form name",
+                            "designator": "N102"
                           }
                         ]
                       },
                       {
-                        "key": "IHoBP-B-stYsSn_DC5VI9",
+                        "key": "vUGdZBzSlq0qzV49ofBqs",
                         "id": "N2",
                         "desc": "Additional Name Information",
                         "purpose": "To specify additional names or those longer than 35 characters in length",
                         "elements": [
                           {
-                            "key": "O8nfyfCNc9RRycxaZxbGA",
+                            "key": "2kf0WoLruIvZjGs2TEmM_",
                             "type": "Data Element",
                             "value": "asde",
                             "id": "93",
@@ -357,18 +379,19 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 1,
                             "maxLength": 60,
-                            "definition": "Free-form name"
+                            "definition": "Free-form name",
+                            "designator": "N201"
                           }
                         ]
                       },
                       {
-                        "key": "DRRxF4YKV7n8r3bgCPClx",
+                        "key": "VYVhV6VK4q5UgIxCIPagr",
                         "id": "N3",
                         "desc": "Address Information",
                         "purpose": "To specify the location of the named party",
                         "elements": [
                           {
-                            "key": "FC6EfDQyrb5fpiYCLuZk3",
+                            "key": "NEM5JjAiPrHz4_0YtkqXV",
                             "type": "Data Element",
                             "value": "TNC 3110",
                             "id": "166",
@@ -377,10 +400,11 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 1,
                             "maxLength": 55,
-                            "definition": "Address information"
+                            "definition": "Address information",
+                            "designator": "N301"
                           },
                           {
-                            "key": "oEpLkrUChGKnesY4CV8kt",
+                            "key": "njzfvW5wLzWVeLkjrEgar",
                             "type": "Data Element",
                             "value": "PO Box 1296",
                             "id": "166",
@@ -389,18 +413,19 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 55,
-                            "definition": "Address information"
+                            "definition": "Address information",
+                            "designator": "N302"
                           }
                         ]
                       },
                       {
-                        "key": "YLKA7Du6mOZsuc2tH1xN2",
+                        "key": "nBEh3BDLKPecZ0FLrG-Ke",
                         "id": "N4",
                         "desc": "Geographic Location",
                         "purpose": "To specify the geographic place of the named party",
                         "elements": [
                           {
-                            "key": "wseiGFOy9AdypGDmPGYe6",
+                            "key": "3U6_JURhhq6sqhgEVq-RC",
                             "type": "Data Element",
                             "value": "Minneapolis",
                             "id": "19",
@@ -409,10 +434,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 2,
                             "maxLength": 30,
-                            "definition": "Free-form text for city name"
+                            "definition": "Free-form text for city name",
+                            "designator": "N401"
                           },
                           {
-                            "key": "z5fZhrI0Ds0u3Tpiu23bx",
+                            "key": "usFEbUsSesyJqPZFLTpKQ",
                             "type": "Data Element",
                             "value": "MN",
                             "id": "156",
@@ -421,10 +447,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 2,
                             "maxLength": 2,
-                            "definition": "Code (Standard State/Province) as defined by appropriate government agency"
+                            "definition": "Code (Standard State/Province) as defined by appropriate government agency",
+                            "designator": "N402"
                           },
                           {
-                            "key": "UjYt-VLel_DRGNeQR3zUP",
+                            "key": "ZZtdNnDIHgW4j_V5JiOSm",
                             "type": "Data Element",
                             "value": "55440",
                             "id": "116",
@@ -433,10 +460,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 3,
                             "maxLength": 15,
-                            "definition": "Code defining international postal zone code excluding punctuation and blanks (zip code for United States)"
+                            "definition": "Code defining international postal zone code excluding punctuation and blanks (zip code for United States)",
+                            "designator": "N403"
                           },
                           {
-                            "key": "4o9r6z5kr6G9WY6vspz-u",
+                            "key": "umsOqx-KvGUhFNIjHJ7Lr",
                             "type": "Data Element",
                             "value": "US",
                             "id": "26",
@@ -445,28 +473,30 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 2,
                             "maxLength": 3,
-                            "definition": "Code identifying the country"
+                            "definition": "Code identifying the country",
+                            "designator": "N404"
                           }
                         ]
                       },
                       {
-                        "key": "wGoCsanYgrN84CQSG2B52",
+                        "key": "L8dML2pif3LYxgAp072UE",
                         "id": "PER",
                         "desc": "Administrative Communications Contact",
                         "purpose": "To identify a person or office to whom administrative communications should be directed",
                         "elements": [
                           {
-                            "key": "P8zH8NvnECizDiRdPpgia",
+                            "key": "zSjUwrNXHWWebMloNCEfO",
                             "type": "Data Element",
                             "value": "CN",
                             "id": "366",
                             "desc": "Contact Function Code",
                             "required": true,
                             "codeValue": "General Contact",
-                            "definition": "Code identifying the major duty or responsibility of the person or group named"
+                            "definition": "Code identifying the major duty or responsibility of the person or group named",
+                            "designator": "PER01"
                           },
                           {
-                            "key": "34_Ynzco27IhNfaVHGOM8",
+                            "key": "lqiS5BM5y5bAa3h546NSc",
                             "type": "Data Element",
                             "value": "EDI",
                             "id": "93",
@@ -475,20 +505,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 60,
-                            "definition": "Free-form name"
+                            "definition": "Free-form name",
+                            "designator": "PER02"
                           },
                           {
-                            "key": "TYpYRzb7r0dt0lqYQ1QsR",
+                            "key": "Xh1Dv1a_pRJB5EA4OU6JK",
                             "type": "Data Element",
                             "value": "EM",
                             "id": "365",
                             "desc": "Communication Number Qualifier",
                             "required": false,
                             "codeValue": "Electronic Mail",
-                            "definition": "Code identifying the type of communication number"
+                            "definition": "Code identifying the type of communication number",
+                            "designator": "PER03"
                           },
                           {
-                            "key": "az6aW1QDqJsp1JXvfynah",
+                            "key": "QiPKSk7ZjLSg_qm0pIBg-",
                             "type": "Data Element",
                             "value": "test@ABC.COM",
                             "id": "364",
@@ -497,20 +529,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 80,
-                            "definition": "Complete communications number including country or area code when applicable"
+                            "definition": "Complete communications number including country or area code when applicable",
+                            "designator": "PER04"
                           },
                           {
-                            "key": "1yDTAz2CJ-QdjeJwhJy1e",
+                            "key": "ublwNBGNeDq_JHLQrGLlg",
                             "type": "Data Element",
                             "value": "TE",
                             "id": "365",
                             "desc": "Communication Number Qualifier",
                             "required": false,
                             "codeValue": "Telephone",
-                            "definition": "Code identifying the type of communication number"
+                            "definition": "Code identifying the type of communication number",
+                            "designator": "PER05"
                           },
                           {
-                            "key": "OQ7py40ZCwjWU-I7bfItA",
+                            "key": "CRurjbtJ1rqwYPGvjOP9N",
                             "type": "Data Element",
                             "value": "111-222-3333",
                             "id": "364",
@@ -519,37 +553,39 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 80,
-                            "definition": "Complete communications number including country or area code when applicable"
+                            "definition": "Complete communications number including country or area code when applicable",
+                            "designator": "PER06"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "key": "1KhIsJDfk5LJnGnefRkrJ",
+                    "key": "ph0jNJ44il5ayN2WdjUxy",
                     "id": "N1Loop1",
                     "desc": "Name",
                     "purpose": "To identify a party by type of organization, name, and code",
                     "elements": [],
                     "Loop": [
                       {
-                        "key": "cAaB4oSiGedjwtjuCzeDN",
+                        "key": "cdSOBFXOzlenMl1JLn98T",
                         "id": "N1",
                         "desc": "Name",
                         "purpose": "To identify a party by type of organization, name, and code",
                         "elements": [
                           {
-                            "key": "EOE5rc3L0ttLrNIqDFwND",
+                            "key": "dWlH6jNZiDLLTZtzPrbh_",
                             "type": "Data Element",
                             "value": "SO",
                             "id": "98",
                             "desc": "Entity Identifier Code",
                             "required": true,
                             "codeValue": "Sold To If Different From Bill To",
-                            "definition": "Code identifying an organizational entity, a physical location, property or an individual"
+                            "definition": "Code identifying an organizational entity, a physical location, property or an individual",
+                            "designator": "N101"
                           },
                           {
-                            "key": "2yaTLG6SQ5X5yzljHPa5Y",
+                            "key": "WAAarj6iUDj9TleMMouD2",
                             "type": "Data Element",
                             "value": "EDI Helpdesk",
                             "id": "93",
@@ -558,18 +594,19 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 60,
-                            "definition": "Free-form name"
+                            "definition": "Free-form name",
+                            "designator": "N102"
                           }
                         ]
                       },
                       {
-                        "key": "nwISxD3JJc7WVlu5b1JeW",
+                        "key": "zIKQpFcG4bw6Vk_8eN2W3",
                         "id": "N2",
                         "desc": "Additional Name Information",
                         "purpose": "To specify additional names or those longer than 35 characters in length",
                         "elements": [
                           {
-                            "key": "PMViqZu9cpDvZLTJN4f4f",
+                            "key": "W5micmt_1xYVf2LyIImR1",
                             "type": "Data Element",
                             "value": "Mike",
                             "id": "93",
@@ -578,18 +615,19 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 1,
                             "maxLength": 60,
-                            "definition": "Free-form name"
+                            "definition": "Free-form name",
+                            "designator": "N201"
                           }
                         ]
                       },
                       {
-                        "key": "JKQRR2PBEdr3TiV3gNR1I",
+                        "key": "YjzvjDupz_v-Pdo25wqDr",
                         "id": "N3",
                         "desc": "Address Information",
                         "purpose": "To specify the location of the named party",
                         "elements": [
                           {
-                            "key": "CZI10R-KJAZY_3mrxe2sA",
+                            "key": "mfIq3JzllfBzZzYAZ6KR_",
                             "type": "Data Element",
                             "value": "7000 Example Parkway",
                             "id": "166",
@@ -598,18 +636,19 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 1,
                             "maxLength": 55,
-                            "definition": "Address information"
+                            "definition": "Address information",
+                            "designator": "N301"
                           }
                         ]
                       },
                       {
-                        "key": "024I5yvrzVL24Yu1IaxYJ",
+                        "key": "e-uhx-uhRZ_3NSNwGW7yX",
                         "id": "N4",
                         "desc": "Geographic Location",
                         "purpose": "To specify the geographic place of the named party",
                         "elements": [
                           {
-                            "key": "fTo9e4CZF4smq8tzIhxFM",
+                            "key": "hUITyY_ZSNNqiK0Hn9Ksl",
                             "type": "Data Element",
                             "value": "Brooklyn Park",
                             "id": "19",
@@ -618,10 +657,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 2,
                             "maxLength": 30,
-                            "definition": "Free-form text for city name"
+                            "definition": "Free-form text for city name",
+                            "designator": "N401"
                           },
                           {
-                            "key": "c-gDaWbikpo422bGQedW_",
+                            "key": "8GdxMGAQ_n_-IBwDTK6dI",
                             "type": "Data Element",
                             "value": "MN",
                             "id": "156",
@@ -630,10 +670,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 2,
                             "maxLength": 2,
-                            "definition": "Code (Standard State/Province) as defined by appropriate government agency"
+                            "definition": "Code (Standard State/Province) as defined by appropriate government agency",
+                            "designator": "N402"
                           },
                           {
-                            "key": "sIowwQUKYAqFEwa4Lo3nn",
+                            "key": "49HNG6BCQ5ryCidRhq0gP",
                             "type": "Data Element",
                             "value": "55445",
                             "id": "116",
@@ -642,10 +683,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 3,
                             "maxLength": 15,
-                            "definition": "Code defining international postal zone code excluding punctuation and blanks (zip code for United States)"
+                            "definition": "Code defining international postal zone code excluding punctuation and blanks (zip code for United States)",
+                            "designator": "N403"
                           },
                           {
-                            "key": "d2GScfKIwystvejBZj-h2",
+                            "key": "5obd4If0WVAnyKPOcR9WB",
                             "type": "Data Element",
                             "value": "US",
                             "id": "26",
@@ -654,28 +696,30 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 2,
                             "maxLength": 3,
-                            "definition": "Code identifying the country"
+                            "definition": "Code identifying the country",
+                            "designator": "N404"
                           }
                         ]
                       },
                       {
-                        "key": "BizyfAvgchsEuKFxVQ07N",
+                        "key": "BfMuX3YRpHOos5tUQ91nZ",
                         "id": "PER",
                         "desc": "Administrative Communications Contact",
                         "purpose": "To identify a person or office to whom administrative communications should be directed",
                         "elements": [
                           {
-                            "key": "GNfFgwCt07flgRJQdfhSh",
+                            "key": "CQdfpSZ9d8r8eesLTIzOa",
                             "type": "Data Element",
                             "value": "CN",
                             "id": "366",
                             "desc": "Contact Function Code",
                             "required": true,
                             "codeValue": "General Contact",
-                            "definition": "Code identifying the major duty or responsibility of the person or group named"
+                            "definition": "Code identifying the major duty or responsibility of the person or group named",
+                            "designator": "PER01"
                           },
                           {
-                            "key": "HcSzcPeWO6uT3GbY7Gs1t",
+                            "key": "WGyLqujZ1TjV0oj1qDROu",
                             "type": "Data Element",
                             "value": "EDI",
                             "id": "93",
@@ -684,20 +728,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 60,
-                            "definition": "Free-form name"
+                            "definition": "Free-form name",
+                            "designator": "PER02"
                           },
                           {
-                            "key": "KfUWjk_OPseu8U7S4Pzp0",
+                            "key": "7A-E7Crdcq10-E9dlYLm9",
                             "type": "Data Element",
                             "value": "EM",
                             "id": "365",
                             "desc": "Communication Number Qualifier",
                             "required": false,
                             "codeValue": "Electronic Mail",
-                            "definition": "Code identifying the type of communication number"
+                            "definition": "Code identifying the type of communication number",
+                            "designator": "PER03"
                           },
                           {
-                            "key": "4OgrFUVLhtWR3vNMrdMDh",
+                            "key": "nlQUOwoPjH4CosBKsjbTM",
                             "type": "Data Element",
                             "value": "test@ABC.COM",
                             "id": "364",
@@ -706,20 +752,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 80,
-                            "definition": "Complete communications number including country or area code when applicable"
+                            "definition": "Complete communications number including country or area code when applicable",
+                            "designator": "PER04"
                           },
                           {
-                            "key": "UlWRbFxDkBCfaUWONwHib",
+                            "key": "luVhkw6GiUYACvntQmqUe",
                             "type": "Data Element",
                             "value": "TE",
                             "id": "365",
                             "desc": "Communication Number Qualifier",
                             "required": false,
                             "codeValue": "Telephone",
-                            "definition": "Code identifying the type of communication number"
+                            "definition": "Code identifying the type of communication number",
+                            "designator": "PER05"
                           },
                           {
-                            "key": "M7Rg9b3n21Bv8rYVtTxEw",
+                            "key": "neHwgFLrUjqbK-JGyxL8Y",
                             "type": "Data Element",
                             "value": "111-222-4444",
                             "id": "364",
@@ -728,27 +776,28 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 80,
-                            "definition": "Complete communications number including country or area code when applicable"
+                            "definition": "Complete communications number including country or area code when applicable",
+                            "designator": "PER06"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "key": "Ag-81Vto0uQiNmUHGWMDV",
+                    "key": "FkJ2HgXmAiNPrN29Q5hlj",
                     "id": "PO1Loop1",
                     "desc": "Baseline Item Data",
                     "purpose": "To specify basic and most frequently used line item data",
                     "elements": [],
                     "Loop": [
                       {
-                        "key": "mY4pVXNJGfuP0qti4ySGB",
+                        "key": "tVmyguQ-FOcKJCzOY0CnV",
                         "id": "PO1",
                         "desc": "Baseline Item Data",
                         "purpose": "To specify basic and most frequently used line item data",
                         "elements": [
                           {
-                            "key": "5e-b3ts72FU6pj0a-mfc6",
+                            "key": "UHw1EsyRYFJN9qHjoU3-i",
                             "type": "Data Element",
                             "value": "1",
                             "id": "350",
@@ -757,10 +806,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 20,
-                            "definition": "Alphanumeric characters assigned for differentiation within a transaction set"
+                            "definition": "Alphanumeric characters assigned for differentiation within a transaction set",
+                            "designator": "PO101"
                           },
                           {
-                            "key": "1bRZekOmzFxUYR5w251xn",
+                            "key": "QgULwVV5SiVATnflrFE29",
                             "type": "Data Element",
                             "value": "3",
                             "id": "330",
@@ -769,20 +819,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 15,
-                            "definition": "Quantity ordered"
+                            "definition": "Quantity ordered",
+                            "designator": "PO102"
                           },
                           {
-                            "key": "mC8T6KhMBFrj-G37ijEjm",
+                            "key": "tLXqCfkn5-dvbOVjd1dqe",
                             "type": "Data Element",
                             "value": "EA",
                             "id": "355",
                             "desc": "Unit or Basis for Measurement Code",
                             "required": false,
                             "codeValue": "Each",
-                            "definition": "Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken"
+                            "definition": "Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken",
+                            "designator": "PO103"
                           },
                           {
-                            "key": "7SPFW6FrZfM7_LcLVJa23",
+                            "key": "MsFVVpkfkTvyZHSSqI_1L",
                             "type": "Data Element",
                             "value": "12.3",
                             "id": "212",
@@ -791,30 +843,33 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 17,
-                            "definition": "Price per unit of product, service, commodity, etc."
+                            "definition": "Price per unit of product, service, commodity, etc.",
+                            "designator": "PO104"
                           },
                           {
-                            "key": "O5573oLQBrZ_gOpT_jBqx",
+                            "key": "jGiGu1TzxhaEibyv6U9tt",
                             "type": "Data Element",
                             "value": "PE",
                             "id": "639",
                             "desc": "Basis of Unit Price Code",
                             "required": false,
                             "codeValue": "Price per Each",
-                            "definition": "Code identifying the type of unit price for an item"
+                            "definition": "Code identifying the type of unit price for an item",
+                            "designator": "PO105"
                           },
                           {
-                            "key": "_rKvTTcwi0imB_3sSosm3",
+                            "key": "14w6xXRk2z9XCXDVP4Hbg",
                             "type": "Data Element",
                             "value": "IN",
                             "id": "235",
                             "desc": "Product/Service ID Qualifier",
                             "required": false,
                             "codeValue": "Buyer's Item Number",
-                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                            "designator": "PO106"
                           },
                           {
-                            "key": "Egk5aOazHGUf_4pcyxjyb",
+                            "key": "Amg41hFyaKFia38eOmI9_",
                             "type": "Data Element",
                             "value": "15013163",
                             "id": "234",
@@ -823,20 +878,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 48,
-                            "definition": "Identifying number for a product or service"
+                            "definition": "Identifying number for a product or service",
+                            "designator": "PO107"
                           },
                           {
-                            "key": "h2_VFmKKZpjHlwJ2sVnP4",
+                            "key": "ahd-TtnLdVgzXzgKGdPml",
                             "type": "Data Element",
                             "value": "SK",
                             "id": "235",
                             "desc": "Product/Service ID Qualifier",
                             "required": false,
                             "codeValue": "Stock Keeping Unit (SKU)",
-                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                            "designator": "PO108"
                           },
                           {
-                            "key": "ui4pmV51tBLU7ZbrrZDw7",
+                            "key": "1rr0wPi5oqX6MM6PDtnnM",
                             "type": "Data Element",
                             "value": "7680-02009152",
                             "id": "234",
@@ -845,20 +902,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 48,
-                            "definition": "Identifying number for a product or service"
+                            "definition": "Identifying number for a product or service",
+                            "designator": "PO109"
                           },
                           {
-                            "key": "gD0pL-U97U1T6HLPoSiGN",
+                            "key": "vgQlswUSMHLdyfKOehAY0",
                             "type": "Data Element",
                             "value": "UP",
                             "id": "235",
                             "desc": "Product/Service ID Qualifier",
                             "required": false,
                             "codeValue": "GTIN-12",
-                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                            "designator": "PO110"
                           },
                           {
-                            "key": "Hb51EmT7YH3N_EVcRW9Wf",
+                            "key": "PnJlFthoMhPWS9pYqog76",
                             "type": "Data Element",
                             "value": "846186077111",
                             "id": "234",
@@ -867,20 +926,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 48,
-                            "definition": "Identifying number for a product or service"
+                            "definition": "Identifying number for a product or service",
+                            "designator": "PO111"
                           },
                           {
-                            "key": "XGOXe3eMge7eM8UmgxvR4",
+                            "key": "xI9jdHJknyvKBAcVTsTNn",
                             "type": "Data Element",
                             "value": "CB",
                             "id": "235",
                             "desc": "Product/Service ID Qualifier",
                             "required": false,
                             "codeValue": "Buyer's Catalog Number",
-                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                            "designator": "PO112"
                           },
                           {
-                            "key": "D3MVvfa5PjkjkrwWB4F5c",
+                            "key": "G01QTzCJCulEYnIusqNiW",
                             "type": "Data Element",
                             "value": "790-01-20",
                             "id": "234",
@@ -889,20 +950,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 48,
-                            "definition": "Identifying number for a product or service"
+                            "definition": "Identifying number for a product or service",
+                            "designator": "PO113"
                           },
                           {
-                            "key": "odr6Os6IhzZNiQIdlKAvU",
+                            "key": "MeN_u1Np0mX9zYsjWNGPP",
                             "type": "Data Element",
                             "value": "EN",
                             "id": "235",
                             "desc": "Product/Service ID Qualifier",
                             "required": false,
                             "codeValue": "GTIN-13",
-                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                            "designator": "PO114"
                           },
                           {
-                            "key": "HUd9hUUnKPnDNn5LXBmq0",
+                            "key": "e-36P8f10Rv4IvHiQJ31x",
                             "type": "Data Element",
                             "value": "12345",
                             "id": "234",
@@ -911,54 +974,58 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 48,
-                            "definition": "Identifying number for a product or service"
+                            "definition": "Identifying number for a product or service",
+                            "designator": "PO115"
                           }
                         ]
                       },
                       {
-                        "key": "ucGsXeNfOgFFgZREeWOeA",
+                        "key": "qOK82662ytV4E9RM6ZZA4",
                         "id": "PIDLoop1",
                         "desc": "Product/Item Description",
                         "purpose": "To describe a product or process in coded or free-form format",
                         "elements": [],
                         "Loop": [
                           {
-                            "key": "YUR4t_4w90gJ8JSsDMWjm",
+                            "key": "YFewNq0EOwGTjqE7I6X0G",
                             "id": "PID",
                             "desc": "Product/Item Description",
                             "purpose": "To describe a product or process in coded or free-form format",
                             "elements": [
                               {
-                                "key": "_ZQ85TkEAZEYKGD051r9H",
+                                "key": "wtZn_BsNEQ_0Cx7A-xXn9",
                                 "type": "Data Element",
                                 "value": "F",
                                 "id": "349",
                                 "desc": "Item Description Type",
                                 "required": true,
                                 "codeValue": "",
-                                "definition": "Code indicating the format of a description"
+                                "definition": "Code indicating the format of a description",
+                                "designator": "PID01"
                               },
                               {
-                                "key": "mPzZGTqep_AAJTBmsCzYe",
+                                "key": "N7D9RB3buj31T5FFyOldf",
                                 "type": "Data Element",
                                 "value": "08",
                                 "id": "750",
                                 "desc": "Product/Process Characteristic Code",
                                 "required": false,
                                 "codeValue": "Product",
-                                "definition": "Code identifying the general class of a product or process characteristic"
+                                "definition": "Code identifying the general class of a product or process characteristic",
+                                "designator": "PID02"
                               },
                               {
-                                "key": "wFxovCXJWE4oWCIGS-U4Q",
+                                "key": "Z-PyiA1BRwdA-9pGRqzoO",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "559",
                                 "desc": "Agency Qualifier Code",
                                 "required": false,
-                                "definition": "Code identifying the agency assigning the code values"
+                                "definition": "Code identifying the agency assigning the code values",
+                                "designator": "PID03"
                               },
                               {
-                                "key": "0gWH0oNWFVZblfJ5diJvB",
+                                "key": "qU7irNL4OPBK2xalRfRUY",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "751",
@@ -967,10 +1034,11 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 12,
-                                "definition": "A code from an industry code list which provides specific data about a product characteristic"
+                                "definition": "A code from an industry code list which provides specific data about a product characteristic",
+                                "designator": "PID04"
                               },
                               {
-                                "key": "lhk3oHuweEXZR494cHiPt",
+                                "key": "U9H1K1k7_E7f98nQm8H_j",
                                 "type": "Data Element",
                                 "value": "WR CARGO SHO 38 BLK SOLID",
                                 "id": "352",
@@ -979,20 +1047,21 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 80,
-                                "definition": "A free-form description to clarify the related data elements and their content"
+                                "definition": "A free-form description to clarify the related data elements and their content",
+                                "designator": "PID05"
                               }
                             ]
                           }
                         ]
                       },
                       {
-                        "key": "3fwAk8hPRcW2GKiUY_C-o",
+                        "key": "YxjHYC1Z5sq6Wly8_oAZv",
                         "id": "MSG",
                         "desc": "Message Text",
                         "purpose": "To provide a free-form format that allows the transmission of text information",
                         "elements": [
                           {
-                            "key": "2imhQJeifHXHVD2siMq4z",
+                            "key": "9wQEjEDXGbkduTbAvj55f",
                             "type": "Data Element",
                             "value": "Mail In or Store",
                             "id": "933",
@@ -1001,54 +1070,58 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 1,
                             "maxLength": 264,
-                            "definition": "Free-form message text"
+                            "definition": "Free-form message text",
+                            "designator": "MSG01"
                           }
                         ]
                       },
                       {
-                        "key": "zq4dU2WSPUkJ3salpE77Q",
+                        "key": "wqHURt5g0JhSDcH5AcGPC",
                         "id": "PKGLoop1",
                         "desc": "Marking, Packaging, Loading",
                         "purpose": "To describe marking, packaging, loading, and unloading requirements",
                         "elements": [],
                         "Loop": [
                           {
-                            "key": "Q_IXqjoS5Q2wJU0KyGX34",
+                            "key": "GWIvQoEpgaMqSrtVPEBiH",
                             "id": "PKG",
                             "desc": "Marking, Packaging, Loading",
                             "purpose": "To describe marking, packaging, loading, and unloading requirements",
                             "elements": [
                               {
-                                "key": "EFaOObZtXoQxwSnCn8s-u",
+                                "key": "5yrxW3z0U-npVV-FpJgCp",
                                 "type": "Data Element",
                                 "value": "F",
                                 "id": "349",
                                 "desc": "Item Description Type",
                                 "required": false,
                                 "codeValue": "",
-                                "definition": "Code indicating the format of a description"
+                                "definition": "Code indicating the format of a description",
+                                "designator": "PKG01"
                               },
                               {
-                                "key": "gs2rEHRgKPfcUMNjKqm36",
+                                "key": "tMmX9u0gnsURrpB1S8xl4",
                                 "type": "Data Element",
                                 "value": "WM",
                                 "id": "753",
                                 "desc": "Packaging Characteristic Code",
                                 "required": false,
                                 "codeValue": "Wrapping Material",
-                                "definition": "Code specifying the marking, packaging, loading and related characteristics being described"
+                                "definition": "Code specifying the marking, packaging, loading and related characteristics being described",
+                                "designator": "PKG02"
                               },
                               {
-                                "key": "bU2Qr7XMjBbygwg1f_Vsr",
+                                "key": "_jiI1k_lTw0CY-v2oQUCh",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "559",
                                 "desc": "Agency Qualifier Code",
                                 "required": false,
-                                "definition": "Code identifying the agency assigning the code values"
+                                "definition": "Code identifying the agency assigning the code values",
+                                "designator": "PKG03"
                               },
                               {
-                                "key": "rBiOv3w5Circn0sCE5s3R",
+                                "key": "aixGuvzcbGq5jwXQunqIa",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "754",
@@ -1057,10 +1130,11 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 7,
-                                "definition": "A code from an industry code list which provides specific data about the marking, packaging or loading and unloading of a product"
+                                "definition": "A code from an industry code list which provides specific data about the marking, packaging or loading and unloading of a product",
+                                "designator": "PKG04"
                               },
                               {
-                                "key": "Tdt0DQE5s_Ir7pEk3pryK",
+                                "key": "nhFSK6qTm2hatc3XtalpX",
                                 "type": "Data Element",
                                 "value": "GIFTWRAP",
                                 "id": "352",
@@ -1069,37 +1143,39 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 80,
-                                "definition": "A free-form description to clarify the related data elements and their content"
+                                "definition": "A free-form description to clarify the related data elements and their content",
+                                "designator": "PKG05"
                               }
                             ]
                           }
                         ]
                       },
                       {
-                        "key": "IRxndV2_xNOhIEfXxfSV3",
+                        "key": "EZMxJ7rF0Cmq2Of_BozeO",
                         "id": "N9Loop2",
                         "desc": "Reference Identification",
                         "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
                         "elements": [],
                         "Loop": [
                           {
-                            "key": "kVjgUNDSMg2yCR1BwdKb8",
+                            "key": "Tm7-ZJIg9lGhKo24ZHAXO",
                             "id": "N9",
                             "desc": "Reference Identification",
                             "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
                             "elements": [
                               {
-                                "key": "rWqjk4PrCpdCSqS8IuW1z",
+                                "key": "5-y_pBqxlt_sFLJh89RrQ",
                                 "type": "Data Element",
                                 "value": "L1",
                                 "id": "128",
                                 "desc": "Reference Identification Qualifier",
                                 "required": true,
                                 "codeValue": "Letters or Notes",
-                                "definition": "Code qualifying the Reference Identification"
+                                "definition": "Code qualifying the Reference Identification",
+                                "designator": "N901"
                               },
                               {
-                                "key": "wZ8rW_tB9zRSP4k1R_kXm",
+                                "key": "oqT1SUIKWWVxraf05hzRT",
                                 "type": "Data Element",
                                 "value": "MESSAGE",
                                 "id": "127",
@@ -1108,10 +1184,11 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 30,
-                                "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
+                                "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier",
+                                "designator": "N902"
                               },
                               {
-                                "key": "DzIcoX681sMzNLkVKxgug",
+                                "key": "XGsDzYbKcgYPGcyu120k6",
                                 "type": "Data Element",
                                 "value": "This item must be returned within 90 days of",
                                 "id": "369",
@@ -1120,37 +1197,39 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 45,
-                                "definition": "Free-form descriptive text"
+                                "definition": "Free-form descriptive text",
+                                "designator": "N903"
                               }
                             ]
                           }
                         ]
                       },
                       {
-                        "key": "TmlIzO3tpzhBtEz2_qtJH",
+                        "key": "4x1POo2-FvCSIWIuhIDLE",
                         "id": "N9Loop2",
                         "desc": "Reference Identification",
                         "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
                         "elements": [],
                         "Loop": [
                           {
-                            "key": "tudou2ZuDHCumH5vggs10",
+                            "key": "l_RFCLw8-ylMpAIKLmTgh",
                             "id": "N9",
                             "desc": "Reference Identification",
                             "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
                             "elements": [
                               {
-                                "key": "jN1lGfOnbaJAHVuia2Rj_",
+                                "key": "maqpZUfxEjMJ2uq6JlRSA",
                                 "type": "Data Element",
                                 "value": "L1",
                                 "id": "128",
                                 "desc": "Reference Identification Qualifier",
                                 "required": true,
                                 "codeValue": "Letters or Notes",
-                                "definition": "Code qualifying the Reference Identification"
+                                "definition": "Code qualifying the Reference Identification",
+                                "designator": "N901"
                               },
                               {
-                                "key": "8-2Q7WNPUBm8d_2_OJ0Q4",
+                                "key": "eiLVdIYFgiJQMqdNfCvzX",
                                 "type": "Data Element",
                                 "value": "MESSAGE",
                                 "id": "127",
@@ -1159,10 +1238,11 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 30,
-                                "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
+                                "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier",
+                                "designator": "N902"
                               },
                               {
-                                "key": "2lBbz-0caYW9DZsVDnrKe",
+                                "key": "0jLn4nuffN1fZHi2GW4Bm",
                                 "type": "Data Element",
                                 "value": " the ship date.",
                                 "id": "369",
@@ -1171,37 +1251,39 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 45,
-                                "definition": "Free-form descriptive text"
+                                "definition": "Free-form descriptive text",
+                                "designator": "N903"
                               }
                             ]
                           }
                         ]
                       },
                       {
-                        "key": "ludd1D7KM6_8qQV9cYf8j",
+                        "key": "98iyUtsFFqT0Suk40sIu2",
                         "id": "N1Loop3",
                         "desc": "Name",
                         "purpose": "To identify a party by type of organization, name, and code",
                         "elements": [],
                         "Loop": [
                           {
-                            "key": "B47inIZzLMzd50EBahRb6",
+                            "key": "6e7o-TaVJSsnRXIAsIndL",
                             "id": "N1",
                             "desc": "Name",
                             "purpose": "To identify a party by type of organization, name, and code",
                             "elements": [
                               {
-                                "key": "YWb5PN4gcGglYFMqkpQHR",
+                                "key": "V_xMhVBFQJNufeN9_AzW5",
                                 "type": "Data Element",
                                 "value": "ST",
                                 "id": "98",
                                 "desc": "Entity Identifier Code",
                                 "required": true,
                                 "codeValue": "Ship To",
-                                "definition": "Code identifying an organizational entity, a physical location, property or an individual"
+                                "definition": "Code identifying an organizational entity, a physical location, property or an individual",
+                                "designator": "N101"
                               },
                               {
-                                "key": "N-dsXgmturxUuNboUJoEF",
+                                "key": "u4YeYTOYM7JwCdd28rjf1",
                                 "type": "Data Element",
                                 "value": "Company",
                                 "id": "93",
@@ -1210,35 +1292,37 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 60,
-                                "definition": "Free-form name"
+                                "definition": "Free-form name",
+                                "designator": "N102"
                               }
                             ]
                           },
                           {
-                            "key": "5I1ggx0zpT6BYFi7tYLge",
+                            "key": "nNiJacIdZhZ9cjEVhktVF",
                             "id": "LDTLoop2",
                             "desc": "Lead Time",
                             "purpose": "To specify lead time for availability of products and services",
                             "elements": [],
                             "Loop": [
                               {
-                                "key": "o6vpWwoa9VQqXI_8iwHLO",
+                                "key": "sXpQSS_wDdRFpAoiqMStv",
                                 "id": "LDT",
                                 "desc": "Lead Time",
                                 "purpose": "To specify lead time for availability of products and services",
                                 "elements": [
                                   {
-                                    "key": "HPPmleLDLnXBXv-p6X_VS",
+                                    "key": "Qu2Jwue_Yq96SA3bg5XLI",
                                     "type": "Data Element",
                                     "value": "AA",
                                     "id": "345",
                                     "desc": "Lead Time Code",
                                     "required": true,
                                     "codeValue": "From date of PO receipt to sample ready",
-                                    "definition": "Code indicating the time range"
+                                    "definition": "Code indicating the time range",
+                                    "designator": "LDT01"
                                   },
                                   {
-                                    "key": "ht2x4K90V26gB-iOq7od2",
+                                    "key": "RPCeKiiOh_NLDxCkkgRN9",
                                     "type": "Data Element",
                                     "value": "10",
                                     "id": "380",
@@ -1247,38 +1331,41 @@ export default function useTestData(): EdiDocument {
                                     "required": true,
                                     "minLength": 1,
                                     "maxLength": 15,
-                                    "definition": "Numeric value of quantity"
+                                    "definition": "Numeric value of quantity",
+                                    "designator": "LDT02"
                                   },
                                   {
-                                    "key": "41lEw0D1WBTRfLbGwT7Kc",
+                                    "key": "UYB5uvZjGAUh45jR-PSwk",
                                     "type": "Data Element",
                                     "value": "AA",
                                     "id": "344",
                                     "desc": "Unit of Time Period or Interval",
                                     "required": true,
                                     "codeValue": "",
-                                    "definition": "Code indicating the time period or interval"
+                                    "definition": "Code indicating the time period or interval",
+                                    "designator": "LDT03"
                                   }
                                 ]
                               },
                               {
-                                "key": "WtowG5_Ku_77nmEbnxQay",
+                                "key": "9B0OfD5J9ciUb9XNYUaEr",
                                 "id": "QTY",
                                 "desc": "Quantity",
                                 "purpose": "To specify quantity information",
                                 "elements": [
                                   {
-                                    "key": "D2_h796r-Hjm3y5kT6Fft",
+                                    "key": "OQ2grPQ8yFRyVfFvDAZaE",
                                     "type": "Data Element",
                                     "value": "10",
                                     "id": "673",
                                     "desc": "Quantity Qualifier",
                                     "required": true,
                                     "codeValue": "Cumulative Quantity - Rejected Material:Disposition Pending",
-                                    "definition": "Code specifying the type of quantity"
+                                    "definition": "Code specifying the type of quantity",
+                                    "designator": "QTY01"
                                   },
                                   {
-                                    "key": "jm5OptKnKiAoJYdoJNkOu",
+                                    "key": "BH83ZIUnFH9VnY9xleRND",
                                     "type": "Data Element",
                                     "value": "100",
                                     "id": "380",
@@ -1287,7 +1374,8 @@ export default function useTestData(): EdiDocument {
                                     "required": false,
                                     "minLength": 1,
                                     "maxLength": 15,
-                                    "definition": "Numeric value of quantity"
+                                    "definition": "Numeric value of quantity",
+                                    "designator": "QTY02"
                                   }
                                 ]
                               }
@@ -1296,20 +1384,20 @@ export default function useTestData(): EdiDocument {
                         ]
                       },
                       {
-                        "key": "4oZqV434EdW3zYVUnky87",
+                        "key": "ZEmTKjFIHBRBn9DXkA1zv",
                         "id": "SLNLoop1",
                         "desc": "Subline Item Detail",
                         "purpose": "To specify product subline detail item data",
                         "elements": [],
                         "Loop": [
                           {
-                            "key": "TfGq81JOxsQtoUpZA43xG",
+                            "key": "8Su9gH8f9PK_2Rm34yeVb",
                             "id": "SLN",
                             "desc": "Subline Item Detail",
                             "purpose": "To specify product subline detail item data",
                             "elements": [
                               {
-                                "key": "b9ppbNVhcYtRcGvjTlFiR",
+                                "key": "_cP0LLBIeahsxkULYTpjd",
                                 "type": "Data Element",
                                 "value": "1",
                                 "id": "350",
@@ -1318,10 +1406,11 @@ export default function useTestData(): EdiDocument {
                                 "required": true,
                                 "minLength": 1,
                                 "maxLength": 20,
-                                "definition": "Alphanumeric characters assigned for differentiation within a transaction set"
+                                "definition": "Alphanumeric characters assigned for differentiation within a transaction set",
+                                "designator": "SLN01"
                               },
                               {
-                                "key": "AUveAMy7Es4MJBCwp3itu",
+                                "key": "jvJLJgCVxJ5ctUP7Hu43_",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "350",
@@ -1330,20 +1419,22 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 20,
-                                "definition": "Alphanumeric characters assigned for differentiation within a transaction set"
+                                "definition": "Alphanumeric characters assigned for differentiation within a transaction set",
+                                "designator": "SLN02"
                               },
                               {
-                                "key": "ZoDGlBe7dxGJvMra3mTA8",
+                                "key": "yhMdimmdI9Z4b4WflBgmY",
                                 "type": "Data Element",
                                 "value": "I",
                                 "id": "662",
                                 "desc": "Relationship Code",
                                 "required": true,
                                 "codeValue": "Included",
-                                "definition": "Code indicating the relationship between entities"
+                                "definition": "Code indicating the relationship between entities",
+                                "designator": "SLN03"
                               },
                               {
-                                "key": "3PwVnoRScPGHkXfj_62J1",
+                                "key": "GR_sPmNv0CyahRDZLMa_7",
                                 "type": "Data Element",
                                 "value": "1",
                                 "id": "380",
@@ -1352,31 +1443,34 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 15,
-                                "definition": "Numeric value of quantity"
+                                "definition": "Numeric value of quantity",
+                                "designator": "SLN04"
                               },
                               {
-                                "key": "7bKkZlpF5lL-WNcKXkIyf",
+                                "key": "kfSmcR2Ogyx9nJ_6ICVc7",
                                 "type": "Data Element",
                                 "value": "EA",
                                 "components": [
                                   {
-                                    "key": "C97QyA3YD_6gEwJCPCLPM",
+                                    "key": "uDyzi9bYBQ-cUEtTftt7t",
                                     "type": "Component Element",
                                     "value": "EA",
                                     "id": "355",
                                     "desc": "Unit or Basis for Measurement Code",
                                     "required": true,
                                     "codeValue": "Each",
-                                    "definition": "Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken"
+                                    "definition": "Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken",
+                                    "designator": "SLN0501"
                                   }
                                 ],
                                 "id": "C001",
                                 "desc": "Composite Unit of Measure",
                                 "required": false,
-                                "definition": "To identify a composite unit of measure\\n\\n(See Figures Appendix for examples of use)"
+                                "definition": "To identify a composite unit of measure\\n\\n(See Figures Appendix for examples of use)",
+                                "designator": "SLN05"
                               },
                               {
-                                "key": "YUcd3EXw7t-Czy4G1AwF8",
+                                "key": "_kIo72WDg7y01UPbafOuc",
                                 "type": "Data Element",
                                 "value": "3.55",
                                 "id": "212",
@@ -1385,38 +1479,42 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 17,
-                                "definition": "Price per unit of product, service, commodity, etc."
+                                "definition": "Price per unit of product, service, commodity, etc.",
+                                "designator": "SLN06"
                               },
                               {
-                                "key": "eD14CDqj3TvHszdLMr2fY",
+                                "key": "jY5m_OCU75Acn6cMpMU8w",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "639",
                                 "desc": "Basis of Unit Price Code",
                                 "required": false,
-                                "definition": "Code identifying the type of unit price for an item"
+                                "definition": "Code identifying the type of unit price for an item",
+                                "designator": "SLN07"
                               },
                               {
-                                "key": "F6XzxOWCEmenP2UtFFzhZ",
+                                "key": "ZHO2pXSCFLkSBs1pGrnvv",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "662",
                                 "desc": "Relationship Code",
                                 "required": false,
-                                "definition": "Code indicating the relationship between entities"
+                                "definition": "Code indicating the relationship between entities",
+                                "designator": "SLN08"
                               },
                               {
-                                "key": "7zj1he4cD1V-USnKGjTSM",
+                                "key": "-8G1nkTYKcDDpZ9Q5ug8V",
                                 "type": "Data Element",
                                 "value": "IN",
                                 "id": "235",
                                 "desc": "Product/Service ID Qualifier",
                                 "required": false,
                                 "codeValue": "Buyer's Item Number",
-                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                                "designator": "SLN09"
                               },
                               {
-                                "key": "5lj3n5sXSHwE6w5I11NhW",
+                                "key": "79Ys-jA4XkF8WmHztijRI",
                                 "type": "Data Element",
                                 "value": "2456987",
                                 "id": "234",
@@ -1425,20 +1523,22 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 48,
-                                "definition": "Identifying number for a product or service"
+                                "definition": "Identifying number for a product or service",
+                                "designator": "SLN10"
                               },
                               {
-                                "key": "MfyfDTHjmVwC3__dTuNGA",
+                                "key": "BEFuWr0h16z0Z_0NEydNB",
                                 "type": "Data Element",
                                 "value": "SK",
                                 "id": "235",
                                 "desc": "Product/Service ID Qualifier",
                                 "required": false,
                                 "codeValue": "Stock Keeping Unit (SKU)",
-                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                                "designator": "SLN11"
                               },
                               {
-                                "key": "MyZb5UWT4E4HKY57MObhd",
+                                "key": "fuY4ZxeieG_BoYr5SR7xU",
                                 "type": "Data Element",
                                 "value": "123456",
                                 "id": "234",
@@ -1447,20 +1547,22 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 48,
-                                "definition": "Identifying number for a product or service"
+                                "definition": "Identifying number for a product or service",
+                                "designator": "SLN12"
                               },
                               {
-                                "key": "_JMc7yU17DGuU-i09u3rG",
+                                "key": "Q6R_JLBcY9tyVhsgquOJA",
                                 "type": "Data Element",
                                 "value": "UP",
                                 "id": "235",
                                 "desc": "Product/Service ID Qualifier",
                                 "required": false,
                                 "codeValue": "GTIN-12",
-                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                                "designator": "SLN13"
                               },
                               {
-                                "key": "5YNn46ZVWpdIYbE7-H_pW",
+                                "key": "D_mh9lMSBerLOBaR8fPQJ",
                                 "type": "Data Element",
                                 "value": "105647894512",
                                 "id": "234",
@@ -1469,20 +1571,22 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 48,
-                                "definition": "Identifying number for a product or service"
+                                "definition": "Identifying number for a product or service",
+                                "designator": "SLN14"
                               },
                               {
-                                "key": "7x2Q5zHzOOI6jc_6Bw_gz",
+                                "key": "iZAVAVhPI42B-bsEOnDZi",
                                 "type": "Data Element",
                                 "value": "CB",
                                 "id": "235",
                                 "desc": "Product/Service ID Qualifier",
                                 "required": false,
                                 "codeValue": "Buyer's Catalog Number",
-                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                                "designator": "SLN15"
                               },
                               {
-                                "key": "zR3XB4kgrYZlRkNulczC8",
+                                "key": "Cc0aBmeK3fWnjgcJoB8pB",
                                 "type": "Data Element",
                                 "value": "123-12-1239",
                                 "id": "234",
@@ -1491,20 +1595,22 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 48,
-                                "definition": "Identifying number for a product or service"
+                                "definition": "Identifying number for a product or service",
+                                "designator": "SLN16"
                               },
                               {
-                                "key": "g4ww4et1DFJ-09qF3ai7b",
+                                "key": "CiaHSMH7WiHvlG1WwhAe3",
                                 "type": "Data Element",
                                 "value": "UA",
                                 "id": "235",
                                 "desc": "Product/Service ID Qualifier",
                                 "required": false,
                                 "codeValue": "",
-                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                                "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                                "designator": "SLN17"
                               },
                               {
-                                "key": "yRPOJ91FVd_HhlyGeTcYk",
+                                "key": "MQVQqDXVRRpG1gKpO146V",
                                 "type": "Data Element",
                                 "value": "3456787",
                                 "id": "234",
@@ -1513,47 +1619,51 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 48,
-                                "definition": "Identifying number for a product or service"
+                                "definition": "Identifying number for a product or service",
+                                "designator": "SLN18"
                               }
                             ]
                           },
                           {
-                            "key": "hYDl36ZUpfl7Ji_0RLg00",
+                            "key": "VAmF9DABShEhhttt5PIPu",
                             "id": "PID",
                             "desc": "Product/Item Description",
                             "purpose": "To describe a product or process in coded or free-form format",
                             "elements": [
                               {
-                                "key": "wnEOQkYRNwCA1DSFRhlPp",
+                                "key": "R2bZDmEjFWQ5OneMBB88u",
                                 "type": "Data Element",
                                 "value": "F",
                                 "id": "349",
                                 "desc": "Item Description Type",
                                 "required": true,
                                 "codeValue": "",
-                                "definition": "Code indicating the format of a description"
+                                "definition": "Code indicating the format of a description",
+                                "designator": "PID01"
                               },
                               {
-                                "key": "-nFaC-4s7cPQCSrNzqLrB",
+                                "key": "BNsKiPtNrs995_f2R9Ebb",
                                 "type": "Data Element",
                                 "value": "08",
                                 "id": "750",
                                 "desc": "Product/Process Characteristic Code",
                                 "required": false,
                                 "codeValue": "Product",
-                                "definition": "Code identifying the general class of a product or process characteristic"
+                                "definition": "Code identifying the general class of a product or process characteristic",
+                                "designator": "PID02"
                               },
                               {
-                                "key": "eF_-4P_5kHtiXjZ_9WlgS",
+                                "key": "Fr3u3OOYK5sWT_YnttJPv",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "559",
                                 "desc": "Agency Qualifier Code",
                                 "required": false,
-                                "definition": "Code identifying the agency assigning the code values"
+                                "definition": "Code identifying the agency assigning the code values",
+                                "designator": "PID03"
                               },
                               {
-                                "key": "BWmJpLIh9LOENRA5I_n82",
+                                "key": "Ps7J8yHo9SSxv-t5wWoR4",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "751",
@@ -1562,10 +1672,11 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 12,
-                                "definition": "A code from an industry code list which provides specific data about a product characteristic"
+                                "definition": "A code from an industry code list which provides specific data about a product characteristic",
+                                "designator": "PID04"
                               },
                               {
-                                "key": "M9z7kCL7dghkYbCZ-xz4P",
+                                "key": "S098T-R7V8r0DmGLcOjSX",
                                 "type": "Data Element",
                                 "value": "Component Description",
                                 "id": "352",
@@ -1574,35 +1685,37 @@ export default function useTestData(): EdiDocument {
                                 "required": false,
                                 "minLength": 1,
                                 "maxLength": 80,
-                                "definition": "A free-form description to clarify the related data elements and their content"
+                                "definition": "A free-form description to clarify the related data elements and their content",
+                                "designator": "PID05"
                               }
                             ]
                           },
                           {
-                            "key": "I1yUt3Uayex9jhQuPgbvT",
+                            "key": "E-UjEokYT6WSETtcxryj_",
                             "id": "N9Loop3",
                             "desc": "Reference Identification",
                             "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
                             "elements": [],
                             "Loop": [
                               {
-                                "key": "dR6nFYante_VTRTNnOF8v",
+                                "key": "gGddY_4AWUeiMxvjcsFhS",
                                 "id": "N9",
                                 "desc": "Reference Identification",
                                 "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
                                 "elements": [
                                   {
-                                    "key": "nlJZZPA88xbxoUZtrm146",
+                                    "key": "utAgoXdBuuWr50UI8Nrnr",
                                     "type": "Data Element",
                                     "value": "L1",
                                     "id": "128",
                                     "desc": "Reference Identification Qualifier",
                                     "required": true,
                                     "codeValue": "Letters or Notes",
-                                    "definition": "Code qualifying the Reference Identification"
+                                    "definition": "Code qualifying the Reference Identification",
+                                    "designator": "N901"
                                   },
                                   {
-                                    "key": "mgNrPBmTQ7bVOdKcUyh3F",
+                                    "key": "wJsnjBViwdaJS4KUJWye7",
                                     "type": "Data Element",
                                     "value": "MESSAGE",
                                     "id": "127",
@@ -1611,10 +1724,11 @@ export default function useTestData(): EdiDocument {
                                     "required": false,
                                     "minLength": 1,
                                     "maxLength": 30,
-                                    "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier"
+                                    "definition": "Reference information as defined for a particular Transaction Set or as specified by the Reference Identification Qualifier",
+                                    "designator": "N902"
                                   },
                                   {
-                                    "key": "lcseZUqJqH7yLxVd5mUg8",
+                                    "key": "tqp_Sk1bjTyfe31AakOdC",
                                     "type": "Data Element",
                                     "value": "Subline Item",
                                     "id": "369",
@@ -1623,18 +1737,19 @@ export default function useTestData(): EdiDocument {
                                     "required": false,
                                     "minLength": 1,
                                     "maxLength": 45,
-                                    "definition": "Free-form descriptive text"
+                                    "definition": "Free-form descriptive text",
+                                    "designator": "N903"
                                   }
                                 ]
                               },
                               {
-                                "key": "ZjYLjVgAwI6qK0gOaseSY",
+                                "key": "JHWH3t2jbik-W3fPa3fme",
                                 "id": "MSG",
                                 "desc": "Message Text",
                                 "purpose": "To provide a free-form format that allows the transmission of text information",
                                 "elements": [
                                   {
-                                    "key": "FuUJzZNYdIlbCTwe71Mpx",
+                                    "key": "xI3bK3bIrIDCvE57UhHRn",
                                     "type": "Data Element",
                                     "value": "3 Items",
                                     "id": "933",
@@ -1643,7 +1758,8 @@ export default function useTestData(): EdiDocument {
                                     "required": true,
                                     "minLength": 1,
                                     "maxLength": 264,
-                                    "definition": "Free-form message text"
+                                    "definition": "Free-form message text",
+                                    "designator": "MSG01"
                                   }
                                 ]
                               }
@@ -1654,20 +1770,20 @@ export default function useTestData(): EdiDocument {
                     ]
                   },
                   {
-                    "key": "zyOd0uQqvNd0pdasHn-WZ",
+                    "key": "S2DkcCd52OIKmrPcJD4ZR",
                     "id": "PO1Loop1",
                     "desc": "Baseline Item Data",
                     "purpose": "To specify basic and most frequently used line item data",
                     "elements": [],
                     "Loop": [
                       {
-                        "key": "krundZcPZWik8Ozo6LKds",
+                        "key": "TC0XFwv7rertyadelxCOm",
                         "id": "PO1",
                         "desc": "Baseline Item Data",
                         "purpose": "To specify basic and most frequently used line item data",
                         "elements": [
                           {
-                            "key": "z4vEASrAQljW_fxtUdPSz",
+                            "key": "b5mFFL0CRx5xqkroBzHG2",
                             "type": "Data Element",
                             "value": "2",
                             "id": "350",
@@ -1676,10 +1792,11 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 20,
-                            "definition": "Alphanumeric characters assigned for differentiation within a transaction set"
+                            "definition": "Alphanumeric characters assigned for differentiation within a transaction set",
+                            "designator": "PO101"
                           },
                           {
-                            "key": "_8kUCmFPfj4gCdFyWNmvq",
+                            "key": "jP_uLpI2UoyLBbk-8MQVi",
                             "type": "Data Element",
                             "value": "3",
                             "id": "330",
@@ -1688,20 +1805,22 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 15,
-                            "definition": "Quantity ordered"
+                            "definition": "Quantity ordered",
+                            "designator": "PO102"
                           },
                           {
-                            "key": "3Nxz9phXZOKJacZwSdSRh",
+                            "key": "wibIUSY6jy4g70lcpRk3M",
                             "type": "Data Element",
                             "value": "EA",
                             "id": "355",
                             "desc": "Unit or Basis for Measurement Code",
                             "required": false,
                             "codeValue": "Each",
-                            "definition": "Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken"
+                            "definition": "Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken",
+                            "designator": "PO103"
                           },
                           {
-                            "key": "XRVLwQ7AfvtSr0j01yE_Z",
+                            "key": "UMlUqzzcIpku94REA3rlJ",
                             "type": "Data Element",
                             "value": "12.3",
                             "id": "212",
@@ -1710,30 +1829,33 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 17,
-                            "definition": "Price per unit of product, service, commodity, etc."
+                            "definition": "Price per unit of product, service, commodity, etc.",
+                            "designator": "PO104"
                           },
                           {
-                            "key": "fII-4RQcbjufE-QVUK85w",
+                            "key": "HDFKLOvRxPVZeeHf8kxKS",
                             "type": "Data Element",
                             "value": "PE",
                             "id": "639",
                             "desc": "Basis of Unit Price Code",
                             "required": false,
                             "codeValue": "Price per Each",
-                            "definition": "Code identifying the type of unit price for an item"
+                            "definition": "Code identifying the type of unit price for an item",
+                            "designator": "PO105"
                           },
                           {
-                            "key": "UYVkz5mXFR503Y3RBcf4U",
+                            "key": "JoUyC4mcmdn86OPrZKrTD",
                             "type": "Data Element",
                             "value": "IN",
                             "id": "235",
                             "desc": "Product/Service ID Qualifier",
                             "required": false,
                             "codeValue": "Buyer's Item Number",
-                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)"
+                            "definition": "Code identifying the type/source of the descriptive number used in Product/Service ID (234)",
+                            "designator": "PO106"
                           },
                           {
-                            "key": "NPU0SpTDI9UEJdc_RDkpx",
+                            "key": "xQ9RySTq4tgH-ge1EfhJC",
                             "type": "Data Element",
                             "value": "123",
                             "id": "234",
@@ -1742,27 +1864,28 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 48,
-                            "definition": "Identifying number for a product or service"
+                            "definition": "Identifying number for a product or service",
+                            "designator": "PO107"
                           }
                         ]
                       }
                     ]
                   },
                   {
-                    "key": "xtjS0PAkvRs0247SOm-5U",
+                    "key": "cwGvCtUVg2de5S3UQJILU",
                     "id": "CTTLoop1",
                     "desc": "Transaction Totals",
                     "purpose": "To transmit a hash total for a specific element in the transaction set",
                     "elements": [],
                     "Loop": [
                       {
-                        "key": "9RjDI_kp0nmolDnZUcKDR",
+                        "key": "uBjI3P1SL9vpodv1WYnM2",
                         "id": "CTT",
                         "desc": "Transaction Totals",
                         "purpose": "To transmit a hash total for a specific element in the transaction set",
                         "elements": [
                           {
-                            "key": "j1QTh_jYz1LPBwACAJ0wc",
+                            "key": "d5ZgudMe3WBDI_1UGHboA",
                             "type": "Data Element",
                             "value": "1",
                             "id": "354",
@@ -1771,10 +1894,11 @@ export default function useTestData(): EdiDocument {
                             "required": true,
                             "minLength": 1,
                             "maxLength": 6,
-                            "definition": "Total number of line items in the transaction set"
+                            "definition": "Total number of line items in the transaction set",
+                            "designator": "CTT01"
                           },
                           {
-                            "key": "0nIji3mGmDzQ4m5MJwLhM",
+                            "key": "3W8wo_dopME9viLrLQdOI",
                             "type": "Data Element",
                             "value": "200",
                             "id": "347",
@@ -1783,7 +1907,8 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 10,
-                            "definition": "Sum of values of the specified data element. All values in the data element will be summed without regard to decimal points (explicit or implicit) or signs. Truncation will occur on the left most digits if the sum is greater than the maximum size of the hash total of the data element.\\n\\nExample:\\n-.0018 First occurrence of value being hashed.\\n.18 Second occurrence of value being hashed.\\n1.8 Third occurrence of value being hashed.\\n18.01 Fourth occurrence of value being hashed.\\n---------\\n1855 Hash total prior to truncation.\\n855 Hash total after truncation to three-digit field."
+                            "definition": "Sum of values of the specified data element. All values in the data element will be summed without regard to decimal points (explicit or implicit) or signs. Truncation will occur on the left most digits if the sum is greater than the maximum size of the hash total of the data element.\\n\\nExample:\\n-.0018 First occurrence of value being hashed.\\n.18 Second occurrence of value being hashed.\\n1.8 Third occurrence of value being hashed.\\n18.01 Fourth occurrence of value being hashed.\\n---------\\n1855 Hash total prior to truncation.\\n855 Hash total after truncation to three-digit field.",
+                            "designator": "CTT02"
                           }
                         ]
                       }
@@ -1791,13 +1916,13 @@ export default function useTestData(): EdiDocument {
                   }
                 ],
                 "startSegment": {
-                  "key": "clGROfnhqCEUnJR5uZsA5",
+                  "key": "DhL1qt-ezT_YEoVcBIv1G",
                   "id": "ST",
                   "desc": "Transaction Set Header",
                   "purpose": "To indicate the start of a transaction set and to assign a control number",
                   "elements": [
                     {
-                      "key": "d28zCW4znZiEekmp9N5qD",
+                      "key": "IL1ggpJCVNHlA3e35tX7Q",
                       "type": "Data Element",
                       "value": "850",
                       "id": "143",
@@ -1807,10 +1932,11 @@ export default function useTestData(): EdiDocument {
                       "minLength": 3,
                       "maxLength": 3,
                       "codeValue": "Purchase Order",
-                      "definition": "Code uniquely identifying a Transaction Set"
+                      "definition": "Code uniquely identifying a Transaction Set",
+                      "designator": "ST01"
                     },
                     {
-                      "key": "N38yP2HvO504ziFpDNYa3",
+                      "key": "PuyHJ9-l3_m53PtIRuijc",
                       "type": "Data Element",
                       "value": "0001",
                       "id": "329",
@@ -1819,18 +1945,19 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 4,
                       "maxLength": 9,
-                      "definition": "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set"
+                      "definition": "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set",
+                      "designator": "ST02"
                     }
                   ]
                 },
                 "endSegment": {
-                  "key": "mmt1EC3MZlA_EzkSCe91Q",
+                  "key": "vDZusoTGSpo9GzIE6lZ6I",
                   "id": "SE",
                   "desc": "Transaction Set Trailer",
                   "purpose": "To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)",
                   "elements": [
                     {
-                      "key": "BfBkrOIanP-KIMUU9O_xA",
+                      "key": "R5cQ-BelK-Db56G5pIhAw",
                       "type": "Data Element",
                       "value": "32",
                       "id": "96",
@@ -1839,10 +1966,11 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 1,
                       "maxLength": 10,
-                      "definition": "Total number of segments included in a transaction set including ST and SE segments"
+                      "definition": "Total number of segments included in a transaction set including ST and SE segments",
+                      "designator": "SE01"
                     },
                     {
-                      "key": "AjQCCs4HXGLv5WEPZm92F",
+                      "key": "yyDXLy_WTlzpBj82h-xos",
                       "type": "Data Element",
                       "value": "0001",
                       "id": "329",
@@ -1851,20 +1979,21 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 4,
                       "maxLength": 9,
-                      "definition": "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set"
+                      "definition": "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set",
+                      "designator": "SE02"
                     }
                   ]
                 }
               }
             ],
             "startSegment": {
-              "key": "rxGVIyIe2S3BKb-4VRfUX",
+              "key": "d77Wln2amdJQKQo4GpPY2",
               "id": "GS",
               "desc": "Functional Group Header",
               "purpose": "To indicate the beginning of a functional group and to provide control information",
               "elements": [
                 {
-                  "key": "lMFyjtr4kozGN-BjRSAjr",
+                  "key": "MI9Sdsu2VSfvSroiu95HT",
                   "type": "Data Element",
                   "value": "PO",
                   "id": "479",
@@ -1872,10 +2001,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 2,
                   "maxLength": 2,
-                  "definition": "Code identifying a group of application related transaction sets"
+                  "definition": "Code identifying a group of application related transaction sets",
+                  "designator": "GS01"
                 },
                 {
-                  "key": "keF7EjRKcpXsSQDPRSboO",
+                  "key": "Tek_M-FDzBE99EQtBuk91",
                   "type": "Data Element",
                   "value": "DERICL",
                   "id": "142",
@@ -1883,10 +2013,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 2,
                   "maxLength": 15,
-                  "definition": "Code identifying party sending transmission; codes agreed to by trading partners"
+                  "definition": "Code identifying party sending transmission; codes agreed to by trading partners",
+                  "designator": "GS02"
                 },
                 {
-                  "key": "9Hkw9E1Bcl6WIQcas4X0y",
+                  "key": "3z4CdYde5EXTZFogLKdOz",
                   "type": "Data Element",
                   "value": "TEST01",
                   "id": "124",
@@ -1894,10 +2025,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 2,
                   "maxLength": 15,
-                  "definition": "Code identifying party receiving transmission. Codes agreed to by trading partners"
+                  "definition": "Code identifying party receiving transmission. Codes agreed to by trading partners",
+                  "designator": "GS03"
                 },
                 {
-                  "key": "qwvRSDVDMnohnoYNNzaH-",
+                  "key": "YLs9vsAx63TTTze-1YGMf",
                   "type": "Data Element",
                   "value": "20210517",
                   "id": "373",
@@ -1905,10 +2037,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 8,
                   "maxLength": 8,
-                  "definition": "Date expressed as CCYYMMDD"
+                  "definition": "Date expressed as CCYYMMDD",
+                  "designator": "GS04"
                 },
                 {
-                  "key": "GCDMzmCFTcQN4R8W33aTG",
+                  "key": "clzCQTGkr43evBag3PJ6j",
                   "type": "Data Element",
                   "value": "0643",
                   "id": "337",
@@ -1916,10 +2049,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 4,
                   "maxLength": 8,
-                  "definition": "Time expressed in 24-hour clock time as follows: HHMM, or HHMMSS, or HHMMSSD, or HHMMSSDD, where H = hours (00-23), M = minutes (00-59), S = integer seconds (00-59) and DD = decimal seconds; decimal seconds are expressed as follows: D = tenths (0-9) and DD = hundredths (00-99)"
+                  "definition": "Time expressed in 24-hour clock time as follows: HHMM, or HHMMSS, or HHMMSSD, or HHMMSSDD, where H = hours (00-23), M = minutes (00-59), S = integer seconds (00-59) and DD = decimal seconds; decimal seconds are expressed as follows: D = tenths (0-9) and DD = hundredths (00-99)",
+                  "designator": "GS05"
                 },
                 {
-                  "key": "hXeBOb34BFJvnDflLjDM3",
+                  "key": "foNW4dQNcDt54QJsWf12w",
                   "type": "Data Element",
                   "value": "7080",
                   "id": "28",
@@ -1927,10 +2061,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 9,
-                  "definition": "Assigned number originated and maintained by the sender"
+                  "definition": "Assigned number originated and maintained by the sender",
+                  "designator": "GS06"
                 },
                 {
-                  "key": "M7Ksp_WuQRV2adMGzwafC",
+                  "key": "Com6NpvtMMLx_XS5Looup",
                   "type": "Data Element",
                   "value": "X",
                   "id": "455",
@@ -1938,10 +2073,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 2,
-                  "definition": "Code used in conjunction with Data Element 480 to identify the issuer of the standard"
+                  "definition": "Code used in conjunction with Data Element 480 to identify the issuer of the standard",
+                  "designator": "GS07"
                 },
                 {
-                  "key": "kbdfgUyOTmyVhEBe3fOLK",
+                  "key": "NT827h2drcEs5msik5238",
                   "type": "Data Element",
                   "value": "004010",
                   "id": "480",
@@ -1949,18 +2085,19 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 12,
-                  "definition": "Code indicating the version, release, subrelease, and industry identifier of the EDI standard being used, including the GS and GE segments; if code in DE455 in GS segment is X, then in DE 480 positions 1-3 are the version number; positions 4-6 are the release and subrelease, level of the version; and positions 7-12 are the industry or trade association identifiers (optionally assigned by user); if code in DE455 in GS segment is T, then other formats are allowed"
+                  "definition": "Code indicating the version, release, subrelease, and industry identifier of the EDI standard being used, including the GS and GE segments; if code in DE455 in GS segment is X, then in DE 480 positions 1-3 are the version number; positions 4-6 are the release and subrelease, level of the version; and positions 7-12 are the industry or trade association identifiers (optionally assigned by user); if code in DE455 in GS segment is T, then other formats are allowed",
+                  "designator": "GS08"
                 }
               ]
             },
             "endSegment": {
-              "key": "stgV0U3qGVIMDUHn44OHf",
+              "key": "LrWqYiq4qBj2GPQJhyTzX",
               "id": "GE",
               "desc": "Functional Group Trailer",
               "purpose": "To indicate the end of a functional group and to provide control information",
               "elements": [
                 {
-                  "key": "dtYskn_MBxYWfX6FcdV7t",
+                  "key": "SPqVUipbJR2qLlUpY7LNf",
                   "type": "Data Element",
                   "value": "1",
                   "id": "97",
@@ -1968,10 +2105,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 6,
-                  "definition": "Total number of transaction sets included in the functional group or interchange (transmission) group terminated by the trailer containing this data element"
+                  "definition": "Total number of transaction sets included in the functional group or interchange (transmission) group terminated by the trailer containing this data element",
+                  "designator": "GE01"
                 },
                 {
-                  "key": "XOixzKyG5XfYiy3KH28NE",
+                  "key": "vhawzNOvPAVVnvNaKlr03",
                   "type": "Data Element",
                   "value": "7080",
                   "id": "28",
@@ -1979,20 +2117,21 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 9,
-                  "definition": "Assigned number originated and maintained by the sender"
+                  "definition": "Assigned number originated and maintained by the sender",
+                  "designator": "GE02"
                 }
               ]
             }
           }
         ],
         "startSegment": {
-          "key": "ADDB27nkTGwVPQ69KH30U",
+          "key": "wHB_DwHaIPNzaujeh-TYn",
           "id": "ISA",
           "desc": "Interchange Control Header",
           "purpose": "To start and identify an interchange of zero or more functional groups and interchange-related control segments",
           "elements": [
             {
-              "key": "13-pFNgyMBlTjXVkyOkDa",
+              "key": "EumOwQGDzAVZGxQfFlmMd",
               "type": "Data Element",
               "value": "00",
               "id": "I01",
@@ -2000,10 +2139,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 2,
               "maxLength": 2,
-              "definition": "Code to identify the type of information in the Authorization Information"
+              "definition": "Code to identify the type of information in the Authorization Information",
+              "designator": "ISA01"
             },
             {
-              "key": "PX3KpA-Y24dqsYZYgima0",
+              "key": "IbYetD7tyd84-7xLae40Q",
               "type": "Data Element",
               "value": "          ",
               "id": "I02",
@@ -2011,10 +2151,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 10,
               "maxLength": 10,
-              "definition": "Information used for additional identification or authorization of the interchange sender or the data in the interchange; the type of information is set by the Authorization Information Qualifier (I01)"
+              "definition": "Information used for additional identification or authorization of the interchange sender or the data in the interchange; the type of information is set by the Authorization Information Qualifier (I01)",
+              "designator": "ISA02"
             },
             {
-              "key": "NRCBzRSMeLAmsk4YV9HxV",
+              "key": "VBCLZhiavbtgkqxTdHZEQ",
               "type": "Data Element",
               "value": "00",
               "id": "I03",
@@ -2022,10 +2163,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 2,
               "maxLength": 2,
-              "definition": "Code to identify the type of information in the Security Information"
+              "definition": "Code to identify the type of information in the Security Information",
+              "designator": "ISA03"
             },
             {
-              "key": "iMtf-6OIXJuddWZvuUIkm",
+              "key": "Iu8kAvAA-04ye0uoVqdnO",
               "type": "Data Element",
               "value": "          ",
               "id": "I04",
@@ -2033,10 +2175,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 10,
               "maxLength": 10,
-              "definition": "This is used for identifying the security information about the interchange sender or the data in the interchange; the type of information is set by the Security Information Qualifier (I03)"
+              "definition": "This is used for identifying the security information about the interchange sender or the data in the interchange; the type of information is set by the Security Information Qualifier (I03)",
+              "designator": "ISA04"
             },
             {
-              "key": "4qjV2NgiMGXMevV5-87Js",
+              "key": "5rL3c6ma984dCBhDCVlz3",
               "type": "Data Element",
               "value": "ZZ",
               "id": "I05",
@@ -2044,10 +2187,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 2,
               "maxLength": 2,
-              "definition": "Qualifier to designate the system/method of code structure used to designate the sender or receiver ID element being qualified"
+              "definition": "Qualifier to designate the system/method of code structure used to designate the sender or receiver ID element being qualified",
+              "designator": "ISA05"
             },
             {
-              "key": "IOtze3MxCRjLmBa61YZRI",
+              "key": "AHJww4tVqM5Dh4DIMzAKf",
               "type": "Data Element",
               "value": "DERICL         ",
               "id": "I06",
@@ -2055,10 +2199,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 15,
               "maxLength": 15,
-              "definition": "Identification code published by the sender for other parties to use as the receiver ID to route data to them; the sender always codes this value in the sender ID element"
+              "definition": "Identification code published by the sender for other parties to use as the receiver ID to route data to them; the sender always codes this value in the sender ID element",
+              "designator": "ISA06"
             },
             {
-              "key": "gG1c7hFCH2guhLzWCxJnZ",
+              "key": "fxRQ_RTYyYkJbBbiHb9EM",
               "type": "Data Element",
               "value": "ZZ",
               "id": "I05",
@@ -2066,10 +2211,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 2,
               "maxLength": 2,
-              "definition": "Qualifier to designate the system/method of code structure used to designate the sender or receiver ID element being qualified"
+              "definition": "Qualifier to designate the system/method of code structure used to designate the sender or receiver ID element being qualified",
+              "designator": "ISA07"
             },
             {
-              "key": "RYmSSOz2v-NRKOzmBOZkz",
+              "key": "Mj1u8ZiQSkUMXagAnYffD",
               "type": "Data Element",
               "value": "TEST01         ",
               "id": "I07",
@@ -2077,10 +2223,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 15,
               "maxLength": 15,
-              "definition": "Identification code published by the receiver of the data; When sending, it is used by the sender as their sending ID, thus other parties sending to them will use this as a receiving ID to route data to them"
+              "definition": "Identification code published by the receiver of the data; When sending, it is used by the sender as their sending ID, thus other parties sending to them will use this as a receiving ID to route data to them",
+              "designator": "ISA08"
             },
             {
-              "key": "sL3s0iewT-7TdHctRne9V",
+              "key": "0rH5U89X6FIksD--S67PL",
               "type": "Data Element",
               "value": "210517",
               "id": "I08",
@@ -2088,10 +2235,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 6,
               "maxLength": 6,
-              "definition": "Date of the interchange"
+              "definition": "Date of the interchange",
+              "designator": "ISA09"
             },
             {
-              "key": "273LcgT6Ey8xPQyjfWkgV",
+              "key": "mZJxH-a1RR74knrBLvrMP",
               "type": "Data Element",
               "value": "0643",
               "id": "I09",
@@ -2099,10 +2247,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 4,
               "maxLength": 4,
-              "definition": "Time of the interchange"
+              "definition": "Time of the interchange",
+              "designator": "ISA10"
             },
             {
-              "key": "JdDJWXNNVGxvGr7HLSIl4",
+              "key": "0ZpUIAegeXmYOTCimHIUj",
               "type": "Data Element",
               "value": "U",
               "id": "I10",
@@ -2110,10 +2259,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 1,
-              "definition": "Code to identify the agency responsible for the control standard used by the message that is enclosed by the interchange header and trailer"
+              "definition": "Code to identify the agency responsible for the control standard used by the message that is enclosed by the interchange header and trailer",
+              "designator": "ISA11"
             },
             {
-              "key": "dyUtPNaaisyRS3Wwtdbue",
+              "key": "jIRdItA7HJRyu9vsvyiXp",
               "type": "Data Element",
               "value": "00401",
               "id": "I11",
@@ -2121,10 +2271,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 5,
               "maxLength": 5,
-              "definition": "This version number covers the interchange control segments"
+              "definition": "This version number covers the interchange control segments",
+              "designator": "ISA12"
             },
             {
-              "key": "jvjB8g-beIQo8vzWRAIVz",
+              "key": "m4PKf7akF5wzOEixAN0Sz",
               "type": "Data Element",
               "value": "000007080",
               "id": "I12",
@@ -2132,10 +2283,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 9,
               "maxLength": 9,
-              "definition": "A control number assigned by the interchange sender"
+              "definition": "A control number assigned by the interchange sender",
+              "designator": "ISA13"
             },
             {
-              "key": "m3gJKFhWOcYsywIf2_9M5",
+              "key": "uK-Grf1VYPvPBzIMJnEYT",
               "type": "Data Element",
               "value": "0",
               "id": "I13",
@@ -2143,10 +2295,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 1,
-              "definition": "Code sent by the sender to request an interchange acknowledgment (TA1)"
+              "definition": "Code sent by the sender to request an interchange acknowledgment (TA1)",
+              "designator": "ISA14"
             },
             {
-              "key": "Eg8p66mNV-NBGDZYxNWc-",
+              "key": "UtYmBdc_rKyNYBrlts4wS",
               "type": "Data Element",
               "value": "P",
               "id": "I14",
@@ -2154,10 +2307,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 1,
-              "definition": "Code to indicate whether data enclosed by this interchange envelope is test, production or information"
+              "definition": "Code to indicate whether data enclosed by this interchange envelope is test, production or information",
+              "designator": "ISA15"
             },
             {
-              "key": "xR8CHUTiKRF2RnUkeuxsu",
+              "key": "aLbg5uIP6zyXQFlxviHZV",
               "type": "Data Element",
               "value": ">",
               "id": "I15",
@@ -2165,18 +2319,19 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 1,
-              "definition": "Type is not applicable; the component element separator is a delimiter and not a data element; this field provides the delimiter used to separate component data elements within a composite data structure; this value must be different than the data element separator and the segment terminator"
+              "definition": "Type is not applicable; the component element separator is a delimiter and not a data element; this field provides the delimiter used to separate component data elements within a composite data structure; this value must be different than the data element separator and the segment terminator",
+              "designator": "ISA16"
             }
           ]
         },
         "endSegment": {
-          "key": "cP8bbWwoB43C0hDDsMder",
+          "key": "cam_46AhS0Jzn_EENJii2",
           "id": "IEA",
           "desc": "Interchange Control Trailer",
           "purpose": "To define the end of an interchange of zero or more functional groups and interchange-related control segments",
           "elements": [
             {
-              "key": "3n1ZXU4rHGuTNmjVNCTpv",
+              "key": "3UepDz3jM23EbCQv_iIpH",
               "type": "Data Element",
               "value": "1",
               "id": "I16",
@@ -2184,10 +2339,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 5,
-              "definition": "A count of the number of functional groups included in an interchange"
+              "definition": "A count of the number of functional groups included in an interchange",
+              "designator": "IEA01"
             },
             {
-              "key": "OS-2FMdokDApNMCrW7shK",
+              "key": "BbU7dH7Wjz-JNijeHldvC",
               "type": "Data Element",
               "value": "000007080",
               "id": "I12",
@@ -2195,7 +2351,8 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 9,
               "maxLength": 9,
-              "definition": "A control number assigned by the interchange sender"
+              "definition": "A control number assigned by the interchange sender",
+              "designator": "IEA02"
             }
           ]
         }
@@ -2208,7 +2365,7 @@ export default function useTestData(): EdiDocument {
   const edifactTestData: IEdiDocument = {
     "interchanges": [
       {
-        "key": "cwwWNxwr8t8ztiEPeHjCU",
+        "key": "WLMdasynygbRaVqJhUjEK",
         "meta": {
           "senderID": "<Sender GLN>",
           "senderQualifer": "14",
@@ -2221,12 +2378,12 @@ export default function useTestData(): EdiDocument {
         "id": "0001",
         "functionalGroups": [
           {
-            "key": "Og1SMXIKITAoEVSZRqG9W",
+            "key": "2EyBXWpF18-84j-urg21p",
             "meta": {},
             "id": "",
             "transactionSets": [
               {
-                "key": "SzlDL2qC5idJzc5fh1s_p",
+                "key": "3zZTOyrXeBclREr24zDA0",
                 "meta": {
                   "id": "001",
                   "version": "ORDERS",
@@ -2240,18 +2397,18 @@ export default function useTestData(): EdiDocument {
                 "id": "001",
                 "segments": [
                   {
-                    "key": "qSTEI3EyaE2SREt4nEhmF",
+                    "key": "wdxUG9u-bE1MyXSOIEG7x",
                     "id": "BGM",
                     "desc": "BEGINNING OF MESSAGE",
                     "purpose": "To indicate the type and function of a message and to transmit the identifying number.",
                     "elements": [
                       {
-                        "key": "G8VWmAxNJ1dv1Wwkh56kP",
+                        "key": "0JP3DKLO5IGJOK6k6icPw",
                         "type": "Data Element",
                         "value": "220",
                         "components": [
                           {
-                            "key": "LQkm8bGrFSCDZqtmh7S01",
+                            "key": "wSz1GYrI1DdblhlUtjDxq",
                             "type": "Component Element",
                             "value": "220",
                             "id": "1001",
@@ -2261,16 +2418,18 @@ export default function useTestData(): EdiDocument {
                             "minLength": 0,
                             "maxLength": 3,
                             "codeValue": "Order",
-                            "definition": "Document/message identifier expressed in code."
+                            "definition": "Document/message identifier expressed in code.",
+                            "designator": "BGM0101"
                           }
                         ],
                         "id": "C002",
                         "desc": "DOCUMENT/MESSAGE NAME",
                         "required": false,
-                        "definition": "Identification of a type of document/message by code or name. Code preferred."
+                        "definition": "Identification of a type of document/message by code or name. Code preferred.",
+                        "designator": "BGM01"
                       },
                       {
-                        "key": "RFzZ-HVa-gQ7evVaAbPK4",
+                        "key": "XY2xJ_epXWFbrT9XDZcLp",
                         "type": "Data Element",
                         "value": "PO1",
                         "id": "1004",
@@ -2279,10 +2438,11 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 0,
                         "maxLength": 35,
-                        "definition": "Reference number assigned to the document/message by the issuer."
+                        "definition": "Reference number assigned to the document/message by the issuer.",
+                        "designator": "BGM02"
                       },
                       {
-                        "key": "D3IYJXgXBduhzATXByvdP",
+                        "key": "U_rR4dxQdZJ87OYLykBDF",
                         "type": "Data Element",
                         "value": "9",
                         "id": "1225",
@@ -2292,19 +2452,20 @@ export default function useTestData(): EdiDocument {
                         "minLength": 0,
                         "maxLength": 3,
                         "codeValue": "Original",
-                        "definition": "Code indicating the function of the message."
+                        "definition": "Code indicating the function of the message.",
+                        "designator": "BGM03"
                       }
                     ]
                   }
                 ],
                 "startSegment": {
-                  "key": "yTjDo9-B55iC1UIYObDya",
+                  "key": "P1e6I7RC_ZvRQxeZPzUlt",
                   "id": "UNH",
                   "desc": "Message header",
                   "purpose": "To head, identify and specify a message.",
                   "elements": [
                     {
-                      "key": "icwlX3SLTB3yrbq_Wqq-X",
+                      "key": "Rz4u5WDLudY6cJiA6p_Ey",
                       "type": "Data Element",
                       "value": "001",
                       "id": "0062",
@@ -2313,15 +2474,16 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender."
+                      "definition": "Unique message reference assigned by the sender.",
+                      "designator": "UNH01"
                     },
                     {
-                      "key": "ra4xZDbhMezOjRG1ocY1l",
+                      "key": "y-JgLkRsbSv9IMLszCNQa",
                       "type": "Data Element",
                       "value": "ORDERS:D:96A:UN:EAN001",
                       "components": [
                         {
-                          "key": "W0aph-wRJL8msiFroH4j8",
+                          "key": "9HEgQfvnZfiqBfVzbRBEB",
                           "type": "Component Element",
                           "value": "ORDERS",
                           "id": "0065",
@@ -2331,10 +2493,11 @@ export default function useTestData(): EdiDocument {
                           "minLength": 0,
                           "maxLength": 6,
                           "codeValue": "Purchase order message",
-                          "definition": "Code identifying a type of message and assigned by its controlling agency."
+                          "definition": "Code identifying a type of message and assigned by its controlling agency.",
+                          "designator": "UNH0201"
                         },
                         {
-                          "key": "vzujJ_ncQDCYoQaBl5AZA",
+                          "key": "39SEfOKABTT7cFRuffJzA",
                           "type": "Component Element",
                           "value": "D",
                           "id": "0052",
@@ -2343,10 +2506,11 @@ export default function useTestData(): EdiDocument {
                           "required": true,
                           "minLength": 0,
                           "maxLength": 3,
-                          "definition": "Version number of a message type."
+                          "definition": "Version number of a message type.",
+                          "designator": "UNH0202"
                         },
                         {
-                          "key": "H8XnqUIt93ypvicwYJgXW",
+                          "key": "bp7SwcYBOi0Ei-PvJzkp2",
                           "type": "Component Element",
                           "value": "96A",
                           "id": "0054",
@@ -2355,10 +2519,11 @@ export default function useTestData(): EdiDocument {
                           "required": true,
                           "minLength": 0,
                           "maxLength": 3,
-                          "definition": "Release number within the current message type version number (0052)."
+                          "definition": "Release number within the current message type version number (0052).",
+                          "designator": "UNH0203"
                         },
                         {
-                          "key": "38q_EbtoU5rRoWhG0uazp",
+                          "key": "S5Qt55ewTTz5tMzfaaGwY",
                           "type": "Component Element",
                           "value": "UN",
                           "id": "0051",
@@ -2368,10 +2533,11 @@ export default function useTestData(): EdiDocument {
                           "minLength": 0,
                           "maxLength": 2,
                           "codeValue": "UN/ECE/TRADE/WP.4, United Nations Standard Messages (UNSM)",
-                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type."
+                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type.",
+                          "designator": "UNH0204"
                         },
                         {
-                          "key": "2Rl_sMDSVrWWoX5BLJIL_",
+                          "key": "d0r2ecdFj5QbBIYnWe1rh",
                           "type": "Component Element",
                           "value": "EAN001",
                           "id": "0057",
@@ -2380,24 +2546,26 @@ export default function useTestData(): EdiDocument {
                           "required": false,
                           "minLength": 0,
                           "maxLength": 6,
-                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message."
+                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message.",
+                          "designator": "UNH0205"
                         }
                       ],
                       "id": "S009",
                       "desc": "MESSAGE IDENTIFIER",
                       "required": true,
-                      "definition": "Identification of the type, version etc. of the message being interchanged."
+                      "definition": "Identification of the type, version etc. of the message being interchanged.",
+                      "designator": "UNH02"
                     }
                   ]
                 },
                 "endSegment": {
-                  "key": "ZnHoaoSxDsaMREgvvFbfO",
+                  "key": "iQsiCvZbtKrahe7Z2f1rr",
                   "id": "UNT",
                   "desc": "Message trailer",
                   "purpose": "To end and check the completeness of a message.",
                   "elements": [
                     {
-                      "key": "Zi0MHqXeSsuu_YUptsJ8J",
+                      "key": "yMIlE_2dRX1uluOMpk4M2",
                       "type": "Data Element",
                       "value": "3",
                       "id": "0074",
@@ -2406,10 +2574,11 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 6,
-                      "definition": "Control count of number of segments in a message."
+                      "definition": "Control count of number of segments in a message.",
+                      "designator": "UNT01"
                     },
                     {
-                      "key": "pUdnzPxTUprSXE9iIPJPm",
+                      "key": "1RmUGFuob4386WLGFWRIU",
                       "type": "Data Element",
                       "value": "001",
                       "id": "0062",
@@ -2418,13 +2587,14 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender."
+                      "definition": "Unique message reference assigned by the sender.",
+                      "designator": "UNT02"
                     }
                   ]
                 }
               },
               {
-                "key": "VTiXglY3833yy4CNeCEwf",
+                "key": "iN5i-tnbOSEo2-qsOL3nx",
                 "meta": {
                   "id": "002",
                   "version": "DESADV",
@@ -2438,18 +2608,18 @@ export default function useTestData(): EdiDocument {
                 "id": "002",
                 "segments": [
                   {
-                    "key": "OnoWolP0H_WuG5QX65Vrt",
+                    "key": "iR-P_ODD2tJjFbebmlWmi",
                     "id": "BGM",
                     "desc": "BEGINNING OF MESSAGE",
                     "purpose": "To indicate the type and function of a message and to transmit the identifying number.",
                     "elements": [
                       {
-                        "key": "OLYBtkclmYr0GjTSQpb_x",
+                        "key": "Y8eRmSlYXD4myepKJDJJg",
                         "type": "Data Element",
                         "value": "351",
                         "components": [
                           {
-                            "key": "A-VPXTfjK8cLxpqLUifaH",
+                            "key": "-8gOflv4Ral89yf0PGGL-",
                             "type": "Component Element",
                             "value": "351",
                             "id": "1001",
@@ -2459,16 +2629,18 @@ export default function useTestData(): EdiDocument {
                             "minLength": 0,
                             "maxLength": 3,
                             "codeValue": "Despatch advice",
-                            "definition": "Document/message identifier expressed in code."
+                            "definition": "Document/message identifier expressed in code.",
+                            "designator": "BGM0101"
                           }
                         ],
                         "id": "C002",
                         "desc": "DOCUMENT/MESSAGE NAME",
                         "required": false,
-                        "definition": "Identification of a type of document/message by code or name. Code preferred."
+                        "definition": "Identification of a type of document/message by code or name. Code preferred.",
+                        "designator": "BGM01"
                       },
                       {
-                        "key": "IfsQtF7MUTIqSEgXwS3KK",
+                        "key": "DPWX1mWJ-f-p55NVb9EJx",
                         "type": "Data Element",
                         "value": "20171229",
                         "id": "1004",
@@ -2477,19 +2649,20 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 0,
                         "maxLength": 35,
-                        "definition": "Reference number assigned to the document/message by the issuer."
+                        "definition": "Reference number assigned to the document/message by the issuer.",
+                        "designator": "BGM02"
                       }
                     ]
                   }
                 ],
                 "startSegment": {
-                  "key": "af0_-O__NPy8nViZqck_n",
+                  "key": "qmAQ5ZYxIKkr8nFS2uyl2",
                   "id": "UNH",
                   "desc": "Message header",
                   "purpose": "To head, identify and specify a message.",
                   "elements": [
                     {
-                      "key": "hvAkPqry_zs7Z6DzxO1oI",
+                      "key": "KAImJ854An0C485ab7xPS",
                       "type": "Data Element",
                       "value": "002",
                       "id": "0062",
@@ -2498,15 +2671,16 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender."
+                      "definition": "Unique message reference assigned by the sender.",
+                      "designator": "UNH01"
                     },
                     {
-                      "key": "F4HwBRzr3EMwGpJDPk2bX",
+                      "key": "Hu9OftGhiDhFChtvg0_0o",
                       "type": "Data Element",
                       "value": "DESADV:D:96A:UN:EAN001",
                       "components": [
                         {
-                          "key": "h5kJgCyurEJlm06uSK03a",
+                          "key": "JJrEOWMR3ZGBhGzNfxL6W",
                           "type": "Component Element",
                           "value": "DESADV",
                           "id": "0065",
@@ -2516,10 +2690,11 @@ export default function useTestData(): EdiDocument {
                           "minLength": 0,
                           "maxLength": 6,
                           "codeValue": "Despatch advice message",
-                          "definition": "Code identifying a type of message and assigned by its controlling agency."
+                          "definition": "Code identifying a type of message and assigned by its controlling agency.",
+                          "designator": "UNH0201"
                         },
                         {
-                          "key": "gYMCt2hkZvoxHpnBYOZbw",
+                          "key": "ZwSPf3zXhMJdTTI2Bg_XU",
                           "type": "Component Element",
                           "value": "D",
                           "id": "0052",
@@ -2528,10 +2703,11 @@ export default function useTestData(): EdiDocument {
                           "required": true,
                           "minLength": 0,
                           "maxLength": 3,
-                          "definition": "Version number of a message type."
+                          "definition": "Version number of a message type.",
+                          "designator": "UNH0202"
                         },
                         {
-                          "key": "KEyQg416dZqDsnJu2slQa",
+                          "key": "gOeGqVzO8D_SrPsf5e-1G",
                           "type": "Component Element",
                           "value": "96A",
                           "id": "0054",
@@ -2540,10 +2716,11 @@ export default function useTestData(): EdiDocument {
                           "required": true,
                           "minLength": 0,
                           "maxLength": 3,
-                          "definition": "Release number within the current message type version number (0052)."
+                          "definition": "Release number within the current message type version number (0052).",
+                          "designator": "UNH0203"
                         },
                         {
-                          "key": "uJ5THKtdu0OsGNCKWneoa",
+                          "key": "9Cb_tjue8k4r57FqAk0yl",
                           "type": "Component Element",
                           "value": "UN",
                           "id": "0051",
@@ -2553,10 +2730,11 @@ export default function useTestData(): EdiDocument {
                           "minLength": 0,
                           "maxLength": 2,
                           "codeValue": "UN/ECE/TRADE/WP.4, United Nations Standard Messages (UNSM)",
-                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type."
+                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type.",
+                          "designator": "UNH0204"
                         },
                         {
-                          "key": "vJgDOBZbxa8U75gKv97uN",
+                          "key": "hiw-m100GooVmw_Q-NuLV",
                           "type": "Component Element",
                           "value": "EAN001",
                           "id": "0057",
@@ -2565,24 +2743,26 @@ export default function useTestData(): EdiDocument {
                           "required": false,
                           "minLength": 0,
                           "maxLength": 6,
-                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message."
+                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message.",
+                          "designator": "UNH0205"
                         }
                       ],
                       "id": "S009",
                       "desc": "MESSAGE IDENTIFIER",
                       "required": true,
-                      "definition": "Identification of the type, version etc. of the message being interchanged."
+                      "definition": "Identification of the type, version etc. of the message being interchanged.",
+                      "designator": "UNH02"
                     }
                   ]
                 },
                 "endSegment": {
-                  "key": "r6VLSjM9q0dgQ3IJK5SNL",
+                  "key": "so6DnUKTmJkTEu1pLJ5Kw",
                   "id": "UNT",
                   "desc": "Message trailer",
                   "purpose": "To end and check the completeness of a message.",
                   "elements": [
                     {
-                      "key": "1ZlXfVcP1EPe6B6cEo4pR",
+                      "key": "m7KQjALYj-UDKhvGwGMW4",
                       "type": "Data Element",
                       "value": "3",
                       "id": "0074",
@@ -2591,10 +2771,11 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 6,
-                      "definition": "Control count of number of segments in a message."
+                      "definition": "Control count of number of segments in a message.",
+                      "designator": "UNT01"
                     },
                     {
-                      "key": "rvjU_8eXyiVMHFRwOFqne",
+                      "key": "bv7z_NNEb5usQ_Qo07iQd",
                       "type": "Data Element",
                       "value": "002",
                       "id": "0062",
@@ -2603,7 +2784,8 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender."
+                      "definition": "Unique message reference assigned by the sender.",
+                      "designator": "UNT02"
                     }
                   ]
                 }
@@ -2612,18 +2794,18 @@ export default function useTestData(): EdiDocument {
           }
         ],
         "startSegment": {
-          "key": "IPXaV8gkK2BhzMN3jSE_u",
+          "key": "4ydJ8uGra-JlTsEDVNBt3",
           "id": "UNB",
           "desc": "Interchange header",
           "purpose": "To start, identify and specify an interchange.",
           "elements": [
             {
-              "key": "RtcWWoejTOwvLI1e86yVg",
+              "key": "S5haD5VUndRDM_0OhLGJ6",
               "type": "Data Element",
               "value": "UNOA:2",
               "components": [
                 {
-                  "key": "3Bab0rzCa-ITGDfUJKFwA",
+                  "key": "m25ZMnr0CDEbysXVRv9Yw",
                   "type": "Component Element",
                   "value": "UNOA",
                   "id": "0001",
@@ -2632,10 +2814,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 4,
                   "maxLength": 4,
-                  "definition": "Coded identification of the agency controlling a syntax and syntax level used in an interchange."
+                  "definition": "Coded identification of the agency controlling a syntax and syntax level used in an interchange.",
+                  "designator": "UNB0101"
                 },
                 {
-                  "key": "z_Pdd_Nabg5VoVjsPQzpO",
+                  "key": "MufpRhuGLUHkDLrhy3N0O",
                   "type": "Component Element",
                   "value": "2",
                   "id": "0002",
@@ -2644,21 +2827,23 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 1,
-                  "definition": "Version number of the syntax identified in the syntax identifier (0001)"
+                  "definition": "Version number of the syntax identified in the syntax identifier (0001)",
+                  "designator": "UNB0102"
                 }
               ],
               "id": "S001",
               "desc": "Syntax identifier",
               "required": true,
-              "definition": "Identification of the agency controlling the syntax and indication of syntax level."
+              "definition": "Identification of the agency controlling the syntax and indication of syntax level.",
+              "designator": "UNB01"
             },
             {
-              "key": "TYaCMs66oAjFQGtNcK9OI",
+              "key": "z806FUQDVRdyTf856aD9h",
               "type": "Data Element",
               "value": "<Sender GLN>:14",
               "components": [
                 {
-                  "key": "E2xESaTMtQ4fLh3ChVLub",
+                  "key": "_YMLUHHi6JT8WsEsFzmfG",
                   "type": "Component Element",
                   "value": "<Sender GLN>",
                   "id": "0004",
@@ -2667,10 +2852,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 35,
-                  "definition": "Name or coded representation of the sender of a data interchange."
+                  "definition": "Name or coded representation of the sender of a data interchange.",
+                  "designator": "UNB0201"
                 },
                 {
-                  "key": "m1mAimI2WSglw1EsFngg4",
+                  "key": "-pClHHk7Aflv8BuTY_gQP",
                   "type": "Component Element",
                   "value": "14",
                   "id": "0007",
@@ -2679,21 +2865,23 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 1,
                   "maxLength": 4,
-                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners."
+                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
+                  "designator": "UNB0202"
                 }
               ],
               "id": "S002",
               "desc": "Interchange sender",
               "required": true,
-              "definition": "Identification of the sender of the interchange."
+              "definition": "Identification of the sender of the interchange.",
+              "designator": "UNB02"
             },
             {
-              "key": "zrGKWOMvh-fUMwDApUNd9",
+              "key": "JtoqS5N_3g6laPZ80As5M",
               "type": "Data Element",
               "value": "<Receiver GLN>:14",
               "components": [
                 {
-                  "key": "_cz0cMFDMzvuT7nHdiIUs",
+                  "key": "5_u292KHV3kT6p1ojFjkd",
                   "type": "Component Element",
                   "value": "<Receiver GLN>",
                   "id": "0010",
@@ -2702,10 +2890,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 35,
-                  "definition": "Name or coded representation of the recipient of a data interchange."
+                  "definition": "Name or coded representation of the recipient of a data interchange.",
+                  "designator": "UNB0301"
                 },
                 {
-                  "key": "hgt15LRyZ4Fzjtg7ShFiy",
+                  "key": "-OsfgfjBYOj5rqxEprITL",
                   "type": "Component Element",
                   "value": "14",
                   "id": "0007",
@@ -2714,21 +2903,23 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 1,
                   "maxLength": 4,
-                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners."
+                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
+                  "designator": "UNB0302"
                 }
               ],
               "id": "S003",
               "desc": "Interchange recipient",
               "required": true,
-              "definition": "Identification of the recipient of the interchange."
+              "definition": "Identification of the recipient of the interchange.",
+              "designator": "UNB03"
             },
             {
-              "key": "fMhpqqzbI6rRSN_BkrRr8",
+              "key": "8FNqbU-qBcjB0ZStYDnsR",
               "type": "Data Element",
               "value": "140407:0910",
               "components": [
                 {
-                  "key": "453JpxB_6CNlUOr4xTN7o",
+                  "key": "nR0ojekcgYH-VFr1xuMUl",
                   "type": "Component Element",
                   "value": "140407",
                   "id": "0017",
@@ -2737,10 +2928,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 6,
                   "maxLength": 6,
-                  "definition": "Local date when an interchange or a functional group was prepared."
+                  "definition": "Local date when an interchange or a functional group was prepared.",
+                  "designator": "UNB0401"
                 },
                 {
-                  "key": "zM_49hav-oT3cJvWecCMS",
+                  "key": "PUrp5aMEhyTZgaeY9hNxi",
                   "type": "Component Element",
                   "value": "0910",
                   "id": "0019",
@@ -2749,16 +2941,18 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 4,
                   "maxLength": 4,
-                  "definition": "Local time of day when an interchange or a functional group was prepared."
+                  "definition": "Local time of day when an interchange or a functional group was prepared.",
+                  "designator": "UNB0402"
                 }
               ],
               "id": "S004",
               "desc": "Date/time of preparation",
               "required": true,
-              "definition": "Date and time of preparation of the interchange."
+              "definition": "Date and time of preparation of the interchange.",
+              "designator": "UNB04"
             },
             {
-              "key": "oi5PVs0ZiWJEmXqRpG8V6",
+              "key": "cK0q-vowfN0_D0h9gpJFS",
               "type": "Data Element",
               "value": "0001",
               "id": "0020",
@@ -2767,18 +2961,19 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 14,
-              "definition": "Unique reference assigned by the sender to an interchange."
+              "definition": "Unique reference assigned by the sender to an interchange.",
+              "designator": "UNB05"
             }
           ]
         },
         "endSegment": {
-          "key": "CSBRV-LqqdQrtb2I4_5JR",
+          "key": "j14hAnrsxxYVtxh1DD0Vx",
           "id": "UNZ",
           "desc": "Interchange trailer",
           "purpose": "To end and check the completeness of an interchange.",
           "elements": [
             {
-              "key": "KBCKyYoz2-A0w7G3icSxb",
+              "key": "5g4YmmJnBFhz5JxXRQuFm",
               "type": "Data Element",
               "value": "2",
               "id": "0036",
@@ -2786,10 +2981,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 6,
-              "definition": "Count either of the number of messages or, if used, of the number of functional groups in an interchange."
+              "definition": "Count either of the number of messages or, if used, of the number of functional groups in an interchange.",
+              "designator": "UNZ01"
             },
             {
-              "key": "o_A8KqJ80EeUrZk_CzCtZ",
+              "key": "Kr8QxJY5ncAbuOQSlN9jt",
               "type": "Data Element",
               "value": "0001",
               "id": "0020",
@@ -2797,13 +2993,14 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 14,
-              "definition": "Unique reference assigned by the sender to an interchange."
+              "definition": "Unique reference assigned by the sender to an interchange.",
+              "designator": "UNZ02"
             }
           ]
         }
       },
       {
-        "key": "Hh314lQNuJak5LEbX4nL5",
+        "key": "2gpckBK6DcxXpn7R6VtTk",
         "meta": {
           "senderID": "<Sender GLN>",
           "senderQualifer": "14",
@@ -2816,12 +3013,12 @@ export default function useTestData(): EdiDocument {
         "id": "0002",
         "functionalGroups": [
           {
-            "key": "2vtPYeBv8vJo9VzKhtbIc",
+            "key": "alk6cfDI2dQvfX_g_Zmq-",
             "meta": {},
             "id": "",
             "transactionSets": [
               {
-                "key": "8Ecj3OHJuPREQ2cJ_FrJZ",
+                "key": "JLAN_sFQMCqKO2TfWpYuS",
                 "meta": {
                   "id": "003",
                   "version": "ORDERS",
@@ -2835,18 +3032,18 @@ export default function useTestData(): EdiDocument {
                 "id": "003",
                 "segments": [
                   {
-                    "key": "R0Sryyy-cdE77WiQ1-Tgt",
+                    "key": "gA8-3dueB4INi1Qz0hz_H",
                     "id": "BGM",
                     "desc": "BEGINNING OF MESSAGE",
                     "purpose": "To indicate the type and function of a message and to transmit the identifying number.",
                     "elements": [
                       {
-                        "key": "ftBgAPUhbp26D1SFF5Joy",
+                        "key": "vQJFX2Mg3vwMwAyfTa5aw",
                         "type": "Data Element",
                         "value": "220",
                         "components": [
                           {
-                            "key": "jPQM_mqS-T7ipN-x05Vu2",
+                            "key": "sgMNLpcpnF2wMfH8e7QXN",
                             "type": "Component Element",
                             "value": "220",
                             "id": "1001",
@@ -2856,16 +3053,18 @@ export default function useTestData(): EdiDocument {
                             "minLength": 0,
                             "maxLength": 3,
                             "codeValue": "Order",
-                            "definition": "Document/message identifier expressed in code."
+                            "definition": "Document/message identifier expressed in code.",
+                            "designator": "BGM0101"
                           }
                         ],
                         "id": "C002",
                         "desc": "DOCUMENT/MESSAGE NAME",
                         "required": false,
-                        "definition": "Identification of a type of document/message by code or name. Code preferred."
+                        "definition": "Identification of a type of document/message by code or name. Code preferred.",
+                        "designator": "BGM01"
                       },
                       {
-                        "key": "-T2peFOAWSzpSIvQjupb3",
+                        "key": "Dl-_m0VwYII7_nGCTJVC2",
                         "type": "Data Element",
                         "value": "PO3",
                         "id": "1004",
@@ -2874,10 +3073,11 @@ export default function useTestData(): EdiDocument {
                         "required": false,
                         "minLength": 0,
                         "maxLength": 35,
-                        "definition": "Reference number assigned to the document/message by the issuer."
+                        "definition": "Reference number assigned to the document/message by the issuer.",
+                        "designator": "BGM02"
                       },
                       {
-                        "key": "fnmhsuZi3fpJC8LLJyUQS",
+                        "key": "F2U0e6RiA_w6qOU-w73Kx",
                         "type": "Data Element",
                         "value": "9",
                         "id": "1225",
@@ -2887,19 +3087,20 @@ export default function useTestData(): EdiDocument {
                         "minLength": 0,
                         "maxLength": 3,
                         "codeValue": "Original",
-                        "definition": "Code indicating the function of the message."
+                        "definition": "Code indicating the function of the message.",
+                        "designator": "BGM03"
                       }
                     ]
                   }
                 ],
                 "startSegment": {
-                  "key": "FCNg29wWd3Q70JSA872Wb",
+                  "key": "GJUntUZS2JSZLTYkGQLNq",
                   "id": "UNH",
                   "desc": "Message header",
                   "purpose": "To head, identify and specify a message.",
                   "elements": [
                     {
-                      "key": "hvy15rfkQXwVjMdomGSqw",
+                      "key": "D103KV7Ema1uhyfbbMr08",
                       "type": "Data Element",
                       "value": "003",
                       "id": "0062",
@@ -2908,15 +3109,16 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender."
+                      "definition": "Unique message reference assigned by the sender.",
+                      "designator": "UNH01"
                     },
                     {
-                      "key": "Ks__LmxFkiLxLfJPuU6S_",
+                      "key": "VlVogaHeh4UJ7BBqsJdVr",
                       "type": "Data Element",
                       "value": "ORDERS:D:96A:UN:EAN001",
                       "components": [
                         {
-                          "key": "tW8pj59b_jcbmA6A3vNBW",
+                          "key": "5BPc_MPE17gMkMpcDBKs0",
                           "type": "Component Element",
                           "value": "ORDERS",
                           "id": "0065",
@@ -2926,10 +3128,11 @@ export default function useTestData(): EdiDocument {
                           "minLength": 0,
                           "maxLength": 6,
                           "codeValue": "Purchase order message",
-                          "definition": "Code identifying a type of message and assigned by its controlling agency."
+                          "definition": "Code identifying a type of message and assigned by its controlling agency.",
+                          "designator": "UNH0201"
                         },
                         {
-                          "key": "cMoDrnp2eagxHnzvixlas",
+                          "key": "6HHDlSOTBz-z_Fb10YZoJ",
                           "type": "Component Element",
                           "value": "D",
                           "id": "0052",
@@ -2938,10 +3141,11 @@ export default function useTestData(): EdiDocument {
                           "required": true,
                           "minLength": 0,
                           "maxLength": 3,
-                          "definition": "Version number of a message type."
+                          "definition": "Version number of a message type.",
+                          "designator": "UNH0202"
                         },
                         {
-                          "key": "al1NS8HH8nOl-deMyrnpI",
+                          "key": "R21Lk9PKVzd5s45Hlrm-3",
                           "type": "Component Element",
                           "value": "96A",
                           "id": "0054",
@@ -2950,10 +3154,11 @@ export default function useTestData(): EdiDocument {
                           "required": true,
                           "minLength": 0,
                           "maxLength": 3,
-                          "definition": "Release number within the current message type version number (0052)."
+                          "definition": "Release number within the current message type version number (0052).",
+                          "designator": "UNH0203"
                         },
                         {
-                          "key": "ij9cSWEgs5ODAHvUDAofN",
+                          "key": "Urwza7tMFk_ahEOkdRpiM",
                           "type": "Component Element",
                           "value": "UN",
                           "id": "0051",
@@ -2963,10 +3168,11 @@ export default function useTestData(): EdiDocument {
                           "minLength": 0,
                           "maxLength": 2,
                           "codeValue": "UN/ECE/TRADE/WP.4, United Nations Standard Messages (UNSM)",
-                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type."
+                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type.",
+                          "designator": "UNH0204"
                         },
                         {
-                          "key": "CsRSosw0YqPanYxz8xIFW",
+                          "key": "VX3ATA6Apex85JJmGg-K-",
                           "type": "Component Element",
                           "value": "EAN001",
                           "id": "0057",
@@ -2975,24 +3181,26 @@ export default function useTestData(): EdiDocument {
                           "required": false,
                           "minLength": 0,
                           "maxLength": 6,
-                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message."
+                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message.",
+                          "designator": "UNH0205"
                         }
                       ],
                       "id": "S009",
                       "desc": "MESSAGE IDENTIFIER",
                       "required": true,
-                      "definition": "Identification of the type, version etc. of the message being interchanged."
+                      "definition": "Identification of the type, version etc. of the message being interchanged.",
+                      "designator": "UNH02"
                     }
                   ]
                 },
                 "endSegment": {
-                  "key": "Wkj-o7tx9yPBsjVatfXiH",
+                  "key": "0jgbIregToYuOdfnaQgIX",
                   "id": "UNT",
                   "desc": "Message trailer",
                   "purpose": "To end and check the completeness of a message.",
                   "elements": [
                     {
-                      "key": "d-h11gMNke0BUz5CAMfPC",
+                      "key": "pKNkNn4uW_C-l1-fpmgSO",
                       "type": "Data Element",
                       "value": "3",
                       "id": "0074",
@@ -3001,10 +3209,11 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 6,
-                      "definition": "Control count of number of segments in a message."
+                      "definition": "Control count of number of segments in a message.",
+                      "designator": "UNT01"
                     },
                     {
-                      "key": "a7OxhpqTnqfnWjUN8O8od",
+                      "key": "NiMWmVKZE_rAqmL4BNifZ",
                       "type": "Data Element",
                       "value": "003",
                       "id": "0062",
@@ -3013,7 +3222,8 @@ export default function useTestData(): EdiDocument {
                       "required": true,
                       "minLength": 0,
                       "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender."
+                      "definition": "Unique message reference assigned by the sender.",
+                      "designator": "UNT02"
                     }
                   ]
                 }
@@ -3022,18 +3232,18 @@ export default function useTestData(): EdiDocument {
           }
         ],
         "startSegment": {
-          "key": "OB0VSDJtSYzgxg_83qfQO",
+          "key": "vlPzz7LHx5iFJ2s-3NAAH",
           "id": "UNB",
           "desc": "Interchange header",
           "purpose": "To start, identify and specify an interchange.",
           "elements": [
             {
-              "key": "hg4KcT01ZCRIg5I7aNoNw",
+              "key": "6w9VUslXb_dc9gi2M0VPS",
               "type": "Data Element",
               "value": "UNOA:2",
               "components": [
                 {
-                  "key": "XTesPfG7AA8Uw2ijSfXB9",
+                  "key": "h0SRD8AzItlpHq7uRR0Te",
                   "type": "Component Element",
                   "value": "UNOA",
                   "id": "0001",
@@ -3042,10 +3252,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 4,
                   "maxLength": 4,
-                  "definition": "Coded identification of the agency controlling a syntax and syntax level used in an interchange."
+                  "definition": "Coded identification of the agency controlling a syntax and syntax level used in an interchange.",
+                  "designator": "UNB0101"
                 },
                 {
-                  "key": "tPT9Lki5b63OAeVPTwWrC",
+                  "key": "zL24fHtdhRsFcg6SvB9MR",
                   "type": "Component Element",
                   "value": "2",
                   "id": "0002",
@@ -3054,21 +3265,23 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 1,
-                  "definition": "Version number of the syntax identified in the syntax identifier (0001)"
+                  "definition": "Version number of the syntax identified in the syntax identifier (0001)",
+                  "designator": "UNB0102"
                 }
               ],
               "id": "S001",
               "desc": "Syntax identifier",
               "required": true,
-              "definition": "Identification of the agency controlling the syntax and indication of syntax level."
+              "definition": "Identification of the agency controlling the syntax and indication of syntax level.",
+              "designator": "UNB01"
             },
             {
-              "key": "DFBNMeU0NSTx88l92Q7TB",
+              "key": "Vvc6m7cJGy5xSm6s3rn-n",
               "type": "Data Element",
               "value": "<Sender GLN>:14",
               "components": [
                 {
-                  "key": "BiyxswJJSBWhqwQFqu0mR",
+                  "key": "d64GR-JPFdEye62A1ZcUv",
                   "type": "Component Element",
                   "value": "<Sender GLN>",
                   "id": "0004",
@@ -3077,10 +3290,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 35,
-                  "definition": "Name or coded representation of the sender of a data interchange."
+                  "definition": "Name or coded representation of the sender of a data interchange.",
+                  "designator": "UNB0201"
                 },
                 {
-                  "key": "a-lRTcR7LeA0MlVnSTt1N",
+                  "key": "XYJL_oAYWx3jRPV264egV",
                   "type": "Component Element",
                   "value": "14",
                   "id": "0007",
@@ -3089,21 +3303,23 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 1,
                   "maxLength": 4,
-                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners."
+                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
+                  "designator": "UNB0202"
                 }
               ],
               "id": "S002",
               "desc": "Interchange sender",
               "required": true,
-              "definition": "Identification of the sender of the interchange."
+              "definition": "Identification of the sender of the interchange.",
+              "designator": "UNB02"
             },
             {
-              "key": "W2_eK9t_Gj8O6OaUgekiy",
+              "key": "quGecEwmoGyrS3TYQa-nK",
               "type": "Data Element",
               "value": "<Receiver GLN>:14",
               "components": [
                 {
-                  "key": "d3ZIr_U2RcVkybEhBo5Wr",
+                  "key": "88MVvZnrTvOIY_5CClO6b",
                   "type": "Component Element",
                   "value": "<Receiver GLN>",
                   "id": "0010",
@@ -3112,10 +3328,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 35,
-                  "definition": "Name or coded representation of the recipient of a data interchange."
+                  "definition": "Name or coded representation of the recipient of a data interchange.",
+                  "designator": "UNB0301"
                 },
                 {
-                  "key": "aPRKokRDlzz34xIDnF7uM",
+                  "key": "Q5ls8utn2M4EHiF73Ek7V",
                   "type": "Component Element",
                   "value": "14",
                   "id": "0007",
@@ -3124,21 +3341,23 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 1,
                   "maxLength": 4,
-                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners."
+                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
+                  "designator": "UNB0302"
                 }
               ],
               "id": "S003",
               "desc": "Interchange recipient",
               "required": true,
-              "definition": "Identification of the recipient of the interchange."
+              "definition": "Identification of the recipient of the interchange.",
+              "designator": "UNB03"
             },
             {
-              "key": "yHDqiMKbwnUXXXd6qWR_v",
+              "key": "PjiJEeTwbE7fg5rSLLozN",
               "type": "Data Element",
               "value": "140407:0910",
               "components": [
                 {
-                  "key": "3XGAUzG6PNqjJXGfg7vP9",
+                  "key": "Kger6oJYAP1AfuyAoGMc_",
                   "type": "Component Element",
                   "value": "140407",
                   "id": "0017",
@@ -3147,10 +3366,11 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 6,
                   "maxLength": 6,
-                  "definition": "Local date when an interchange or a functional group was prepared."
+                  "definition": "Local date when an interchange or a functional group was prepared.",
+                  "designator": "UNB0401"
                 },
                 {
-                  "key": "S9SGkWtM7QOohIFnajv9j",
+                  "key": "S4AFmAj4cKRaCJou__SpU",
                   "type": "Component Element",
                   "value": "0910",
                   "id": "0019",
@@ -3159,16 +3379,18 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 4,
                   "maxLength": 4,
-                  "definition": "Local time of day when an interchange or a functional group was prepared."
+                  "definition": "Local time of day when an interchange or a functional group was prepared.",
+                  "designator": "UNB0402"
                 }
               ],
               "id": "S004",
               "desc": "Date/time of preparation",
               "required": true,
-              "definition": "Date and time of preparation of the interchange."
+              "definition": "Date and time of preparation of the interchange.",
+              "designator": "UNB04"
             },
             {
-              "key": "fM5gXOyVhFRJLuMq-aHF0",
+              "key": "9T3auLIq9rxupw_yVWF_P",
               "type": "Data Element",
               "value": "0002",
               "id": "0020",
@@ -3177,18 +3399,19 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 14,
-              "definition": "Unique reference assigned by the sender to an interchange."
+              "definition": "Unique reference assigned by the sender to an interchange.",
+              "designator": "UNB05"
             }
           ]
         },
         "endSegment": {
-          "key": "zHqlzwPbVscMq5Sam0sm8",
+          "key": "07oGoA0tFXJGHCmRCI1l8",
           "id": "UNZ",
           "desc": "Interchange trailer",
           "purpose": "To end and check the completeness of an interchange.",
           "elements": [
             {
-              "key": "PuzSK_BNGuCeIGLgud_Ny",
+              "key": "NDV4pkXLfDmyySWrCR-23",
               "type": "Data Element",
               "value": "1",
               "id": "0036",
@@ -3196,10 +3419,11 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 6,
-              "definition": "Count either of the number of messages or, if used, of the number of functional groups in an interchange."
+              "definition": "Count either of the number of messages or, if used, of the number of functional groups in an interchange.",
+              "designator": "UNZ01"
             },
             {
-              "key": "qtPYm6qe7BGKMU_OTQ4Mw",
+              "key": "Gk1GcT8te_wNospT1QuqL",
               "type": "Data Element",
               "value": "0002",
               "id": "0020",
@@ -3207,20 +3431,21 @@ export default function useTestData(): EdiDocument {
               "required": true,
               "minLength": 1,
               "maxLength": 14,
-              "definition": "Unique reference assigned by the sender to an interchange."
+              "definition": "Unique reference assigned by the sender to an interchange.",
+              "designator": "UNZ02"
             }
           ]
         }
       }
     ],
     "separatorsSegment": {
-      "key": "UA0DPFN4U8YEHYiuh6zi0",
+      "key": "qz3p_GRjR_GkACQ0LQGle",
       "id": "UNA",
       "desc": "Delimiter String Advice",
       "purpose": "To start, identify and specify an interchange.",
       "elements": [
         {
-          "key": "4yTKyFEjNZv7P4sgCXAu1",
+          "key": "NdhQF1slFrupHbVyx9sun",
           "type": "Data Element",
           "value": ":",
           "id": "UNA01",
@@ -3228,10 +3453,11 @@ export default function useTestData(): EdiDocument {
           "required": true,
           "minLength": 1,
           "maxLength": 1,
-          "definition": "Sub-element delimiter"
+          "definition": "Sub-element delimiter",
+          "designator": "UNA01"
         },
         {
-          "key": "8m0wFulUTuiVCHFDa0xSw",
+          "key": "pPGeH33DR40FdQJc_nbaQ",
           "type": "Data Element",
           "value": "+",
           "id": "UNA02",
@@ -3239,10 +3465,11 @@ export default function useTestData(): EdiDocument {
           "required": true,
           "minLength": 1,
           "maxLength": 1,
-          "definition": "Data element delimiter"
+          "definition": "Data element delimiter",
+          "designator": "UNA02"
         },
         {
-          "key": "y9kt43A4n2YqC5dFiY0dV",
+          "key": "zZ-Ck1u0dSYY_6H0V8Wtg",
           "type": "Data Element",
           "value": ".",
           "id": "UNA03",
@@ -3250,10 +3477,11 @@ export default function useTestData(): EdiDocument {
           "required": true,
           "minLength": 1,
           "maxLength": 1,
-          "definition": "Decimal point indicator"
+          "definition": "Decimal point indicator",
+          "designator": "UNA03"
         },
         {
-          "key": "5UeTX_6yPyBwFBE7oD6yq",
+          "key": "Kt8oDMadNGRYcTwf5BmdU",
           "type": "Data Element",
           "value": "?",
           "id": "UNA04",
@@ -3261,10 +3489,11 @@ export default function useTestData(): EdiDocument {
           "required": true,
           "minLength": 1,
           "maxLength": 1,
-          "definition": "Release character"
+          "definition": "Release character",
+          "designator": "UNA04"
         },
         {
-          "key": "i6Qd9RWFFY9sMzdY-5nsp",
+          "key": "Z0x7ISeERemy1mY_47wUy",
           "type": "Data Element",
           "value": "*",
           "id": "UNA05",
@@ -3272,7 +3501,8 @@ export default function useTestData(): EdiDocument {
           "required": true,
           "minLength": 1,
           "maxLength": 1,
-          "definition": "Space"
+          "definition": "Space",
+          "designator": "UNA05"
         }
       ]
     },

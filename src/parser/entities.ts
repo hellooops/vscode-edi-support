@@ -233,7 +233,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     this.designatorIndex = designatorIndex;
   }
 
-  public getDesignator() : string {
+  public getDesignator(): string {
     return `${this.segmentName}${this.designatorIndex}`;
   }
 
@@ -338,6 +338,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       maxLength: this.ediReleaseSchemaElement?.maxLength,
       codeValue,
       definition: this.ediReleaseSchemaElement?.definition,
+      designator: this.getDesignator()
     };
   }
 }
