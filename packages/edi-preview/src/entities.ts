@@ -13,10 +13,10 @@ export class EdiElement implements TreeItemBase {
   components?: EdiElement[];
 
   // EdiReleaseSchemaElement
-  id: string;
-  desc: string;
+  id?: string;
+  desc?: string;
   dataType?: string;
-  required: boolean;
+  required?: boolean;
   minLength?: number;
   maxLength?: number;
   codeValue?: string;

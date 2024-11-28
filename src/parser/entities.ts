@@ -330,14 +330,14 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       type: this.type,
       value: this.value,
       components: this.components?.map(e => e.getIResult()),
-      id: this.ediReleaseSchemaElement!.id,
-      desc: this.ediReleaseSchemaElement!.desc,
-      dataType: this.ediReleaseSchemaElement!.dataType,
-      required: this.ediReleaseSchemaElement!.required,
-      minLength: this.ediReleaseSchemaElement!.minLength,
-      maxLength: this.ediReleaseSchemaElement!.maxLength,
+      id: this.ediReleaseSchemaElement?.id,
+      desc: this.ediReleaseSchemaElement?.desc,
+      dataType: this.ediReleaseSchemaElement?.dataType,
+      required: this.ediReleaseSchemaElement?.required,
+      minLength: this.ediReleaseSchemaElement?.minLength,
+      maxLength: this.ediReleaseSchemaElement?.maxLength,
       codeValue,
-      definition: this.ediReleaseSchemaElement!.definition,
+      definition: this.ediReleaseSchemaElement?.definition,
     };
   }
 }

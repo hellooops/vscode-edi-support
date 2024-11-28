@@ -41,7 +41,8 @@ export abstract class EdiParserBase {
   protected abstract parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta;
   protected abstract parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta;
   private fitSegmentsToVersion(segments: EdiSegment[]): EdiSegment[] {
-    const versionSegmentsContext = new SchemaVersionSegmentsContext(this.schema!.ediVersionSchema!.TransactionSet);
+    if (!this.schema?.ediVersionSchema) return segments;
+    const versionSegmentsContext = new SchemaVersionSegmentsContext(this.schema.ediVersionSchema.TransactionSet);
     return versionSegmentsContext.build(segments);
   }
 
