@@ -111,11 +111,11 @@ export class EdiUtils {
   }
 
   static getInterchangeStartPosition(document: vscode.TextDocument, interchange: EdiInterchange): vscode.Position {
-    return document.positionAt(interchange.startSegment!.startIndex);
+    return document.positionAt(interchange.getFirstSegment()!.startIndex);
   }
 
   static getInterchangeEndPosition(document: vscode.TextDocument, interchange: EdiInterchange): vscode.Position {
-    return document.positionAt(interchange.endSegment!.endIndex + 1);
+    return document.positionAt(interchange.getLastSegment()!.endIndex + 1);
   }
 
   static getInterchangeRange(document: vscode.TextDocument, interchange: EdiInterchange): vscode.Range {
@@ -126,11 +126,11 @@ export class EdiUtils {
   }
 
   static getFunctionalGroupStartPosition(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.Position {
-    return document.positionAt(functionalGroup.startSegment!.startIndex);
+    return document.positionAt(functionalGroup.getFirstSegment()!.startIndex);
   }
 
   static getFunctionalGroupEndPosition(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.Position {
-    return document.positionAt(functionalGroup.endSegment!.endIndex + 1);
+    return document.positionAt(functionalGroup.getLastSegment()!.endIndex + 1);
   }
 
   static getFunctionalGroupRange(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.Range {
@@ -141,11 +141,11 @@ export class EdiUtils {
   }
 
   static getTransactionSetStartPosition(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.Position {
-    return document.positionAt(transactionSet.startSegment!.startIndex);
+    return document.positionAt(transactionSet.getFirstSegment()!.startIndex);
   }
 
   static getTransactionSetEndPosition(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.Position {
-    return document.positionAt(transactionSet.endSegment!.endIndex + 1);
+    return document.positionAt(transactionSet.getLastSegment()!.endIndex + 1);
   }
 
   static getTransactionSetRange(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.Range {
