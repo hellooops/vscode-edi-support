@@ -39,7 +39,7 @@ export class EdiDecorationsMgr implements IDecorationable {
 
     const segments = ediDocument.getSegments(true);
     const { element, segment } = EdiUtils.getSegmentOrElementByPosition(startOffset, segments);
-    if (!segment) {
+    if (!segment || !EdiUtils.isOnlySegmentInLine(document, segment)) {
       this.clearDecorations();
       return;
     }
