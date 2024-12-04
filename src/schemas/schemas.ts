@@ -215,7 +215,7 @@ export class EdiReleaseSchemaSegment {
       {
         Id: "S005",
         Desc: "Recipient's reference, password",
-        Required: true,
+        Required: false,
         Definition: "Reference or password as agreed between the communicating partners.",
         Components: [
           { Id: "0022", Desc: "Recipient's reference/password", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference assigned by the recipient to the data interchange or a password to the recipient's system or to a third party network as specified in the partners interchange agreement.", mock: true },

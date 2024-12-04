@@ -9,6 +9,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## [1.6.2] - 2024-11-27
+
+### Changed
+
+- Set UNB06(S005) optional.
+
+
 ## [1.6.1] - 2024-11-27
 
 ### Added
