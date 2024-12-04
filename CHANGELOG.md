@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+
+- Don't crash when unexpected composite element occurs.
 
 
 

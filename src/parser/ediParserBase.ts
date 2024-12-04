@@ -216,7 +216,7 @@ export abstract class EdiParserBase {
           segment.startIndex,
           `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
         );
-        subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
+        subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components?.[subElementIndex - 1];
         element!.components = element!.components || [];
         element!.components.push(subElement);
       }
