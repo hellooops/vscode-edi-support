@@ -9,7 +9,7 @@ suite("Extension Test Suite", () => {
 
   test("Edifact Parse Meta", async () => {
     const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
-    const parser: EdifactParser = new EdifactParser(documentStr);
+    const parser = new EdifactParser(documentStr);
     const ediDocument: EdiDocument = await parser.parse()!;
 
     assert.strictEqual(ediDocument.interchanges.length, 1);
@@ -24,7 +24,7 @@ suite("Extension Test Suite", () => {
 
   test("Edifact Parse Segment", async () => {
     const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
-    const parser: EdifactParser = new EdifactParser(documentStr);
+    const parser = new EdifactParser(documentStr);
 
     const ediDocument: EdiDocument = await parser.parse()!;
     const segments = ediDocument.getSegments();
@@ -131,7 +131,7 @@ suite("Extension Test Suite", () => {
     ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~
     ST*850*0001~`;
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     const ediDocument: EdiDocument = await parser.parse()!;
 
     assert.strictEqual(ediDocument.interchanges.length, 1);
@@ -149,7 +149,7 @@ suite("Extension Test Suite", () => {
     ISA+00+          +00+          +ZZ+DERICL         +ZZ+TEST01         +210517+0643+U+00401+000007080+0+P+>~
     GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
     ST+850+0001~`;
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     const ediDocument: EdiDocument = await parser.parse()!;
 
     assert.strictEqual(ediDocument.interchanges.length, 1);
@@ -167,7 +167,7 @@ suite("Extension Test Suite", () => {
     ISA+00+          +00+          +ZZ+DERICL         +ZZ+TEST01         +210517+0643+U+00400+000007080+0+P+>~
     GS+PO+DERICL+TEST01+20210517+0643+7080+X+004010~
     ST+850+0001~`;
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     const ediDocument: EdiDocument = await parser.parse()!;
 
     assert.strictEqual(ediDocument.interchanges.length, 1);
@@ -182,7 +182,7 @@ suite("Extension Test Suite", () => {
 
   test("X12 Parse Segment", async () => {
     const documentStr = "SV2*0730*HC>93010*76.56*UN*3~";
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     parser.setMessageSeparators({ segmentSeparator: "~", dataElementSeparator: "*", componentElementSeparator: ">" });
     await parser.loadSchema({release: "00401", version: "850"})
 
@@ -259,7 +259,7 @@ suite("Extension Test Suite", () => {
 
   test("X12 Parse Separators 1", async () => {
     const documentStr = `ISA*00*          *00*          *ZZ*1234567890     *ZZ*ABCDEFGH       *230705*1100*U*00400*000000001*0*P*>^`;
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     const separators = parser.getMessageSeparators();
     assert.strictEqual(separators.segmentSeparator, "^");
     assert.strictEqual(separators.dataElementSeparator, "*");
@@ -269,7 +269,7 @@ suite("Extension Test Suite", () => {
   test("X12 Parse Separators 2", async () => {
     const documentStr = `ISA*00**00* *ZZ*1234567890*ZZ*ABCDEFGH*230705*1100*U*00400*000000001*0*P*>^
     GS*PO*1234567890*ABCDEFGH*20030705*1100*1*X*004010^`;
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     const separators = parser.getMessageSeparators();
     assert.strictEqual(separators.segmentSeparator, "^");
     assert.strictEqual(separators.dataElementSeparator, "*");
@@ -278,10 +278,237 @@ suite("Extension Test Suite", () => {
 
   test("X12 Parse Separators 3", async () => {
     const documentStr = `ISA*00**00* *ZZ*1234567890*ZZ*ABCDEFGH*230705*1100*U*00400*000000001*0*P*>\nGS*PO*1234567890*ABCDEFGH*20030705*1100*1*X*004010\n`;
-    const parser: X12Parser = new X12Parser(documentStr);
+    const parser = new X12Parser(documentStr);
     const separators = parser.getMessageSeparators();
     assert.strictEqual(separators.segmentSeparator, "\n");
     assert.strictEqual(separators.dataElementSeparator, "*");
     assert.strictEqual(separators.componentElementSeparator, ">");
+  });
+
+  test("Edifact Parse Separators 1", async () => {
+    const documentStr = ``;
+    const parser = new EdifactParser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "'");
+    assert.strictEqual(separators.dataElementSeparator, "+");
+    assert.strictEqual(separators.componentElementSeparator, ":");
+    assert.strictEqual(separators.releaseCharacter, "?");
+  });
+
+  test("Edifact Parse Separators 2", async () => {
+    const documentStr = `UNB+UNOB:3+ + +180123:1127+000000128`;
+    const parser = new EdifactParser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "'");
+    assert.strictEqual(separators.dataElementSeparator, "+");
+    assert.strictEqual(separators.componentElementSeparator, ":");
+    assert.strictEqual(separators.releaseCharacter, "?");
+  });
+
+  test("Edifact Parse Separators 3-1", async () => {
+    const documentStr = `UNA:+.?*'`;
+    const parser = new EdifactParser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "'");
+    assert.strictEqual(separators.dataElementSeparator, "+");
+    assert.strictEqual(separators.componentElementSeparator, ":");
+    assert.strictEqual(separators.releaseCharacter, "?");
+  });
+
+  test("Edifact Parse Separators 3-2", async () => {
+    const documentStr = `UNA123456`;
+    const parser = new EdifactParser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "6");
+    assert.strictEqual(separators.dataElementSeparator, "2");
+    assert.strictEqual(separators.componentElementSeparator, "1");
+    assert.strictEqual(separators.releaseCharacter, "4");
+  });
+
+  test("Edifact Parse Separators 4", async () => {
+    const documentStr = `UNA:+.?*\r\nUNB+UNOB:3+ + +180123:1127+000000128'`;
+    const parser = new EdifactParser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "\r");
+    assert.strictEqual(separators.dataElementSeparator, "+");
+    assert.strictEqual(separators.componentElementSeparator, ":");
+    assert.strictEqual(separators.releaseCharacter, "?");
+  });
+
+  test("Edifact Parse Separators 5", async () => {
+    const documentStr = `UNA:+.?*\nUNB+UNOB:3+ + +180123:1127+000000128`;
+    const parser = new EdifactParser(documentStr);
+    const separators = parser.getMessageSeparators();
+    assert.strictEqual(separators.segmentSeparator, "\n");
+    assert.strictEqual(separators.dataElementSeparator, "+");
+    assert.strictEqual(separators.componentElementSeparator, ":");
+    assert.strictEqual(separators.releaseCharacter, "?");
+  });
+
+  suite("Parse Document", () => {
+    test("X12 1", async () => {
+      const documentStr = `
+ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00401*000000001*0*T*:~
+
+GS*PO*  *  *20241111*0300*1*T*004010~
+
+ST*850*0001~
+BEG*00*DS*PO1**20150708~
+SE*3*0001~
+
+ST*864*0002~
+BMG*00**03~
+SE*3*0002~
+
+GE*2*1~
+
+GS*PO*  *  *20241111*0300*2*T*004010~
+ST*850*0003~
+BEG*00*DS*PO3**20150708~
+SE*3*0003~
+GE*1*2~
+
+IEA*2*000000001~
+`;
+      const parser = new X12Parser(documentStr);
+      const document = await parser.parse();
+
+
+      assert.strictEqual(document.separatorsSegment, undefined);
+      assert.strictEqual(document.startSegment, undefined);
+      assert.strictEqual(document.endSegment, undefined);
+      assert.strictEqual(document.interchanges.length, 1);
+
+      // Interchange 1
+      assert.strictEqual(document.interchanges[0].getId(), "000000001");
+      assert.ok(document.interchanges[0].startSegment);
+      assert.strictEqual(document.interchanges[0].startSegment.id, "ISA");
+      assert.ok(document.interchanges[0].endSegment);
+      assert.strictEqual(document.interchanges[0].endSegment.id, "IEA");
+      assert.strictEqual(document.interchanges[0].functionalGroups.length, 2);
+
+      // Interchange 1 - FunctionalGroup 1
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].getId(), "1");
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].isFake(), false);
+      assert.ok(document.interchanges[0].functionalGroups[0].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].startSegment.id, "GS");
+      assert.ok(document.interchanges[0].functionalGroups[0].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].endSegment.id, "GE");
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets.length, 2);
+
+      // Interchange 1 - FunctionalGroup 1 - TransactionSet 1
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].getId(), "0001");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[0].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].startSegment.id, "ST");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[0].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].endSegment.id, "SE");
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].segments.length, 1);
+
+      // Interchange 1 - FunctionalGroup 1 - TransactionSet 2
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].getId(), "0002");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[1].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].startSegment.id, "ST");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[1].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].endSegment.id, "SE");
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].segments.length, 1);
+
+      // Interchange 1 - FunctionalGroup 2
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].getId(), "2");
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].isFake(), false);
+      assert.ok(document.interchanges[0].functionalGroups[1].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].startSegment.id, "GS");
+      assert.ok(document.interchanges[0].functionalGroups[1].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].endSegment.id, "GE");
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].transactionSets.length, 1);
+
+      // Interchange 1 - FunctionalGroup 2 - TransactionSet 1
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].transactionSets[0].getId(), "0003");
+      assert.ok(document.interchanges[0].functionalGroups[1].transactionSets[0].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].transactionSets[0].startSegment.id, "ST");
+      assert.ok(document.interchanges[0].functionalGroups[1].transactionSets[0].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].transactionSets[0].endSegment.id, "SE");
+      assert.strictEqual(document.interchanges[0].functionalGroups[1].transactionSets[0].segments.length, 1);
+    });
+
+    test("Edifact 1", async () => {
+      const documentStr = `
+UNA:+.?*'
+
+UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+0001'
+UNH+001+ORDERS:D:96A:UN:EAN001'
+BGM+220+PO1+9'
+UNT+3+001'
+
+UNH+002+DESADV:D:96A:UN:EAN001'
+BGM+351+20171229'
+UNT+3+002'
+UNZ+2+0001'
+
+UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+0002'
+UNH+003+ORDERS:D:96A:UN:EAN001'
+BGM+220+PO3+9'
+UNT+3+003'
+UNZ+1+0002'
+`;
+      const parser = new EdifactParser(documentStr);
+      const document = await parser.parse();
+
+      assert.ok(document.separatorsSegment !== undefined);
+      assert.strictEqual(document.startSegment, undefined);
+      assert.strictEqual(document.endSegment, undefined);
+      assert.strictEqual(document.interchanges.length, 2);
+
+      // Interchange 1
+      assert.strictEqual(document.interchanges[0].getId(), "0001");
+      assert.ok(document.interchanges[0].startSegment);
+      assert.strictEqual(document.interchanges[0].startSegment.id, "UNB");
+      assert.ok(document.interchanges[0].endSegment);
+      assert.strictEqual(document.interchanges[0].endSegment.id, "UNZ");
+      assert.strictEqual(document.interchanges[0].functionalGroups.length, 1);
+
+      // Interchange 1 - FunctionalGroup 1
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].isFake(), true);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].startSegment, undefined);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].endSegment, undefined);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets.length, 2);
+
+      // Interchange 1 - FunctionalGroup 1 - TransactionSet 1
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].getId(), "001");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[0].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].startSegment.id, "UNH");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[0].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].endSegment.id, "UNT");
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[0].segments.length, 1);
+
+      // Interchange 1 - FunctionalGroup 1 - TransactionSet 2
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].getId(), "002");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[1].startSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].startSegment.id, "UNH");
+      assert.ok(document.interchanges[0].functionalGroups[0].transactionSets[1].endSegment);
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].endSegment.id, "UNT");
+      assert.strictEqual(document.interchanges[0].functionalGroups[0].transactionSets[1].segments.length, 1);
+
+      // Interchange 2
+      assert.strictEqual(document.interchanges[1].getId(), "0002");
+      assert.ok(document.interchanges[1].startSegment);
+      assert.strictEqual(document.interchanges[1].startSegment.id, "UNB");
+      assert.ok(document.interchanges[1].endSegment);
+      assert.strictEqual(document.interchanges[1].endSegment.id, "UNZ");
+      assert.strictEqual(document.interchanges[1].functionalGroups.length, 1);
+
+      // Interchange 2 - FunctionalGroup 1
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].isFake(), true);
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].startSegment, undefined);
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].endSegment, undefined);
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].transactionSets.length, 1);
+
+      // Interchange 2 - FunctionalGroup 1 - TransactionSet 1
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].transactionSets[0].getId(), "003");
+      assert.ok(document.interchanges[1].functionalGroups[0].transactionSets[0].startSegment);
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].transactionSets[0].startSegment.id, "UNH");
+      assert.ok(document.interchanges[1].functionalGroups[0].transactionSets[0].endSegment);
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].transactionSets[0].endSegment.id, "UNT");
+      assert.strictEqual(document.interchanges[1].functionalGroups[0].transactionSets[0].segments.length, 1);
+    });
   });
 });
