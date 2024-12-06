@@ -44,18 +44,24 @@ export class EdifactParser extends EdiParserBase {
 
   protected parseSeparators(): EdiMessageSeparators | null {
     const document = this.document.trim();
-    if (!document || document.length < 9 || !document.startsWith(constants.ediDocument.edifact.segment.UNA)) {
+    if (!document || !document.startsWith(constants.ediDocument.edifact.segment.UNA)) {
       return null;
     }
 
-    const ediMessageSeparators = new EdiMessageSeparators();
-    ediMessageSeparators.segmentSeparator = document[8];
-    ediMessageSeparators.dataElementSeparator = document[4];
-    ediMessageSeparators.componentElementSeparator = document[3];
-    ediMessageSeparators.releaseCharacter = document[6];
-    this._separators = ediMessageSeparators;
+    const separators = new EdiMessageSeparators();
+    let UNAString: string;
+    if (document.includes(constants.ediDocument.edifact.segment.UNB)) {
+      UNAString = document.split(constants.ediDocument.edifact.segment.UNB)[0];
+    } else {
+      UNAString = document;
+    }
+
+    if (UNAString.length > 8) separators.segmentSeparator = UNAString[8];
+    if (UNAString.length > 4) separators.dataElementSeparator = UNAString[4];
+    if (UNAString.length > 3) separators.componentElementSeparator = UNAString[3];
+    if (UNAString.length > 6) separators.releaseCharacter = UNAString[6];
     
-    return ediMessageSeparators;
+    return separators;
   }
 
   protected getDefaultMessageSeparators(): EdiMessageSeparators {
@@ -126,12 +132,6 @@ export class EdifactParser extends EdiParserBase {
 
   private async parseSegmentUNA(segment: EdiSegment, segmentStr: string): Promise<EdiSegment> {
     segment.elements = [];
-    const ediMessageSeparators = new EdiMessageSeparators();
-    ediMessageSeparators.segmentSeparator = segmentStr[8];
-    ediMessageSeparators.dataElementSeparator = segmentStr[4];
-    ediMessageSeparators.componentElementSeparator = segmentStr[3];
-    ediMessageSeparators.releaseCharacter = segmentStr[6];
-    this._separators = ediMessageSeparators;
 
     for (let i = 0; i < 5; i++) {
       const element = new EdiElement(

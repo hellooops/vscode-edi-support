@@ -79,7 +79,9 @@ export abstract class EdiParserBase {
       transactionSet.segments = this.fitSegmentsToVersion(transactionSet.segments);
     });
     try {
-      while ((match = regex.exec(this.document)) !== null) {
+      while ((match = regex.exec(this.document))) {
+        if (Utils.isNullOrUndefined(match) || match.length <= 0) break;
+        if (Utils.isNullOrUndefined(match[0]) || match[0] === "") break;
         const ediSegment = await this.parseSegment(match[0], match.index, match.index + match[0].length - 1, match[2]);
         await ediDocumentBuilder.addSegment(ediSegment);
       }
@@ -91,24 +93,14 @@ export abstract class EdiParserBase {
     }
   }
 
-  protected getSegmentByRegex(segmentId: string): string | null {
-    const regex = this.getSegmentRegex(segmentId);
-    let match: RegExpExecArray | null;
-    if ((match = regex.exec(this.document)) !== null) {
-      return match[0];
-    }
-
-    return null;
-  }
-
-  private getSegmentRegex(segmentId?: string): RegExp {
+  private getSegmentRegex(): RegExp {
     const separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     const releaseCharacter = this.escapeCharRegex(this.getMessageSeparators().releaseCharacter!);
     let regexPattern: string;
     if (releaseCharacter) {
-      regexPattern = `\\b(${segmentId ?? ""}[\\s\\S]*?)((?<!${releaseCharacter})${separater})`;
+      regexPattern = `\\b([\\s\\S]*?)((?<!${releaseCharacter})(${separater}|$))`;
     } else {
-      regexPattern = `\\b(${segmentId ?? ""}[\\s\\S]*?)(${separater})`;
+      regexPattern = `\\b([\\s\\S]*?)(${separater}|$)`;
     }
     return new RegExp(regexPattern, "g");
   }
@@ -147,15 +139,17 @@ export abstract class EdiParserBase {
       const isSegmentSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, segmentSeparator, releaseCharacter);
       const isDataElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, dataElementSeparator, releaseCharacter);
       const isComponentElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, componentElementSeparator, releaseCharacter);
-      if (isDataElementSeparator || isSegmentSeparator) {
+      const isEndOfSegment = i === segmentStr.length - 1;
+      if (isDataElementSeparator || isSegmentSeparator || isEndOfSegment) {
+        const elementEndIndex = (isEndOfSegment && !isSegmentSeparator) ? i : i - 1;
         if (element) {
-          element.endIndex = i - 1;
+          element.endIndex = elementEndIndex;
           element.value = segmentStr.substring(element.startIndex + 1, element.endIndex + 1);
           element = undefined;
         }
 
         if (subElement) {
-          subElement.endIndex = i - 1;
+          subElement.endIndex = elementEndIndex;
           subElement.value = segmentStr.substring(subElement.startIndex + 1, subElement.endIndex + 1);
           subElement = undefined;
         }
@@ -269,11 +263,19 @@ export abstract class EdiParserBase {
 
   public getMessageSeparators(): EdiMessageSeparators {
     if (!this._separators) {
-      this._separators = this.parseSeparators();
-    }
+      const separators = this.getDefaultMessageSeparators();
+      const parsedSeparators = this.parseSeparators();
+      if (parsedSeparators) {
+        for (const key of Object.keys(parsedSeparators)) {
+          const separatorKey = key as keyof EdiMessageSeparators;
+          const value = parsedSeparators[separatorKey];
+          if (value !== undefined) {
+            separators[separatorKey] = value;
+          }
+        }
+      }
 
-    if (!this._separators) {
-      return this.getDefaultMessageSeparators();
+      this._separators = separators;
     }
     
     return this._separators;

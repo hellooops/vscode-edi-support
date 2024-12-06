@@ -89,7 +89,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
       });
     } else {
       const indentString = options.getFormatString();
-      return `${Array(this.getLevel()).fill(indentString).join("")}${this.id}${this.elements.join("")}${this.endingDelimiter}`;
+      return `${Array(this.getLevel()).fill(indentString).join("")}${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
     }
   }
 

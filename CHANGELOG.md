@@ -9,6 +9,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - Don't crash when unexpected composite element occurs.
+- Optimize the logic of parsing separators.
+- Optimize the support line break as the segment delimiter.
 
 
 
