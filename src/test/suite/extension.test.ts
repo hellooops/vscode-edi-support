@@ -7,19 +7,76 @@ import { EdiReleaseSchema } from "../../schemas/schemas";
 
 suite("Extension Test Suite", () => {
   suite("Parse Meta", () => {
-    test("Edifact Parse Meta", async () => {
-      const documentStr = "UNH+1+ORDERS:D:96A:UN:EAN008'";
-      const parser = new EdifactParser(documentStr);
+    test.only("X12 Parse Meta", async () => {
+      const documentStr = `
+      ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00401*000000001*0*T*:~
+      GS*PO*  *  *20241111*0300*1*T*004010~
+      ST*850*0001~
+      BEG*00*DS*PO1**20150708~
+      SE*3*0001~
+      GE*1*1~
+      IEA*1*000000001~
+      `;
+      const parser = new X12Parser(documentStr);
       const ediDocument = await parser.parse();
   
       assert.strictEqual(ediDocument.interchanges.length, 1);
-      assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
-      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
+      assert.ok(ediDocument.interchanges[0].meta !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].meta.senderQualifer, "ZZ");
+      assert.strictEqual(ediDocument.interchanges[0].meta.senderID, "SENDER         ");
+      assert.strictEqual(ediDocument.interchanges[0].meta.receiverQualifer, "ZZ");
+      assert.strictEqual(ediDocument.interchanges[0].meta.receiverID, "RECEIVER       ");
+      assert.strictEqual(ediDocument.interchanges[0].meta.date, "241111");
+      assert.strictEqual(ediDocument.interchanges[0].meta.time, "0300");
+      assert.strictEqual(ediDocument.interchanges[0].meta.id, "000000001");
   
-      const meta = ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta;
-      assert.strictEqual(meta.release, "D96A");
-      assert.strictEqual(meta.version, "ORDERS");
-      assert.strictEqual(meta.id, "1");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
+      assert.ok(ediDocument.interchanges[0].functionalGroups[0].meta !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].meta.date, "20241111");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].meta.time, "0300");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].meta.id, "1");
+  
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
+      assert.ok(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.release, "00401");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.version, "850");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.id, "0001");
+      assert.ok(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.messageInfo !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.messageInfo.version, "850");
+    });
+
+    test.only("Edifact Parse Meta", async () => {
+      const documentStr = `
+      UNA:+.?*'
+      UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+0001'
+      UNH+001+ORDERS:D:96A:UN:EAN001'
+      BGM+220+PO1+9'
+      UNT+3+001'
+      UNZ+1+0001'
+      `;
+      const parser = new EdifactParser(documentStr);
+      const ediDocument = await parser.parse();
+
+      assert.strictEqual(ediDocument.interchanges.length, 1);
+      assert.ok(ediDocument.interchanges[0].meta !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].meta.senderQualifer, "14");
+      assert.strictEqual(ediDocument.interchanges[0].meta.senderID, "<Sender GLN>");
+      assert.strictEqual(ediDocument.interchanges[0].meta.receiverQualifer, "14");
+      assert.strictEqual(ediDocument.interchanges[0].meta.receiverID, "<Receiver GLN>");
+      assert.strictEqual(ediDocument.interchanges[0].meta.date, "140407");
+      assert.strictEqual(ediDocument.interchanges[0].meta.time, "0910");
+      assert.strictEqual(ediDocument.interchanges[0].meta.id, "0001");
+
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups.length, 1);
+      assert.ok(ediDocument.interchanges[0].functionalGroups[0].isFake());
+
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets.length, 1);
+      assert.ok(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.release, "D96A");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.version, "ORDERS");
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.id, "001");
+      assert.ok(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.messageInfo !== undefined);
+      assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.messageInfo.version, "ORDERS");
     });
   });
 
