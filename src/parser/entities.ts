@@ -84,7 +84,6 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     if (this.isLoop()) {
       return formatEdiDocumentPartsSegment({
         children: this.Loop!,
-        lineBreakCount: 1,
         options,
       });
     } else {
@@ -540,7 +539,6 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.segments,
-      lineBreakCount: 1,
       options,
     });
   }
@@ -744,7 +742,6 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.transactionSets,
-      lineBreakCount: 2,
       options,
     });
   }
@@ -967,7 +964,6 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.functionalGroups,
-      lineBreakCount: 2,
       options,
     });
   }
@@ -1099,7 +1095,6 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.interchanges,
-      lineBreakCount: 2,
       options,
       separatorsSegment: this.separatorsSegment,
     });
@@ -1245,28 +1240,20 @@ function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalG
   startSegment,
   endSegment,
   children,
-  lineBreakCount,
   options,
   separatorsSegment,
 }: {
   startSegment?: EdiSegment,
   endSegment?: EdiSegment,
   children: T[],
-  lineBreakCount: number,
   options: EdiFormattingOptions,
   separatorsSegment?: EdiSegment
 }): string {
   if (!children) children = [];
-  let lineBreaks: string;
-  if (children.length === 1) {
-    lineBreaks = constants.ediDocument.lineBreak;
-  } else {
-    lineBreaks = Array(lineBreakCount).fill(constants.ediDocument.lineBreak).join("");
-  }
   return [
     separatorsSegment,
     startSegment,
     ...children.map(i => i.getFormatString(options)),
     endSegment,
-  ].filter(i => i).join(lineBreaks);
+  ].filter(i => i).join(constants.ediDocument.lineBreak);
 }
