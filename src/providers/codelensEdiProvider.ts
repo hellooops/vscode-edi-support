@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiSegment, EdiType } from "../parser/entities";
+import { EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
 import * as constants from "../constants";
 import { EdiUtils } from "../utils/ediUtils";
 
@@ -113,13 +113,80 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
       return [];
     }
 
-    const segments = ediDocument.getSegments();
-    return this.getSegmentsCodeLenses(document, segments);
+    return ediDocument.interchanges.flatMap(i => this.getInterchangeCodeLenses(document, i, ediDocument.interchanges.length > 1));
+  }
+
+  getInterchangeCodeLenses(document: vscode.TextDocument, interchange: EdiInterchange, headerCodeLense: boolean): vscode.CodeLens[] {
+    const codeLenses: vscode.CodeLens[] = [];
+    if (headerCodeLense) {
+      const firstChildSegment = interchange.getFirstSegment()!;
+      if (EdiUtils.isOnlySegmentInLine(document, firstChildSegment)) {
+        const startPosition = EdiUtils.getInterchangeStartPosition(document, interchange);
+        const title = `Interchange [ID=${interchange.getId() ?? "Unknown"}]`;
+        codeLenses.push(new vscode.CodeLens(
+          new vscode.Range(startPosition, startPosition),
+          {
+            title: title,
+            tooltip: title,
+            command: "",
+            arguments: []
+          }
+        ));
+      }
+    }
+
+    codeLenses.push(...interchange.functionalGroups.flatMap(i => this.getFunctionalGroupCodeLenses(document, i, interchange.functionalGroups.length > 1)));
+    return codeLenses;
+  }
+
+  getFunctionalGroupCodeLenses(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup, headerCodeLense: boolean): vscode.CodeLens[] {
+    const codeLenses: vscode.CodeLens[] = [];
+    if (headerCodeLense) {
+      const firstChildSegment = functionalGroup.getFirstSegment()!;
+      if (EdiUtils.isOnlySegmentInLine(document, firstChildSegment)) {
+        const startPosition = EdiUtils.getFunctionalGroupStartPosition(document, functionalGroup);
+        const title = `Functional Group [ID=${functionalGroup.getId() ?? "Unknown"}]`;
+        codeLenses.push(new vscode.CodeLens(
+          new vscode.Range(startPosition, startPosition),
+          {
+            title: title,
+            tooltip: title,
+            command: "",
+            arguments: []
+          }
+        ));
+      }
+    }
+
+    codeLenses.push(...functionalGroup.transactionSets.flatMap(i => this.getTransactionSetCodeLenses(document, i, functionalGroup.transactionSets.length > 1)));
+    return codeLenses;
+  }
+
+  getTransactionSetCodeLenses(document: vscode.TextDocument, transactionSet: EdiTransactionSet, headerCodeLense: boolean): vscode.CodeLens[] {
+    const codeLenses: vscode.CodeLens[] = [];
+    if (headerCodeLense) {
+      const firstChildSegment = transactionSet.getFirstSegment()!;
+      if (EdiUtils.isOnlySegmentInLine(document, firstChildSegment)) {
+        const startPosition = EdiUtils.getTransactionSetStartPosition(document, transactionSet);
+        const title = `Transaction Set [ID=${transactionSet.getId() ?? "Unknown"}]`;
+        codeLenses.push(new vscode.CodeLens(
+          new vscode.Range(startPosition, startPosition),
+          {
+            title: title,
+            tooltip: title,
+            command: "",
+            arguments: []
+          }
+        ));
+      }
+    }
+
+    codeLenses.push(...this.getSegmentsCodeLenses(document, transactionSet.segments));
+    return codeLenses;
   }
 
   getSegmentsCodeLenses(document: vscode.TextDocument, segments: EdiSegment[]): vscode.CodeLens[] {
     const codeLenses: vscode.CodeLens[] = [];
-    // TODO(Deric): Interchange codelens, remove lines between transactions
     for (const segment of segments) {
       if (segment.isLoop() && segment.Loop!.length > 0) {
         const firstChildSegment = segment.Loop![0];

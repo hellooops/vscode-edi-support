@@ -258,6 +258,7 @@ export class EdiUtils {
   }
 
   static isOnlySegmentInLine(document: vscode.TextDocument, segment: EdiSegment): boolean {
+    if (!segment) return false;
     const segmentStartPosition = EdiUtils.getSegmentStartPosition(document, segment);
     const segmentEndPosition = EdiUtils.getSegmentEndPosition(document, segment);
     if (segmentStartPosition.line !== segmentEndPosition.line) return false;

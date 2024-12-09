@@ -6,12 +6,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Changed
+
+- Use codeLenses as the identifications if the same level interchanges/functionalGroups/transactionSets occurs multiple times.
+
 ### Fixed
 
 - Don't crash when unexpected composite element occurs.
 - Optimize the logic of parsing separators.
 - Optimize the support line break as the segment delimiter.
-
 
 
 ## [1.6.2] - 2024-11-27
@@ -30,7 +33,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 
 - Set inlay hints default configuration to false.
-
 
 
 ## [1.6.0] - 2024-11-26
