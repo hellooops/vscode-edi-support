@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
-import { EdiType, type DiagnoscticsContext, type DiagnosticError, DiagnosticErrorSeverity } from "../parser/entities";
+import { EdiElement, EdiSegment } from "../parser/entities";
 import { IDecorationable } from "../interfaces/decorationable";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
+import { StringBuilder } from "../utils/utils";
 
 export class EdiDecorationsMgr implements IDecorationable {
   static decorationType = vscode.window.createTextEditorDecorationType({
@@ -44,14 +45,7 @@ export class EdiDecorationsMgr implements IDecorationable {
       return;
     }
 
-    let lineAnnotation: string | undefined;
-    if (element) {
-      lineAnnotation = element.getDesignatorWithId();
-      if (element.ediReleaseSchemaElement?.desc) lineAnnotation += `: ${element.ediReleaseSchemaElement?.desc}`;
-    } else {
-      lineAnnotation = segment.getDesc() ?? segment.id;
-    }
-
+    const lineAnnotation = element ? EdiDecorationsMgr.getElementAnnotation(element) : EdiDecorationsMgr.getSegmentAnnotation(segment);
     this.setDecorations([
       {
         renderOptions: {
@@ -64,6 +58,27 @@ export class EdiDecorationsMgr implements IDecorationable {
     ]);
 
     return this;
+  }
+
+  private static getElementAnnotation(element: EdiElement): string {
+    const annotation = new StringBuilder();
+    annotation.append(element.getDesignatorWithId());
+    if (element.ediReleaseSchemaElement?.desc) {
+      annotation.append(`: ${element.ediReleaseSchemaElement?.desc}`);
+    }
+
+    if (element.ediReleaseSchemaElement?.qualifierRef && element.value) {
+      const elementValueCode = element?.ediReleaseSchemaElement?.getCodeByValue(element.value);
+      if (elementValueCode) {
+        annotation.append(`, ${element.value}: ${elementValueCode.desc}`);
+      }
+    }
+
+    return annotation.toString();
+  }
+
+  private static getSegmentAnnotation(segment: EdiSegment): string {
+    return segment.getDesc() ?? segment.id;
   }
 
   private clearDecorations() {
