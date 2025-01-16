@@ -6,9 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [1.6.3] - 2025-01-16
+
 ### Changed
 
 - Use codeLenses as the identifications if the same level interchanges/functionalGroups/transactionSets occurs multiple times.
+- Support qualifier explanation in element annotation.
 
 ### Fixed
 
