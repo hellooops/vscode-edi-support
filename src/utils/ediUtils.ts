@@ -292,6 +292,6 @@ export class EdiUtils {
     if (segmentStartPosition.line !== segmentEndPosition.line) return false;
     const segmentLineNumber = segmentStartPosition.line;
     const documentContentInLine = document.lineAt(segmentLineNumber).text;
-    return documentContentInLine.trim() === segment.segmentStr;
+    return documentContentInLine.trim() === segment.segmentStr?.trim();
   }
 }
