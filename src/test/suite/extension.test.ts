@@ -85,7 +85,7 @@ suite("Extension Test Suite", () => {
       const documentStr = "SV2*0730*HC>93010*76.56*UN*3~";
       const parser = new X12Parser(documentStr);
       parser.setMessageSeparators({ segmentSeparator: "~", dataElementSeparator: "*", componentElementSeparator: ">" });
-      await parser.loadSchema({release: "00401", version: "850"})
+      await parser.loadSchema({release: "00401", version: "850"});
   
       const segment: EdiSegment = await parser.parseSegment(documentStr, 0, documentStr.length - 1, "~");
   

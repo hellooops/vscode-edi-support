@@ -24,7 +24,7 @@ export class EdiQualifier {
   }
 
   getEscapedDesc() : string {
-    return this.desc.replace(/"/g, '\\"');
+    return this.desc.replace(/"/g, `\\"`);
   }
 }
 
@@ -69,6 +69,7 @@ export class EdiReleaseSchemaElement {
   public qualifierRef: string;
   public definition: string;
   public components: EdiReleaseSchemaElement[];
+  public Length?: number;
 
   public mock: boolean;
 
@@ -81,6 +82,7 @@ export class EdiReleaseSchemaElement {
     this.maxLength = raw.MaxLength;
     this.qualifierRef = raw.QualifierRef;
     this.definition = raw.Definition;
+    this.Length = raw.Length;
     this.components = raw.Components?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
     this._schema = schema;
     this.mock = !!raw.mock;

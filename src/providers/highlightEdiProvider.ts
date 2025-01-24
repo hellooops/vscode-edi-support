@@ -47,6 +47,7 @@ export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, I
     return [
       vscode.languages.registerDocumentHighlightProvider({ language: EdiType.X12 }, this),
       vscode.languages.registerDocumentHighlightProvider({ language: EdiType.EDIFACT }, this),
+      vscode.languages.registerDocumentHighlightProvider({ language: EdiType.VDA }, this),
     ];
   }
 }

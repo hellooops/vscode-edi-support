@@ -1,0 +1,1140 @@
+{
+  "Release": "03",
+  "Qualifiers": {
+    "Type of delivery, code": {
+      "E": "Express delivery",
+      "J": "JIT-delivery"
+    },
+    "Pre-payment of charges key": {
+      "01": "Unpaid",
+      "03": "Paid 712_14 Key to means"
+    },
+    "Key to means of Transport": {
+      "01": "Licence plate",
+      "02": "Bordero number",
+      "07": "Express parcel number",
+      "08": "Rail-car number",
+      "09": "Mail-package number",
+      "10": "Flight number and/or freight bill number",
+      "11": "Name of ship"
+    },
+    "Qualifier for information": {
+      "1": "Zip code",
+      "2": "Official licence plate of the transporting vehicle"
+    },
+    "Truck type code": {
+      "1": "Standard truck with/without trailer",
+      "2": "Semi-trailer",
+      "3": "Greater area truck with/without trailer (Jumbo)",
+      "4": "Greater area semi-trailer (Jumbo)"
+    },
+    "Dispatch type": {
+      "01": "Sub supplier's truck",
+      "02": "Customer's truck",
+      "03": "Freight forwarder's truck",
+      "04": "Railway company's truck",
+      "05": "Supplier's own truck",
+      "08": "Rail car",
+      "09": "Mail delivery",
+      "10": "Air fright",
+      "11": "Sea freight",
+      "20": "Private parcel service"
+    },
+    "Process code": {
+      "30": "Entry message from EDL to supplier when EDL-application",
+      "32": "Damage incurred during transit / Loss / Difference from EDL to supplier when EDL-application",
+      "33": "Return from EDL to supplier when EDL-application",
+      "35": "Stock from EDL to supplier and/or customer when EDL-application",
+      "36": "Dispatch advice from EDL to Lieferant when EDL-application",
+      "40": "Delivery advice"
+    },
+    "Country of origin": {
+      "000": "Unknown",
+      "001": "Frankreich",
+      "003": "Niederlande",
+      "004": "Deutschland",
+      "005": "Italien",
+      "006": "Vereinigtes Königreich",
+      "007": "Irland",
+      "008": "Dänemark",
+      "009": "Griechenland",
+      "010": "Portugal",
+      "011": "Spanien",
+      "017": "Belgien",
+      "018": "Luxemburg",
+      "021": "Ceuta",
+      "023": "Melilla",
+      "024": "Island",
+      "028": "Norwegen",
+      "030": "Schweden",
+      "032": "Finnland",
+      "037": "Liechtenstein",
+      "038": "Österreich",
+      "039": "Schweiz",
+      "041": "Färöer",
+      "043": "Andorra",
+      "044": "Gibraltar",
+      "045": "Vatikanstadt",
+      "046": "Malta",
+      "047": "San Marino",
+      "052": "Türkei",
+      "053": "Estland",
+      "054": "Lettland",
+      "055": "Litauen",
+      "060": "Polen",
+      "061": "Tschechische Republik",
+      "063": "Slowakei",
+      "064": "Ungarn",
+      "066": "Rumänien",
+      "068": "Bulgarien",
+      "070": "Albanien",
+      "072": "Ukraine",
+      "073": "Belarus",
+      "074": "Republik Moldau",
+      "075": "Russische Föderation",
+      "076": "Georgien",
+      "077": "Armenien",
+      "078": "Aserbaidschan",
+      "079": "Kasachstan",
+      "080": "Turkmenistan",
+      "081": "Usbekistan",
+      "082": "Tadschikistan",
+      "083": "Kirgisische Republik",
+      "091": "Slowenien",
+      "092": "Kroatien",
+      "093": "Bosnien und Herzegowina",
+      "095": "Kosovo",
+      "096": "Ehemalige jugoslawische Republik Mazedonien",
+      "097": "Montenegro",
+      "098": "Serbien",
+      "204": "Marokko",
+      "208": "Algerien",
+      "212": "Tunesien",
+      "216": "Libysch-Arabische Dschamahirija",
+      "220": "Ägypten",
+      "224": "Sudan",
+      "228": "Mauretanien",
+      "232": "Mali",
+      "236": "Burkina Faso",
+      "240": "Niger",
+      "244": "Tschad",
+      "247": "Kap Verde",
+      "248": "Senegal",
+      "252": "Gambia",
+      "257": "Guinea-Bissau",
+      "260": "Guinea",
+      "264": "Sierra Leone",
+      "268": "Liberia",
+      "272": "Côte d'Ivoire",
+      "276": "Ghana",
+      "280": "Togo",
+      "284": "Benin",
+      "288": "Nigeria",
+      "302": "Kamerun",
+      "306": "Zentralafrikanische Republik",
+      "310": "Äquatorialguinea",
+      "311": "São Tomé und Príncipe",
+      "314": "Gabun",
+      "318": "Kongo",
+      "322": "Kongo, demokratische Republik",
+      "324": "Ruanda",
+      "328": "Burundi",
+      "329": "St. Helena",
+      "330": "Angola",
+      "334": "Äthiopien",
+      "336": "Eritrea",
+      "338": "Dschibuti",
+      "342": "Somalia",
+      "346": "Kenia",
+      "350": "Uganda",
+      "352": "Vereinigte Republik Tansania",
+      "355": "Seychellen",
+      "357": "Britisches Territorium im Indischen Ozean",
+      "366": "Mosambik",
+      "370": "Madagaskar",
+      "373": "Mauritius",
+      "375": "Komoren",
+      "377": "Mayotte",
+      "378": "Sambia",
+      "382": "Simbabwe",
+      "386": "Malawi",
+      "388": "Südafrika",
+      "389": "Namibia",
+      "391": "Botsuana",
+      "393": "Swasiland",
+      "395": "Lesotho",
+      "400": "Vereinigte Staaten",
+      "404": "Kanada",
+      "406": "Grönland",
+      "408": "St. Pierre und Miquelon",
+      "412": "Mexiko",
+      "413": "Bermuda",
+      "416": "Guatemala",
+      "421": "Belize",
+      "424": "Honduras",
+      "428": "El Salvador",
+      "432": "Nicaragua",
+      "436": "Costa Rica",
+      "442": "Panama",
+      "446": "Anguilla",
+      "448": "Kuba",
+      "449": "St. Kitts und Nevis",
+      "452": "Haiti",
+      "453": "Bahamas",
+      "454": "Turks- und Caicosinseln",
+      "456": "Dominikanische Republik",
+      "457": "Amerikanische Jungferninseln",
+      "459": "Antigua und Barbuda",
+      "460": "Dominica",
+      "463": "Kaimaninseln",
+      "464": "Jamaika",
+      "465": "St. Lucia",
+      "467": "St. Vincent und die Grenadinen",
+      "468": "Britische Jungferninseln",
+      "469": "Barbados",
+      "470": "Montserrat",
+      "472": "Trinidad und Tobago",
+      "473": "Grenada",
+      "474": "Aruba",
+      "478": "Niederländische Antillen",
+      "480": "Kolumbien",
+      "484": "Venezuela",
+      "488": "Guyana",
+      "492": "Suriname",
+      "500": "Ecuador",
+      "504": "Peru",
+      "508": "Brasilien",
+      "512": "Chile",
+      "516": "Bolivien",
+      "520": "Paraguay",
+      "524": "Uruguay",
+      "528": "Argentinien",
+      "529": "Falklandinseln (Malwinen)",
+      "600": "Zypern",
+      "604": "Libanon",
+      "608": "Arabische Republik Syrien",
+      "612": "Irak",
+      "616": "Islamische Republik Iran",
+      "624": "Israel",
+      "625": "Besetzte palästinensische Gebiete",
+      "626": "Timor-Leste",
+      "628": "Jordanien",
+      "632": "Saudi-Arabien",
+      "636": "Kuwait",
+      "640": "Bahrain",
+      "644": "Katar",
+      "647": "Vereinigte Arabische Emirate",
+      "649": "Oman",
+      "653": "Jemen",
+      "660": "Afghanistan",
+      "662": "Pakistan",
+      "664": "Indien",
+      "666": "Bangladesch",
+      "667": "Malediven",
+      "669": "Sri Lanka",
+      "672": "Nepal",
+      "675": "Bhutan",
+      "676": "Myanmar",
+      "680": "Thailand",
+      "684": "Laos, demokratische Volksrepublik",
+      "690": "Vietnam",
+      "696": "Kambodscha",
+      "700": "Indonesien",
+      "701": "Malaysia",
+      "703": "Brunei Darussalam",
+      "706": "Singapur",
+      "708": "Philippinen",
+      "716": "Mongolei",
+      "720": "China",
+      "724": "Korea, demokratische Volksrepublik",
+      "728": "Republik Korea",
+      "732": "Japan",
+      "736": "Taiwan",
+      "740": "Hongkong",
+      "743": "Macau",
+      "800": "Australien",
+      "801": "Papua-Neuguinea",
+      "803": "Nauru",
+      "804": "Neuseeland",
+      "806": "Salomonen",
+      "807": "Tuvalu",
+      "809": "Neukaledonien",
+      "811": "Wallis und Futuna",
+      "812": "Kiribati",
+      "813": "Pitcairninseln",
+      "815": "Fidschi",
+      "816": "Vanuatu",
+      "817": "Tonga",
+      "819": "Samoa",
+      "820": "Nördliche Marianen",
+      "822": "Französisch-Polynesien",
+      "823": "Föderierte Staaten von Mikronesien",
+      "824": "Marshallinseln",
+      "825": "Palau",
+      "830": "Amerikanisch-Samoa",
+      "831": "Guam",
+      "832": "Kleinere amerikanische Überseeinseln",
+      "833": "Kokosinseln (Keelinginseln)",
+      "834": "Weihnachtsinsel",
+      "835": "Heard und McDonaldinseln",
+      "836": "Norfolkinsel",
+      "837": "Cookinseln",
+      "838": "Niue",
+      "839": "Tokelau",
+      "891": "Antarktis",
+      "892": "Bouvetinsel",
+      "893": "Südgeorgien und die Südlichen Sandwichinseln",
+      "894": "Französische Südgebiete",
+      "950": "Schiffe und Luftfahrzeuge in deutschen (Flug-) Häfen)",
+      "951": "Schiffs- und Luftfahrzeugbedarf (Lieferung von Schiffs- und Luftfahrzeugbedarf auf fremde",
+      "952": "Schiffs- und Luftfahrzeugbedarf (Lieferung von Schiffs- und Luftfahrzeugbedarf auf fremde Schiffe und Luftfahrzeuge in deutschen (Flug-) Häfen) im Rahmen des Warenverkehrs mit",
+      "999": "Other Countries"
+    },
+    "Masure unit code": {
+      "KG": "Kilogram",
+      "L": "Litre",
+      "M": "Metre",
+      "M2": "Square metre",
+      "M3": "Cubic metre",
+      "SA": "Set",
+      "ST": "Piece",
+      "T": "Can"
+    },
+    "Type of call-off, coded": {
+      "F": "Daily call-off",
+      "P": "Call-off in production sequence call-off"
+    },
+    "Usage code": {
+      "E": "General substitute",
+      "M": "Substitute pattern",
+      "S": "General series",
+      "U": "Series and Substitute"
+    },
+    "Preference status": {
+      "C": "Switzerland",
+      "F": "Finland",
+      "G": "Goods of EU origin; all countries with preferential agreement",
+      "I": "Iceland",
+      "N": "Norway",
+      "O": "Austria",
+      "S": "Sweden",
+      "W": "Goods of EU origin; preferential agreement for goods transportation within the EFTA states",
+      "X": "Not yet checked, no goods' origin"
+    },
+    "Dutiable goods": {
+      "1": "Blocked, transfer per status"
+    },
+    "Customer's package type ID": {
+      "0000BEH": "Additional liquid container, packing drum, can, sealed tin container (hobbock), tank, cargo container, not specified",
+      "0000BLE": "Sheet metal packaging, sheet metal coils, not specified",
+      "0000BUN": "Bunches, not specified",
+      "0000FAS": "Barrel, not specified",
+      "0000LOS": "Loose material (unpacked)",
+      "0000PAL": "120 x 80 cm, palette until 15 cm high",
+      "0000SAC": "Bag, not specified",
+      "0000SCH": "Box, case, package, not specified",
+      "0000SON": "Additional packages, not specified",
+      "0000UMR": "Hoop, tightening strap, not specified",
+      "0001PAL": "120 x 80 cm, until 50 cm high",
+      "0001SCH": "Box, case, package: Dimension until 30 x 20 x 14 cm",
+      "0001SON": "Additional packages > 1 cbm, not specified",
+      "0002PAL": "120 x 80 cm, palette until 100 cm high",
+      "0002SCH": "Box, case, package: Dimension until 30 x 20 x 28 cm",
+      "0002SON": "Additional packages < 1 cbm, not specified",
+      "0003PAL": "120 x 80 cm, palette until 150 cm high",
+      "0003SCH": "Box, case, package: Dimension until 40 x 30 x 14 cm",
+      "0004PAL": "120 x 80 cm, palette until 200 cm high",
+      "0004SCH": "Box, case, package: Dimension until 30 x 20 x 28 cm",
+      "0005PAL": "120 x 100 cm, palette until 50 cm high",
+      "0005SCH": "Box, case, package: Dimension until 50 x 30 x 20 cm",
+      "0006PAL": "120 x 100 cm, palette until 100 cm high",
+      "0006SCH": "Box, case, package: Dimension until 50 x 50 x 50 cm",
+      "0007PAL": "120 x 100 cm, paette until 150 cm high",
+      "0007SCH": "Box, case, package: Dimension until 58 x 48 x 36 cm",
+      "0008PAL": "120 x 100 cm, palette until 200 cm high",
+      "0008SCH": "Box, case, package: Dimension until 60 x 40 x 14 cm",
+      "0009SCH": "Box, case, package: Dimension until 60 x 40 x 28 cm",
+      "0010SCH": "Box, case, package: Dimension until 80 x 60 x 40 cm",
+      "0011SCH": "Box, case, package: Dimension until 98 x 58 x 36 cm",
+      "0012SCH": "Box, case, package: Dimension until 100 x 60 x 73 cm",
+      "0013SCH": "Box, case, package: Dimension until 120 x 78 x 110 cm",
+      "0014SCH": "Box, case, package: Dimension until 120 x 80 x 40 cm",
+      "0015SCH": "Box, case, package: Dimension until 120 x 80 x 90 cm",
+      "0016SCH": "Box, case, package: Dimension until 120 x 100 x 90 cm"
+    },
+    "Label indicator": {
+      "G": "Mixed packages (with sub-packages and different reference numbers)",
+      "M": "Master-Label (with sub-packages and the same reference numbers)",
+      "S": "Single-Label (1 package)"
+    },
+    "Returnable package indicator": {
+      "E": "One way packaging",
+      "M": "Returnable packaging"
+    },
+    "Property code": {
+      "D": "Returnable packaging belonging to 3rd party, must be returned",
+      "K": "Returnable packaging property of customer",
+      "L": "Returnable packaging, property of supplier, must be returned"
+    }
+  },
+  "Segments": {
+    "711": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Data Receiver ID / Customer ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Data Sender ID / Supplier ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Old (previous) transmission number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 5
+        },
+        {
+          "Desc": "New transmission number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 5
+        },
+        {
+          "Desc": "Transmission date",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 6
+        },
+        {
+          "Desc": "Sub-supplier ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Carrier ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Message origin, code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Type of delivery, code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Type of delivery, code"
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 69
+        }
+      ]
+    },
+    "712": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Shipment Load Reference Number (consignment number)",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        },
+        {
+          "Desc": "Plant supplier",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        },
+        {
+          "Desc": "Carrier",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 14
+        },
+        {
+          "Desc": "Date when goods have been handed over to carrier",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 6
+        },
+        {
+          "Desc": "Time when goods have been handed over to carrier",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 4
+        },
+        {
+          "Desc": "Shipment gross weight",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Shipment net weight",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Pre-payment of charges key",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2,
+          "QualifierRef": "Pre-payment of charges key"
+        },
+        {
+          "Desc": "Carrier transmission indicator",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Number of packages",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 4
+        },
+        {
+          "Desc": "Transport partner ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 14
+        },
+        {
+          "Desc": "Key to means of Transport",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2,
+          "QualifierRef": "Key to means of Transport"
+        },
+        {
+          "Desc": "Means of transport number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 25
+        },
+        {
+          "Desc": "Qualifier for information",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Qualifier for information"
+        },
+        {
+          "Desc": "Content in accordance with the qualifier",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        },
+        {
+          "Desc": "Required arrival date",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 6
+        },
+        {
+          "Desc": "Required arrival time",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 4
+        },
+        {
+          "Desc": "Loading meters",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        },
+        {
+          "Desc": "Truck type code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Truck type code"
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        }
+      ]
+    },
+    "713": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Delivery note number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        },
+        {
+          "Desc": "Despatch date",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 6
+        },
+        {
+          "Desc": "Unloading point",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 5
+        },
+        {
+          "Desc": "Dispatch type",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2,
+          "QualifierRef": "Dispatch type"
+        },
+        {
+          "Desc": "Customer's reference as transmitted in the delivery instruction",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 4
+        },
+        {
+          "Desc": "Contract/Order number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 12
+        },
+        {
+          "Desc": "Process code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2,
+          "QualifierRef": "Process code"
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 4
+        },
+        {
+          "Desc": "Customer plant",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        },
+        {
+          "Desc": "Consigment reference",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        },
+        {
+          "Desc": "Goods receiver ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Empty 2",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Ship to/ Customer's storage location",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Supplier ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Point of consuption / internal destination",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 14
+        },
+        {
+          "Desc": "Call off number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 4
+        },
+        {
+          "Desc": "Customer's reference as transmitted in an individual order",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 6
+        },
+        {
+          "Desc": "Document number assigned by customer",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 14
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 5
+        }
+      ]
+    },
+    "714": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Customer's article number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 22
+        },
+        {
+          "Desc": "Supplier's article number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 22
+        },
+        {
+          "Desc": "Country of origin",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3,
+          "QualifierRef": "Country of origin"
+        },
+        {
+          "Desc": "Delivery quantity 1",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 13
+        },
+        {
+          "Desc": "Masure unit code 1",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2,
+          "QualifierRef": "Masure unit code"
+        },
+        {
+          "Desc": "Delivery quantity 2",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 13
+        },
+        {
+          "Desc": "Measure unit code 2",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2,
+          "QualifierRef": "Masure unit code"
+        },
+        {
+          "Desc": "VAT rate",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        },
+        {
+          "Desc": "Empty 1",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Delivery note line item number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        },
+        {
+          "Desc": "Type of call-off, coded",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Type of call-off, coded"
+        },
+        {
+          "Desc": "Batch number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 15
+        },
+        {
+          "Desc": "Usage code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Usage code"
+        },
+        {
+          "Desc": "Dangerous goods code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        },
+        {
+          "Desc": "Preference status",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Preference status"
+        },
+        {
+          "Desc": "Dutiable goods",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Dutiable goods"
+        },
+        {
+          "Desc": "Empty 2",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Inventory status",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Modified version code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Original delivery note number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        }
+      ]
+    },
+    "715": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Customer's package type ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 22,
+          "QualifierRef": "Customer's package type ID"
+        },
+        {
+          "Desc": "Supplier's package type ID",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 22
+        },
+        {
+          "Desc": "Number of packages",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 13
+        },
+        {
+          "Desc": "Delivery note line item number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        },
+        {
+          "Desc": "Maximum quantity",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 13
+        },
+        {
+          "Desc": "Package number from",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Package number to",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 9
+        },
+        {
+          "Desc": "Package dimensions",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 12
+        },
+        {
+          "Desc": "Stacking factor (maximum stackability)",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        },
+        {
+          "Desc": "Warehouse call-off number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 15
+        },
+        {
+          "Desc": "Label indicator",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Label indicator"
+        },
+        {
+          "Desc": "Returnable package indicator",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Returnable package indicator"
+        },
+        {
+          "Desc": "Property code",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1,
+          "QualifierRef": "Property code"
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 1
+        }
+      ]
+    },
+    "716": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Text 1",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 40
+        },
+        {
+          "Desc": "Text 2",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 40
+        },
+        {
+          "Desc": "Text 3",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 40
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 3
+        }
+      ]
+    },
+    "718": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "delivery note number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 8
+        },
+        {
+          "Desc": "Manufacturing reference number 1",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 2",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 3",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 4",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 5",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 6",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 7",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 8",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 9",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 10",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Manufacturing reference number 11",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 10
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 5
+        }
+      ]
+    },
+    "719": {
+      "Elements": [
+        {
+          "Desc": "Version number",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 2
+        },
+        {
+          "Desc": "Record type counter 711",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 712",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 713",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 714",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 715",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 716",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 718",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 719",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Record type counter 717",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 7
+        },
+        {
+          "Desc": "Empty",
+          "DataType": "AN",
+          "Required": true,
+          "Length": 60
+        }
+      ]
+    }
+  }
+}

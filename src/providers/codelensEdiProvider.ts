@@ -214,6 +214,7 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
     return [
       vscode.languages.registerCodeLensProvider({ language: EdiType.X12 }, this),
       vscode.languages.registerCodeLensProvider({ language: EdiType.EDIFACT }, this),
+      vscode.languages.registerCodeLensProvider({ language: EdiType.VDA }, this),
     ];
   }
 }

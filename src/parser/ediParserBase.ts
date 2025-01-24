@@ -39,7 +39,7 @@ export abstract class EdiParserBase {
 
   protected abstract parseInterchangeMeta(interchangeSegment: EdiSegment | undefined): EdiInterchangeMeta;
   protected abstract parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta;
-  protected abstract parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta;
+  protected abstract parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment | undefined, transactionSetSegment: EdiSegment): EdiTransactionSetMeta;
   private fitSegmentsToVersion(segments: EdiSegment[]): EdiSegment[] {
     if (!this.schema?.ediVersionSchema) return segments;
     const versionSegmentsContext = new SchemaVersionSegmentsContext(this.schema.ediVersionSchema.TransactionSet);
@@ -93,7 +93,7 @@ export abstract class EdiParserBase {
     }
   }
 
-  private getSegmentRegex(): RegExp {
+  protected getSegmentRegex(): RegExp {
     const separater = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     const releaseCharacter = this.escapeCharRegex(this.getMessageSeparators().releaseCharacter!);
     let regexPattern: string;
@@ -105,10 +105,14 @@ export abstract class EdiParserBase {
     return new RegExp(regexPattern, "g");
   }
 
-  public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
+  protected getSegmentNameBySegmentStr(segmentStr: string): string {
     const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length - 1;
+    return segmentStr.substring(0, firstElementSeparatorIndex);
+  }
+
+  public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
     const segment = new EdiSegment(
-      segmentStr.substring(0, firstElementSeparatorIndex),
+      this.getSegmentNameBySegmentStr(segmentStr),
       startIndex,
       endIndex,
       segmentStr.length,

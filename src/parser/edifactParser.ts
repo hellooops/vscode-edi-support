@@ -159,7 +159,6 @@ export class EdifactParser extends EdiParserBase {
       interchangeStartSegmentName: "UNB",
       interchangeEndSegmentName: "UNZ",
 
-      isFunctionalGroupSupport: false,
       functionalGroupStartSegmentName: undefined,
       functionalGroupEndSegmentName: undefined,
 

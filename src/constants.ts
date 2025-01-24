@@ -68,6 +68,13 @@ export namespace ediDocument {
       releaseCharacter: "?"
     }
   };
+  export const vda = {
+    name: "vda",
+    segment: {
+      segment_511: "511",
+      segment_711: "711",
+    },
+  };
 }
 
 export namespace configuration {

@@ -352,6 +352,7 @@ export class EdiMessageSeparators {
 export class EdiType {
   static X12 = constants.ediDocument.x12.name;
   static EDIFACT = constants.ediDocument.edifact.name;
+  static VDA = constants.ediDocument.vda.name;
   static UNKNOWN = "unknown";
 }
 
@@ -592,7 +593,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return this.transactionSets[this.transactionSets.length - 1];
   }
 
-  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): EdiTransactionSet {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment | undefined): EdiTransactionSet {
     const ediTransactionSet = new EdiTransactionSet(meta, this);
     if (startSegment) startSegment.functionalGroupParent = this;
     ediTransactionSet.startSegment = startSegment;
@@ -822,7 +823,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return activeFunctionalGroup;
   }
 
-  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): EdiTransactionSet {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment | undefined): EdiTransactionSet {
     this.ensureActiveFunctionalGroup();
     return this.getActiveFunctionalGroup().startTransactionSet(meta, startSegment);
   }
@@ -1049,7 +1050,7 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return this.getActiveInterchange().endFunctionalGroup(endSegment);
   }
 
-  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment): EdiTransactionSet {
+  startTransactionSet(meta: EdiTransactionSetMeta, startSegment: EdiSegment | undefined): EdiTransactionSet {
     this.ensureActiveInterchange();
     return this.getActiveInterchange().startTransactionSet(meta, startSegment);
   }
@@ -1108,20 +1109,19 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
 export interface EdiStandardOptions {
   separatorsSegmentName?: string;
 
-  interchangeStartSegmentName: string;
+  interchangeStartSegmentName?: string;
   interchangeEndSegmentName?: string;
 
-  isFunctionalGroupSupport: boolean;
   functionalGroupStartSegmentName?: string;
   functionalGroupEndSegmentName?: string;
 
-  transactionSetStartSegmentName: string;
-  transactionSetEndSegmentName: string;
+  transactionSetStartSegmentName?: string;
+  transactionSetEndSegmentName?: string;
 }
 
 type ParseInterchangeMetaFunc = (interchangeSegment: EdiSegment | undefined) => EdiInterchangeMeta;
 type ParseFunctionalGroupMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment) => EdiFunctionalGroupMeta;
-type ParseTransactionSetMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment) => EdiTransactionSetMeta;
+type ParseTransactionSetMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment | undefined, transactionSetSegment: EdiSegment) => EdiTransactionSetMeta;
 type LoadSchemaFunc = (meta: EdiTransactionSetMeta) => Promise<void>;
 type UnloadSchemaFunc = () => void;
 type LoadTransactionSetStartSegmentSchemaFunc = (segment: EdiSegment) => Promise<EdiSegment>;
@@ -1132,6 +1132,7 @@ export class EdiDocumentBuilder {
   private ediDocument: EdiDocument;
   private interchangeSegment?: EdiSegment;
   private functionalGroupSegment?: EdiSegment;
+  private transactionSetStarted: boolean = false;
 
   parseInterchangeMetaFunc?: ParseInterchangeMetaFunc;
   parseFunctionalGroupMetaFunc?: ParseFunctionalGroupMetaFunc;
@@ -1147,6 +1148,19 @@ export class EdiDocumentBuilder {
   }
 
   async addSegment(segment: EdiSegment): Promise<void> {
+    if (!this.options.transactionSetStartSegmentName && !this.transactionSetStarted) {
+      const transactionSetMeta = this.parseTransactionSetMetaFunc!(undefined, undefined, segment);
+      if (this.loadSchemaFunc) {
+        await this.loadSchemaFunc(transactionSetMeta);
+        if (this.loadTransactionSetStartSegmentSchemaFunc) {
+          segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
+        }
+      }
+
+      this.ediDocument.startTransactionSet(transactionSetMeta, undefined);
+      this.transactionSetStarted = true;
+    }
+
     if (this.options.separatorsSegmentName && segment.id === this.options.separatorsSegmentName) {
       this.ediDocument.addSeparatorsSegment(segment);
     } else if (segment.id === this.options.interchangeStartSegmentName) {

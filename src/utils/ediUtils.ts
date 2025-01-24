@@ -2,6 +2,7 @@ import { EdiParserBase } from "../parser/ediParserBase";
 import { EdifactParser } from "../parser/edifactParser";
 import { EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
 import { X12Parser } from "../parser/x12Parser";
+import { VdaParser } from "../parser/vdaParser";
 import * as vscode from "vscode";
 import * as constants from "../constants";
 
@@ -65,6 +66,30 @@ export class EdiUtils {
     return false;
   }
 
+  static isVda(document: vscode.TextDocument): boolean {
+    if (document.languageId === EdiType.VDA) {
+      return true;
+    }
+
+    if (!document) {
+      return false;
+    }
+
+    let content = document.getText();
+    if (!content) {
+      return false;
+    }
+
+    content = content.trim();
+    if (content.startsWith(`${constants.ediDocument.vda.segment.segment_511}`) ||
+        content.startsWith(`${constants.ediDocument.vda.segment.segment_711}`)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   private static ediParserCache: {
     document?: string;
     result: {
@@ -100,6 +125,9 @@ export class EdiUtils {
     } else if (EdiUtils.isEdifact(document)) {
       parser = new EdifactParser(documentContent);
       ediType = EdiType.EDIFACT;
+    } else if (EdiUtils.isVda(document)) {
+      parser = new VdaParser(documentContent);
+      ediType = EdiType.VDA;
     } else {
       ediType = EdiType.UNKNOWN;
     }

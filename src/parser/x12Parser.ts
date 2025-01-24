@@ -192,7 +192,6 @@ export class X12Parser extends EdiParserBase {
       interchangeStartSegmentName: "ISA",
       interchangeEndSegmentName: "IEA",
 
-      isFunctionalGroupSupport: true,
       functionalGroupStartSegmentName: "GS",
       functionalGroupEndSegmentName: "GE",
 
