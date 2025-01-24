@@ -17,9 +17,11 @@ const TokenTypes = {
 const legend = new vscode.SemanticTokensLegend(Object.values(TokenTypes));
 
 export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProvider, IProvidable {
+  ediType?: EdiType;
   onDidChangeSemanticTokens?: vscode.Event<void> | undefined;
   async provideDocumentSemanticTokens(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.SemanticTokens | undefined> {
-    const { parser } = EdiUtils.getEdiParser(document);
+    const { parser, ediType } = EdiUtils.getEdiParser(document);
+    this.ediType = ediType;
     if (!parser) return;
     const ediDocument = await parser.parse();
     const segments = ediDocument.getSegments(true);
@@ -38,6 +40,7 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
     return [
       vscode.languages.registerDocumentSemanticTokensProvider({ language: EdiType.X12 }, this, legend),
       vscode.languages.registerDocumentSemanticTokensProvider({ language: EdiType.EDIFACT }, this, legend),
+      vscode.languages.registerDocumentSemanticTokensProvider({ language: EdiType.VDA }, this, legend),
     ];
   }
 
@@ -55,9 +58,28 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
       );
     }
 
-    for (const ele of segment.elements) {
-      this.buildElementSemanticTokens(document, builder, segment, ele, separators);
+    for (let i = 0; i < segment.elements.length; i++) {
+      const ele = segment.elements[i];
+      if (this.ediType === EdiType.VDA) {
+        this.buildElementSemanticTokensByElementIndex(document, builder, segment, ele, i);
+      } else {
+        this.buildElementSemanticTokens(document, builder, segment, ele, separators);
+      }
     }
+  }
+
+  private buildElementSemanticTokensByElementIndex(document: vscode.TextDocument, builder: vscode.SemanticTokensBuilder, segment: EdiSegment, element: EdiElement, elementIndex: number) {
+    const elementValueRange = element.separator ? EdiUtils.getElementWithoutSeparatorRange(document, segment, element) : EdiUtils.getElementRange(document, segment, element);
+    const tokenTypes = [
+      TokenTypes.EdiValueTypeQualifer,
+      TokenTypes.EdiValueTypeNumber,
+      TokenTypes.EdiValueTypeDatetime,
+      TokenTypes.EdiValueTypeOther,
+    ];
+    builder.push(
+      elementValueRange,
+      tokenTypes[elementIndex % tokenTypes.length],
+    );
   }
 
   private buildElementSemanticTokens(document: vscode.TextDocument, builder: vscode.SemanticTokensBuilder, segment: EdiSegment, element: EdiElement, separators: EdiMessageSeparators) {
