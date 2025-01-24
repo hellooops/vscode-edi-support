@@ -53,6 +53,7 @@ export class InlayHintsEdiProvider implements vscode.InlayHintsProvider, IProvid
     return [
       vscode.languages.registerInlayHintsProvider({ language: EdiType.X12 }, this),
       vscode.languages.registerInlayHintsProvider({ language: EdiType.EDIFACT }, this),
+      vscode.languages.registerInlayHintsProvider({ language: EdiType.VDA }, this),
     ];
   }
 }
