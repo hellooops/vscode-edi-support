@@ -36,6 +36,7 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
     return [
       vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.X12 }, this),
       vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.EDIFACT }, this),
+      vscode.languages.registerDocumentFormattingEditProvider({ language: EdiType.VDA }, this),
     ];
   }
 }
