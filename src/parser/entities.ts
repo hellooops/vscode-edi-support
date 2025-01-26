@@ -772,6 +772,10 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     this.document = document;
   }
 
+  isFake(): boolean {
+    return !this.startSegment;
+  }
+
   getIResult(): IEdiInterchange {
     return {
       key: this.key,

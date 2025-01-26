@@ -18,12 +18,16 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
       symbols.push(this.getSegmentSymbols(document, ediDocument.separatorsSegment));
     }
 
-    const interchangesSymbols = ediDocument.interchanges.map(interchange => this.getInterchangeSymbols(document, interchange));
+    const interchangesSymbols = ediDocument.interchanges.flatMap(interchange => this.getInterchangeSymbols(document, interchange));
     symbols.push(...interchangesSymbols);
     return symbols;
   }
 
-  getInterchangeSymbols(document: vscode.TextDocument, interchange: EdiInterchange): vscode.DocumentSymbol {
+  getInterchangeSymbols(document: vscode.TextDocument, interchange: EdiInterchange): vscode.DocumentSymbol[] {
+    const functionalGroupSymbols = interchange.functionalGroups.flatMap(functionalGroup => this.getFunctionalGroupSymbols(document, functionalGroup));
+    if (interchange.isFake()) {
+      return functionalGroupSymbols;
+    }
     const interchangeSegmentRange = EdiUtils.getInterchangeRange(document, interchange);
     const interchangeSymbol = new vscode.DocumentSymbol(
       interchange.getId() ?? "Unknown",
@@ -35,13 +39,6 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
 
     const startSegmentSymbols = this.getSegmentSymbols(document, interchange.startSegment!);
     const endSegmentSymbols = this.getSegmentSymbols(document, interchange.endSegment!);
-    let functionalGroupSymbols: vscode.DocumentSymbol[];
-    if (interchange.functionalGroups.length === 1 && interchange.functionalGroups[0].isFake()) {
-      // EDIFACT
-      functionalGroupSymbols = interchange.functionalGroups[0].transactionSets.map(transactionSet => this.getTransactionSetSymbols(document, transactionSet));
-    } else {
-      functionalGroupSymbols = interchange.functionalGroups.map(functionalGroup => this.getFunctionalGroupSymbols(document, functionalGroup));
-    }
 
     interchangeSymbol.children = [
       startSegmentSymbols,
@@ -49,10 +46,15 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
       endSegmentSymbols,
     ];
 
-    return interchangeSymbol;
+    return [interchangeSymbol];
   }
 
-  getFunctionalGroupSymbols(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.DocumentSymbol {
+  getFunctionalGroupSymbols(document: vscode.TextDocument, functionalGroup: EdiFunctionalGroup): vscode.DocumentSymbol[] {
+    const transactionSetSymbols = functionalGroup.transactionSets.map(transactionSet => this.getTransactionSetSymbols(document, transactionSet));
+    if (functionalGroup.isFake()) {
+      return transactionSetSymbols;
+    }
+
     const functionalGroupSegmentRange = EdiUtils.getFunctionalGroupRange(document, functionalGroup);
     const functionalGroupSymbol = new vscode.DocumentSymbol(
       functionalGroup.getId() ?? "Unknown",
@@ -62,9 +64,8 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
       functionalGroupSegmentRange, 
     );
 
-    const transactionSetSymbols = functionalGroup.transactionSets.map(transactionSet => this.getTransactionSetSymbols(document, transactionSet));
     functionalGroupSymbol.children = transactionSetSymbols || [];
-    return functionalGroupSymbol;
+    return [functionalGroupSymbol];
   }
 
   getTransactionSetSymbols(document: vscode.TextDocument, transactionSet: EdiTransactionSet): vscode.DocumentSymbol {
@@ -135,6 +136,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
     return [
       vscode.languages.registerDocumentSymbolProvider({ language: EdiType.X12 }, this),
       vscode.languages.registerDocumentSymbolProvider({ language: EdiType.EDIFACT }, this),
+      vscode.languages.registerDocumentSymbolProvider({ language: EdiType.VDA }, this),
     ];
   }
 }
