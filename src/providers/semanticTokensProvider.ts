@@ -60,26 +60,8 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
 
     for (let i = 0; i < segment.elements.length; i++) {
       const ele = segment.elements[i];
-      if (this.ediType === EdiType.VDA) {
-        this.buildElementSemanticTokensByElementIndex(document, builder, segment, ele, i);
-      } else {
-        this.buildElementSemanticTokens(document, builder, segment, ele, separators);
-      }
+      this.buildElementSemanticTokens(document, builder, segment, ele, separators);
     }
-  }
-
-  private buildElementSemanticTokensByElementIndex(document: vscode.TextDocument, builder: vscode.SemanticTokensBuilder, segment: EdiSegment, element: EdiElement, elementIndex: number) {
-    const elementValueRange = element.separator ? EdiUtils.getElementWithoutSeparatorRange(document, segment, element) : EdiUtils.getElementRange(document, segment, element);
-    const tokenTypes = [
-      TokenTypes.EdiValueTypeQualifer,
-      TokenTypes.EdiValueTypeNumber,
-      TokenTypes.EdiValueTypeDatetime,
-      TokenTypes.EdiValueTypeOther,
-    ];
-    builder.push(
-      elementValueRange,
-      tokenTypes[elementIndex % tokenTypes.length],
-    );
   }
 
   private buildElementSemanticTokens(document: vscode.TextDocument, builder: vscode.SemanticTokensBuilder, segment: EdiSegment, element: EdiElement, separators: EdiMessageSeparators) {
