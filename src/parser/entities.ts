@@ -245,6 +245,10 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     return `${this.getDesignator()}(${elementId})`;
   }
 
+  public getIdOrDesignator(): string {
+    return this.ediReleaseSchemaElement?.id ?? this.getDesignator();
+  }
+
   public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.components && this.components.length > 0) {
@@ -257,40 +261,43 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       return errors;
     }
 
-    if (this.value && this.value.length > this.ediReleaseSchemaElement.maxLength) {
+    const value = context.ediType === EdiType.VDA ? this.value?.trimEnd() : this.value;
+    const idOrDesignator = this.getIdOrDesignator();
+
+    if (value && value.length > this.ediReleaseSchemaElement.maxLength) {
       errors.push({
-        error: `Element ${this.ediReleaseSchemaElement?.id} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}, got ${this.value.length}.`,
+        error: `Element ${idOrDesignator} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}, got ${value.length}.`,
         code: DiagnosticErrors.VALUE_TOO_LONG,
         severity: DiagnosticErrorSeverity.ERROR,
         errorElement: this,
       });
     }
 
-    if (this.value && this.value.length < this.ediReleaseSchemaElement.minLength) {
+    if (value && value.length < this.ediReleaseSchemaElement.minLength) {
       errors.push({
-        error: `Element ${this.ediReleaseSchemaElement?.id} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}, got ${this.value.length}.`,
+        error: `Element ${idOrDesignator} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}, got ${value.length}.`,
         code: DiagnosticErrors.VALUE_TOO_SHORT,
         severity: DiagnosticErrorSeverity.ERROR,
         errorElement: this,
       });
     }
 
-    if (this.ediReleaseSchemaElement?.required && !this.value) {
+    if (this.ediReleaseSchemaElement?.required && !value) {
       errors.push({
-        error: `Element ${this.ediReleaseSchemaElement?.id} is required.`,
+        error: `Element ${idOrDesignator} is required.`,
         code: DiagnosticErrors.VALUE_REQUIRED,
         severity: DiagnosticErrorSeverity.ERROR,
         errorElement: this,
       });
     }
 
-    if (this.ediReleaseSchemaElement.qualifierRef && this.value) {
+    if (this.ediReleaseSchemaElement.qualifierRef && value) {
       const codes = this.ediReleaseSchemaElement.getCodes();
       if (codes) {
-        const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(this.value);
+        const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(value);
         if (!elementValueCode) {
           errors.push({
-            error: `Invalid code value '${this.value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
+            error: `Invalid code value '${value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
             code: DiagnosticErrors.QUALIFIER_INVALID_CODE,
             severity: DiagnosticErrorSeverity.ERROR,
             errorElement: this,
