@@ -69,7 +69,7 @@ export class EdiReleaseSchemaElement {
   public qualifierRef: string;
   public definition: string;
   public components: EdiReleaseSchemaElement[];
-  public length?: number;
+  public length?: number;  // VDA
 
   public mock: boolean;
 

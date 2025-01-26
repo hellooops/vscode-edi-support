@@ -3508,7 +3508,795 @@ export default function useTestData(): EdiDocument {
     },
     "ediType": "edifact"
   };
+
+  const vdaTestData: IEdiDocument = {
+    "interchanges": [
+      {
+        "key": "Hhvk0GcCK4YgcAVEjtbSo",
+        "meta": {},
+        "functionalGroups": [
+          {
+            "key": "jelhFpgkrzjG-_zSjewwl",
+            "meta": {},
+            "id": "",
+            "transactionSets": [
+              {
+                "key": "8Mb6XI4I0gpp_WOtRM7z0",
+                "meta": {
+                  "release": "02",
+                  "version": "511"
+                },
+                "segments": [
+                  {
+                    "key": "s8kWGN_qzxboP2XZNJCTv",
+                    "id": "511",
+                    "elements": [
+                      {
+                        "key": "-ByHpuOsI4rjJn2sOfpqO",
+                        "type": "Data Element",
+                        "value": "02",
+                        "desc": "Version Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 2,
+                        "designator": "51101"
+                      },
+                      {
+                        "key": "rX2nY-s7YspKkw_LJQTKn",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Customer Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51102"
+                      },
+                      {
+                        "key": "JFRBslGtiMj81o_QufUl2",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Supplier Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51103"
+                      },
+                      {
+                        "key": "bWS1_0cYpeW8SZ43snWYh",
+                        "type": "Data Element",
+                        "value": "99999",
+                        "desc": "Old Transmission Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 5,
+                        "designator": "51104"
+                      },
+                      {
+                        "key": "exomlIMIeU89gfNC7NYlq",
+                        "type": "Data Element",
+                        "value": "00001",
+                        "desc": "New Transmission Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 5,
+                        "designator": "51105"
+                      },
+                      {
+                        "key": "STIahk_-f5oY8oIrf1opn",
+                        "type": "Data Element",
+                        "value": "250124",
+                        "desc": "Transmission Date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51106"
+                      },
+                      {
+                        "key": "o2j1nMonbNjjxtpvH0ckt",
+                        "type": "Data Element",
+                        "value": "111231",
+                        "desc": "Date Of Zero",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51107"
+                      },
+                      {
+                        "key": "KtDz4OhbfVVJs7wZEo_U2",
+                        "type": "Data Element",
+                        "value": "                                                                                   ",
+                        "desc": "Empty",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 83,
+                        "designator": "51108"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "CiIh7pE_HVGiRu-Jdsrhw",
+                    "id": "512",
+                    "elements": [
+                      {
+                        "key": "YYZoOnxEt3mzVaddpwJFt",
+                        "type": "Data Element",
+                        "value": "01",
+                        "desc": "Version Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 2,
+                        "designator": "51201"
+                      },
+                      {
+                        "key": "r23-BBGJehLNoztAb_GCp",
+                        "type": "Data Element",
+                        "value": "030",
+                        "desc": "Plant Customer",
+                        "dataType": "AN",
+                        "required": true,
+                        "codeValue": "Component plant Berlin",
+                        "length": 3,
+                        "designator": "51202"
+                      },
+                      {
+                        "key": "eIgnOq_qF4GS7Bkbj43tY",
+                        "type": "Data Element",
+                        "value": "187      ",
+                        "desc": "New Call Off Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51203"
+                      },
+                      {
+                        "key": "8TvlnYeEvjSHRZ4YexVbq",
+                        "type": "Data Element",
+                        "value": "121115",
+                        "desc": "New Call Off Date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51204"
+                      },
+                      {
+                        "key": "UgtEv_i8UfzxTzx-oVyAe",
+                        "type": "Data Element",
+                        "value": "186      ",
+                        "desc": "Old Call Off Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51205"
+                      },
+                      {
+                        "key": "o3f1X5c88R_zutJ5tbK4c",
+                        "type": "Data Element",
+                        "value": "121109",
+                        "desc": "Old Call Off Date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51206"
+                      },
+                      {
+                        "key": "g15WhyihoDqs9uk-xh9kT",
+                        "type": "Data Element",
+                        "value": "1514280009100         ",
+                        "desc": "Customer Part Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 22,
+                        "designator": "51207"
+                      },
+                      {
+                        "key": "36K2JWrRlhGwhEcx8dGS0",
+                        "type": "Data Element",
+                        "value": "                      ",
+                        "desc": "Supplier Part Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 22,
+                        "designator": "51208"
+                      },
+                      {
+                        "key": "cFv4qkyCR_SoqAqX4h_XU",
+                        "type": "Data Element",
+                        "value": "CGF-56026482",
+                        "desc": "Purchase Order Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 12,
+                        "designator": "51209"
+                      },
+                      {
+                        "key": "LLpIlo4AFGaN_hpiCDcs_",
+                        "type": "Data Element",
+                        "value": "A 13 ",
+                        "desc": "Unloading Point",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 5,
+                        "designator": "51210"
+                      },
+                      {
+                        "key": "xjQY0inhKHDcLPRzExI9J",
+                        "type": "Data Element",
+                        "value": "    ",
+                        "desc": "Code Of Customer",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 4,
+                        "designator": "51211"
+                      },
+                      {
+                        "key": "-uC7rKvFPc6R7BaNf7C6I",
+                        "type": "Data Element",
+                        "value": "ST",
+                        "desc": "Unit Of Measurement",
+                        "dataType": "AN",
+                        "required": true,
+                        "codeValue": "Piece",
+                        "length": 2,
+                        "designator": "51212"
+                      },
+                      {
+                        "key": "Xv-iRti0023tNNO5sbWHQ",
+                        "type": "Data Element",
+                        "value": "L",
+                        "desc": "Delivery Interval",
+                        "dataType": "AN",
+                        "required": true,
+                        "codeValue": "In accordance with delivery date",
+                        "length": 1,
+                        "designator": "51213"
+                      },
+                      {
+                        "key": "VXfwgDTp6eocZjTeLGy9G",
+                        "type": "Data Element",
+                        "value": " ",
+                        "desc": "Inclusive Production Release",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 1,
+                        "designator": "51214"
+                      },
+                      {
+                        "key": "DtgKl7mXDnVbjvaU_sAtf",
+                        "type": "Data Element",
+                        "value": " ",
+                        "desc": "Material Release",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 1,
+                        "designator": "51215"
+                      },
+                      {
+                        "key": "sYk787U178pKkOvf54Z3u",
+                        "type": "Data Element",
+                        "value": " ",
+                        "desc": "Code Usage",
+                        "dataType": "AN",
+                        "required": true,
+                        "codeValue": "Invalid code value",
+                        "length": 1,
+                        "designator": "51216"
+                      },
+                      {
+                        "key": "4NysXGejZAzW11wLZ-jDS",
+                        "type": "Data Element",
+                        "value": "       ",
+                        "desc": "Allocation",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51217"
+                      },
+                      {
+                        "key": "-UnhDCE4EMYbJII_WikhE",
+                        "type": "Data Element",
+                        "value": "       ",
+                        "desc": "Warehouse Location",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51218"
+                      },
+                      {
+                        "key": "05FEZb0gaYOl6tVRKpcBx",
+                        "type": "Data Element",
+                        "value": "     ",
+                        "desc": "Empty",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 5,
+                        "designator": "51219"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "y-Au-UTZf5ypx4nUryWEl",
+                    "id": "513",
+                    "elements": [
+                      {
+                        "key": "oPaz1c4FNtVFYccWaZFR8",
+                        "type": "Data Element",
+                        "value": "01",
+                        "desc": "Version Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 2,
+                        "designator": "51301"
+                      },
+                      {
+                        "key": "QbOvffgZClQsufKFvnS4H",
+                        "type": "Data Element",
+                        "value": "121113",
+                        "desc": "Entry Date Last delivery",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51302"
+                      },
+                      {
+                        "key": "yUIQ0DKlpeprmwPZ7h7ZX",
+                        "type": "Data Element",
+                        "value": "432701  ",
+                        "desc": "Delivery Note Number last delivery",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 8,
+                        "designator": "51303"
+                      },
+                      {
+                        "key": "JchStOvIEN7GTf5_dY7oP",
+                        "type": "Data Element",
+                        "value": "      ",
+                        "desc": "Delivery Note Date last delivery",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51304"
+                      },
+                      {
+                        "key": "-aJab5GXx1m_cudkrZYJP",
+                        "type": "Data Element",
+                        "value": "000000346000",
+                        "desc": "Quantity Last Delivery",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 12,
+                        "designator": "51305"
+                      },
+                      {
+                        "key": "HVg4oXe2BNvD9_TzNF02z",
+                        "type": "Data Element",
+                        "value": "0000019427",
+                        "desc": "Cumulative Figure",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 10,
+                        "designator": "51306"
+                      },
+                      {
+                        "key": "od3cW25nuk-VdJ7StuMuj",
+                        "type": "Data Element",
+                        "value": "121115",
+                        "desc": "Call Off Date 1",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51307"
+                      },
+                      {
+                        "key": "-Cvlbh7970hfGi3aMM5a0",
+                        "type": "Data Element",
+                        "value": "000000000",
+                        "desc": "Call Off Quantity 1",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51308"
+                      },
+                      {
+                        "key": "M-qhn5ND5xj63G57CmTYC",
+                        "type": "Data Element",
+                        "value": "000000",
+                        "desc": "Call Off Date 2",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51309"
+                      },
+                      {
+                        "key": "I8Ukg-v4Kwz5ND1y6JuNC",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Call Off Quantity 2",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51310"
+                      },
+                      {
+                        "key": "yPdHwEZdwxXp-YNKLpSjs",
+                        "type": "Data Element",
+                        "value": "      ",
+                        "desc": "Call Off Date 3",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51311"
+                      },
+                      {
+                        "key": "Pb92k1j2IdcluLmlyaPJZ",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Call Off Quantity 3",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51312"
+                      },
+                      {
+                        "key": "NhT6QwPgcfB1CJgfTYqUp",
+                        "type": "Data Element",
+                        "value": "      ",
+                        "desc": "Call Off Date 4",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51313"
+                      },
+                      {
+                        "key": "OBS7uLXIA_j4TBySMt2j-",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Call Off Quantity 4",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51314"
+                      },
+                      {
+                        "key": "OM3p24HMjm2DcKMQqD9Jv",
+                        "type": "Data Element",
+                        "value": "      ",
+                        "desc": "Call Off Date 5",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51315"
+                      },
+                      {
+                        "key": "yWAhla1XWhBFy9IRBR9cB",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Call Off Quantity 5",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51316"
+                      },
+                      {
+                        "key": "VU_Eqnb2zLIsAvdj3E9sa",
+                        "type": "Data Element",
+                        "value": "      ",
+                        "desc": "Empty",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51317"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "jqQU2i-fIVYlOz18qNjC1",
+                    "id": "515",
+                    "elements": [
+                      {
+                        "key": "A-fC__8H13tYbtaWGm8Aq",
+                        "type": "Data Element",
+                        "value": "01",
+                        "desc": "Version Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 2,
+                        "designator": "51501"
+                      },
+                      {
+                        "key": "RZRk8BdgXAyGxmkXDQFW-",
+                        "type": "Data Element",
+                        "value": "000000",
+                        "desc": "Production Authorisation, start date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51502"
+                      },
+                      {
+                        "key": "0HtkXIcAjy9eRN2odZJra",
+                        "type": "Data Element",
+                        "value": "130213",
+                        "desc": "Production Authorisation, end date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51503"
+                      },
+                      {
+                        "key": "pt-5G-Wg9AyUZyd_ZgnIg",
+                        "type": "Data Element",
+                        "value": "0000000000",
+                        "desc": "Production Authorisation, cumulative quantity",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 10,
+                        "designator": "51504"
+                      },
+                      {
+                        "key": "ceVMq7M2DQt7osWSjrv_L",
+                        "type": "Data Element",
+                        "value": "000000",
+                        "desc": "Material Authorisation, start date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51505"
+                      },
+                      {
+                        "key": "YJM2ccKIgh3AJKx8n8xhP",
+                        "type": "Data Element",
+                        "value": "130315",
+                        "desc": "Material Authorisation, end date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51506"
+                      },
+                      {
+                        "key": "zbAd89PVUDotJSjRowvh-",
+                        "type": "Data Element",
+                        "value": "0000000000",
+                        "desc": "Material Authorisation, cumulative demand",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 10,
+                        "designator": "51507"
+                      },
+                      {
+                        "key": "fpUkKKyCym5KXMFk-YQ56",
+                        "type": "Data Element",
+                        "value": "                      ",
+                        "desc": "FPSD Article Code",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 22,
+                        "designator": "51508"
+                      },
+                      {
+                        "key": "4eHaWtkHWhaDeup3_lWEQ",
+                        "type": "Data Element",
+                        "value": "         ",
+                        "desc": "Sub Supplier",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 9,
+                        "designator": "51509"
+                      },
+                      {
+                        "key": "R7pNtqWQja8RmNy7jcXzE",
+                        "type": "Data Element",
+                        "value": "000000",
+                        "desc": "Planning Horizon Date",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 6,
+                        "designator": "51510"
+                      },
+                      {
+                        "key": "Z5ATEk_MxZR-hCAnSMq2c",
+                        "type": "Data Element",
+                        "value": "              ",
+                        "desc": "Point Of Use",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 14,
+                        "designator": "51511"
+                      },
+                      {
+                        "key": "DWUxh1beybkkJgUmxKfdd",
+                        "type": "Data Element",
+                        "value": "          ",
+                        "desc": "Cumulative Received Quantity before resetting it to zero",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 10,
+                        "designator": "51512"
+                      },
+                      {
+                        "key": "ov98KOa2MTpPJswhExsfd",
+                        "type": "Data Element",
+                        "value": "                  ",
+                        "desc": "Empty",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 18,
+                        "designator": "51513"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "6jZjseaVyLO2k__57Lpi7",
+                    "id": "518",
+                    "elements": [
+                      {
+                        "key": "Zd4fxqz7A8NrY9FurgIPv",
+                        "type": "Data Element",
+                        "value": "01",
+                        "desc": "Version Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 2,
+                        "designator": "51801"
+                      },
+                      {
+                        "key": "Y9nS1MNUK4cjG0Eyf7hUe",
+                        "type": "Data Element",
+                        "value": "07-08140295/04                          ",
+                        "desc": "Call Off Text 1",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 40,
+                        "designator": "51802"
+                      },
+                      {
+                        "key": "MAlN99bsrk-7qZrL0uY50",
+                        "type": "Data Element",
+                        "value": "23-09140029                             ",
+                        "desc": "Call Off Text 2",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 40,
+                        "designator": "51803"
+                      },
+                      {
+                        "key": "NN6pJD1_5dGJ2DMFYJCz1",
+                        "type": "Data Element",
+                        "value": "                                        ",
+                        "desc": "Call Off Text 3",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 40,
+                        "designator": "51804"
+                      },
+                      {
+                        "key": "_wbIepTL2R0ivsXKofK5j",
+                        "type": "Data Element",
+                        "value": "   ",
+                        "desc": "Empty",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 3,
+                        "designator": "51805"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "wWHEUDfqjq7FS5IORSu2J",
+                    "id": "519",
+                    "elements": [
+                      {
+                        "key": "aqMel-gST2ovzu-_cF9G1",
+                        "type": "Data Element",
+                        "value": "01",
+                        "desc": "Version Number",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 2,
+                        "designator": "51901"
+                      },
+                      {
+                        "key": "jDdplOmCdhdmLNXAJ6GXu",
+                        "type": "Data Element",
+                        "value": "0000001",
+                        "desc": "Counter Record 511",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51902"
+                      },
+                      {
+                        "key": "UsTdxSLuVI92sms2AKZkk",
+                        "type": "Data Element",
+                        "value": "0000001",
+                        "desc": "Counter Record 512",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51903"
+                      },
+                      {
+                        "key": "LZq8KJNAZrXGsism_DlSx",
+                        "type": "Data Element",
+                        "value": "0000001",
+                        "desc": "Counter Record 513",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51904"
+                      },
+                      {
+                        "key": "rvLWeeKhUZOSQyNLTpwG7",
+                        "type": "Data Element",
+                        "value": "0000000",
+                        "desc": "Counter Record 514",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51905"
+                      },
+                      {
+                        "key": "JnQtIUapwukmBRMFJSQR-",
+                        "type": "Data Element",
+                        "value": "0000000",
+                        "desc": "Counter Record 517",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51906"
+                      },
+                      {
+                        "key": "uyJ5zvi0Gbewqr__l63QV",
+                        "type": "Data Element",
+                        "value": "0000001",
+                        "desc": "Counter Record 518",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51907"
+                      },
+                      {
+                        "key": "vaC4SIetQXaNa0pb7HVPS",
+                        "type": "Data Element",
+                        "value": "0000001",
+                        "desc": "Counter Record 519",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51908"
+                      },
+                      {
+                        "key": "9hcWgxWKXJB04NQkbvRrZ",
+                        "type": "Data Element",
+                        "value": "0000001",
+                        "desc": "Counter Record 515",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 7,
+                        "designator": "51909"
+                      },
+                      {
+                        "key": "QOYXm5eBGQHM0oYVLOmbP",
+                        "type": "Data Element",
+                        "value": "                                                                   ",
+                        "desc": "Empty",
+                        "dataType": "AN",
+                        "required": true,
+                        "length": 67,
+                        "designator": "51910"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ediType": "vda"
+  };
   
 
-  return new EdiDocument(x12TestData);
+  return new EdiDocument(vdaTestData);
 }

@@ -337,6 +337,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       maxLength: this.ediReleaseSchemaElement?.maxLength,
       codeValue,
       definition: this.ediReleaseSchemaElement?.definition,
+      length: this.ediReleaseSchemaElement?.length,
       designator: this.getDesignator()
     };
   }

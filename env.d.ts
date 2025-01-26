@@ -29,6 +29,8 @@ interface IEdiElement {
   codeValue?: string;
   definition?: string;
 
+  length?: number;  // VDA
+
   designator: string;
 }
 
@@ -42,7 +44,7 @@ interface IEdiSegment {
   Loop?: IEdiSegment[];
 }
 
-type IEdiType = "x12" | "edifact" | "unknown";
+type IEdiType = "x12" | "edifact" | "vda" | "unknown";
 
 interface IMessageInfo {
   version: string;

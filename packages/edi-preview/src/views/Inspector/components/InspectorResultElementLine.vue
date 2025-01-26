@@ -14,9 +14,10 @@
           <span class="font-semibold">{{ element.value }}</span>
           <span>{{ element.codeValue }}</span>
         </div>
+        <p v-if="element.length !== undefined" class="opacity-70 text-xs">Length: {{ element.length }}</p>
         <div class="text-xs opacity-80 space-x-2">
           <span>{{ element.required ? "Required" : "Optional" }}</span>
-          <span>{{ getMinMaxStr() }}</span>
+          <span v-if="getMinMaxStr()">{{ getMinMaxStr() }}</span>
           <span v-if="element.dataType">{{ element.dataType }}</span>
         </div>
         <p class="opacity-70 text-xs">{{ element.definition }}</p>
