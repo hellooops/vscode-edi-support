@@ -3523,9 +3523,11 @@ export default function useTestData(): EdiDocument {
               {
                 "key": "8Mb6XI4I0gpp_WOtRM7z0",
                 "meta": {
+                  "id": "00002",
                   "release": "02",
                   "version": "511"
                 },
+                "id": "00002",
                 "segments": [
                   {
                     "key": "s8kWGN_qzxboP2XZNJCTv",

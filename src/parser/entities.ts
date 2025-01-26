@@ -414,13 +414,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   }
 
   getId(): string | undefined {
-    if (this.startSegment?.id === "ST" && this.startSegment.elements.length >= 2) {
-      return this.startSegment.elements[1].value;
-    } else if (this.startSegment?.id === "UNH" && this.startSegment.elements.length >= 1) {
-      return this.startSegment.elements[0].value;
-    } else {
-      return undefined;
-    }
+    return this.meta.id;
   }
 
   getEndId(): string | undefined {
@@ -628,13 +622,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
   }
 
   getId(): string | undefined {
-    if (this.startSegment?.id === "GS" && this.startSegment.elements.length >= 6) {
-      return this.startSegment.elements[5].value;
-    } else if (!this.startSegment) {
-      return "";
-    } else {
-      return undefined;
-    }
+    return this.meta.id;
   }
 
   getEndId(): string | undefined {
@@ -847,13 +835,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
   }
 
   getId(): string | undefined {
-    if (this.startSegment?.id === "ISA" && this.startSegment.elements.length >= 13) {
-      return this.startSegment.elements[12].value;
-    } else if (this.startSegment?.id === "UNB" && this.startSegment.elements.length >= 5) {
-      return this.startSegment.elements[4].value;
-    } else {
-      return undefined;
-    }
+    return this.meta.id;
   }
 
   getEndId(): string | undefined {

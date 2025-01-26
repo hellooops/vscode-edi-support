@@ -76,9 +76,13 @@ export class VdaParser extends EdiParserBase {
   protected parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta {
     const meta: EdiTransactionSetMeta = {};
     const document = this.document.trim();
-    if (document.length >= 5) {
+    if (document.length >= 3 + 2) {
       meta.release = document.substring(3, 5);
       meta.version = document.substring(0, 3);
+    }
+
+    if (document.length >= 3 + 2 + 9 + 9 + 5 + 5) {
+      meta.id = document.substring(28, 33);
     }
 
     return meta;
