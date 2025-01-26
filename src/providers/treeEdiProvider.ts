@@ -226,6 +226,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       {key: "maxLength", label: "Max Length"},
       {key: "qualifierRef", label: "Qualifier Ref"},
       {key: "definition", label: "Definition"},
+      {key: "length", label: "Length"},
     ];
     const children: TreeItemElement[] = [];
     for (let attrKey of attrKeys) {
@@ -355,7 +356,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
       return;
     }
 
-    if (EdiUtils.isX12(e?.document) || EdiUtils.isEdifact(e?.document)) {
+    if (EdiUtils.isX12(e?.document) || EdiUtils.isEdifact(e?.document) || EdiUtils.isVda(e?.document)) {
       this.refresh();
     }
   }

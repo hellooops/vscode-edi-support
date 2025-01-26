@@ -77,8 +77,8 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       if (element.ediReleaseSchemaElement.minLength !== undefined && element.ediReleaseSchemaElement.maxLength !== undefined) {
         part1MdSb.append(` \`Min ${element.ediReleaseSchemaElement.minLength} / Max ${element.ediReleaseSchemaElement.maxLength}\``);
       }
-      if (element.ediReleaseSchemaElement.Length !== undefined) {
-        part1MdSb.append(` \`Length ${element.ediReleaseSchemaElement.Length}\``);
+      if (element.ediReleaseSchemaElement.length !== undefined) {
+        part1MdSb.append(` \`Length ${element.ediReleaseSchemaElement.length}\``);
       }
     }
 

@@ -17,7 +17,7 @@ export class VdaParser extends EdiParserBase {
       for (let i = 0; i < segment.ediReleaseSchemaSegment.elements.length; i++) {
         const elementReleaseSchema = segment.ediReleaseSchemaSegment.elements[i];
         const elementStartIndex = segmentParseIndex;
-        const elementEndIndex = elementStartIndex + elementReleaseSchema.Length! - 1;
+        const elementEndIndex = elementStartIndex + elementReleaseSchema.length! - 1;
         const element = new EdiElement(
           segment,
           ElementType.dataElement,
@@ -31,7 +31,7 @@ export class VdaParser extends EdiParserBase {
         element.value = segmentStr.substring(elementStartIndex, elementEndIndex + 1);
         element.ediReleaseSchemaElement = elementReleaseSchema;
         segment.elements.push(element);
-        segmentParseIndex += elementReleaseSchema.Length!;
+        segmentParseIndex += elementReleaseSchema.length!;
       }
       return segment;
     };
