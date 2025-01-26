@@ -54,7 +54,7 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
@@ -72,32 +72,32 @@
         },
         {
           "Desc": "Old Transmission Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 5
         },
         {
           "Desc": "New Transmission Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 5
         },
         {
           "Desc": "Transmission Date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Date Of Zero",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 83
         }
       ]
@@ -106,7 +106,7 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
@@ -119,25 +119,25 @@
         },
         {
           "Desc": "New Call Off Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 9
         },
         {
           "Desc": "New Call Off Date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Old Call Off Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 9
         },
         {
           "Desc": "Old Call Off Date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
@@ -150,13 +150,13 @@
         {
           "Desc": "Supplier Part Number",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 22
         },
         {
           "Desc": "Purchase Order Number",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 12
         },
         {
@@ -187,14 +187,14 @@
         },
         {
           "Desc": "Inclusive Production Release",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 1
         },
         {
           "Desc": "Material Release",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 1
         },
         {
@@ -207,19 +207,19 @@
         {
           "Desc": "Allocation",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 7
         },
         {
           "Desc": "Warehouse Location",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 7
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 5
         }
       ]
@@ -228,104 +228,104 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
         {
           "Desc": "Entry Date Last delivery",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Delivery Note Number last delivery",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 8
         },
         {
           "Desc": "Delivery Note Date last delivery",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Quantity Last Delivery",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 12
         },
         {
           "Desc": "Cumulative Figure",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 10
         },
         {
           "Desc": "Call Off Date 1",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 1",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 2",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 2",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 3",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 3",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 4",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 4",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 5",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 5",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 6
         }
       ]
@@ -334,110 +334,110 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
         {
           "Desc": "Call Off Date 6",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 6",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 7",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 7",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 8",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 8",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 9",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 9",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 10",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 10",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 11",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 11",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 12",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 12",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Call Off Date 13",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 6
         },
         {
           "Desc": "Call Off Quantity 13",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 3
         }
       ]
@@ -446,80 +446,80 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
         {
           "Desc": "Production Authorisation, start date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Production Authorisation, end date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Production Authorisation, cumulative quantity",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 10
         },
         {
           "Desc": "Material Authorisation, start date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Material Authorisation, end date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Material Authorisation, cumulative demand",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 10
         },
         {
           "Desc": "FPSD Article Code",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 22
         },
         {
           "Desc": "Sub Supplier",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 9
         },
         {
           "Desc": "Planning Horizon Date",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 6
         },
         {
           "Desc": "Point Of Use",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 14
         },
         {
           "Desc": "Cumulative Received Quantity before resetting it to zero",
-          "DataType": "AN",
-          "Required": true,
+          "DataType": "N",
+          "Required": false,
           "Length": 10
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 18
         }
       ]
@@ -528,7 +528,7 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
@@ -541,19 +541,19 @@
         {
           "Desc": "Supplier'S article Number for the package",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 22
         },
         {
           "Desc": "Package Capacity",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 72
         }
       ]
@@ -562,7 +562,7 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
@@ -575,19 +575,19 @@
         {
           "Desc": "Call Off Text 2",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 40
         },
         {
           "Desc": "Call Off Text 3",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 40
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 3
         }
       ]
@@ -596,62 +596,62 @@
       "Elements": [
         {
           "Desc": "Version Number",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 2
         },
         {
           "Desc": "Counter Record 511",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 512",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 513",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 514",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 517",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 518",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 519",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Counter Record 515",
-          "DataType": "AN",
+          "DataType": "N",
           "Required": true,
           "Length": 7
         },
         {
           "Desc": "Empty",
           "DataType": "AN",
-          "Required": true,
+          "Required": false,
           "Length": 67
         }
       ]
