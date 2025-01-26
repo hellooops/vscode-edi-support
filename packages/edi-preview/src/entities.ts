@@ -222,7 +222,12 @@ export class EdiInterchange implements TreeItemBase {
     this.ediDocument = ediDocument;
   }
 
+  isFake(): boolean {
+    return !this.startSegment;
+  }
+
   getHeight(): number {
+    if (this.isFake()) return 0;
     return 48;
   }
 

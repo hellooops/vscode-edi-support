@@ -1,5 +1,6 @@
 <template>
   <InspectorResultLine
+    v-if="!functionalGroup.isFake()"
     v-model:visible="visible"
     type="FunctionalGroup"
     :name="'Functional Group'"
@@ -25,6 +26,12 @@
       :segment="functionalGroup.endSegment"
     />
   </InspectorResultLine>
+  <InspectorResultTransactionSet
+    v-else
+    v-for="(transactionSet, i) in functionalGroup.transactionSets"
+    :key="i"
+    :transactionSet="transactionSet"
+  />
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
