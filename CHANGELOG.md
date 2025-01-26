@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.0.0] - 2025-01-26
+
+### Added
+
+- Support VDA
+
+
+
 ## [1.6.3] - 2025-01-16
 
 ### Changed
