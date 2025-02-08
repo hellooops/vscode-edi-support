@@ -612,12 +612,15 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return activeTransactionSet;
   }
 
-  addSegment(segment: EdiSegment): void {
+  ensureActiveTransactionSet(): void {
     if (!this.hasActiveTransactionSet) {
-      throw new Error("Functional Group is invalid");
+      this.startTransactionSet({}, undefined);
     }
+  }
 
-    this.transactionSets[this.transactionSets.length - 1].addSegment(segment);
+  addSegment(segment: EdiSegment): void {
+    this.ensureActiveTransactionSet();
+    this.getActiveTransactionSet().addSegment(segment);
   }
 
   getSegments(withoutLoop?: boolean): EdiSegment[] {
