@@ -300,14 +300,14 @@ export abstract class EdiParserBase {
     let releaseSchema = null;
     let versionSchema = null;
     try {
-      releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/RSSBus_${meta.release}.json`);
+      releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}.json`);
     } catch (ex) {
       console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
       return;
     }
 
     try {
-      versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/RSSBus_${meta.release}_${meta.version}.json`);
+      versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_${meta.version}.json`);
     } catch (ex) {
       console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
     }
