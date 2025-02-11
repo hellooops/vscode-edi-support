@@ -23,7 +23,8 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
 
     const diagnoscticsContext: DiagnoscticsContext = {
       ediType,
-      standardOptions: ediDocument.standardOptions
+      standardOptions: ediDocument.standardOptions,
+      ignoreRequired: ediType === EdiType.VDA
     };
     const errors = ediDocument.getErrors(diagnoscticsContext);
     const vscodeDiagnostics = errors.map(error => this.ediDiagnosticsToVscodeDiagnostics(document, error));

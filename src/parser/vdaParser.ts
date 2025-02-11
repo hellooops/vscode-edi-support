@@ -38,7 +38,6 @@ export class VdaParser extends EdiParserBase {
   }
 
   protected getSegmentRegex(): RegExp {
-    const segmentSeparator = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
     let regexPattern = `(\\d){5}[\\s\\S]{123}`;
     return new RegExp(regexPattern, "g");
   }

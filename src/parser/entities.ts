@@ -201,6 +201,7 @@ export interface DiagnoscticsContext {
   element?: EdiElement;
   ediType: string;
   standardOptions: EdiStandardOptions;
+  ignoreRequired?: boolean;
 }
 
 export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticErrorAble {
@@ -282,7 +283,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       });
     }
 
-    if (this.ediReleaseSchemaElement?.required && !value) {
+    if (!context.ignoreRequired && this.ediReleaseSchemaElement?.required && !value) {
       errors.push({
         error: `Element ${idOrDesignator} is required.`,
         code: DiagnosticErrors.VALUE_REQUIRED,
