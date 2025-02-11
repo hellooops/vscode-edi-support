@@ -6,6 +6,10 @@ import * as constants from "../constants";
 
 export class EdiDiagnosticsMgr implements IDiagnosticsable {
   async refreshDiagnostics(document: vscode.TextDocument, ediDiagnostics: vscode.DiagnosticCollection): Promise<void> {
+    if (![constants.ediDocument.x12.name, constants.ediDocument.edifact.name, constants.ediDocument.vda.name].includes(document.languageId)) {
+      return;
+    }
+
     const { parser, ediType } = EdiUtils.getEdiParser(document);
     if (!parser) {
       return;
