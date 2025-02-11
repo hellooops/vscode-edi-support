@@ -5,6 +5,7 @@ import { MinifyDocumentCommand } from "./commands/minifyDocumentCommand";
 import { PreviewDocumentCommand } from "./commands/previewDocumentCommand";
 import { ToggleInlayHintsCommand } from "./commands/toggleInlayHintsCommand";
 import { ToggleLoopAnnotationsCommand } from "./commands/toggleLoopAnnotationsCommand";
+import { ToggleElementIndexAnnotationCommand } from "./commands/toggleElementIndexAnnotationCommand";
 import { ToggleIndentSegmentsInLoopCommand } from "./commands/toggleIndentSegmentsInLoopCommand";
 import { SelectTextByPositionCommand } from "./commands/selectTextByPositionCommand";
 import { IProvidable } from "./interfaces/providable";
@@ -31,6 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PreviewDocumentCommand(context));
   registerCommand(context, new ToggleInlayHintsCommand());
   registerCommand(context, new ToggleLoopAnnotationsCommand());
+  registerCommand(context, new ToggleElementIndexAnnotationCommand());
   registerCommand(context, new ToggleIndentSegmentsInLoopCommand());
   registerCommand(context, new SelectTextByPositionCommand());
   registerProvider(context, new HighlightEdiProvider());

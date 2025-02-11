@@ -18,7 +18,8 @@ export class EdiDecorationsBeforePositionProvider extends EdiDecorationsProvider
   decorationType: vscode.TextEditorDecorationType = EdiDecorationsBeforePositionProvider.decorationTypeBeforePosition;
 
   async refreshDecorations(document: vscode.TextDocument | undefined, startOffset: number): Promise<void> {
-    if (!document) {
+    const enableElementIndexAnnotation = !!vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.enableElementIndexAnnotation);
+    if (!enableElementIndexAnnotation || !document) {
       this.clearDecorations();
       return;
     }

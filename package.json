@@ -165,11 +165,6 @@
           "default": true,
           "description": "Enable/disable annotations for loop segments."
         },
-        "ediSupport.enableSegmentIndent": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable indentation for segments in loops."
-        },
         "ediSupport.enableHover": {
           "type": "boolean",
           "default": true,
@@ -179,6 +174,11 @@
           "type": "boolean",
           "default": false,
           "description": "Show inlay hints for segment names."
+        },
+        "ediSupport.vda.enableElementIndexAnnotation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show element index as annotations for VDA."
         },
         "ediSupport.menu.icon": {
           "type": "boolean",

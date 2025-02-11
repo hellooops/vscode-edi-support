@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.0.1] - 2025-02-11
+
+### Fixed
+
+- Correct schema ref path
+- Support toggle element index annotation for VDA.
+
+
 ## [2.0.0] - 2025-01-26
 
 ### Added

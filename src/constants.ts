@@ -25,6 +25,10 @@ export namespace commands {
     name: "edi-support.toggleLoopAnnotationsCommand",
     label: "Loop annotations"
   };
+  export const toggleElementIndexAnnotationCommand = {
+    name: "edi-support.toggleElementIndexAnnotationCommand",
+    label: "Element Index"
+  };
   export const toggleIndentSegmentsInLoopCommand = {
     name: "edi-support.toggleIndentSegmentsInLoopCommand",
     label: "Segment indent"
@@ -89,6 +93,7 @@ export namespace configuration {
   };
   export const enableHover = "enableHover";
   export const enableTrailingAnnotations = "enableTrailingAnnotations";
+  export const enableElementIndexAnnotation = "vda.enableElementIndexAnnotation";
 }
 
 export namespace colors {
