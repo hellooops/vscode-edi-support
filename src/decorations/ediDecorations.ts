@@ -9,7 +9,7 @@ export class EdiDecorationsMgr implements IDecorationable {
 
   constructor() {
     this.decorationsProviders.push(new EdiDecorationsAfterLineProvider());
-    this.decorationsProviders.push(new EdiDecorationsBeforePositionProvider());
+    // this.decorationsProviders.push(new EdiDecorationsBeforePositionProvider());
   }
 
   registerDecorations(): vscode.Disposable[] {
