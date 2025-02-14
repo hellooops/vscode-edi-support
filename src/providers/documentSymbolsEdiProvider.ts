@@ -72,7 +72,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
     const transactionSetSegmentRange = EdiUtils.getTransactionSetRange(document, transactionSet);
     const transactionSetSymbol = new vscode.DocumentSymbol(
       `${transactionSet.getFormattedReleaseAndSchemaString()}[ID=${transactionSet.getId() ?? "Unknown"}]`,
-      "FunctionalGroup",
+      "TransactionSet",
       vscode.SymbolKind.Package,
       transactionSetSegmentRange,
       transactionSetSegmentRange, 

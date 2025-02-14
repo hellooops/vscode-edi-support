@@ -6,6 +6,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+
+## [2.0.2] - 2025-02-17
+
+### Changed
+- Use inlayhints to implement vda index annotations.
+
+### Fixed
+- Fix the wrong DocumentSymbol description of transaction.
+
+
 ## [2.0.1] - 2025-02-11
 
 ### Fixed
