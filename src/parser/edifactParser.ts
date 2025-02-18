@@ -2,6 +2,7 @@ import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStan
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, getMessageInfo } from "../schemas/schemas";
 import * as constants from "../constants";
+import Utils from "../utils/utils";
 
 export class EdifactParser extends EdiParserBase {
   protected getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
@@ -22,7 +23,22 @@ export class EdifactParser extends EdiParserBase {
         segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNA;
       };
     } else if (segmentId === constants.ediDocument.edifact.segment.UNB) {
-      return async (segment) => {
+      return async (segment, segmentStr) => {
+        const { segmentSeparator, dataElementSeparator } = <Required<EdiMessageSeparators>>this.getMessageSeparators();
+        if (segmentStr.endsWith(segmentSeparator)) segmentStr = segmentStr.substring(0, segmentStr.length - segmentSeparator.length);
+        const elementFrags = segmentStr.split(dataElementSeparator);
+        if (elementFrags.length > 2) {
+          const UNB01 = elementFrags[1];
+          const subElementFrags = UNB01.split(":");
+          if (subElementFrags.length > 1) {
+            const syntaxVersion = subElementFrags[1];
+            if (syntaxVersion === "4") {
+              segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNB_SYNTAX_4;
+              return;
+            }
+          }
+        }
+
         segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNB;
       };
     } else if (segmentId === constants.ediDocument.edifact.segment.UNZ) {

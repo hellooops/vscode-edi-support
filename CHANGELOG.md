@@ -9,6 +9,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 - Indent segment using decorations instead of spaces.
 
+### Fixed
+- When EDIFACT syntax version(UNB0102) is 4, the length of UNB0401 is supposed to be 8.
+
 
 ## [2.0.2] - 2025-02-17
 

@@ -148,6 +148,7 @@ export class EdiReleaseSchemaSegment {
   public desc: string;
   public purpose: string;
   public elements: EdiReleaseSchemaElement[];
+  public raw: any;
 
   public mock: boolean;
   // EDIFACT
@@ -234,6 +235,11 @@ export class EdiReleaseSchemaSegment {
     Purpose: "To start, identify and specify an interchange.",
     mock: true
   }, undefined);
+  public static UNB_SYNTAX_4: EdiReleaseSchemaSegment = EdiReleaseSchemaSegment.UNB.clone();
+  static {
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4.elements[3].components[0].maxLength = 8;
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4.elements[3].components[0].minLength = 8;
+  }
   public static UNZ: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange trailer",
     Elements: [
@@ -323,6 +329,11 @@ export class EdiReleaseSchemaSegment {
     this.elements = raw.Elements?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
     this._schema = schema;
     this.mock = !!raw.mock;
+    this.raw = raw;
+  }
+
+  clone(): EdiReleaseSchemaSegment {
+    return new EdiReleaseSchemaSegment(this.raw, this._schema);
   }
 }
 
