@@ -5,30 +5,30 @@ BEG*00*BK*0019-1234567-1234**20000130~
 REF*IA*3688063*VENDOR NAME~
 REF*2H*AD*Ad~
 SAC*A***100.00~
-  CUR*LZ*USD**VN*USD~
+CUR*LZ*USD**VN*USD~
 N1*BT*Example.com Accounts Payable~
-  N2*asde~
-  N3*TNC 3110*PO Box 1296~
-  N4*Minneapolis*MN*55440*US~
-  PER*CN*EDI*EM*test@ABC.COM*TE*111-222-3333~
+N2*asde~
+N3*TNC 3110*PO Box 1296~
+N4*Minneapolis*MN*55440*US~
+PER*CN*EDI*EM*test@ABC.COM*TE*111-222-3333~
 N1*SO*EDI Helpdesk~
-  N2*Mike~
-  N3*7000 Example Parkway~
-  N4*Brooklyn Park*MN*55445*US~
-  PER*CN*EDI*EM*test@ABC.COM*TE*111-222-4444~
+N2*Mike~
+N3*7000 Example Parkway~
+N4*Brooklyn Park*MN*55445*US~
+PER*CN*EDI*EM*test@ABC.COM*TE*111-222-4444~
 PO1*1*3*EA*12.3*PE*IN*15013163*SK*7680-02009152*UP*846186077111*CB*790-01-20*EN*12345~
-  PID*F*08***WR CARGO SHO 38 BLK SOLID~
-  MSG*Mail In or Store~
-  PKG*F*WM***GIFTWRAP~
-  N9*L1*MESSAGE*This item must be returned within 90 days of~
-  N9*L1*MESSAGE* the ship date.~
-  N1*ST*Company~
-    LDT*AA*10*AA~
-      QTY*10*100~
-  SLN*1**I*1*EA*3.55***IN*2456987*SK*123456*UP*105647894512*CB*123-12-1239*UA*3456787~
-    PID*F*08***Component Description~
-    N9*L1*MESSAGE*Subline Item~
-      MSG*3 Items~
+PID*F*08***WR CARGO SHO 38 BLK SOLID~
+MSG*Mail In or Store~
+PKG*F*WM***GIFTWRAP~
+N9*L1*MESSAGE*This item must be returned within 90 days of~
+N9*L1*MESSAGE* the ship date.~
+N1*ST*Company~
+LDT*AA*10*AA~
+QTY*10*100~
+SLN*1**I*1*EA*3.55***IN*2456987*SK*123456*UP*105647894512*CB*123-12-1239*UA*3456787~
+PID*F*08***Component Description~
+N9*L1*MESSAGE*Subline Item~
+MSG*3 Items~
 PO1*2*3*EA*12.3*PE*IN*123~
 CTT*1*200~
 SE*32*0001~

@@ -80,20 +80,18 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return this.parentSegment.getLevel() + 1;
   }
 
-  getFormatString(options: EdiFormattingOptions): string {
+  getFormatString(): string {
     if (this.isLoop()) {
       return formatEdiDocumentPartsSegment({
         children: this.Loop!,
-        options,
       });
     } else {
-      const indentString = options.getFormatString();
-      return `${Array(this.getLevel()).fill(indentString).join("")}${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
+      return `${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
     }
   }
 
   public toString() {
-    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
+    return this.getFormatString();
   }
 
   public getElement(elementIndex: number, componentIndex: number | undefined = undefined): EdiElement | null {
@@ -538,17 +536,16 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     }
   }
 
-  getFormatString(options: EdiFormattingOptions): string {
+  getFormatString(): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.segments,
-      options,
     });
   }
 
   public toString() {
-    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
+    return this.getFormatString();
   }
 }
 
@@ -738,17 +735,16 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(context)).filter(i => i));
   }
 
-  getFormatString(options: EdiFormattingOptions): string {
+  getFormatString(): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.transactionSets,
-      options,
     });
   }
 
   public toString() {
-    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
+    return this.getFormatString();
   }
 }
 
@@ -958,17 +954,16 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(context)).filter(i => i));
   }
 
-  getFormatString(options: EdiFormattingOptions): string {
+  getFormatString(): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.functionalGroups,
-      options,
     });
   }
 
   public toString() {
-    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
+    return this.getFormatString();
   }
 }
 
@@ -1089,18 +1084,17 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(context)).filter(i => i));
   }
 
-  getFormatString(options: EdiFormattingOptions): string {
+  getFormatString(): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.interchanges,
-      options,
       separatorsSegment: this.separatorsSegment,
     });
   }
 
   public toString() {
-    return this.getFormatString(EdiFormattingOptions.TAB_SIZE_0);
+    return this.getFormatString();
   }
 }
 
@@ -1228,44 +1222,22 @@ export class EdiDocumentBuilder {
   }
 }
 
-export class EdiFormattingOptions {
-  tabSize: number;
-  insertSpaces: boolean;
-
-  static TAB_SIZE_0: EdiFormattingOptions = new EdiFormattingOptions(0, true);
-
-  constructor(tabSize: number, insertSpaces: boolean) {
-    this.tabSize = tabSize;
-    this.insertSpaces = insertSpaces;
-  }
-
-  getFormatString() {
-    if (this.insertSpaces) {
-      return Array(this.tabSize).fill(" ").join("");
-    } else {
-      return "\t";
-    }
-  }
-}
-
 function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalGroup | EdiTransactionSet | EdiSegment>({
   startSegment,
   endSegment,
   children,
-  options,
   separatorsSegment,
 }: {
   startSegment?: EdiSegment,
   endSegment?: EdiSegment,
   children: T[],
-  options: EdiFormattingOptions,
   separatorsSegment?: EdiSegment
 }): string {
   if (!children) children = [];
   return [
     separatorsSegment,
     startSegment,
-    ...children.map(i => i.getFormatString(options)),
+    ...children.map(i => i.getFormatString()),
     endSegment,
   ].filter(i => i).join(constants.ediDocument.lineBreak);
 }

@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Changed
+- Indent segment using decorations instead of spaces.
+
 
 ## [2.0.2] - 2025-02-17
 
