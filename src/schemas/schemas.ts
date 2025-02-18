@@ -174,8 +174,8 @@ export class EdiReleaseSchemaSegment {
         Required: true,
         Definition: "Identification of the agency controlling the syntax and indication of syntax level.",
         Components: [
-          { Id: "0001", Desc: "Syntax identifier", DataType: "AN", Required: true, MinLength: 4, MaxLength: 4, Definition: "Coded identification of the agency controlling a syntax and syntax level used in an interchange.", mock: true },
-          { Id: "0002", Desc: "Syntax version number", DataType: "N", Required: true, MinLength: 1, MaxLength: 1, Definition: "Version number of the syntax identified in the syntax identifier (0001)", mock: true },
+          { Id: "0001", Desc: "Syntax identifier", DataType: "AN", Required: true, MinLength: 4, MaxLength: 4, Definition: "Coded identification of the agency controlling a syntax and syntax level used in an interchange.", mock: true, QualifierRef: "Syntax identifier" },
+          { Id: "0002", Desc: "Syntax version number", DataType: "N", Required: true, MinLength: 1, MaxLength: 1, Definition: "Version number of the syntax identified in the syntax identifier (0001)", mock: true, QualifierRef: "Syntax version number" },
         ],
         mock: true
       },
@@ -186,7 +186,7 @@ export class EdiReleaseSchemaSegment {
         Definition: "Identification of the sender of the interchange.",
         Components: [
           { Id: "0004", Desc: "Sender identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded representation of the sender of a data interchange.", mock: true },
-          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners.", mock: true },
+          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners.", mock: true, QualifierRef: "Identification code qualifier" },
           { Id: "0008", Desc: "Address for reverse routing", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Address specified by the sender of an interchange to be included by the recipient in the response interchanges to facilitate internal routing.", mock: true },
         ],
         mock: true
@@ -198,7 +198,7 @@ export class EdiReleaseSchemaSegment {
         Definition: "Identification of the recipient of the interchange.",
         Components: [
           { Id: "0010", Desc: "Recipient identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded representation of the recipient of a data interchange.", mock: true },
-          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners.", mock: true },
+          { Id: "0007", Desc: "Partner identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the source of codes for the identifiers of interchanging partners.", mock: true, QualifierRef: "Identification code qualifier" },
           { Id: "0014", Desc: "Routing address", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Address specified by the recipient of an interchange to be included by the sender and used by the recipient for routing of received interchanges inside his organization.", mock: true },
         ],
         mock: true
@@ -222,19 +222,112 @@ export class EdiReleaseSchemaSegment {
         Definition: "Reference or password as agreed between the communicating partners.",
         Components: [
           { Id: "0022", Desc: "Recipient's reference/password", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference assigned by the recipient to the data interchange or a password to the recipient's system or to a third party network as specified in the partners interchange agreement.", mock: true },
-          { Id: "0025", Desc: "Recipient's reference/password qualifier", DataType: "AN", Required: false, MinLength: 2, MaxLength: 2, Definition: "Qualifier for the recipient's reference or password.", mock: true },
+          { Id: "0025", Desc: "Recipient's reference/password qualifier", DataType: "AN", Required: false, MinLength: 2, MaxLength: 2, Definition: "Qualifier for the recipient's reference or password.", mock: true, QualifierRef: "Recipient reference/password qualifier" },
         ],
         mock: true
       },
       { Id: "0026", Desc: "Application reference", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Identification of the application area assigned by the sender, to which the messages in the interchange relate e.g. the message identifier if all the messages in the interchange are of the same type.", mock: true },
-      { Id: "0029", Desc: "Processing priority code", DataType: "AN", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender requesting processing priority for the interchange.", mock: true },
-      { Id: "0031", Desc: "Acknowledgement request", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender for acknowledgement of the interchange.", mock: true },
+      { Id: "0029", Desc: "Processing priority code", DataType: "AN", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender requesting processing priority for the interchange.", mock: true, QualifierRef: "Processing priority code" },
+      { Id: "0031", Desc: "Acknowledgement request", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Code determined by the sender for acknowledgement of the interchange.", mock: true, QualifierRef: "Acknowledgement request" },
       { Id: "0032", Desc: "Communications agreement ID", DataType: "AN", Required: false, MinLength: 1, MaxLength: 35, Definition: "Identification by name or code of the type of agreement under which the interchange takes place.", mock: true },
-      { Id: "0035", Desc: "Test indicator", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Indication that the interchange is a test.", mock: true },
+      { Id: "0035", Desc: "Test indicator", DataType: "N", Required: false, MinLength: 1, MaxLength: 1, Definition: "Indication that the interchange is a test.", mock: true, QualifierRef: "Test indicator" },
     ],
     Purpose: "To start, identify and specify an interchange.",
     mock: true
-  }, undefined);
+  }, new EdiReleaseSchema({
+    "Qualifiers": {
+      "Syntax identifier": {
+        "UNOA": "UN/ECE level A: As defined in the basic code table of ISO 646 with the exceptions of lower case letters, alternative graphic character allocations and national or application-oriented graphic character allocations.",
+        "UNOB": "UN/ECE level B: As defined in the basic code table of ISO 646 with the exceptions of alternative graphic character allocations and national or application-oriented graphic character allocations.",
+        "UNOC": "UN/ECE level C: As defined in ISO/IEC 8859-1 : Information technology - Part 1: Latin alphabet No. 1.",
+        "UNOD": "UN/ECE level D: As defined in ISO/IEC 8859-2 : Information technology - Part 2: Latin alphabet No. 2.",
+        "UNOE": "UN/ECE level E: As defined in ISO/IEC 8859-5 : Information technology - Part 5: Latin/Cyrillic alphabet.",
+        "UNOF": "UN/ECE level F: As defined in ISO 8859-7 : Information processing - Part 7: Latin/Greek alphabet.",
+        "UNOG": "UN/ECE level G: As defined in ISO/IEC 8859-3 : Information technology - Part 3: Latin alphabet No. 3.",
+        "UNOH": "UN/ECE level H: As defined in ISO/IEC 8859-4 : Information technology - Part 4: Latin alphabet No. 4.",
+        "UNOI": "UN/ECE level I: As defined in ISO/IEC 8859-6 : Information technology - Part 6: Latin/Arabic alphabet.",
+        "UNOJ": "UN/ECE level J: As defined in ISO/IEC 8859-8 : Information technology - Part 8: Latin/Hebrew alphabet.",
+        "UNOK": "UN/ECE level K: As defined in ISO/IEC 8859-9 : Information technology - Part 9: Latin alphabet No. 5.",
+        "UNOL": "UN/ECE level L: As defined in ISO/IEC 8859-15 : Information technology - Part 15: Latin alphabet No. 9.",
+        "UNOW": "UN/ECE level W: ISO 10646-1 octet with code extension technique to support UTF-8 (UCS Transformation Format, 8 bit) encoding.",
+        "UNOX": "UN/ECE level X: Code extension technique as defined by ISO 2022 utilising the escape techniques in accordance with ISO 2375.",
+        "UNOY": "UN/ECE level Y: ISO 10646-1 octet without code extension technique."
+      },
+      "Syntax version number": {
+        "1": "Version 1: ISO 9735:1988.",
+        "2": "Version 2: ISO 9735:1990.",
+        "3": "Version 3: ISO 9735 Amendment 1:1992.",
+        "4": "Version 4: ISO 9735:1998."
+      },
+      "Identification code qualifier": {
+        "1": "DUNS (Data Universal Numbering System)",
+        "4": "IATA (International Air Transport Association)",
+        "5": "INSEE (Institut National de la Statistique et des Etudes Economiques) - SIRET",
+        "8": "UCC Communications ID (Uniform Code Council Communications Identifier)",
+        "9": "DUNS (Data Universal Numbering System) with 4 digit suffix",
+        "12": "Telephone number",
+        "14": "GS1",
+        "18": "AIAG (Automotive Industry Action Group)",
+        "22": "INSEE (Institut National de la Statistique et des Etudes Economiques) - SIREN",
+        "30": "ISO 6523: Organization identification",
+        "31": "DIN (Deutsches Institut fuer Normung)",
+        "33": "BfA (Bundesversicherungsanstalt fuer Angestellte)",
+        "34": "National Statistical Agency",
+        "51": "GEIS (General Electric Information Services)",
+        "52": "INS (IBM Network Services)",
+        "53": "Datenzentrale des Einzelhandels",
+        "54": "Bundesverband der Deutschen Baustoffhaendler",
+        "55": "Bank identifier code",
+        "57": "KTNet (Korea Trade Network Services)",
+        "58": "UPU (Universal Postal Union)",
+        "59": "ODETTE (Organization for Data Exchange through Tele-Transmission in Europe)",
+        "61": "SCAC (Standard Carrier Alpha Code)",
+        "63": "ECA (Electronic Commerce Australia)",
+        "65": "TELEBOX 400 (Deutsche Telekom)",
+        "80": "NHS (National Health Service)",
+        "82": "Statens Teleforvaltning",
+        "84": "Athens Chamber of Commerce",
+        "85": "Swiss Chamber of Commerce",
+        "86": "US Council for International Business",
+        "87": "National Federation of Chambers of Commerce and Industry",
+        "89": "Association of British Chambers of Commerce",
+        "90": "SITA (Societe Internationale de Telecommunications Aeronautiques)",
+        "91": "Assigned by seller or seller's agent",
+        "92": "Assigned by buyer or buyer's agent",
+        "103": "TW, Trade-van",
+        "128": "CH, BCNR (Swiss Clearing Bank Number)",
+        "129": "CH, BPI (Swiss Business Partner Identification)",
+        "144": "US, DoDAAC (Department of Defense Activity Address Code)",
+        "145": "FR, DGCP (Direction Generale de la Comptabilite Publique)",
+        "146": "FR, DGI (Direction Generale des Impots)",
+        "147": "JP, JIPDEC/ECPC (Japan Information Processing Development Corporation / Electronic Commerce Promotion Center)",
+        "148": "ITU (International Telecommunications Union) Data Network Identification Code (DNIC)",
+        "500": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+        "501": "EASEE-gas (European Association for the Streamlining of Energy Exchange) ",
+        "502": "DE, DVGW (Deutsche Vereinigung des Gas- und Wasserfaches e.V.)",
+        "Z01": "Vehicle registration number",
+        "ZZZ": "Mutually defined"
+      },
+      "Recipient reference/password qualifier": {
+        "AA": "Reference",
+        "AB": "Password"
+      },
+      "Processing priority code": {
+        "A": "Highest priority"
+      },
+      "Acknowledgement request": {
+        "1": "Acknowledgement requested",
+        "2": "Indication of receipt"
+      },
+      "Test indicator": {
+        "1": "Interchange is a test",
+        "2": "Syntax only test",
+        "3": "Echo request",
+        "4": "Echo response",
+        "5": "Interchange is a service provider test"
+      }
+    }
+  }));
   public static UNB_SYNTAX_4: EdiReleaseSchemaSegment = EdiReleaseSchemaSegment.UNB.clone();
   static {
     EdiReleaseSchemaSegment.UNB_SYNTAX_4.elements[3].components[0].maxLength = 8;

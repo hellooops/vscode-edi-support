@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Added
+- Add schema for EDIFACT UNB
+
 ### Changed
 - Indent segment using decorations instead of spaces.
 

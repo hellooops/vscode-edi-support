@@ -2,7 +2,6 @@ import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStan
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, getMessageInfo } from "../schemas/schemas";
 import * as constants from "../constants";
-import Utils from "../utils/utils";
 
 export class EdifactParser extends EdiParserBase {
   protected getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
