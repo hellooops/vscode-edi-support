@@ -35,13 +35,14 @@ export class EdiReleaseSchema {
   public qualifiers: Record<string, EdiQualifier[]>;
   public segments: Record<string, EdiReleaseSchemaSegment>;
   constructor (raw: any) {
+    this._rawSchema = raw;
     this.release = raw.Release;
     this.qualifiers = {};
     if (raw.Qualifiers) {
       for (let qualifierName in raw.Qualifiers) {
         const qualifier = raw.Qualifiers[qualifierName];
-        this.qualifiers[qualifierName] = Object.keys(qualifier).map(qualifierKey => {
-          return new EdiQualifier(qualifierKey, qualifier[qualifierKey]);
+        Object.keys(qualifier).forEach(qualifierKey => {
+          this.addQualifier(qualifierName, qualifierKey, qualifier[qualifierKey]);
         });
       }
     }
@@ -55,6 +56,18 @@ export class EdiReleaseSchema {
 
   public getSegment(name: string) : EdiReleaseSchemaSegment | undefined {
     return this.segments[name];
+  }
+
+  public addQualifier(name: string, value: string, desc: string) {
+    if (!this.qualifiers[name]) {
+      this.qualifiers[name] = [];
+    }
+
+    this.qualifiers[name].push(new EdiQualifier(value, desc));
+  }
+
+  public clone() {
+    return new EdiReleaseSchema(this._rawSchema);
   }
 }
 
@@ -243,15 +256,8 @@ export class EdiReleaseSchemaSegment {
         "UNOD": "UN/ECE level D: As defined in ISO/IEC 8859-2 : Information technology - Part 2: Latin alphabet No. 2.",
         "UNOE": "UN/ECE level E: As defined in ISO/IEC 8859-5 : Information technology - Part 5: Latin/Cyrillic alphabet.",
         "UNOF": "UN/ECE level F: As defined in ISO 8859-7 : Information processing - Part 7: Latin/Greek alphabet.",
-        "UNOG": "UN/ECE level G: As defined in ISO/IEC 8859-3 : Information technology - Part 3: Latin alphabet No. 3.",
-        "UNOH": "UN/ECE level H: As defined in ISO/IEC 8859-4 : Information technology - Part 4: Latin alphabet No. 4.",
-        "UNOI": "UN/ECE level I: As defined in ISO/IEC 8859-6 : Information technology - Part 6: Latin/Arabic alphabet.",
-        "UNOJ": "UN/ECE level J: As defined in ISO/IEC 8859-8 : Information technology - Part 8: Latin/Hebrew alphabet.",
-        "UNOK": "UN/ECE level K: As defined in ISO/IEC 8859-9 : Information technology - Part 9: Latin alphabet No. 5.",
         "UNOL": "UN/ECE level L: As defined in ISO/IEC 8859-15 : Information technology - Part 15: Latin alphabet No. 9.",
         "UNOW": "UN/ECE level W: ISO 10646-1 octet with code extension technique to support UTF-8 (UCS Transformation Format, 8 bit) encoding.",
-        "UNOX": "UN/ECE level X: Code extension technique as defined by ISO 2022 utilising the escape techniques in accordance with ISO 2375.",
-        "UNOY": "UN/ECE level Y: ISO 10646-1 octet without code extension technique."
       },
       "Syntax version number": {
         "1": "Version 1: ISO 9735:1988.",
@@ -332,6 +338,14 @@ export class EdiReleaseSchemaSegment {
   static {
     EdiReleaseSchemaSegment.UNB_SYNTAX_4.elements[3].components[0].maxLength = 8;
     EdiReleaseSchemaSegment.UNB_SYNTAX_4.elements[3].components[0].minLength = 8;
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "", "");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOG", "UN/ECE level G: As defined in ISO/IEC 8859-3 : Information technology - Part 3: Latin alphabet No. 3.");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOH", "UN/ECE level H: As defined in ISO/IEC 8859-4 : Information technology - Part 4: Latin alphabet No. 4.");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOI", "UN/ECE level I: As defined in ISO/IEC 8859-6 : Information technology - Part 6: Latin/Arabic alphabet.");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOJ", "UN/ECE level J: As defined in ISO/IEC 8859-8 : Information technology - Part 8: Latin/Hebrew alphabet.");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOK", "UN/ECE level K: As defined in ISO/IEC 8859-9 : Information technology - Part 9: Latin alphabet No. 5.");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOX", "UN/ECE level X: Code extension technique as defined by ISO 2022 utilising the escape techniques in accordance with ISO 2375.");
+    EdiReleaseSchemaSegment.UNB_SYNTAX_4._schema!.addQualifier("Syntax identifier", "UNOY", "UN/ECE level Y: ISO 10646-1 octet without code extension technique.");
   }
   public static UNZ: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
     Desc: "Interchange trailer",
@@ -426,7 +440,7 @@ export class EdiReleaseSchemaSegment {
   }
 
   clone(): EdiReleaseSchemaSegment {
-    return new EdiReleaseSchemaSegment(this.raw, this._schema);
+    return new EdiReleaseSchemaSegment(this.raw, this._schema?.clone());
   }
 }
 
