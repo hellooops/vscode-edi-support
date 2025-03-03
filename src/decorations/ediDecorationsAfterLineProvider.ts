@@ -74,7 +74,7 @@ export class EdiDecorationsAfterLineProvider extends EdiDecorationsProviderBase 
   }
 
   private static getSegmentAnnotation(segment: EdiSegment): string {
-    return segment.getDesc() ?? segment.id;
+    return segment.getDesc() ? `${segment.id}: ${segment.getDesc()}` : segment.id;
   }
 
   registerDecorations(): vscode.Disposable[] {
