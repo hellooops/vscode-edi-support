@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Changed
+- Don't indent segment that is not the only segment in line.
+
 ### Added
 - Add schema for EDIFACT UNB
 - Partially support syntax version 4 for EDIFACT

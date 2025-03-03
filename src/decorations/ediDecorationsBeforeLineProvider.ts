@@ -29,7 +29,7 @@ export class EdiDecorationsBeforeLineProvider extends EdiDecorationsProviderBase
     }
 
     const segments = ediDocument.getSegments(true);
-    const decorations: vscode.DecorationOptions[] = segments.map(segment => {
+    const decorations: vscode.DecorationOptions[] = segments.filter(segment => EdiUtils.isOnlySegmentInLine(document, segment)).map(segment => {
       return {
         renderOptions: {
           before: {
