@@ -9,6 +9,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 - Don't indent segment that is not the only segment in line.
 
+### Fixed
+- Fix segments are not reindent after change segment indent option.
+
+
+## [2.0.3] - 2025-02-28
+
 ### Added
 - Add schema for EDIFACT UNB
 - Partially support syntax version 4 for EDIFACT

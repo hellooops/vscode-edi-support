@@ -14,7 +14,7 @@ export class EdiDecorationsBeforeLineProvider extends EdiDecorationsProviderBase
 
   decorationType: vscode.TextEditorDecorationType = EdiDecorationsBeforeLineProvider.decorationTypeBeforeLine;
 
-  async refreshDecorations(document: vscode.TextDocument, startOffset: number): Promise<void> {
+  async refreshDecorations(document: vscode.TextDocument): Promise<void> {
     const indentSegmentsInLoop = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.formatting.indentSegmentsInLoop);
     if (!indentSegmentsInLoop) {
       this.clearDecorations();
@@ -45,9 +45,12 @@ export class EdiDecorationsBeforeLineProvider extends EdiDecorationsProviderBase
 
   registerDecorations(): vscode.Disposable[] {
     return [
+      vscode.workspace.onDidChangeConfiguration(async (e) => {
+        if (!vscode.window.activeTextEditor?.document) return;
+        return await this.refreshDecorations(vscode.window.activeTextEditor.document);
+      }),
       vscode.window.onDidChangeTextEditorSelection(async (e) => {
-        const startOffset = e.textEditor.document.offsetAt(e.selections[0].start);
-        return await this.refreshDecorations(e.textEditor.document, startOffset);
+        return await this.refreshDecorations(e.textEditor.document);
       })
     ];
   }

@@ -17,7 +17,5 @@ export abstract class EdiDecorationsProviderBase implements IDecorationable {
     vscode.window.activeTextEditor!.setDecorations(this.decorationType, decorations);
   }
 
-  abstract refreshDecorations(document: vscode.TextDocument, startOffset: number): Promise<void>;
-
   abstract registerDecorations(): vscode.Disposable[];
 }
