@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.0.4] - 2025-03-10
+
 ### Changed
 - Don't indent segment that is not the only segment in line.
 
