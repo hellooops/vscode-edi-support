@@ -90,6 +90,15 @@ export class EdiUtils {
     return false;
   }
 
+  static isDocumentSupported(document: vscode.TextDocument | undefined | null): boolean {
+    if (!document) return false;
+    return EdiUtils.isX12(document) || EdiUtils.isEdifact(document) || EdiUtils.isVda(document);
+  }
+
+  static isLanguageSupported(languageId: string): boolean {
+    return languageId === EdiType.X12 || languageId === EdiType.EDIFACT || languageId === EdiType.VDA;
+  }
+
   private static ediParserCache: {
     document?: string;
     result: {

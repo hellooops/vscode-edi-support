@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+- Fix when new file is opened, segment is not auto decorated.
+
 ## [2.0.4] - 2025-03-10
 
 ### Changed

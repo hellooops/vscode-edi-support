@@ -46,12 +46,17 @@ export class EdiDecorationsBeforeLineProvider extends EdiDecorationsProviderBase
   registerDecorations(): vscode.Disposable[] {
     return [
       vscode.workspace.onDidChangeConfiguration(async (e) => {
-        if (!vscode.window.activeTextEditor?.document) return;
-        return await this.refreshDecorations(vscode.window.activeTextEditor.document);
+        if (!EdiUtils.isDocumentSupported(vscode.window.activeTextEditor?.document)) return;
+        return await this.refreshDecorations(vscode.window.activeTextEditor!.document);
       }),
       vscode.window.onDidChangeTextEditorSelection(async (e) => {
+        if (!EdiUtils.isDocumentSupported(e.textEditor.document)) return;
         return await this.refreshDecorations(e.textEditor.document);
-      })
+      }),
+      vscode.window.onDidChangeActiveTextEditor(async (e) => {
+        if (!EdiUtils.isDocumentSupported(e?.document)) return;
+        return await this.refreshDecorations(e!.document);
+      }),
     ];
   }
 }
