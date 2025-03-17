@@ -8,6 +8,7 @@ import { ToggleLoopAnnotationsCommand } from "./commands/toggleLoopAnnotationsCo
 import { ToggleElementIndexAnnotationCommand } from "./commands/toggleElementIndexAnnotationCommand";
 import { ToggleIndentSegmentsInLoopCommand } from "./commands/toggleIndentSegmentsInLoopCommand";
 import { SelectTextByPositionCommand } from "./commands/selectTextByPositionCommand";
+import { AddCodeToQualifierCommand } from "./commands/addCodeToQualifierCommand";
 import { IProvidable } from "./interfaces/providable";
 import { HighlightEdiProvider } from "./providers/highlightEdiProvider";
 import { HoverX12Provider } from "./providers/hoverX12Provider";
@@ -27,6 +28,7 @@ import { EdiDiagnosticsMgr } from "./diagnostics/ediDiagnostics";
 import { IDiagnosticsable } from "./interfaces/diagnosticsable";
 import { EdiDecorationsMgr } from "./decorations/ediDecorations";
 import { IDecorationable } from "./interfaces/decorationable";
+import { CodeActionEdiProvider } from "./providers/codeActionEdiProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
@@ -37,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new ToggleElementIndexAnnotationCommand());
   registerCommand(context, new ToggleIndentSegmentsInLoopCommand());
   registerCommand(context, new SelectTextByPositionCommand());
+  registerCommand(context, new AddCodeToQualifierCommand());
   registerProvider(context, new HighlightEdiProvider());
   registerProvider(context, new HoverX12Provider());
   registerProvider(context, new HoverEdifactProvider());
@@ -47,6 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerProvider(context, new InlayHintsEdiEdifactProvider());
   registerProvider(context, new InlayHintsEdiVdaProvider());
   registerProvider(context, new CompletionItemEdiProvider());
+  registerProvider(context, new CodeActionEdiProvider());
   registerDiagnostics(context, new EdiDiagnosticsMgr());
   registerDecorations(context, new EdiDecorationsMgr());
 

@@ -140,6 +140,11 @@
         "command": "edi-support.selectTextByPosition",
         "title": "Select Text By Position",
         "category": "EDI Support Internal"
+      },
+      {
+        "command": "edi-support.addCodeToQualifier",
+        "title": "Add code to qualifier",
+        "category": "EDI Support Internal"
       }
     ],
     "configuration": {
@@ -184,6 +189,10 @@
           "type": "boolean",
           "default": true,
           "description": "Show action icons in the title area of editor."
+        },
+        "ediSupport.customQualifiers": {
+          "type": "object",
+          "description": "Custom qualifiers."
         }
       }
     },

@@ -4,6 +4,10 @@ import { IDiagnosticsable } from "../interfaces/diagnosticsable";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 
+export class DiagnosticsWithContext extends vscode.Diagnostic {
+  others: any;
+}
+
 export class EdiDiagnosticsMgr implements IDiagnosticsable {
   async refreshDiagnostics(document: vscode.TextDocument, ediDiagnostics: vscode.DiagnosticCollection): Promise<void> {
     if (![constants.ediDocument.x12.name, constants.ediDocument.edifact.name, constants.ediDocument.vda.name].includes(document.languageId)) {
@@ -31,7 +35,7 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     ediDiagnostics.set(document.uri, vscodeDiagnostics);
   }
 
-  ediDiagnosticsToVscodeDiagnostics(document: vscode.TextDocument, error: DiagnosticError): vscode.Diagnostic {
+  ediDiagnosticsToVscodeDiagnostics(document: vscode.TextDocument, error: DiagnosticError): DiagnosticsWithContext {
     let range: vscode.Range;
     if (error.errorSegment) {
       range = EdiUtils.getSegmentIdRange(document, error.errorSegment);
@@ -41,12 +45,14 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
       range = new vscode.Range(document.positionAt(0), document.positionAt(0));
     }
 
-    const diagnostic = new vscode.Diagnostic(
+    const diagnostic = new DiagnosticsWithContext(
       range,
       error.error,
-      this.ediDiagnosticErrorSeverityToVscodeDiagnosticSeverity(error.severity)
+      this.ediDiagnosticErrorSeverityToVscodeDiagnosticSeverity(error.severity),
     );
     diagnostic.code = error.code;
+    diagnostic.source = constants.diagnostic.source;
+    diagnostic.others = error.others;
     return diagnostic;
   }
 

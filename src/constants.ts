@@ -37,6 +37,10 @@ export namespace commands {
     name: "edi-support.preview",
     label: "Preview"
   };
+  export const addCodeToQualifierCommand = {
+    name: "edi-support.addCodeToQualifier",
+    label: "Add code to qualifier"
+  };
 }
 
 export namespace ediDocument {
@@ -94,6 +98,7 @@ export namespace configuration {
   export const enableHover = "enableHover";
   export const enableTrailingAnnotations = "enableTrailingAnnotations";
   export const enableElementIndexAnnotation = "vda.enableElementIndexAnnotation";
+  export const customQualifiers = "customQualifiers";
 }
 
 export namespace colors {
@@ -102,6 +107,7 @@ export namespace colors {
 
 export namespace diagnostic {
   export const diagnosticCollectionId = "ediDiagnostics";
+  export const source = "edi-support-source";
 }
 
 export namespace explorers {

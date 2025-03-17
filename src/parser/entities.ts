@@ -182,6 +182,15 @@ export interface DiagnosticError {
   errorSegment?: EdiSegment;
   errorElement?: EdiElement;
   severity: DiagnosticErrorSeverity;
+  others?: any;
+}
+
+export interface DiagnosticError_QUALIFIER_INVALID_CODE extends DiagnosticError {
+  others: {
+    ediType: EdiType,
+    qualifier: string;
+    code: string;
+  }
 }
 
 export namespace DiagnosticErrors {
@@ -300,7 +309,12 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
             code: DiagnosticErrors.QUALIFIER_INVALID_CODE,
             severity: DiagnosticErrorSeverity.ERROR,
             errorElement: this,
-          });
+            others: {
+              ediType: context.ediType,
+              qualifier: this.ediReleaseSchemaElement.qualifierRef,
+              code: value
+            }
+          } as DiagnosticError_QUALIFIER_INVALID_CODE);
         }
       }
     }
