@@ -1,9 +1,11 @@
-import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta } from "./entities";
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta, EdiType } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
 import { EdiReleaseSchemaSegment, getMessageInfo } from "../schemas/schemas";
 import * as constants from "../constants";
 
 export class EdifactParser extends EdiParserBase {
+  protected ediType = EdiType.EDIFACT;
+  
   protected getCustomSegmentParser(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<EdiSegment>) | undefined {
     if (segmentId === constants.ediDocument.edifact.segment.UNA) {
       return async (segment, segmentStr) => {

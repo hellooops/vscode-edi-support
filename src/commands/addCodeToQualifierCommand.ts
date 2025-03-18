@@ -1,14 +1,13 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
 import * as constants from "../constants";
-
-export type CustomQualifiers = Record<string, Record<string, string[]>>;
+import { Configuration_CustomQualifiers } from "../interfaces/configurations";
 
 export class AddCodeToQualifierCommand implements ICommandable {
   name: string = constants.commands.addCodeToQualifierCommand.name;
 
   public async command(ediType: string, qualifier: string, code: string) {
-    let customQualifiers: CustomQualifiers = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customQualifiers) ?? {};
+    let customQualifiers: Configuration_CustomQualifiers = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customQualifiers) ?? {};
     customQualifiers = JSON.parse(JSON.stringify(customQualifiers));
     if (!customQualifiers[ediType]) {
       customQualifiers[ediType] = {};

@@ -83,7 +83,11 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
         if (doc.isClosed) {
           return ediDiagnostics.delete(doc.uri);
         }
-      })
+      }),
+      vscode.workspace.onDidChangeConfiguration(async (e) => {
+        EdiUtils.clearCache();
+        this.refreshDiagnostics(vscode.window.activeTextEditor!.document, ediDiagnostics);
+      }),
     ];
   }
 }

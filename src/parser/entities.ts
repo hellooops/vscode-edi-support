@@ -1130,6 +1130,7 @@ type ParseFunctionalGroupMetaFunc = (interchangeSegment: EdiSegment | undefined,
 type ParseTransactionSetMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment | undefined, transactionSetSegment: EdiSegment) => EdiTransactionSetMeta;
 type LoadSchemaFunc = (meta: EdiTransactionSetMeta) => Promise<void>;
 type UnloadSchemaFunc = () => void;
+type SchemaLoadedFunc = () => void;
 type LoadTransactionSetStartSegmentSchemaFunc = (segment: EdiSegment) => Promise<EdiSegment>;
 type AfterEndTransactionSetFunc = (transactionSet: EdiTransactionSet) => Promise<void>;
 
@@ -1145,6 +1146,7 @@ export class EdiDocumentBuilder {
   parseTransactionSetMetaFunc?: ParseTransactionSetMetaFunc;
   loadSchemaFunc?: LoadSchemaFunc;
   unloadSchemaFunc?: UnloadSchemaFunc;
+  schemaLoadedFunc?: SchemaLoadedFunc;
   loadTransactionSetStartSegmentSchemaFunc?: LoadTransactionSetStartSegmentSchemaFunc;
   afterEndTransactionSetFunc?: AfterEndTransactionSetFunc;
 
@@ -1160,6 +1162,9 @@ export class EdiDocumentBuilder {
         await this.loadSchemaFunc(transactionSetMeta);
         if (this.loadTransactionSetStartSegmentSchemaFunc) {
           segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
+        }
+        if (this.schemaLoadedFunc) {
+          this.schemaLoadedFunc();
         }
       }
 
@@ -1191,6 +1196,9 @@ export class EdiDocumentBuilder {
         await this.loadSchemaFunc(transactionSetMeta);
         if (this.loadTransactionSetStartSegmentSchemaFunc) {
           segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
+        }
+        if (this.schemaLoadedFunc) {
+          this.schemaLoadedFunc();
         }
       }
       this.ediDocument.startTransactionSet(transactionSetMeta, segment);
@@ -1225,6 +1233,10 @@ export class EdiDocumentBuilder {
 
   onUnloadSchema(unloadSchemaFunc: UnloadSchemaFunc) {
     this.unloadSchemaFunc = unloadSchemaFunc;
+  }
+
+  onSchemaLoaded(schemaLoadedFunc: SchemaLoadedFunc) {
+    this.schemaLoadedFunc = schemaLoadedFunc;
   }
 
   onLoadTransactionSetStartSegmentSchema(loadTransactionSetStartSegmentSchemaFunc: LoadTransactionSetStartSegmentSchemaFunc) {

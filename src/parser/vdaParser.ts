@@ -1,7 +1,9 @@
-import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta } from "./entities";
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, type EdiStandardOptions, type EdiInterchangeMeta, type EdiFunctionalGroupMeta, type EdiTransactionSetMeta, EdiType } from "./entities";
 import { EdiParserBase } from "./ediParserBase";
 
 export class VdaParser extends EdiParserBase {
+  protected ediType = EdiType.VDA;
+
   protected getCustomSegmentSchemaBuilder(segmentId: string): ((segment: EdiSegment, segmentStr: string) => Promise<void>) | undefined {
     return undefined;
   }

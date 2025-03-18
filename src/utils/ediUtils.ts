@@ -107,6 +107,10 @@ export class EdiUtils {
     };
   } | undefined = undefined;
 
+  static clearCache(): void {
+    EdiUtils.ediParserCache = undefined;
+  }
+
   static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
     const documentContent = document.getText();
     if (!EdiUtils.ediParserCache || documentContent !== EdiUtils.ediParserCache.document) {

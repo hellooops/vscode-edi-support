@@ -1,7 +1,9 @@
-import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta } from "./entities";
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta, EdiType } from "./entities";
 import { EdiSchema, EdiVersionSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
+import * as vscode from "vscode";
+import { Configuration_CustomQualifiers } from "../interfaces/configurations";
 
 export abstract class EdiParserBase {
   document: string;
@@ -9,6 +11,7 @@ export abstract class EdiParserBase {
   _separators?: EdiMessageSeparators | null;
   private parseResult?: EdiDocument;
   private parsingPromise?: Promise<EdiDocument>;
+  protected abstract ediType: EdiType;
 
   public constructor(document: string) {
     this.document = document;
@@ -71,6 +74,9 @@ export abstract class EdiParserBase {
     });
     ediDocumentBuilder.onUnloadSchema(() => {
       this.unloadSchema();
+    });
+    ediDocumentBuilder.onSchemaLoaded(() => {
+      this.onSchemaLoaded();
     });
     ediDocumentBuilder.onLoadTransactionSetStartSegmentSchema(async (segment) => {
       return await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endIndex, segment.endingDelimiter);
@@ -318,6 +324,18 @@ export abstract class EdiParserBase {
 
   protected unloadSchema(): void {
     this.schema = undefined;
+  }
+
+  protected onSchemaLoaded(): void {
+    const customQualifiers: Configuration_CustomQualifiers = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customQualifiers) ?? {};
+    const ediTypeQualifiers = customQualifiers?.[this.ediType as string];
+    if (!ediTypeQualifiers) return;
+    for (const qualifierName of Object.keys(ediTypeQualifiers)) {
+      const qualifierValueArray = ediTypeQualifiers[qualifierName];
+      qualifierValueArray?.forEach(i => {
+        this.schema?.ediReleaseSchema?.addQualifier(qualifierName, i, "<Custom qualifier code>");
+      });
+    }
   }
 
   protected escapeCharRegex(str: string | undefined | null): string | undefined | null {
