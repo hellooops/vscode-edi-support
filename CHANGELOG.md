@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Added
+- Support add custom qualifier code QuickFix
+
 
 ## [2.0.5] - 2025-03-14
 

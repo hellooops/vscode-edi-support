@@ -98,7 +98,7 @@ export namespace configuration {
   export const enableHover = "enableHover";
   export const enableTrailingAnnotations = "enableTrailingAnnotations";
   export const enableElementIndexAnnotation = "vda.enableElementIndexAnnotation";
-  export const customQualifiers = "customQualifiers";
+  export const customSchemas = "customSchemas";
 }
 
 export namespace colors {

@@ -1,25 +1,15 @@
 import { ICommandable } from "../interfaces/commandable";
 import * as vscode from "vscode";
 import * as constants from "../constants";
-import { Configuration_CustomQualifiers } from "../interfaces/configurations";
+import { type Conf_Supported_EdiType, type Conf_CustomSchema, Conf_Utils } from "../interfaces/configurations";
 
 export class AddCodeToQualifierCommand implements ICommandable {
   name: string = constants.commands.addCodeToQualifierCommand.name;
 
-  public async command(ediType: string, qualifier: string, code: string) {
-    let customQualifiers: Configuration_CustomQualifiers = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customQualifiers) ?? {};
-    customQualifiers = JSON.parse(JSON.stringify(customQualifiers));
-    if (!customQualifiers[ediType]) {
-      customQualifiers[ediType] = {};
-    }
-
-    if (!customQualifiers[ediType][qualifier]) {
-      customQualifiers[ediType][qualifier] = [];
-    }
-
-    if (!customQualifiers[ediType][qualifier].includes(code)) {
-      customQualifiers[ediType][qualifier].push(code);
-      await vscode.workspace.getConfiguration(constants.configuration.ediSupport).update(constants.configuration.customQualifiers, customQualifiers, vscode.ConfigurationTarget.Global, true);
-    }
+  public async command(ediType: Conf_Supported_EdiType, release: string, qualifier: string, code: string, desc: string) {
+    let customSchemas: Conf_CustomSchema = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customSchemas) ?? {};
+    customSchemas = JSON.parse(JSON.stringify(customSchemas));
+    Conf_Utils.addQualifier(customSchemas, ediType, release, qualifier, code, desc);
+    await vscode.workspace.getConfiguration(constants.configuration.ediSupport).update(constants.configuration.customSchemas, customSchemas, vscode.ConfigurationTarget.Global, true);
   }
 }

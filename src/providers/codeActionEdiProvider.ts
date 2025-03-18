@@ -17,7 +17,7 @@ export class CodeActionEdiProvider implements vscode.CodeActionProvider, IProvid
       codeAction.command = {
         title,
         command: constants.commands.addCodeToQualifierCommand.name,
-        arguments: [diagContext.ediType, diagContext.qualifier, diagContext.code]
+        arguments: [diagContext.ediType, diagContext.release, diagContext.qualifier, diagContext.code, "<Custom code>"]
       };
       return codeAction;
     });

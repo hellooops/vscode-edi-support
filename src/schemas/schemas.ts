@@ -72,7 +72,7 @@ export class EdiReleaseSchema {
 }
 
 export class EdiReleaseSchemaElement {
-  private _schema?: EdiReleaseSchema;
+  public _schema?: EdiReleaseSchema;
   public id: string;
   public desc: string;
   public dataType: string;

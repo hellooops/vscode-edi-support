@@ -190,7 +190,7 @@
           "default": true,
           "description": "Show action icons in the title area of editor."
         },
-        "ediSupport.customQualifiers": {
+        "ediSupport.customSchemas": {
           "type": "object",
           "description": "Custom qualifiers."
         }

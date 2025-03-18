@@ -3,7 +3,7 @@ import { EdiSchema, EdiVersionSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
 import * as vscode from "vscode";
-import { Configuration_CustomQualifiers } from "../interfaces/configurations";
+import { type Conf_Supported_EdiType, type Conf_CustomSchema, Conf_Utils } from "../interfaces/configurations";
 
 export abstract class EdiParserBase {
   document: string;
@@ -11,7 +11,7 @@ export abstract class EdiParserBase {
   _separators?: EdiMessageSeparators | null;
   private parseResult?: EdiDocument;
   private parsingPromise?: Promise<EdiDocument>;
-  protected abstract ediType: EdiType;
+  protected abstract ediType: string;
 
   public constructor(document: string) {
     this.document = document;
@@ -327,14 +327,14 @@ export abstract class EdiParserBase {
   }
 
   protected onSchemaLoaded(): void {
-    const customQualifiers: Configuration_CustomQualifiers = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customQualifiers) ?? {};
-    const ediTypeQualifiers = customQualifiers?.[this.ediType as string];
-    if (!ediTypeQualifiers) return;
-    for (const qualifierName of Object.keys(ediTypeQualifiers)) {
-      const qualifierValueArray = ediTypeQualifiers[qualifierName];
-      qualifierValueArray?.forEach(i => {
-        this.schema?.ediReleaseSchema?.addQualifier(qualifierName, i, "<Custom qualifier code>");
+    try {
+      const customSchemas: Conf_CustomSchema = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customSchemas) ?? {};
+      const qualifiers = Conf_Utils.getQualifiers(customSchemas, this.ediType as Conf_Supported_EdiType, this.schema!.ediReleaseSchema.release);
+      qualifiers.forEach(q => {
+        this.schema?.ediReleaseSchema?.addQualifier(q.qualifier, q.code, q.desc);
       });
+    } catch (ex: any) {
+      console.error(ex);
     }
   }
 

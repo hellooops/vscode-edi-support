@@ -187,7 +187,8 @@ export interface DiagnosticError {
 
 export interface DiagnosticError_QUALIFIER_INVALID_CODE extends DiagnosticError {
   others: {
-    ediType: EdiType,
+    ediType: EdiType;
+    release: string;
     qualifier: string;
     code: string;
   }
@@ -311,6 +312,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
             errorElement: this,
             others: {
               ediType: context.ediType,
+              release: this.ediReleaseSchemaElement._schema?.release,
               qualifier: this.ediReleaseSchemaElement.qualifierRef,
               code: value
             }
