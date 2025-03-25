@@ -51,7 +51,7 @@
           ".ansi"
         ],
         "configuration": "./language-configuration.json",
-        "firstLine": "^(ISA|GS|ST)\\*",
+        "firstLine": "^ISA",
         "icon": {
           "light": "./docs/images/icon-600x600.svg",
           "dark": "./docs/images/icon-600x600.svg"

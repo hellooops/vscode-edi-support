@@ -9,6 +9,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 - Support add custom qualifier code QuickFix
 
+### Changed
+- Change X12 firstLine regex
+
 
 ## [2.0.5] - 2025-03-14
 
