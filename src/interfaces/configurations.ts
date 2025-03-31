@@ -38,11 +38,11 @@ export class Conf_Utils {
   static addQualifier(conf_schema: Conf_CustomSchema, ediType: Conf_Supported_EdiType, release: string, qualifier: string, code: string, desc: string) {
     if (!conf_schema[ediType]) conf_schema[ediType] = {};
 
-    if (!conf_schema[ediType][release]) {
-      conf_schema[ediType][release] = { qualifiers: {} };
+    if (!conf_schema[ediType]![release]) {
+      conf_schema[ediType]![release] = { qualifiers: {} };
     }
 
-    const conf_schema_qualifiers = conf_schema[ediType][release].qualifiers!;
+    const conf_schema_qualifiers = conf_schema[ediType]![release].qualifiers!;
 
     const qualifierKeys = Object.keys(conf_schema_qualifiers);
     if (!qualifierKeys.includes(qualifier)) {
