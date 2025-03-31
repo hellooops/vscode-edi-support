@@ -31,14 +31,7 @@ export class EdiUtils {
     }
 
     content = content.trim();
-    if (content.startsWith(`${constants.ediDocument.x12.segment.ISA}${constants.ediDocument.x12.defaultSeparators.dataElementSeparator}`) || // ISA*
-        content.startsWith(`${constants.ediDocument.x12.segment.GS}${constants.ediDocument.x12.defaultSeparators.dataElementSeparator}`) || // GS*
-        content.startsWith(`${constants.ediDocument.x12.segment.ST}${constants.ediDocument.x12.defaultSeparators.dataElementSeparator}`) // ST*
-    ) {
-      return true;
-    }
-
-    return false;
+    return content.startsWith(constants.ediDocument.x12.segment.ISA);
   }
 
   static isEdifact(document: vscode.TextDocument): boolean {

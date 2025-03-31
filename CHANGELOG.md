@@ -10,7 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Support add custom qualifier code QuickFix
 
 ### Changed
-- Change X12 firstLine regex
+- Optimize X12 automatic recognition logic.
 
 
 ## [2.0.5] - 2025-03-14
