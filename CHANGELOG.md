@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.0.7] - 2025-07-09
+
+### Fixed
+- Fix segment range handling for ending delimiters
+
+
 ## [2.0.6] - 2025-03-31
 
 ### Added

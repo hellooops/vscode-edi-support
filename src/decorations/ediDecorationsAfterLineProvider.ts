@@ -44,6 +44,7 @@ export class EdiDecorationsAfterLineProvider extends EdiDecorationsProviderBase 
     }
 
     const lineAnnotation = element ? EdiDecorationsAfterLineProvider.getElementAnnotation(element) : EdiDecorationsAfterLineProvider.getSegmentAnnotation(segment);
+    const segmentRange = segment.endingDelimiter === "\n" ? EdiUtils.getSegmentRange(document, segment) : EdiUtils.getSegmentRange(document, segment, true);
     this.setDecorations([
       {
         renderOptions: {
@@ -51,7 +52,7 @@ export class EdiDecorationsAfterLineProvider extends EdiDecorationsProviderBase 
             contentText: lineAnnotation,
           }
         },
-        range: EdiUtils.getSegmentRange(document, segment)
+        range: segmentRange
       }
     ]);
   }

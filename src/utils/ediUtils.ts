@@ -193,14 +193,14 @@ export class EdiUtils {
     return document.positionAt(segment.startIndex);
   }
 
-  static getSegmentEndPosition(document: vscode.TextDocument, segment: EdiSegment): vscode.Position {
-    return document.positionAt(segment.endIndex + 1);
+  static getSegmentEndPosition(document: vscode.TextDocument, segment: EdiSegment, includingEndingDelimiter: boolean = false): vscode.Position {
+    return document.positionAt(segment.endIndex + (includingEndingDelimiter ? segment.endingDelimiter.length : 0));
   }
 
-  static getSegmentRange(document: vscode.TextDocument, segment: EdiSegment): vscode.Range {
+  static getSegmentRange(document: vscode.TextDocument, segment: EdiSegment, includingEndingDelimiter: boolean = false): vscode.Range {
     return new vscode.Range(
       EdiUtils.getSegmentStartPosition(document, segment),
-      EdiUtils.getSegmentEndPosition(document, segment),
+      EdiUtils.getSegmentEndPosition(document, segment, includingEndingDelimiter),
     );
   }
 
@@ -217,8 +217,8 @@ export class EdiUtils {
     }
 
     return new vscode.Range(
-      EdiUtils.getSegmentEndPosition(document, segment).translate(0, -1),
       EdiUtils.getSegmentEndPosition(document, segment),
+      EdiUtils.getSegmentEndPosition(document, segment, true),
     );
   }
 
@@ -294,8 +294,8 @@ export class EdiUtils {
   static isOnlySegmentInLine(document: vscode.TextDocument, segment: EdiSegment): boolean {
     if (!segment) return false;
     const segmentStartPosition = EdiUtils.getSegmentStartPosition(document, segment);
-    const segmentEndPosition = EdiUtils.getSegmentEndPosition(document, segment);
-    if (segmentStartPosition.line !== segmentEndPosition.line) return false;
+    const segmentEndPosition = EdiUtils.getSegmentEndPosition(document, segment, true);
+    if (segment.endingDelimiter !== "\n" && segmentStartPosition.line !== segmentEndPosition.line) return false;
     const segmentLineNumber = segmentStartPosition.line;
     const documentContentInLine = document.lineAt(segmentLineNumber).text;
     return documentContentInLine.trim() === segment.segmentStr?.trim();
