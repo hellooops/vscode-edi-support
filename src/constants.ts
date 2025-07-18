@@ -41,10 +41,15 @@ export namespace commands {
     name: "edi-support.addCodeToQualifier",
     label: "Add code to qualifier"
   };
+  export const toggleLineCommentCommand = {
+    name: "edi-support.toggleLineComment",
+    label: "Toggle Line Comment"
+  };
 }
 
 export namespace ediDocument {
   export const lineBreak = "\n";
+  export const lineCommentSymbol = "//";
   export const x12 = {
     name: "x12",
     segment: {

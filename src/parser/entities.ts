@@ -14,6 +14,22 @@ interface SegmentMaximumOccurrencesExceed {
   actual: number;
 }
 
+export class EdiComment {
+  startIndex: number;
+  endIndex: number;
+  content: string;
+
+  constructor(startIndex: number, endIndex: number, content: string) {
+    this.startIndex = startIndex;
+    this.endIndex = endIndex;
+    this.content = content;
+  }
+
+  getFormatString(): string {
+    return this.content;
+  }
+}
+
 export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
   key: string;
 
@@ -37,6 +53,8 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   documentParent?: EdiDocument;
 
   parentSegment?: EdiSegment;
+
+  comments: EdiComment[] = [];
 
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
     this.key = Utils.randomId();
@@ -83,10 +101,14 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   getFormatString(): string {
     if (this.isLoop()) {
       return formatEdiDocumentPartsSegment({
-        children: this.Loop!,
+        children: [...this.comments, ...this.Loop!],
       });
     } else {
-      return `${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
+      const commentsStr = formatEdiDocumentPartsSegment({
+        children: this.comments,
+      });
+      const segmentStr = `${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
+      return commentsStr ? commentsStr + constants.ediDocument.lineBreak + segmentStr : segmentStr;
     }
   }
 
@@ -160,6 +182,10 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
 
   public isHeaderSegment(): boolean {
     return !this.transactionSetParent;
+  }
+
+  addComment(comment: EdiComment) {
+    this.comments.push(comment);
   }
 }
 
@@ -992,13 +1018,15 @@ export class EdiDocumentSeparators {
 
 export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnosticErrorAble {
   separators: EdiDocumentSeparators;
-  interchanges: EdiInterchange[];
 
   separatorsSegment?: EdiSegment; // ISA
   startSegment?: EdiSegment;
+  interchanges: EdiInterchange[];
   endSegment?: EdiSegment;
 
   standardOptions: EdiStandardOptions;
+
+  commentsAfterDocument: EdiComment[] = [];
 
   private hasActiveInterchange: boolean = false;
 
@@ -1104,7 +1132,7 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
-      children: this.interchanges,
+      children: [...this.interchanges, ...this.commentsAfterDocument],
       separatorsSegment: this.separatorsSegment,
     });
   }
@@ -1152,12 +1180,20 @@ export class EdiDocumentBuilder {
   loadTransactionSetStartSegmentSchemaFunc?: LoadTransactionSetStartSegmentSchemaFunc;
   afterEndTransactionSetFunc?: AfterEndTransactionSetFunc;
 
+  pendingComments: EdiComment[] = [];
+
   constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions) {
     this.ediDocument = new EdiDocument(separators, options);
     this.options = options;
   }
 
+  addComment(comment: EdiComment): void {
+    this.pendingComments.push(comment);
+  }
+
   async addSegment(segment: EdiSegment): Promise<void> {
+    segment.comments.push(...this.pendingComments);
+    this.pendingComments = [];
     if (!this.options.transactionSetStartSegmentName && !this.transactionSetStarted) {
       const transactionSetMeta = this.parseTransactionSetMetaFunc!(undefined, undefined, segment);
       if (this.loadSchemaFunc) {
@@ -1214,6 +1250,11 @@ export class EdiDocumentBuilder {
   }
 
   buildEdiDocument(): EdiDocument {
+    if (this.pendingComments.length > 0) {
+      this.ediDocument.commentsAfterDocument.push(...this.pendingComments);
+      this.pendingComments = [];
+    }
+
     return this.ediDocument;
   }
 
@@ -1250,7 +1291,7 @@ export class EdiDocumentBuilder {
   }
 }
 
-function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalGroup | EdiTransactionSet | EdiSegment>({
+function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalGroup | EdiTransactionSet | EdiSegment | EdiComment>({
   startSegment,
   endSegment,
   children,

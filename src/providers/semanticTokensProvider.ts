@@ -8,6 +8,7 @@ const TokenTypes = {
   EdiSegmentSeparator: "edisupportseparator",
   EdiDataElementSeparator: "edisupportseparator",
   EdiComponentElementSeparator: "edisupportseparator",
+  EdiComment: "edisupportcomment",
   EdiValueTypeNumber: "edisupportvaluetypenumber",
   EdiValueTypeDatetime: "edisupportvaluetypedatetime",
   EdiValueTypeQualifer: "edisupportvaluetypequalifer",
@@ -34,6 +35,15 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
       this.buildSegmentSemanticTokens(document, tokensBuilder, segment, ediDocument.separators);
     }
 
+
+    for (const comment of ediDocument.commentsAfterDocument) {
+      const commentRange = EdiUtils.getCommentRange(document, comment);
+      tokensBuilder.push(
+        commentRange,
+        TokenTypes.EdiComment,
+      );
+    }
+
     return tokensBuilder.build();
   }
   public registerFunctions(): vscode.Disposable[] {
@@ -49,6 +59,14 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
       EdiUtils.getSegmentIdRange(document, segment),
       TokenTypes.EdiSegmentId,
     );
+
+    for (const comment of segment.comments) {
+      const commentRange = EdiUtils.getCommentRange(document, comment);
+      builder.push(
+        commentRange,
+        TokenTypes.EdiComment,
+      );
+    }
 
     const segmentDelimiterRange = EdiUtils.getSegmentDelimiterRange(document, segment);
     if (segmentDelimiterRange) {

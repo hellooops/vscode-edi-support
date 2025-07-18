@@ -145,6 +145,19 @@
         "command": "edi-support.addCodeToQualifier",
         "title": "Add code to qualifier",
         "category": "EDI Support Internal"
+      },
+      {
+        "command": "edi-support.toggleLineComment",
+        "title": "Toggle Line Comment",
+        "category": "EDI Support Internal"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "edi-support.toggleLineComment",
+        "key": "ctrl+/",
+        "mac": "cmd+/",
+        "when": "editorTextFocus && (editorLangId == 'x12' || editorLangId == 'edifact' || editorLangId == 'vda')"
       }
     ],
     "configuration": {
@@ -277,6 +290,9 @@
           ],
           "edisupportseparator": [
             "keyword.operator"
+          ],
+          "edisupportcomment": [
+            "comment"
           ],
           "edisupportvaluetypenumber": [
             "comment"

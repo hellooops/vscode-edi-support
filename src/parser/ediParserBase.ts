@@ -1,4 +1,4 @@
-import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta, EdiType } from "./entities";
+import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta, EdiType, EdiComment } from "./entities";
 import { EdiSchema, EdiVersionSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
@@ -54,8 +54,6 @@ export abstract class EdiParserBase {
   }
 
   private async parseDocumentInternal(): Promise<EdiDocument> {
-    const regex = this.getSegmentRegex();
-    let match: RegExpExecArray | null;
     const separators = this.getMessageSeparators();
     const standardOptions = this.getStardardOptions();
     const ediDocumentBuilder: EdiDocumentBuilder = new EdiDocumentBuilder(separators, standardOptions);
@@ -79,17 +77,37 @@ export abstract class EdiParserBase {
       this.onSchemaLoaded();
     });
     ediDocumentBuilder.onLoadTransactionSetStartSegmentSchema(async (segment) => {
-      return await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endIndex, segment.endingDelimiter);
+      const newSegment = await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endIndex, segment.endingDelimiter);
+      newSegment.comments = segment.comments;
+      return newSegment;
     });
     ediDocumentBuilder.onAfterEndTransactionSet(async (transactionSet) => {
       transactionSet.segments = this.fitSegmentsToVersion(transactionSet.segments);
     });
     try {
-      while ((match = regex.exec(this.document))) {
-        if (Utils.isNullOrUndefined(match) || match.length <= 0) break;
-        if (Utils.isNullOrUndefined(match[0]) || match[0] === "") break;
-        const ediSegment = await this.parseSegment(match[0], match.index, match.index + match[0].length - 1, match[2]);
-        await ediDocumentBuilder.addSegment(ediSegment);
+      const segmentRegex = this.getSegmentRegex();
+      const commentRegex = this.getCommentRegex();
+
+      let remaining = this.document;
+      while (remaining.length > 0) {
+        const commentMatch = commentRegex.exec(remaining);
+        const segmentMatch = segmentRegex.exec(remaining);
+        const lengthBeforeRemaining = this.document.length - remaining.length;
+        if (commentMatch) {
+          ediDocumentBuilder.addComment(new EdiComment(lengthBeforeRemaining + commentMatch.index, lengthBeforeRemaining + commentMatch.index + commentMatch[0].length - 1, commentMatch[0]));
+          remaining = remaining.slice(commentMatch.index + commentMatch[0].length);
+        } else if (segmentMatch) {
+          if (Utils.isNullOrUndefined(segmentMatch) || segmentMatch.length <= 0) break;
+          if (Utils.isNullOrUndefined(segmentMatch[0]) || segmentMatch[0] === "") break;
+          const ediSegment = await this.parseSegment(segmentMatch[0], lengthBeforeRemaining + segmentMatch.index, lengthBeforeRemaining + segmentMatch.index + segmentMatch[0].length - 1, segmentMatch[2]);
+          await ediDocumentBuilder.addSegment(ediSegment);
+          remaining = remaining.slice(segmentMatch.index + segmentMatch[0].length);
+        } else {
+          break;
+        }
+
+        commentRegex.lastIndex = 0;
+        segmentRegex.lastIndex = 0;
       }
 
       return ediDocumentBuilder.buildEdiDocument();
@@ -109,6 +127,10 @@ export abstract class EdiParserBase {
       regexPattern = `\\b([\\s\\S]*?)(${separater}|$)`;
     }
     return new RegExp(regexPattern, "g");
+  }
+
+  protected getCommentRegex(): RegExp {
+    return new RegExp(`(?<=^\\s*?)\\/\\/[\\s\\S]*?(?=(\n|$))`, "g");
   }
 
   protected getSegmentNameBySegmentStr(segmentStr: string): string {

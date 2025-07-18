@@ -1,6 +1,6 @@
 import { EdiParserBase } from "../parser/ediParserBase";
 import { EdifactParser } from "../parser/edifactParser";
-import { EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
+import { EdiComment, EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
 import { X12Parser } from "../parser/x12Parser";
 import { VdaParser } from "../parser/vdaParser";
 import * as vscode from "vscode";
@@ -219,6 +219,13 @@ export class EdiUtils {
     return new vscode.Range(
       EdiUtils.getSegmentEndPosition(document, segment),
       EdiUtils.getSegmentEndPosition(document, segment, true),
+    );
+  }
+
+  static getCommentRange(document: vscode.TextDocument, comment: EdiComment): vscode.Range {
+    return new vscode.Range(
+      document.positionAt(comment.startIndex),
+      document.positionAt(comment.endIndex + 1),
     );
   }
 

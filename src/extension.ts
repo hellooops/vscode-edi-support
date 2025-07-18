@@ -9,6 +9,7 @@ import { ToggleElementIndexAnnotationCommand } from "./commands/toggleElementInd
 import { ToggleIndentSegmentsInLoopCommand } from "./commands/toggleIndentSegmentsInLoopCommand";
 import { SelectTextByPositionCommand } from "./commands/selectTextByPositionCommand";
 import { AddCodeToQualifierCommand } from "./commands/addCodeToQualifierCommand";
+import { ToggleLineCommentCommand } from "./commands/toggleLineCommentCommand";
 import { IProvidable } from "./interfaces/providable";
 import { HighlightEdiProvider } from "./providers/highlightEdiProvider";
 import { HoverX12Provider } from "./providers/hoverX12Provider";
@@ -40,6 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new ToggleIndentSegmentsInLoopCommand());
   registerCommand(context, new SelectTextByPositionCommand());
   registerCommand(context, new AddCodeToQualifierCommand());
+  registerCommand(context, new ToggleLineCommentCommand());
   registerProvider(context, new HighlightEdiProvider());
   registerProvider(context, new HoverX12Provider());
   registerProvider(context, new HoverEdifactProvider());
