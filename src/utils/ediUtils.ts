@@ -194,7 +194,7 @@ export class EdiUtils {
   }
 
   static getSegmentEndPosition(document: vscode.TextDocument, segment: EdiSegment, includingEndingDelimiter: boolean = false): vscode.Position {
-    return document.positionAt(segment.endIndex + (includingEndingDelimiter ? segment.endingDelimiter.length : 0));
+    return document.positionAt(segment.endIndex + ((includingEndingDelimiter && segment.endingDelimiter) ? segment.endingDelimiter.length : 0));
   }
 
   static getSegmentRange(document: vscode.TextDocument, segment: EdiSegment, includingEndingDelimiter: boolean = false): vscode.Range {
@@ -305,6 +305,12 @@ export class EdiUtils {
     if (segment.endingDelimiter !== "\n" && segmentStartPosition.line !== segmentEndPosition.line) return false;
     const segmentLineNumber = segmentStartPosition.line;
     const documentContentInLine = document.lineAt(segmentLineNumber).text;
-    return documentContentInLine.trim() === segment.segmentStr?.trim();
+    const leftStr = documentContentInLine.replace(segment.segmentStr?.trim() ?? "", "");
+    if (leftStr.includes(constants.ediDocument.lineCommentSymbol)) {
+      const documentContentInLineWithoutComment = leftStr.split(constants.ediDocument.lineCommentSymbol)[0];
+      return documentContentInLineWithoutComment.trim().length === 0;
+    }
+
+    return leftStr.trim().length === 0;
   }
 }
