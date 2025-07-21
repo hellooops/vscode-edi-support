@@ -1,1 +1,0 @@
-{"Release":"00302","DocumentType":"828","TransactionSet":[{"Id":"ST"},{"Id":"BAU"},{"Id":"PER","Min":0,"Max":3},{"Id":"DAD","Max":999990},{"Id":"N1Loop1","Min":0,"Loop":[{"Id":"N1"},{"Id":"N2","Min":0,"Max":2},{"Id":"N3","Min":0,"Max":2},{"Id":"N4","Min":0}]},{"Id":"CTT"},{"Id":"AMT","Min":0},{"Id":"SE"}]}

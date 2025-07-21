@@ -1,1 +1,0 @@
-{"Release":"00502","DocumentType":"437","TransactionSet":[{"Id":"ST"},{"Id":"BJF"},{"Id":"DTM","Min":0,"Max":10},{"Id":"JCT","Min":0},{"Id":"JSLoop1","Min":0,"Max":2,"Loop":[{"Id":"JS"},{"Id":"DTM","Min":0,"Max":3},{"Id":"SID","Min":0,"Max":20}]},{"Id":"SE"}]}

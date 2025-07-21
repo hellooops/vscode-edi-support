@@ -1,1 +1,0 @@
-{"Release":"00305","DocumentType":"928","TransactionSet":[{"Id":"ST"},{"Id":"BIX"},{"Id":"TI","Min":0},{"Id":"VCLoop1","Max":21,"Loop":[{"Id":"VC"},{"Id":"ID","Min":0,"Max":99}]},{"Id":"SE"}]}

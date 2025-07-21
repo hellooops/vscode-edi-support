@@ -1,0 +1,1 @@
+{"Release":"03","DocumentTypes":{"03_711":{"Release":"03","DocumentType":4913,"TransactionSet":[{"Id":"711"},{"Id":"712Loop","Max":9999999,"Loop":[{"Id":"712"},{"Id":"713Loop","Max":9999999,"Loop":[{"Id":"713"},{"Id":"714Loop","Max":9999999,"Loop":[{"Id":"714"},{"Id":"718","Min":0,"Max":9999999},{"Id":"716","Min":0},{"Id":"715","Min":0,"Max":9999999}]}]}]},{"Id":"719"}]}}}

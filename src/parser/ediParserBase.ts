@@ -335,7 +335,15 @@ export abstract class EdiParserBase {
     }
 
     try {
-      versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_${meta.version}.json`);
+      const release_versions = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_versions.json`);
+      const versionKey = `${meta.release}_${meta.version}`;
+      if (!release_versions || !release_versions["DocumentTypes"][versionKey]) {
+        console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), new Error(`Version ${versionKey} not found in ${meta.release}_versions.json`));
+        return;
+      }
+
+      // versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_${meta.version}.json`);
+      versionSchema = release_versions["DocumentTypes"][versionKey];
     } catch (ex) {
       console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
     }

@@ -1,1 +1,0 @@
-{"Release":"00303","DocumentType":"161","TransactionSet":[{"Id":"ST"},{"Id":"BTS"},{"Id":"V9","Max":10},{"Id":"FAC","Min":0,"Max":10},{"Id":"NM1Loop1","Min":0,"Max":10,"Loop":[{"Id":"NM1"},{"Id":"DTM","Min":0,"Max":3}]},{"Id":"SE"}]}

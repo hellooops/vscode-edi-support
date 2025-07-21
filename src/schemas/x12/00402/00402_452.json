@@ -1,1 +1,0 @@
-{"Release":"00402","DocumentType":"452","TransactionSet":[{"Id":"ST"},{"Id":"BGP"},{"Id":"N1","Min":0},{"Id":"N9","Min":0,"Max":5},{"Id":"DTP","Min":0,"Max":2},{"Id":"NTE","Min":0,"Max":999999},{"Id":"SE"}]}

@@ -1,1 +1,0 @@
-{"Release":"00501","DocumentType":"158","TransactionSet":[{"Id":"ST"},{"Id":"BGN"},{"Id":"N1","Max":2},{"Id":"DTPLoop1","Max":"unbounded","Loop":[{"Id":"DTP"},{"Id":"LXLoop1","Max":"unbounded","Loop":[{"Id":"LX"},{"Id":"NX2","Max":"unbounded"},{"Id":"PPA","Min":0},{"Id":"TA","Min":0,"Max":"unbounded"},{"Id":"ASI","Min":0}]}]},{"Id":"SE"}]}

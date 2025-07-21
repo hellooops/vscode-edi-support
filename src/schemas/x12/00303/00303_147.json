@@ -1,1 +1,0 @@
-{"Release":"00303","DocumentType":"147","TransactionSet":[{"Id":"ST"},{"Id":"BGN"},{"Id":"AAA"},{"Id":"REF","Max":10},{"Id":"PWK","Min":0},{"Id":"NTE","Min":0,"Max":15},{"Id":"N1Loop1","Max":2,"Loop":[{"Id":"N1"},{"Id":"N2","Min":0},{"Id":"N3","Min":0},{"Id":"N4","Min":0},{"Id":"PER","Min":0}]},{"Id":"IN1Loop1","Max":15,"Loop":[{"Id":"IN1"},{"Id":"IN2","Max":10}]},{"Id":"SE"}]}

@@ -1,1 +1,0 @@
-{"Release":"00505","DocumentType":"999","TransactionSet":[{"Id":"ST"},{"Id":"AK1"},{"Id":"AK2Loop1","Min":0,"Max":"unbounded","Loop":[{"Id":"AK2"},{"Id":"IK3Loop1","Min":0,"Max":"unbounded","Loop":[{"Id":"IK3"},{"Id":"CTX","Min":0,"Max":10},{"Id":"IK4Loop1","Min":0,"Max":"unbounded","Loop":[{"Id":"IK4"},{"Id":"CTX","Min":0,"Max":10}]}]},{"Id":"IK5"}]},{"Id":"AK9"},{"Id":"SE"}]}

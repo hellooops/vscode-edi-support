@@ -1,1 +1,0 @@
-{"Release":"00304","DocumentType":"893","TransactionSet":[{"Id":"ST"},{"Id":"G39","Max":9999},{"Id":"G69","Min":0},{"Id":"N1Loop1","Max":999,"Loop":[{"Id":"N1"},{"Id":"N2","Min":0},{"Id":"N3","Min":0,"Max":2},{"Id":"N4","Min":0,"Max":2}]},{"Id":"SE"}]}

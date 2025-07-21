@@ -1,1 +1,0 @@
-{"Release":"00603","DocumentType":"468","TransactionSet":[{"Id":"ST"},{"Id":"REN"},{"Id":"DKLoop1","Max":100,"Loop":[{"Id":"DK"},{"Id":"PI","Min":0},{"Id":"JL","Min":0},{"Id":"K1","Min":0,"Max":100}]},{"Id":"SE"}]}

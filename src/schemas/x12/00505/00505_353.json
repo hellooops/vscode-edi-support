@@ -1,1 +1,0 @@
-{"Release":"00505","DocumentType":"353","TransactionSet":[{"Id":"ST"},{"Id":"M10","Min":0},{"Id":"P4","Min":0},{"Id":"CM","Min":0},{"Id":"M15Loop1","Max":9999,"Loop":[{"Id":"M15"},{"Id":"M7A","Min":0,"Max":22},{"Id":"V1","Min":0},{"Id":"V2","Min":0},{"Id":"MEA","Min":0},{"Id":"K1","Min":0,"Max":4}]},{"Id":"SE"}]}
