@@ -28,6 +28,10 @@ export class EdiComment {
   getFormatString(): string {
     return this.content;
   }
+
+  toString() {
+    return this.getFormatString();
+  }
 }
 
 export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
