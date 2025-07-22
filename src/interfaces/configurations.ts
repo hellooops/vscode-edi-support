@@ -56,7 +56,7 @@ export class Conf_Utils {
   }
 
   static getQualifiers(conf_schema: Conf_CustomSchema | undefined, ediType: Conf_Supported_EdiType, release: string): { qualifier: string, code: string, desc: string }[] {
-    const qualifiers = conf_schema?.[ediType]?.[release].qualifiers;
+    const qualifiers = conf_schema?.[ediType]?.[release]?.qualifiers;
     if (!qualifiers) return [];
     return Object.keys(qualifiers).flatMap(qualifier => {
       return Object.keys(qualifiers[qualifier]).map(code => {
