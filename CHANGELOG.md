@@ -6,6 +6,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.1.0] - 2025-07-09
+
+### Added
+- Support line comment.
+
+### Fixed
+- Fix vda parsing error.
+
+### Changed
+- Combine all release version schemas to one file.
+
+
 ## [2.0.7] - 2025-07-09
 
 ### Fixed
