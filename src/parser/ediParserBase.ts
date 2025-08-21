@@ -77,7 +77,7 @@ export abstract class EdiParserBase {
       this.onSchemaLoaded();
     });
     ediDocumentBuilder.onLoadTransactionSetStartSegmentSchema(async (segment) => {
-      const newSegment = await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endIndex, segment.endingDelimiter);
+      const newSegment = await this.parseSegment(segment.segmentStr!, segment.startIndex, segment.endingDelimiter);
       newSegment.comments = segment.comments;
       return newSegment;
     });
@@ -99,7 +99,7 @@ export abstract class EdiParserBase {
         } else if (segmentMatch) {
           if (Utils.isNullOrUndefined(segmentMatch) || segmentMatch.length <= 0) break;
           if (Utils.isNullOrUndefined(segmentMatch[0]) || segmentMatch[0] === "") break;
-          const ediSegment = await this.parseSegment(segmentMatch[0], lengthBeforeRemaining + segmentMatch.index, lengthBeforeRemaining + segmentMatch.index + segmentMatch[0].length - 1, segmentMatch[2]);
+          const ediSegment = await this.parseSegment(segmentMatch[0], lengthBeforeRemaining + segmentMatch.index, segmentMatch[2]);
           await ediDocumentBuilder.addSegment(ediSegment);
           remaining = remaining.slice(segmentMatch.index + segmentMatch[0].length);
         } else {
@@ -138,7 +138,8 @@ export abstract class EdiParserBase {
     return segmentStr.substring(0, firstElementSeparatorIndex);
   }
 
-  public async parseSegment(segmentStr: string, startIndex: number, endIndex: number, endingDelimiter: string): Promise<EdiSegment> {
+  public async parseSegment(segmentStr: string, startIndex: number, endingDelimiter: string): Promise<EdiSegment> {
+    const endIndex = startIndex + segmentStr.length - endingDelimiter.length;
     const segment = new EdiSegment(
       this.getSegmentNameBySegmentStr(segmentStr),
       startIndex,

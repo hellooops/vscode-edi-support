@@ -7,7 +7,7 @@ import { EdiReleaseSchema } from "../../schemas/schemas";
 
 suite("Extension Test Suite", () => {
   suite("Parse Meta", () => {
-    test.only("X12 Parse Meta", async () => {
+    test("X12 Parse Meta", async () => {
       const documentStr = `
       ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00401*000000001*0*T*:~
       GS*PO*  *  *20241111*0300*1*T*004010~
@@ -45,7 +45,7 @@ suite("Extension Test Suite", () => {
       assert.strictEqual(ediDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.messageInfo.version, "850");
     });
 
-    test.only("Edifact Parse Meta", async () => {
+    test("Edifact Parse Meta", async () => {
       const documentStr = `
       UNA:+.?*'
       UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+0001'
@@ -87,7 +87,7 @@ suite("Extension Test Suite", () => {
       parser.setMessageSeparators({ segmentSeparator: "~", dataElementSeparator: "*", componentElementSeparator: ">" });
       await parser.loadSchema({release: "00401", version: "850"});
   
-      const segment: EdiSegment = await parser.parseSegment(documentStr, 0, documentStr.length - 1, "~");
+      const segment: EdiSegment = await parser.parseSegment(documentStr, 0, "~");
   
       assert.strictEqual(segment.id, "SV2");
       assert.strictEqual(segment.elements.length, 5);

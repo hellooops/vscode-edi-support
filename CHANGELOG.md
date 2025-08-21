@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+- Issue#14: Fix annotation wrong position in the last segment
+
 ## [2.1.0] - 2025-07-09
 
 ### Added
