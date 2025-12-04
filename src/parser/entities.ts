@@ -686,6 +686,8 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
   getEndIdElement(): EdiElement | undefined {
     if (this.endSegment?.id === "GE" && this.endSegment.elements.length >= 2) {
       return this.endSegment.elements[1];
+    } else if (this.endSegment?.id === "UNE" && this.endSegment.elements.length >= 2) {
+      return this.endSegment.elements[1];
     } else {
       return undefined;
     }
@@ -697,6 +699,8 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
 
   getControlCountElement(): EdiElement | undefined {
     if (this.endSegment?.id === "GE" && this.endSegment.elements.length >= 1) {
+      return this.endSegment.elements[0];
+    } else if (this.endSegment?.id === "UNE" && this.endSegment.elements.length >= 1) {
       return this.endSegment.elements[0];
     } else {
       return undefined;

@@ -356,6 +356,126 @@ export class EdiReleaseSchemaSegment {
     Purpose: "To end and check the completeness of an interchange.",
     mock: true
   }, undefined);
+  public static UNG: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Group header",
+    Elements: [
+      {
+        Id: "0038",
+        Desc: "Message group identification",
+        DataType: "AN",
+        Required: false,
+        MinLength: 1,
+        MaxLength: 6,
+        Definition: "Identification of the single message type in the group.",
+        mock: true
+      },
+      {
+        Id: "S006",
+        Desc: "Application sender identification",
+        Required: false,
+        Components: [
+          { Id: "0040", Desc: "Application sender identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded identification of the application sender (for example, a division, branch or computer system/process).", mock: true },
+          { Id: "0007", Desc: "Identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the identification code.", mock: true, QualifierRef: "Identification code qualifier" },
+        ],
+        mock: true
+      },
+      {
+        Id: "S007",
+        Desc: "Application recipient identification",
+        Required: false,
+        Components: [
+          { Id: "0044", Desc: "Application recipient identification", DataType: "AN", Required: true, MinLength: 1, MaxLength: 35, Definition: "Name or coded identification of the application recipient (for example, a division, branch or computer system/process).", mock: true },
+          { Id: "0007", Desc: "Identification code qualifier", DataType: "AN", Required: false, MinLength: 1, MaxLength: 4, Definition: "Qualifier referring to the identification code.", mock: true, QualifierRef: "Identification code qualifier" },
+        ],
+        mock: true
+      },
+      {
+        Id: "S004",
+        Desc: "Date/time of preparation",
+        Required: true,
+        Components: [
+          { Id: "0017", Desc: "Date", DataType: "N", Required: true, MinLength: 8, MaxLength: 8, Definition: "Local date when an interchange or a group was prepared. Format is CCYYMMDD.", mock: true },
+          { Id: "0019", Desc: "Time", DataType: "N", Required: true, MinLength: 4, MaxLength: 4, Definition: "Local time of day when an interchange or a group was prepared. Format is HHMM in 24 hour clock.", mock: true },
+        ],
+        mock: true
+      },
+      { Id: "0048", Desc: "Group reference number", DataType: "AN", Required: true, MinLength: 1, MaxLength: 14, Definition: "Unique reference number for the group within an interchange.", mock: true },
+      {
+        Id: "S008",
+        Desc: "Message version",
+        Components: [
+          { Id: "0052", Desc: "Message version number", DataType: "AN", Required: true, MinLength: 1, MaxLength: 3, Definition: "Version number of a message type.", mock: true },
+          { Id: "0054", Desc: "Message release number", DataType: "AN", Required: true, MinLength: 1, MaxLength: 3, Definition: "Release number within the current message version number.", mock: true },
+          { Id: "0057", Desc: "Association assigned code", DataType: "AN", Required: false, MinLength: 1, MaxLength: 6, Definition: "Code, assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message.", mock: true },
+        ],
+        mock: true
+      },
+      { Id: "0058", Desc: "Application password", DataType: "AN", Required: false, MinLength: 1, MaxLength: 14, Definition: "Password to the recipient's division, department or sectional application system/process.", mock: true },
+    ],
+    Purpose: "To head, identify and specify a group of messages and/or packages, which may be used for internal routing and which may contain one or more message types and/or packages.",
+    mock: true
+  }, new EdiReleaseSchema({
+    "Qualifiers": {
+      "Identification code qualifier": {
+        "1": "DUNS (Data Universal Numbering System)",
+        "4": "IATA (International Air Transport Association)",
+        "5": "INSEE (Institut National de la Statistique et des Etudes Economiques) - SIRET",
+        "8": "UCC Communications ID (Uniform Code Council Communications Identifier)",
+        "9": "DUNS (Data Universal Numbering System) with 4 digit suffix",
+        "12": "Telephone number",
+        "14": "GS1",
+        "18": "AIAG (Automotive Industry Action Group)",
+        "22": "INSEE (Institut National de la Statistique et des Etudes Economiques) - SIREN",
+        "30": "ISO 6523: Organization identification",
+        "31": "DIN (Deutsches Institut fuer Normung)",
+        "33": "BfA (Bundesversicherungsanstalt fuer Angestellte)",
+        "34": "National Statistical Agency",
+        "51": "GEIS (General Electric Information Services)",
+        "52": "INS (IBM Network Services)",
+        "53": "Datenzentrale des Einzelhandels",
+        "54": "Bundesverband der Deutschen Baustoffhaendler",
+        "55": "Bank identifier code",
+        "57": "KTNet (Korea Trade Network Services)",
+        "58": "UPU (Universal Postal Union)",
+        "59": "ODETTE (Organization for Data Exchange through Tele- Transmission in Europe)",
+        "61": "SCAC (Standard Carrier Alpha Code)",
+        "63": "ECA (Electronic Commerce Australia)",
+        "65": "TELEBOX 400 (Deutsche Telekom)",
+        "80": "NHS (National Health Service)",
+        "82": "Statens Teleforvaltning",
+        "84": "Athens Chamber of Commerce",
+        "85": "Swiss Chamber of Commerce",
+        "86": "US Council for International Business",
+        "87": "National Federation of Chambers of Commerce and Industry",
+        "89": "Association of British Chambers of Commerce",
+        "90": "SITA (Societe Internationale de Telecommunications Aeronautiques)",
+        "91": "Assigned by seller or seller's agent",
+        "92": "Assigned by buyer or buyer's agent",
+        "103": "TW, Trade-van",
+        "128": "CH, BCNR (Swiss Clearing Bank Number)",
+        "129": "CH, BPI (Swiss Business Partner Identification)",
+        "144": "US, DoDAAC (Department of Defense Activity Address Code)",
+        "145": "FR, DGCP (Direction Generale de la Comptabilite Publique)",
+        "146": "FR, DGI (Direction Generale des Impots)",
+        "147": "JP, JIPDEC/ECPC (Japan Information Processing Development Corporation / Electronic Commerce Promotion Center)",
+        "148": "ITU (International Telecommunications Union) Data Network Identification Code (DNIC)",
+        "500": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+        "501": "EASEE-gas (European Association for the Streamlining of Energy Exchange)",
+        "502": "DE, DVGW (Deutsche Vereinigung des Gas- und Wasserfaches e.V.)",
+        "Z01": "Vehicle registration number",
+        "ZZZ": "Mutually defined",
+      },
+    }
+  }));
+  public static UNE: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({
+    Desc: "Group trailer",
+    Elements: [
+      { Id: "0060", Required: true, MinLength: 1, MaxLength: 6, Desc: "Group control count", Definition: "The number of messages and packages in the group.", mock: true },
+      { Id: "0048", Required: true, MinLength: 1, MaxLength: 14, Desc: "Group reference number", Definition: "Unique reference number for the group within an interchange.", mock: true },
+    ],
+    Purpose: "To end and check the completeness of a group.",
+    mock: true
+  }, undefined);
   // TODO: Id is supposed to be a number
   // X12
   public static ISA: EdiReleaseSchemaSegment = new EdiReleaseSchemaSegment({

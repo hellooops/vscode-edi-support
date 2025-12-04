@@ -120,8 +120,18 @@ export class EdifactParser extends EdiParserBase {
   }
 
   protected parseFunctionalGroupMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment): EdiFunctionalGroupMeta {
-    // Fake
-    return {};
+    // UNG+DESADV+APPSENDER:ZZZ+APPRECEIVER:ZZZ+20251204:1015+GRP001+UN+S:1:ABC001+PWD'
+    const meta: EdiFunctionalGroupMeta = {};
+    if (!functionalGroupSegment) return meta;
+    if (functionalGroupSegment.elements.length > 3) {
+      const dateTimeEle = functionalGroupSegment.elements[3];
+      if (dateTimeEle.components) {
+        if (dateTimeEle.components.length > 0) meta.date = dateTimeEle.components[0].value;
+        if (dateTimeEle.components.length > 1) meta.time = dateTimeEle.components[1].value;
+      }
+    }
+    if (functionalGroupSegment.elements.length > 4) meta.id = functionalGroupSegment.elements[4].value;
+    return meta;
   }
 
   protected parseTransactionSetMeta(interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment, transactionSetSegment: EdiSegment): EdiTransactionSetMeta {
@@ -176,8 +186,8 @@ export class EdifactParser extends EdiParserBase {
       interchangeStartSegmentName: "UNB",
       interchangeEndSegmentName: "UNZ",
 
-      functionalGroupStartSegmentName: undefined,
-      functionalGroupEndSegmentName: undefined,
+      functionalGroupStartSegmentName: "UNG",
+      functionalGroupEndSegmentName: "UNE",
 
       transactionSetStartSegmentName: "UNH",
       transactionSetEndSegmentName: "UNT",

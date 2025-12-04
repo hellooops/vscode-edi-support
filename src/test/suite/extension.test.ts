@@ -575,5 +575,107 @@ suite("Extension Test Suite", () => {
       assert.strictEqual(ediDocument.interchanges[1].functionalGroups[0].transactionSets[0].endSegment.id, "UNT");
       assert.strictEqual(ediDocument.interchanges[1].functionalGroups[0].transactionSets[0].segments.length, 1);
     });
+
+    test("Edifact Multiple Functional Groups", async () => {
+      const documentStr = `
+      UNA:+.?*'
+      UNB+UNOB:3+ + +180123:1127+000000128'
+
+      UNH+2266+DESADV:D:07A:UN:GMI021'
+      BGM+351+20171229'
+      UNT+3+2266'
+
+      UNH+2266+DESADV:D:07A:UN:GMI022'
+      BGM+351+20171229'
+      UNT+3+2266'
+
+      UNH+2266+DESADV:D:07A:UN:GMI023'
+      BGM+351+20171229'
+      UNT+3+2266'
+
+      UNZ+3+000000128'
+
+
+      UNB+UNOB:3+ + +180123:1127+000000129'
+
+      UNG+DESADV+APPSENDER:ZZZ+APPRECEIVER:ZZZ+20251204:1015+GRP001+UN+S:1:ABC001+PWD'
+      UNH+2266+DESADV:D:07A:UN:GMI024'
+      BGM+351+20171229'
+      UNT+3+2266'
+      UNE+1+GRP001'
+
+      UNG+DESADV+APPSENDER:ZZZ+APPRECEIVER:ZZZ+20251204:1015+GRP002+UN+S:1:ABC001+PWD'
+      UNH+2266+DESADV:D:07A:UN:GMI025'
+      BGM+351+20171229'
+      UNT+3+2266'
+      UNE+1+GRP002'
+
+      UNG+DESADV+APPSENDER:ZZZ+APPRECEIVER:ZZZ+20251204:1015+GRP003+UN+S:1:ABC001+PWD'
+      UNH+2266+DESADV:D:07A:UN:GMI026'
+      BGM+351+20171229'
+      UNT+3+2266'
+      UNH+2266+DESADV:D:07A:UN:GMI027'
+      BGM+351+20171229'
+      UNT+3+2266'
+      UNH+2266+DESADV:D:07A:UN:GMI028'
+      BGM+351+20171229'
+      UNT+3+2266'
+      UNE+3+GRP003'
+
+      UNZ+3+000000129'
+      `;
+
+      const parser = new EdifactParser(documentStr);
+      const ediDocument = await parser.parse();
+
+      // Two interchanges (000000128 and 000000129)
+      assert.strictEqual(ediDocument.interchanges.length, 2);
+
+      // Interchange 1 (000000128) - contains three UNH transactions (no UNG groups)
+      const inter1 = ediDocument.interchanges[0];
+      assert.strictEqual(inter1.getId(), "000000128");
+      assert.ok(inter1.startSegment);
+      assert.strictEqual(inter1.startSegment!.id, "UNB");
+      assert.ok(inter1.endSegment);
+      assert.strictEqual(inter1.endSegment!.id, "UNZ");
+      assert.strictEqual(inter1.functionalGroups.length, 1);
+      assert.strictEqual(inter1.functionalGroups[0].isFake(), true);
+      assert.strictEqual(inter1.functionalGroups[0].transactionSets.length, 3);
+      inter1.functionalGroups[0].transactionSets.forEach((ts) => {
+        assert.ok(ts.startSegment);
+        assert.strictEqual(ts.startSegment!.id, "UNH");
+        assert.ok(ts.endSegment);
+        assert.strictEqual(ts.endSegment!.id, "UNT");
+      });
+
+      // Interchange 2 (000000129) - contains three UNG functional groups
+      const inter2 = ediDocument.interchanges[1];
+      assert.strictEqual(inter2.getId(), "000000129");
+      assert.ok(inter2.startSegment);
+      assert.strictEqual(inter2.startSegment!.id, "UNB");
+      assert.ok(inter2.endSegment);
+      assert.strictEqual(inter2.endSegment!.id, "UNZ");
+
+      // There are three UNG groups
+      assert.strictEqual(inter2.functionalGroups.length, 3);
+
+      // First UNG group (GRP001) - 1 transaction
+      const fg1 = inter2.functionalGroups[0];
+      assert.strictEqual(fg1.startSegment?.id, "UNG");
+      assert.strictEqual(fg1.endSegment?.id, "UNE");
+      assert.strictEqual(fg1.transactionSets.length, 1);
+
+      // Second UNG group (GRP002) - 1 transaction
+      const fg2 = inter2.functionalGroups[1];
+      assert.strictEqual(fg2.startSegment?.id, "UNG");
+      assert.strictEqual(fg2.endSegment?.id, "UNE");
+      assert.strictEqual(fg2.transactionSets.length, 1);
+
+      // Third UNG group (GRP003) - 3 transactions
+      const fg3 = inter2.functionalGroups[2];
+      assert.strictEqual(fg3.startSegment?.id, "UNG");
+      assert.strictEqual(fg3.endSegment?.id, "UNE");
+      assert.strictEqual(fg3.transactionSets.length, 3);
+    });
   });
 });
