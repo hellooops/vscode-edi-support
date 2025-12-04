@@ -46,6 +46,14 @@ export class EdifactParser extends EdiParserBase {
       return async (segment) => {
         segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNZ;
       };
+    } else if (segmentId === constants.ediDocument.edifact.segment.UNG) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNG;
+      };
+    } else if (segmentId === constants.ediDocument.edifact.segment.UNE) {
+      return async (segment) => {
+        segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNE;
+      };
     } else if (segmentId === constants.ediDocument.edifact.segment.UNH) {
       return async (segment) => {
         if (segment.ediReleaseSchemaSegment) segment.ediReleaseSchemaSegment.desc = "Message header";

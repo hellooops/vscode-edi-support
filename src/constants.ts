@@ -70,9 +70,11 @@ export namespace ediDocument {
     segment: {
       UNA: "UNA",
       UNB: "UNB",
+      UNG: "UNG",
       UNH: "UNH",
       UNZ: "UNZ",
       UNT: "UNT",
+      UNE: "UNE",
     },
     defaultSeparators: {
       segmentSeparator: "'",
