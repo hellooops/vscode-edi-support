@@ -130,18 +130,6 @@ export class X12Parser extends EdiParserBase {
 
     return meta;
   }
-
-  private getElementValueByIndex(segmentStr: string, index: number): string | null {
-    const segmentSeparator = this.escapeCharRegex(this.getMessageSeparators().segmentSeparator!);
-    const dataElementSeparator = this.escapeCharRegex(this.getMessageSeparators().dataElementSeparator!);
-    const regex = new RegExp(`(.*?${dataElementSeparator}){${index + 1}}(.*?)[${dataElementSeparator}|${segmentSeparator}]`, "g");
-    const match = regex.exec(segmentStr);
-    if (match) {
-      return match[2];
-    }
-
-    return null;
-  }
   
   protected getSchemaRootPath(): string {
     return "../schemas/x12";
