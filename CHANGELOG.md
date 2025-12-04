@@ -6,8 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+
+## [2.1.1] - 2025-12-04
+
 ### Fixed
+- Issue#16: Support Functional Group segments UNG, UNE for EDIFACT.
 - Issue#14: Fix annotation wrong position in the last segment
+
 
 ## [2.1.0] - 2025-07-09
 
