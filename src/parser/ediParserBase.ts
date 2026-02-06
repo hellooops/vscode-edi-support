@@ -139,7 +139,7 @@ export abstract class EdiParserBase {
   }
 
   public async parseSegment(segmentStr: string, startIndex: number, endingDelimiter: string): Promise<EdiSegment> {
-    const endIndex = startIndex + segmentStr.length - endingDelimiter.length;
+    const endIndex = startIndex + segmentStr.length - (endingDelimiter?.length ?? 0);
     const segment = new EdiSegment(
       this.getSegmentNameBySegmentStr(segmentStr),
       startIndex,

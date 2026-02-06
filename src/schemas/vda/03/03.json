@@ -382,6 +382,7 @@
   },
   "Segments": {
     "711": {
+      "Desc": "Interchange Header",
       "Elements": [
         {
           "Desc": "Version number",
@@ -453,6 +454,7 @@
       ]
     },
     "712": {
+      "Desc": "Transport Data",
       "Elements": [
         {
           "Desc": "Version number",
@@ -587,6 +589,7 @@
       ]
     },
     "713": {
+      "Desc": "Delivery Note Header Data",
       "Elements": [
         {
           "Desc": "Version number",
@@ -713,6 +716,7 @@
       ]
     },
     "714": {
+      "Desc": "Delivery Note Item Data",
       "Elements": [
         {
           "Desc": "Version number",
@@ -851,6 +855,7 @@
       ]
     },
     "715": {
+      "Desc": "Packaging Material Data",
       "Elements": [
         {
           "Desc": "Version number",
@@ -949,6 +954,7 @@
       ]
     },
     "716": {
+      "Desc": "Text Data for Items",
       "Elements": [
         {
           "Desc": "Version number",
@@ -983,6 +989,7 @@
       ]
     },
     "718": {
+      "Desc": "Production Number Data",
       "Elements": [
         {
           "Desc": "Version number",
@@ -1071,6 +1078,7 @@
       ]
     },
     "719": {
+      "Desc": "Interchange Trailer",
       "Elements": [
         {
           "Desc": "Version number",

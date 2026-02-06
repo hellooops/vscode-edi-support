@@ -51,6 +51,7 @@
   },
   "Segments": {
     "511": {
+      "Desc": "Interchange Header",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -103,6 +104,7 @@
       ]
     },
     "512": {
+      "Desc": "Delivery Instruction Data",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -225,6 +227,7 @@
       ]
     },
     "513": {
+      "Desc": "Reconciliation and Schedule Data",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -331,6 +334,7 @@
       ]
     },
     "514": {
+      "Desc": "Additional Schedule Data",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -443,6 +447,7 @@
       ]
     },
     "515": {
+      "Desc": "Supplementary Data",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -525,6 +530,7 @@
       ]
     },
     "517": {
+      "Desc": "Packaging Data",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -559,6 +565,7 @@
       ]
     },
     "518": {
+      "Desc": "Text Data",
       "Elements": [
         {
           "Desc": "Version Number",
@@ -593,6 +600,7 @@
       ]
     },
     "519": {
+      "Desc": "Interchange Trailer",
       "Elements": [
         {
           "Desc": "Version Number",
