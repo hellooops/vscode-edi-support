@@ -7,6 +7,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [2.1.5] - 2026-02-09
+
+### Fixed
+- Fix VDA error diagnostics issues.
+
+
 ## [2.1.4] - 2026-02-09
 
 ### Fixed
