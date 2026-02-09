@@ -7,6 +7,25 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 
+## [2.1.4] - 2026-02-09
+
+### Fixed
+- Fixed VDA file parsing error issue.
+- Enrich VDA schema with segment description.
+
+
+## [2.1.3] - 2025-12-04
+
+### Fixed
+- Add missing element in UNG.
+
+
+## [2.1.2] - 2025-12-04
+
+### Added
+- Add CustomSegmentSchemaBuilder for UNG, UNE.
+
+
 ## [2.1.1] - 2025-12-04
 
 ### Fixed
