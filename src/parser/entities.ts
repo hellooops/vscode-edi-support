@@ -533,7 +533,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     if (this.startSegment && this.endSegment) {
       const startId = this.getId();
       const endId = this.getEndId();
-      if (startId && startId !== endId) {
+      if (startId && endId && startId !== endId) {
         errors.push({
           error: `Wrong transaction set control number, supposed to be ${startId}, got ${endId}`,
           code: DiagnosticErrors.INVALID_VALUE,
@@ -544,7 +544,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   
       const controlCount = this.getControlCount();
       const realControlCount = this.getRealControlCount();
-      if (controlCount !== realControlCount) {
+      if (controlCount !== undefined && controlCount !== realControlCount) {
         errors.push({
           error: `Wrong transaction set segments count, supposed to be ${realControlCount}, got ${controlCount}`,
           code: DiagnosticErrors.INVALID_VALUE,
@@ -1159,8 +1159,8 @@ export interface EdiStandardOptions {
   functionalGroupStartSegmentName?: string;
   functionalGroupEndSegmentName?: string;
 
-  transactionSetStartSegmentName?: string;
-  transactionSetEndSegmentName?: string;
+  transactionSetStartSegmentName?: string | string[];
+  transactionSetEndSegmentName?: string | string[];
 }
 
 type ParseInterchangeMetaFunc = (interchangeSegment: EdiSegment | undefined) => EdiInterchangeMeta;
@@ -1236,7 +1236,7 @@ export class EdiDocumentBuilder {
     } else if (segment.id === this.options.functionalGroupEndSegmentName) {
       this.ediDocument.endFunctionalGroup(segment);
       this.functionalGroupSegment = undefined;
-    } else if (segment.id === this.options.transactionSetStartSegmentName) {
+    } else if (segment.id === this.options.transactionSetStartSegmentName || (Array.isArray(this.options.transactionSetStartSegmentName) && this.options.transactionSetStartSegmentName.includes(segment.id))) {
       const transactionSetMeta = this.parseTransactionSetMetaFunc!(this.interchangeSegment, this.functionalGroupSegment!, segment);
       if (this.loadSchemaFunc) {
         await this.loadSchemaFunc(transactionSetMeta);
@@ -1248,7 +1248,7 @@ export class EdiDocumentBuilder {
         }
       }
       this.ediDocument.startTransactionSet(transactionSetMeta, segment);
-    } else if (segment.id === this.options.transactionSetEndSegmentName) {
+    } else if (segment.id === this.options.transactionSetEndSegmentName || (Array.isArray(this.options.transactionSetEndSegmentName) && this.options.transactionSetEndSegmentName.includes(segment.id))) {
       const transactionSet = this.ediDocument.endTransactionSet(segment);
       if (this.afterEndTransactionSetFunc) await this.afterEndTransactionSetFunc(transactionSet);
       this.unloadSchemaFunc && this.unloadSchemaFunc();

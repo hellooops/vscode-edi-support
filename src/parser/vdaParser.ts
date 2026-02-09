@@ -45,7 +45,7 @@ export class VdaParser extends EdiParserBase {
   }
 
   protected parseSeparators(): EdiMessageSeparators | null {
-    const document = this.document.trim();
+    const document = this.document.trimStart();
     if (!document || document.length < 128) {
       return null;
     }
@@ -95,6 +95,8 @@ export class VdaParser extends EdiParserBase {
 
   protected getStardardOptions(): EdiStandardOptions {
     return {
+      transactionSetStartSegmentName: ["511", "711"],
+      transactionSetEndSegmentName: ["519", "719"],
     };
   }
 }
