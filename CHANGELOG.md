@@ -6,6 +6,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Added
+- Support qualifier code inlay hints, this can be toggled in settings.
+
 
 ## [2.1.5] - 2026-02-09
 

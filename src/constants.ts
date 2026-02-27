@@ -96,6 +96,7 @@ export namespace configuration {
   export const ediSupport = "ediSupport";
   export const inlayHints = {
     segmentNames: "inlayHints.segmentNames",
+    qualifierCodes: "inlayHints.qualifierCodes",
   };
   export const enableCodelens = "enableCodelens";
   export const enableLoopAnnotations = "enableLoopAnnotations";

@@ -86,7 +86,9 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
       }),
       vscode.workspace.onDidChangeConfiguration(async (e) => {
         EdiUtils.clearCache();
-        this.refreshDiagnostics(vscode.window.activeTextEditor!.document, ediDiagnostics);
+        if (vscode.window.activeTextEditor) {
+          this.refreshDiagnostics(vscode.window.activeTextEditor.document, ediDiagnostics);
+        }
       }),
     ];
   }

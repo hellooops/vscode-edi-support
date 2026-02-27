@@ -193,6 +193,11 @@
           "default": false,
           "description": "Show inlay hints for segment names."
         },
+        "ediSupport.inlayHints.qualifierCodes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show inlay hints for qualifier codes."
+        },
         "ediSupport.vda.enableElementIndexAnnotation": {
           "type": "boolean",
           "default": true,
