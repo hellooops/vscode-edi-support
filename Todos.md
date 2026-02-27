@@ -41,12 +41,12 @@
 - `SelectTextByPositionCommand` — 按位置选中文本逻辑
 - `AddCodeToQualifierCommand` — qualifier 注册逻辑
 
-### 四、Diagnostics 诊断（完全未测试）
+### 四、Diagnostics 诊断（已补充核心测试）
 
 `src/diagnostics/ediDiagnostics.ts` 的 `EdiDiagnosticsMgr`：
-- `ediDiagnosticsToVscodeDiagnostics()` — severity 映射（Error/Warning）
-- `refreshDiagnostics()` — 解析文档并生成诊断结果的完整流程
-- 对含错误的 EDI 文档生成正确的诊断位置和消息
+- ✅ `ediDiagnosticsToVscodeDiagnostics()` — 已覆盖 severity 映射（Error/Warning）、默认范围、segment/element 范围与异常分支
+- ✅ `refreshDiagnostics()` — 已覆盖不支持语言、parser 缺失、未知类型早退，以及解析+转换+写入诊断集合完整流程
+- ✅ VDA 上下文行为 — 已覆盖 `ignoreRequired=true` 的诊断上下文传递
 
 ### 五、Entities 实体方法（部分覆盖，有缺口）
 
