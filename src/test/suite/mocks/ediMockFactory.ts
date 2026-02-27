@@ -2,32 +2,61 @@ import * as vscode from "vscode";
 
 export class EdiMockFactory {
   static createMockDocument(content: string, languageId: string = "x12"): vscode.TextDocument {
-    const fileName = `test.${languageId}`;
+    const lineOffsets: number[] = [0];
+    for (let i = 0; i < content.length; i++) {
+      if (content[i] === "\n") {
+        lineOffsets.push(i + 1);
+      }
+    }
+
+    const positionAt = (offset: number): vscode.Position => {
+      const safeOffset = Math.max(0, Math.min(offset, content.length));
+      let line = 0;
+      for (let i = 0; i < lineOffsets.length; i++) {
+        if (i + 1 >= lineOffsets.length || lineOffsets[i + 1] > safeOffset) {
+          line = i;
+          break;
+        }
+      }
+
+      return new vscode.Position(line, safeOffset - lineOffsets[line]);
+    };
+
+    const offsetAt = (position: vscode.Position): number => {
+      const lineOffset = lineOffsets[position.line] ?? content.length;
+      return Math.max(0, Math.min(lineOffset + position.character, content.length));
+    };
+
     return {
-      uri: vscode.Uri.file(fileName),
-      fileName,
+      uri: vscode.Uri.file(`test.${languageId}`),
+      fileName: `test.${languageId}`,
       isUntitled: false,
       languageId,
       version: 1,
       isDirty: false,
       isClosed: false,
       eol: vscode.EndOfLine.LF,
-      lineCount: content.split("\n").length,
+      lineCount: lineOffsets.length,
       getText: () => content,
       getWordRangeAtPosition: () => undefined,
-      offsetAt: (pos: vscode.Position) => 0,
-      positionAt: (offset: number) => new vscode.Position(0, offset),
+      offsetAt,
+      positionAt,
       validateRange: (r: vscode.Range) => r,
       validatePosition: (p: vscode.Position) => p,
-      lineAt: () => ({
-        text: content,
-        range: new vscode.Range(0, 0, 0, content.length),
-        isEmptyOrWhitespace: false,
-        firstNonWhitespaceCharacterIndex: 0,
-        rangeIncludingLineBreak: new vscode.Range(0, 0, 0, content.length),
-        lineNumber: 0,
-      }),
-      getLineCount: () => content.split("\n").length,
+      lineAt: (line: number | vscode.Position) => {
+        const lineNumber = typeof line === "number" ? line : line.line;
+        const start = lineOffsets[lineNumber] ?? content.length;
+        const end = lineNumber + 1 < lineOffsets.length ? lineOffsets[lineNumber + 1] - 1 : content.length;
+        const text = content.substring(start, end);
+        return {
+          lineNumber,
+          text,
+          range: new vscode.Range(positionAt(start), positionAt(end)),
+          rangeIncludingLineBreak: new vscode.Range(positionAt(start), positionAt(Math.min(end + 1, content.length))),
+          firstNonWhitespaceCharacterIndex: text.search(/\S|$/),
+          isEmptyOrWhitespace: text.trim().length === 0,
+        };
+      },
       save: async () => true,
     } as vscode.TextDocument;
   }
