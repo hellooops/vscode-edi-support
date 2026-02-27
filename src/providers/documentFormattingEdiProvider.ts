@@ -13,13 +13,19 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
       return;
     }
 
+    const documentText = document.getText();
+    const formattedText = ediDocument.getFormatString();
+    if (documentText === formattedText) {
+      return [];
+    }
+
     const result: vscode.TextEdit[] = [];
     result.push(new vscode.TextEdit(
       new vscode.Range(
         document.positionAt(0),
-        document.positionAt(document.getText().length)
+        document.positionAt(documentText.length)
       ),
-      ediDocument.getFormatString()
+      formattedText
     ));
     return result;
   }
