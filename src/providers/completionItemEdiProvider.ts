@@ -30,7 +30,7 @@ export class CompletionItemEdiProvider implements vscode.CompletionItemProvider,
     }
   }
   resolveCompletionItem?(item: vscode.CompletionItem, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CompletionItem> {
-    throw new Error("Method not implemented.");
+    return item;
   }
 
   private getSegmentCompletionItems(schema: EdiSchema | undefined): vscode.CompletionItem[] {
@@ -60,8 +60,8 @@ export class CompletionItemEdiProvider implements vscode.CompletionItemProvider,
 
   public registerFunctions(): vscode.Disposable[] {
     return [
-      vscode.languages.registerCompletionItemProvider({ language: EdiType.X12 }, this),
-      vscode.languages.registerCompletionItemProvider({ language: EdiType.EDIFACT }, this),
+      vscode.languages.registerCompletionItemProvider({ language: EdiType.X12 }, this, "*", "+", ":"),
+      vscode.languages.registerCompletionItemProvider({ language: EdiType.EDIFACT }, this, "*", "+", ":"),
     ];
   }
 }
