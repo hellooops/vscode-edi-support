@@ -22,7 +22,7 @@ export namespace commands {
     label: "Inlay hints"
   };
   export const toggleLoopAnnotationsCommand = {
-    name: "edi-support.toggleLoopAnnotationsCommand",
+    name: "edi-support.toggleLoopAnnotations",
     label: "Loop annotations"
   };
   export const toggleElementIndexAnnotationCommand = {
