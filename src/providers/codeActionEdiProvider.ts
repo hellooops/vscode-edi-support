@@ -23,7 +23,7 @@ export class CodeActionEdiProvider implements vscode.CodeActionProvider, IProvid
     });
   }
   resolveCodeAction?(codeAction: vscode.CodeAction, token: vscode.CancellationToken): vscode.ProviderResult<vscode.CodeAction> {
-    throw new Error("Method not implemented.");
+    return codeAction;
   }
   registerFunctions(): vscode.Disposable[] {
     const codeActionProviderMetadata: vscode.CodeActionProviderMetadata = {
