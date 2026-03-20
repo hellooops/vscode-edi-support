@@ -1,10 +1,11 @@
 import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta, EdiType, EdiComment } from "./entities";
-import { EdiSchema, EdiVersionSegment } from "../schemas/schemas";
+import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
 import * as vscode from "vscode";
 import { type Conf_Supported_EdiType, type Conf_CustomSchema, Conf_Utils } from "../interfaces/configurations";
 import { SegmentScanner } from "./segmentScanner";
+import { SchemaVersionSegmentsContext } from "./schemaVersionSegmentsContext";
 
 export abstract class EdiParserBase {
   document: string;
@@ -167,81 +168,101 @@ export abstract class EdiParserBase {
       const isEndOfSegment = i === segmentStr.length - 1;
       if (isDataElementSeparator || isSegmentSeparator || isEndOfSegment) {
         const elementEndIndex = (isEndOfSegment && !isSegmentSeparator) ? i : i - 1;
-        if (element) {
-          element.endIndex = elementEndIndex;
-          element.value = segmentStr.substring(element.startIndex + 1, element.endIndex + 1);
-          element = undefined;
-        }
-
-        if (subElement) {
-          subElement.endIndex = elementEndIndex;
-          subElement.value = segmentStr.substring(subElement.startIndex + 1, subElement.endIndex + 1);
-          subElement = undefined;
-        }
+        element = this.closeElement(segmentStr, element, elementEndIndex);
+        subElement = this.closeElement(segmentStr, subElement, elementEndIndex);
 
         subElementIndex = 0;
       } else if (isComponentElementSeparator) {
-        if (subElement) {
-          subElement.endIndex = i - 1;
-          subElement.value = segmentStr.substring(subElement.startIndex + 1, subElement.endIndex + 1);
-          subElement = undefined;
-        }
+        subElement = this.closeElement(segmentStr, subElement, i - 1);
       }
 
       if (isDataElementSeparator) {
         elementIndex++;
-        element = new EdiElement(
-          segment,
-          ElementType.dataElement,
-          i,
-          -1, // endIndex will be set later
-          dataElementSeparator,
-          segment.id,
-          segment.startIndex,
-          this.pad(elementIndex, 2, "0")
-        );
-        element.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1];
+        element = this.createDataElement(segment, i, dataElementSeparator, elementIndex);
         elementDesignator = element.designatorIndex;
         segment.elements.push(element);
-        if (this.isElementComposite(segmentStr, element, i, segmentSeparator, dataElementSeparator, componentElementSeparator)) {
-          const nextC: string | undefined = i < segmentStr.length - 1 ? segmentStr[i + 1] : undefined;
-          const isElementValueEmpty = nextC === dataElementSeparator || nextC === segmentSeparator || nextC === undefined;
-          if (!isElementValueEmpty) {
-            subElementIndex++;
-            subElement = new EdiElement(
-              segment,
-              ElementType.componentElement,
-              i,
-              -1, // endIndex will be set later
-              dataElementSeparator,
-              segment.id,
-              segment.startIndex,
-              `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
-            );
-            subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components[subElementIndex - 1];
-            element.components = element.components || [];
-            element.components.push(subElement);
-          }
+        if (this.shouldCreateImplicitFirstComponent(segmentStr, element, i, segmentSeparator, dataElementSeparator, componentElementSeparator)) {
+          subElementIndex++;
+          subElement = this.createComponentElement(segment, i, dataElementSeparator, elementDesignator, elementIndex, subElementIndex);
+          this.addComponentElement(element, subElement);
         }
       } else if (isComponentElementSeparator) {
         subElementIndex++;
-        subElement = new EdiElement(
-          segment,
-          ElementType.componentElement,
-          i,
-          -1, // endIndex will be set later
-          componentElementSeparator,
-          segment.id,
-          segment.startIndex,
-          `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
-        );
-        subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components?.[subElementIndex - 1];
-        element!.components = element!.components || [];
-        element!.components.push(subElement);
+        subElement = this.createComponentElement(segment, i, componentElementSeparator, elementDesignator, elementIndex, subElementIndex);
+        this.addComponentElement(element!, subElement);
       }
     }
 
     return segment;
+  }
+
+  private closeElement(segmentStr: string, currentElement: EdiElement | undefined, elementEndIndex: number): EdiElement | undefined {
+    if (!currentElement) {
+      return undefined;
+    }
+
+    currentElement.endIndex = elementEndIndex;
+    currentElement.value = segmentStr.substring(currentElement.startIndex + 1, currentElement.endIndex + 1);
+    return undefined;
+  }
+
+  private createDataElement(segment: EdiSegment, startIndex: number, dataElementSeparator: string, elementIndex: number): EdiElement {
+    const element = new EdiElement(
+      segment,
+      ElementType.dataElement,
+      startIndex,
+      -1, // endIndex will be set later
+      dataElementSeparator,
+      segment.id,
+      segment.startIndex,
+      this.pad(elementIndex, 2, "0")
+    );
+    element.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1];
+    return element;
+  }
+
+  private createComponentElement(
+    segment: EdiSegment,
+    startIndex: number,
+    separator: string,
+    elementDesignator: string | undefined,
+    elementIndex: number,
+    subElementIndex: number
+  ): EdiElement {
+    const subElement = new EdiElement(
+      segment,
+      ElementType.componentElement,
+      startIndex,
+      -1, // endIndex will be set later
+      separator,
+      segment.id,
+      segment.startIndex,
+      `${elementDesignator}${this.pad(subElementIndex, 2, "0")}`
+    );
+    subElement.ediReleaseSchemaElement = segment.ediReleaseSchemaSegment?.elements[elementIndex - 1]?.components?.[subElementIndex - 1];
+    return subElement;
+  }
+
+  private addComponentElement(element: EdiElement, subElement: EdiElement): void {
+    element.components = element.components || [];
+    element.components.push(subElement);
+  }
+
+  private shouldCreateImplicitFirstComponent(
+    segmentStr: string,
+    element: EdiElement,
+    elementStartIndex: number,
+    segmentSeparator: string,
+    dataElementSeparator: string,
+    componentElementSeparator: string
+  ): boolean {
+    if (!this.isElementComposite(segmentStr, element, elementStartIndex, segmentSeparator, dataElementSeparator, componentElementSeparator)) {
+      return false;
+    }
+
+    const nextC: string | undefined = elementStartIndex < segmentStr.length - 1 ? segmentStr[elementStartIndex + 1] : undefined;
+    const isElementValueEmpty = nextC === dataElementSeparator || nextC === segmentSeparator || nextC === undefined;
+    return !isElementValueEmpty;
   }
 
   private isElementComposite(segmentStr: string, element: EdiElement, elementStartIndex: number, segmentSeparator: string, dataElementSeparator: string, componentElementSeparator: string): boolean {
@@ -378,94 +399,4 @@ export abstract class EdiParserBase {
   }
 
   protected abstract getStardardOptions(): EdiStandardOptions;
-}
-
-class SchemaVersionSegmentsContext {
-  ediVersionSegments: EdiVersionSegment[];
-  isLoop: boolean;
-
-  constructor(ediVersionSegments: EdiVersionSegment[], isLoop: boolean = false) {
-    this.ediVersionSegments = ediVersionSegments;
-    this.isLoop = isLoop;
-  }
-
-  build(segments: EdiSegment[]): EdiSegment[] {
-    const result: EdiSegment[] = [];
-    for(let i = 0; i < this.ediVersionSegments.length; i++) {
-      const ediVersionSegment = this.ediVersionSegments[i];
-      let segmentMatchTimes = 0;
-      const isFirstSegmentInLoop = i === 0 && this.isLoop;
-      while (true) {
-        if (segments.length === 0) {
-          return result;
-        }
-        
-        if (segments[0].isHeaderSegment()) {
-          result.push(segments.shift()!);
-          continue;
-        }
-
-        if (ediVersionSegment.isLoop()) {
-          // loop
-          const loopContext = new SchemaVersionSegmentsContext(ediVersionSegment.Loop!, true);
-          const loopResult = loopContext.build(segments);
-          if (!loopResult || loopResult.length <= 0) {
-            break;
-          }
-
-          const loopFirstChild = loopResult[0];
-          const loopLastChild = loopResult[loopResult.length - 1];
-          const loopSegment = new EdiSegment(
-            ediVersionSegment.Id,
-            loopFirstChild.startIndex,
-            loopLastChild.endIndex,
-            loopResult.reduce((acc, cur) => acc + cur.length, 0),
-            loopLastChild.endingDelimiter
-          );
-          loopSegment.Loop = loopResult;
-          loopResult.forEach(i => i.parentSegment = loopSegment);
-          result.push(loopSegment);
-          segmentMatchTimes++;
-          if (segmentMatchTimes >= ediVersionSegment.getMax()) {
-            break;
-          }
-        } else {
-          // non loop
-          if (ediVersionSegment.Id === segments[0].id) {
-            // segment match
-            const segment = segments.shift()!;
-            result.push(segment);
-            segmentMatchTimes++;
-            
-            if (segmentMatchTimes >= ediVersionSegment.getMax()) {
-              if (isFirstSegmentInLoop) {
-                break;
-              }
-            }
-
-            if (segmentMatchTimes > ediVersionSegment.getMax()) {
-              segment.segmentMaximumOccurrencesExceed = {
-                expect: ediVersionSegment.getMax(),
-                actual: segmentMatchTimes
-              };
-            }
-          } else {
-            // segment not match
-            if (isFirstSegmentInLoop) {
-              // if the first child segment in loop does not match, break
-              return result;
-            }
-
-            break;
-          }
-        }
-      }
-    }
-
-    if (segments.length > 0 && !this.isLoop) {
-      result.push(...segments);
-    }
-
-    return result;
-  }
 }
