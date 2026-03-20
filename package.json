@@ -328,17 +328,19 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run build",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "prepare:runtime": "npm run copySchema && npm run compile",
+    "build": "npm run prepare:runtime && npm run buildPreview",
+    "pretest": "npm run prepare:runtime && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "buildPreview": "cd packages/edi-preview && npm run build",
+    "buildPreview": "npm --prefix packages/edi-preview run build",
     "copySchema": "node scripts/copySchema.js",
-    "package": "npm run buildPreview && npm run copySchema && vsce package",
-    "publish": "npm run buildPreview && npm run copySchema && vsce publish",
-    "pre-release-publish": "npm run buildPreview && vsce publish --pre-release"
+    "package": "npm run build && npx @vscode/vsce package",
+    "publish": "npm run build && npx @vscode/vsce publish",
+    "pre-release-publish": "npm run build && npx @vscode/vsce publish --pre-release"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
