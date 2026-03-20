@@ -5,6 +5,7 @@ import WebviewProvider from "./webviewProvider";
 // TODO: only update relative webview if edi file is changed.
 
 const webviewsProvidersMap: Map<string, WebviewProvider> = new Map();
+let previewEventsRegistered = false;
 
 export function createWebview(context: vscode.ExtensionContext) {
   const currentDocument = vscode.window.activeTextEditor?.document;
@@ -21,22 +22,34 @@ export function createWebview(context: vscode.ExtensionContext) {
     webviewsProvidersMap.delete(fileName);
   });
   webviewsProvidersMap.set(fileName, webviewProvider);
-  registerEvents();
+  ensurePreviewEventsRegistered(context);
 }
 
-function registerEvents() {
-  vscode.workspace.onDidChangeTextDocument(async editor => {
-    if (!editor?.document) return;
-    const webviewProvider = webviewsProvidersMap.get(editor.document.fileName);
-    if (!webviewProvider) return;
-    webviewProvider.update(editor.document);
-  });
+export function ensurePreviewEventsRegistered(context: vscode.ExtensionContext) {
+  if (previewEventsRegistered) {
+    return;
+  }
 
-  vscode.window.onDidChangeTextEditorSelection(async (event) => {
-    if (!event.textEditor.document) return;
-    const webviewProvider = webviewsProvidersMap.get(event.textEditor.document.fileName);
-    if (!webviewProvider) return;
-    const startOffset = event.textEditor.document.offsetAt(event.selections[0].start);
-    await webviewProvider.onSelectionChange(startOffset);
-  });
+  previewEventsRegistered = true;
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeTextDocument(async editor => {
+      if (!editor?.document) return;
+      const webviewProvider = webviewsProvidersMap.get(editor.document.fileName);
+      if (!webviewProvider) return;
+      webviewProvider.update(editor.document);
+    }),
+    vscode.window.onDidChangeTextEditorSelection(async (event) => {
+      if (!event.textEditor.document) return;
+      const webviewProvider = webviewsProvidersMap.get(event.textEditor.document.fileName);
+      if (!webviewProvider) return;
+      const startOffset = event.textEditor.document.offsetAt(event.selections[0].start);
+      await webviewProvider.onSelectionChange(startOffset);
+    })
+  );
 }
+
+export const previewWebviewTestHooks = {
+  resetRegistrationState() {
+    previewEventsRegistered = false;
+  }
+};
