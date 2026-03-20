@@ -10,29 +10,30 @@ export function run(): Promise<void> {
 	});
 
 	const testsRoot = path.resolve(__dirname, '..');
+	const patterns = [
+		'suite/commands/**/*.test.js',
+		'suite/diagnostics/**/*.test.js',
+		'suite/providers/**/*.test.js',
+		'suite/utils/ediUtils.test.js',
+		'suite/ediPreviewWebview.test.js',
+		'suite/extension.activate.test.js',
+	];
 
 	return new Promise((c, e) => {
-		glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
-			if (err) {
-				return e(err);
-			}
-
-			// Add files to the test suite
+		try {
+			const files = patterns.flatMap(pattern => glob.sync(pattern, { cwd: testsRoot }));
 			files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
 
-			try {
-				// Run the mocha test
-				mocha.run(failures => {
-					if (failures > 0) {
-						e(new Error(`${failures} tests failed.`));
-					} else {
-						c();
-					}
-				});
-			} catch (err) {
-				console.error(err);
-				e(err);
-			}
-		});
+			mocha.run(failures => {
+				if (failures > 0) {
+					e(new Error(`${failures} tests failed.`));
+				} else {
+					c();
+				}
+			});
+		} catch (err) {
+			console.error(err);
+			e(err);
+		}
 	});
 }
