@@ -68,7 +68,7 @@ export abstract class EdiParserBase {
     });
     ediDocumentBuilder.onLoadSchema(async (meta: EdiTransactionSetMeta) => {
       // TODO(Deric): Don't load schema here, in parseSegment
-      await this.loadSchema(meta);
+      return await this.loadSchema(meta);
     });
     ediDocumentBuilder.onUnloadSchema(() => {
       this.unloadSchema();
@@ -324,15 +324,16 @@ export abstract class EdiParserBase {
 
   protected abstract getSchemaRootPath(): string;
 
-  async loadSchema(meta: EdiTransactionSetMeta): Promise<void> {
-    if (!meta.release || !meta.version) return;
+  async loadSchema(meta: EdiTransactionSetMeta): Promise<boolean> {
+    this.schema = undefined;
+    if (!meta.release || !meta.version) return false;
     let releaseSchema = null;
     let versionSchema = null;
     try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}.json`);
     } catch (ex) {
       console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
-      return;
+      return false;
     }
 
     try {
@@ -340,17 +341,19 @@ export abstract class EdiParserBase {
       const versionKey = `${meta.release}_${meta.version}`;
       if (!release_versions || !release_versions["DocumentTypes"][versionKey]) {
         console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), new Error(`Version ${versionKey} not found in ${meta.release}_versions.json`));
-        return;
+        return false;
       }
 
       // versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_${meta.version}.json`);
       versionSchema = release_versions["DocumentTypes"][versionKey];
     } catch (ex) {
       console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
+      return false;
     }
 
     const ediSchema = new EdiSchema(releaseSchema, versionSchema);
     this.schema = ediSchema;
+    return true;
   }
 
   protected unloadSchema(): void {

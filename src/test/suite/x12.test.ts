@@ -421,6 +421,33 @@ suite("X12 Parser Test Suite", () => {
       // Should still parse but may have different structure
       assert.ok(ediDocument);
     });
+
+    test("X12 Unsupported Release Should Not Log Schema Null Reference", async () => {
+      const documentStr = `
+      ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00401*000000001*0*T*:~
+      GS*PO*  *  *20241111*0300*1*T*999999~
+      ST*850*0001~
+      BEG*00*DS*PO1**20150708~
+      SE*3*0001~
+      GE*1*1~
+      IEA*1*000000001~
+      `;
+      const parser = new X12Parser(documentStr);
+      const originalConsoleError = console.error;
+      const errors: string[] = [];
+
+      console.error = (...args: any[]) => {
+        errors.push(args.map(arg => arg instanceof Error ? `${arg.name}: ${arg.message}` : String(arg)).join(" "));
+      };
+
+      try {
+        const ediDocument = await parser.parse();
+        assert.strictEqual(ediDocument.interchanges.length, 1);
+        assert.ok(!errors.some(error => error.includes("ediReleaseSchema")));
+      } finally {
+        console.error = originalConsoleError;
+      }
+    });
   });
 
   suite("Element Type Validation", () => {

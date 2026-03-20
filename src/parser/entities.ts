@@ -1166,7 +1166,7 @@ export interface EdiStandardOptions {
 type ParseInterchangeMetaFunc = (interchangeSegment: EdiSegment | undefined) => EdiInterchangeMeta;
 type ParseFunctionalGroupMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment) => EdiFunctionalGroupMeta;
 type ParseTransactionSetMetaFunc = (interchangeSegment: EdiSegment | undefined, functionalGroupSegment: EdiSegment | undefined, transactionSetSegment: EdiSegment) => EdiTransactionSetMeta;
-type LoadSchemaFunc = (meta: EdiTransactionSetMeta) => Promise<void>;
+type LoadSchemaFunc = (meta: EdiTransactionSetMeta) => Promise<boolean>;
 type UnloadSchemaFunc = () => void;
 type SchemaLoadedFunc = () => void;
 type LoadTransactionSetStartSegmentSchemaFunc = (segment: EdiSegment) => Promise<EdiSegment>;
@@ -1205,11 +1205,11 @@ export class EdiDocumentBuilder {
     if (!this.options.transactionSetStartSegmentName && !this.transactionSetStarted) {
       const transactionSetMeta = this.parseTransactionSetMetaFunc!(undefined, undefined, segment);
       if (this.loadSchemaFunc) {
-        await this.loadSchemaFunc(transactionSetMeta);
-        if (this.loadTransactionSetStartSegmentSchemaFunc) {
+        const schemaLoaded = await this.loadSchemaFunc(transactionSetMeta);
+        if (schemaLoaded && this.loadTransactionSetStartSegmentSchemaFunc) {
           segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
         }
-        if (this.schemaLoadedFunc) {
+        if (schemaLoaded && this.schemaLoadedFunc) {
           this.schemaLoadedFunc();
         }
       }
@@ -1239,11 +1239,11 @@ export class EdiDocumentBuilder {
     } else if (segment.id === this.options.transactionSetStartSegmentName || (Array.isArray(this.options.transactionSetStartSegmentName) && this.options.transactionSetStartSegmentName.includes(segment.id))) {
       const transactionSetMeta = this.parseTransactionSetMetaFunc!(this.interchangeSegment, this.functionalGroupSegment!, segment);
       if (this.loadSchemaFunc) {
-        await this.loadSchemaFunc(transactionSetMeta);
-        if (this.loadTransactionSetStartSegmentSchemaFunc) {
+        const schemaLoaded = await this.loadSchemaFunc(transactionSetMeta);
+        if (schemaLoaded && this.loadTransactionSetStartSegmentSchemaFunc) {
           segment = await this.loadTransactionSetStartSegmentSchemaFunc(segment);
         }
-        if (this.schemaLoadedFunc) {
+        if (schemaLoaded && this.schemaLoadedFunc) {
           this.schemaLoadedFunc();
         }
       }
