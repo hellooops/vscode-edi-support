@@ -4,6 +4,7 @@ import * as constants from "../constants";
 import Utils from "../utils/utils";
 import * as vscode from "vscode";
 import { type Conf_Supported_EdiType, type Conf_CustomSchema, Conf_Utils } from "../interfaces/configurations";
+import { SegmentScanner } from "./segmentScanner";
 
 export abstract class EdiParserBase {
   document: string;
@@ -85,29 +86,20 @@ export abstract class EdiParserBase {
       transactionSet.segments = this.fitSegmentsToVersion(transactionSet.segments);
     });
     try {
-      const segmentRegex = this.getSegmentRegex();
-      const commentRegex = this.getCommentRegex();
-
-      let remaining = this.document;
-      while (remaining.length > 0) {
-        const commentMatch = commentRegex.exec(remaining);
-        const segmentMatch = segmentRegex.exec(remaining);
-        const lengthBeforeRemaining = this.document.length - remaining.length;
-        if (commentMatch) {
-          ediDocumentBuilder.addComment(new EdiComment(lengthBeforeRemaining + commentMatch.index, lengthBeforeRemaining + commentMatch.index + commentMatch[0].length - 1, commentMatch[0]));
-          remaining = remaining.slice(commentMatch.index + commentMatch[0].length);
-        } else if (segmentMatch) {
-          if (Utils.isNullOrUndefined(segmentMatch) || segmentMatch.length <= 0) break;
-          if (Utils.isNullOrUndefined(segmentMatch[0]) || segmentMatch[0] === "") break;
-          const ediSegment = await this.parseSegment(segmentMatch[0], lengthBeforeRemaining + segmentMatch.index, segmentMatch[2]);
-          await ediDocumentBuilder.addSegment(ediSegment);
-          remaining = remaining.slice(segmentMatch.index + segmentMatch[0].length);
-        } else {
+      const scanner = new SegmentScanner(this.document, this.getSegmentRegex(), this.getCommentRegex());
+      while (true) {
+        const token = scanner.next();
+        if (!token) {
           break;
         }
 
-        commentRegex.lastIndex = 0;
-        segmentRegex.lastIndex = 0;
+        if (token.type === "comment") {
+          ediDocumentBuilder.addComment(new EdiComment(token.startIndex, token.endIndex, token.value));
+          continue;
+        }
+
+        const ediSegment = await this.parseSegment(token.value, token.startIndex, token.endingDelimiter);
+        await ediDocumentBuilder.addSegment(ediSegment);
       }
 
       return ediDocumentBuilder.buildEdiDocument();

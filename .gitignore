@@ -5,4 +5,3 @@ node_modules
 *.vsix
 edi-preview-dist/
 edi-edifact-support-*/
-REVIEW_FIX_TODO.md
