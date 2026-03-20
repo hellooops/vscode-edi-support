@@ -345,7 +345,9 @@ export abstract class EdiParserBase {
     try {
       releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}.json`);
     } catch (ex) {
-      console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
+      if (!this.isExpectedSchemaLoadFailure(ex)) {
+        console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
+      }
       return false;
     }
 
@@ -353,14 +355,15 @@ export abstract class EdiParserBase {
       const release_versions = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_versions.json`);
       const versionKey = `${meta.release}_${meta.version}`;
       if (!release_versions || !release_versions["DocumentTypes"][versionKey]) {
-        console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), new Error(`Version ${versionKey} not found in ${meta.release}_versions.json`));
         return false;
       }
 
       // versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_${meta.version}.json`);
       versionSchema = release_versions["DocumentTypes"][versionKey];
     } catch (ex) {
-      console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
+      if (!this.isExpectedSchemaLoadFailure(ex)) {
+        console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
+      }
       return false;
     }
 
@@ -371,6 +374,15 @@ export abstract class EdiParserBase {
 
   protected unloadSchema(): void {
     this.schema = undefined;
+  }
+
+  private isExpectedSchemaLoadFailure(ex: unknown): boolean {
+    if (!(ex instanceof Error)) {
+      return false;
+    }
+
+    const error = ex as NodeJS.ErrnoException;
+    return error.code === "MODULE_NOT_FOUND" || error.message.includes("Cannot find module");
   }
 
   protected onSchemaLoaded(): void {

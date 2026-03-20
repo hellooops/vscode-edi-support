@@ -443,7 +443,7 @@ suite("X12 Parser Test Suite", () => {
       try {
         const ediDocument = await parser.parse();
         assert.strictEqual(ediDocument.interchanges.length, 1);
-        assert.ok(!errors.some(error => error.includes("ediReleaseSchema")));
+        assert.deepStrictEqual(errors, []);
       } finally {
         console.error = originalConsoleError;
       }
