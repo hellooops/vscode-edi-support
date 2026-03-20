@@ -134,7 +134,7 @@ export abstract class EdiParserBase {
   }
 
   protected getSegmentNameBySegmentStr(segmentStr: string): string {
-    const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length - 1;
+    const firstElementSeparatorIndex = /\W/.exec(segmentStr)?.index ?? segmentStr.length;
     return segmentStr.substring(0, firstElementSeparatorIndex);
   }
 
@@ -150,7 +150,7 @@ export abstract class EdiParserBase {
 
     segment.segmentStr = segmentStr;
 
-    this.assembleSegmentReleaseSchema(segment, segmentStr);
+    await this.assembleSegmentReleaseSchema(segment, segmentStr);
 
     const customSegmentParser = this.getCustomSegmentParser(segment.id);
     if (customSegmentParser) {
