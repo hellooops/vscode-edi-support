@@ -113,6 +113,23 @@ suite("EDIFACT Parser Test Suite", () => {
       assert.ok(segmentIds.includes("UNT"));
       assert.ok(segmentIds.includes("UNZ"));
     });
+
+    test("EDIFACT Escaped Component Separator Should Stay In Plain Element Without Schema", async () => {
+      const documentStr = "ZZZ+AB?:CD'";
+      const parser = new EdifactParser(documentStr);
+      parser.setMessageSeparators({
+        segmentSeparator: "'",
+        dataElementSeparator: "+",
+        componentElementSeparator: ":",
+        releaseCharacter: "?"
+      });
+
+      const segment: EdiSegment = await parser.parseSegment(documentStr, 0, "'");
+
+      assert.strictEqual(segment.elements.length, 1);
+      assert.strictEqual(segment.elements[0].value, "AB?:CD");
+      assert.strictEqual(segment.elements[0].components?.length ?? 0, 0);
+    });
   });
 
   suite("Parse Separators", () => {

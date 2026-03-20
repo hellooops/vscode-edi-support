@@ -255,11 +255,11 @@ export abstract class EdiParserBase {
   private isElementComposite(segmentStr: string, element: EdiElement, elementStartIndex: number, segmentSeparator: string, dataElementSeparator: string, componentElementSeparator: string): boolean {
     if (element.ediReleaseSchemaElement) return element.ediReleaseSchemaElement.isComposite();
     if (elementStartIndex >= segmentStr.length) return false;
+    const releaseCharacter = this.getMessageSeparators().releaseCharacter ?? "";
     for (let i = elementStartIndex + 1; i < segmentStr.length; i++) {
-      const c = segmentStr[i];
-      const isSegmentSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, segmentSeparator, c);
-      const isDataElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, dataElementSeparator, c);
-      const isComponentElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, componentElementSeparator, c);
+      const isSegmentSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, segmentSeparator, releaseCharacter);
+      const isDataElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, dataElementSeparator, releaseCharacter);
+      const isComponentElementSeparator = EdiParserBase.isCharWithoutEscape(segmentStr, i, componentElementSeparator, releaseCharacter);
       if (isDataElementSeparator || isSegmentSeparator) return false;
       else if (isComponentElementSeparator) return true;
     }
