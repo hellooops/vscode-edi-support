@@ -1,7 +1,18 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
 import { EdiUtils } from "../../../utils/ediUtils";
-import { EdiType, EdiSegment, EdiElement } from "../../../parser/entities";
+import {
+  EdiComment,
+  EdiDocument,
+  EdiDocumentSeparators,
+  EdiElement,
+  EdiFunctionalGroup,
+  EdiInterchange,
+  EdiSegment,
+  EdiTransactionSet,
+  EdiType,
+  ElementType,
+} from "../../../parser/entities";
 import { EdiMockFactory } from "../mocks/ediMockFactory";
 import { X12Parser } from "../../../parser/x12Parser";
 import { EdifactParser } from "../../../parser/edifactParser";
@@ -94,6 +105,21 @@ suite("EdiUtils Test Suite", () => {
 
       assert.strictEqual(beforeClear.parser === afterClear.parser, false);
     });
+
+    test("getEdiParser should keep unknown documents unchanged", () => {
+      const doc = EdiMockFactory.createMockDocument("not edi", "plaintext");
+      let setLanguageCallCount = 0;
+      vscode.languages.setTextDocumentLanguage = async () => {
+        setLanguageCallCount += 1;
+        return doc;
+      };
+
+      const result = EdiUtils.getEdiParser(doc);
+
+      assert.strictEqual(result.ediType, EdiType.UNKNOWN);
+      assert.strictEqual(result.parser, undefined);
+      assert.strictEqual(setLanguageCallCount, 0);
+    });
   });
 
   suite("Range and Position Helpers", () => {
@@ -142,5 +168,163 @@ suite("EdiUtils Test Suite", () => {
       assert.strictEqual(active.segment?.id, "ST");
       assert.strictEqual(active.element?.value, "850");
     });
+
+    test("Should compute hierarchy, delimiter and comment ranges", () => {
+      const fixture = createHierarchyFixture();
+
+      const interchangeRange = EdiUtils.getInterchangeRange(fixture.document, fixture.interchange);
+      const functionalGroupRange = EdiUtils.getFunctionalGroupRange(fixture.document, fixture.functionalGroup);
+      const transactionSetRange = EdiUtils.getTransactionSetRange(fixture.document, fixture.transactionSet);
+      const segmentRange = EdiUtils.getSegmentRange(fixture.document, fixture.refSegment);
+      const segmentRangeWithDelimiter = EdiUtils.getSegmentRange(fixture.document, fixture.refSegment, true);
+      const delimiterRange = EdiUtils.getSegmentDelimiterRange(fixture.document, fixture.refSegment);
+      const commentRange = EdiUtils.getCommentRange(fixture.document, fixture.comment);
+
+      assert.strictEqual(interchangeRange.start.line, 0);
+      assert.strictEqual(interchangeRange.end.line, 6);
+      assert.strictEqual(functionalGroupRange.start.line, 1);
+      assert.strictEqual(functionalGroupRange.end.line, 5);
+      assert.strictEqual(transactionSetRange.start.line, 2);
+      assert.strictEqual(transactionSetRange.end.line, 4);
+
+      assert.strictEqual(fixture.content.substring(fixture.document.offsetAt(segmentRange.start), fixture.document.offsetAt(segmentRange.end)), "REF*ZZ:AA");
+      assert.strictEqual(fixture.content.substring(fixture.document.offsetAt(segmentRangeWithDelimiter.start), fixture.document.offsetAt(segmentRangeWithDelimiter.end)), "REF*ZZ:AA~");
+      assert.strictEqual(fixture.content.substring(fixture.document.offsetAt(delimiterRange!.start), fixture.document.offsetAt(delimiterRange!.end)), "~");
+      assert.strictEqual(fixture.content.substring(fixture.document.offsetAt(commentRange.start), fixture.document.offsetAt(commentRange.end)), "// memo");
+
+      const newlineDocument = EdiMockFactory.createMockDocument("NTE*NOTE\n", "x12");
+      const newlineSegment = createSegmentFromContent("NTE*NOTE\n", "NTE", "NTE*NOTE\n", "\n");
+      assert.strictEqual(EdiUtils.getSegmentDelimiterRange(newlineDocument, newlineSegment), null);
+    });
+
+    test("Should resolve element separator positions and nested composite elements", () => {
+      const fixture = createHierarchyFixture();
+
+      const separatorRange = EdiUtils.getElementSeparatorRange(fixture.document, fixture.refSegment, fixture.compositeElement);
+      const componentPosition = fixture.refSegment.startIndex + fixture.componentElement.startIndex + 2;
+      const active = EdiUtils.getSegmentOrElementByPosition(componentPosition, [fixture.loopSegment]);
+      const missing = EdiUtils.getSegmentOrElementByPosition(fixture.content.length + 5, [fixture.loopSegment]);
+
+      assert.strictEqual(fixture.content.substring(fixture.document.offsetAt(separatorRange.start), fixture.document.offsetAt(separatorRange.end)), "*");
+      assert.strictEqual(active.segment?.id, "REF");
+      assert.strictEqual(active.element?.designatorIndex, "01-1");
+      assert.deepStrictEqual(missing, {});
+    });
+
+    test("isOnlySegmentInLine should handle standalone, commented and invalid line layouts", () => {
+      const standaloneContent = "REF*ZZ~";
+      const standaloneDocument = EdiMockFactory.createMockDocument(standaloneContent, "x12");
+      const standaloneSegment = createSegmentFromContent(standaloneContent, "REF", "REF*ZZ~", "~");
+
+      const commentedContent = "REF*ZZ~ // note";
+      const commentedDocument = EdiMockFactory.createMockDocument(commentedContent, "x12");
+      const commentedSegment = createSegmentFromContent(commentedContent, "REF", "REF*ZZ~", "~");
+
+      const trailingContent = "REF*ZZ~ EXTRA";
+      const trailingDocument = EdiMockFactory.createMockDocument(trailingContent, "x12");
+      const trailingSegment = createSegmentFromContent(trailingContent, "REF", "REF*ZZ~", "~");
+
+      const multilineContent = "REF*ZZ\nAA~";
+      const multilineDocument = EdiMockFactory.createMockDocument(multilineContent, "x12");
+      const multilineSegment = createSegmentFromContent(multilineContent, "REF", "REF*ZZ\nAA~", "~");
+
+      assert.strictEqual(EdiUtils.isOnlySegmentInLine(standaloneDocument, standaloneSegment), true);
+      assert.strictEqual(EdiUtils.isOnlySegmentInLine(commentedDocument, commentedSegment), true);
+      assert.strictEqual(EdiUtils.isOnlySegmentInLine(trailingDocument, trailingSegment), false);
+      assert.strictEqual(EdiUtils.isOnlySegmentInLine(multilineDocument, multilineSegment), false);
+      assert.strictEqual(EdiUtils.isOnlySegmentInLine(standaloneDocument, undefined as any), false);
+    });
   });
 });
+
+function createHierarchyFixture() {
+  const content = [
+    "ISA*00~",
+    "GS*PO~",
+    "ST*850*0001~",
+    "REF*ZZ:AA~",
+    "SE*2*0001~",
+    "GE*1*1~",
+    "IEA*1*0001~",
+    "// memo",
+  ].join("\n");
+  const document = EdiMockFactory.createMockDocument(content, EdiType.X12);
+
+  const separators = new EdiDocumentSeparators();
+  separators.segmentSeparator = "~";
+  separators.dataElementSeparator = "*";
+  separators.componentElementSeparator = ":";
+
+  const ediDocument = new EdiDocument(separators, {
+    interchangeStartSegmentName: "ISA",
+    interchangeEndSegmentName: "IEA",
+    functionalGroupStartSegmentName: "GS",
+    functionalGroupEndSegmentName: "GE",
+    transactionSetStartSegmentName: "ST",
+    transactionSetEndSegmentName: "SE",
+  });
+  const interchange = new EdiInterchange({ id: "0001" }, ediDocument);
+  const functionalGroup = new EdiFunctionalGroup({ id: "1" }, interchange);
+  const transactionSet = new EdiTransactionSet({ id: "0001", release: "00401", version: "850" }, functionalGroup);
+
+  const isa = createSegmentFromContent(content, "ISA", "ISA*00~", "~");
+  const gs = createSegmentFromContent(content, "GS", "GS*PO~", "~");
+  const st = createSegmentFromContent(content, "ST", "ST*850*0001~", "~");
+  const refSegment = createSegmentFromContent(content, "REF", "REF*ZZ:AA~", "~");
+  const se = createSegmentFromContent(content, "SE", "SE*2*0001~", "~");
+  const ge = createSegmentFromContent(content, "GE", "GE*1*1~", "~");
+  const iea = createSegmentFromContent(content, "IEA", "IEA*1*0001~", "~");
+
+  const compositeElement = new EdiElement(refSegment, ElementType.dataElement, 3, 8, "*", "REF", refSegment.startIndex, "01");
+  compositeElement.value = "ZZ:AA";
+  compositeElement.ediReleaseSchemaElement = {
+    isComposite: () => true,
+  } as any;
+
+  const componentElement = new EdiElement(refSegment, ElementType.componentElement, 6, 8, ":", "REF", refSegment.startIndex, "01-1");
+  componentElement.value = "AA";
+  compositeElement.components = [componentElement];
+  refSegment.elements = [compositeElement];
+
+  const loopSegment = new EdiSegment("REF_LOOP", refSegment.startIndex, refSegment.endIndex, refSegment.length, "~");
+  loopSegment.Loop = [refSegment];
+
+  interchange.startSegment = isa;
+  interchange.endSegment = iea;
+  interchange.functionalGroups.push(functionalGroup);
+
+  functionalGroup.startSegment = gs;
+  functionalGroup.endSegment = ge;
+  functionalGroup.transactionSets.push(transactionSet);
+
+  transactionSet.startSegment = st;
+  transactionSet.segments.push(loopSegment);
+  transactionSet.endSegment = se;
+
+  ediDocument.interchanges.push(interchange);
+
+  const commentStart = content.indexOf("// memo");
+  const comment = new EdiComment(commentStart, commentStart + "// memo".length - 1, "// memo");
+
+  return {
+    content,
+    document,
+    ediDocument,
+    interchange,
+    functionalGroup,
+    transactionSet,
+    refSegment,
+    compositeElement,
+    componentElement,
+    loopSegment,
+    comment,
+  };
+}
+
+function createSegmentFromContent(content: string, id: string, segmentText: string, endingDelimiter: string): EdiSegment {
+  const startIndex = content.indexOf(segmentText);
+  const endIndex = startIndex + segmentText.length - 1;
+  const segment = new EdiSegment(id, startIndex, endIndex, segmentText.length, endingDelimiter);
+  segment.segmentStr = segmentText;
+  return segment;
+}
