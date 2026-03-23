@@ -11,6 +11,15 @@ import * as constants from "../constants";
 //       }
 //     }
 //   }
+//   "edifact": {
+//     "_service": {
+//       "qualifiers": {
+//         "Identification code qualifier": {
+//           "ZZ": "<Custom code>"
+//         }
+//       }
+//     }
+//   }
 // }
 
 

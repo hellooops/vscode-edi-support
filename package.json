@@ -210,7 +210,7 @@
         },
         "ediSupport.customSchemas": {
           "type": "object",
-          "description": "Custom qualifiers."
+          "description": "Custom qualifiers. For EDIFACT service segments such as UNA, UNB, UNG, UNE and UNZ, use edifact._service.qualifiers."
         }
       }
     },
