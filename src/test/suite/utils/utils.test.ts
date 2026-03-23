@@ -1,5 +1,9 @@
 import * as assert from "assert";
+import * as vscode from "vscode";
+import { EdiType } from "../../../parser/entities";
+import { SchemaViewerUtils } from "../../../utils/schemaViewerUtils";
 import Utils, { StringBuilder } from "../../../utils/utils";
+import VscodeUtils from "../../../utils/vscodeUtils";
 
 suite("Utils Test Suite", () => {
   test("yyMMddFormat should format valid date", () => {
@@ -80,5 +84,90 @@ suite("StringBuilder Test Suite", () => {
     const result = sb.append("EDI").append("-").append("X12").toString();
 
     assert.strictEqual(result, "EDI-X12");
+  });
+});
+
+suite("SchemaViewerUtils Test Suite", () => {
+  test("Should build segment and element schema URLs when all parts are present", () => {
+    assert.strictEqual(
+      SchemaViewerUtils.getSegmentUrl(EdiType.X12, "00401", "ISA"),
+      "https://www.kasoftware.com/schema/edi/x12/00401/segments/ISA/",
+    );
+    assert.strictEqual(
+      SchemaViewerUtils.getElementUrl(EdiType.EDIFACT, "D97A", "UNB", "S002"),
+      "https://www.kasoftware.com/schema/edi/edifact/D97A/elements/UNB/S002/",
+    );
+  });
+
+  test("Should fall back to index URL when segment or element information is missing", () => {
+    const indexUrl = SchemaViewerUtils.getIndexUrl();
+
+    assert.strictEqual(SchemaViewerUtils.getSegmentUrl(EdiType.X12, null, "ISA"), indexUrl);
+    assert.strictEqual(SchemaViewerUtils.getSegmentUrl(EdiType.X12, "00401", null), indexUrl);
+    assert.strictEqual(SchemaViewerUtils.getElementUrl(EdiType.X12, "00401", "REF", undefined), indexUrl);
+  });
+});
+
+suite("VscodeUtils Test Suite", () => {
+  let originalActiveTextEditor: typeof vscode.window.activeTextEditor;
+
+  setup(() => {
+    originalActiveTextEditor = vscode.window.activeTextEditor;
+  });
+
+  teardown(() => {
+    Object.defineProperty(vscode.window, "activeTextEditor", {
+      value: originalActiveTextEditor,
+      configurable: true,
+    });
+  });
+
+  test("refreshEditor should do nothing when there is no active editor", async () => {
+    Object.defineProperty(vscode.window, "activeTextEditor", {
+      value: undefined,
+      configurable: true,
+    });
+
+    await VscodeUtils.refreshEditor();
+  });
+
+  test("refreshEditor should replace the full document with its current content", async () => {
+    const content = "ISA*00*~\nGS*PO*1~";
+    let replaceArgs: { range: vscode.Range; text: string } | undefined;
+    const document = {
+      getText: () => content,
+      positionAt: (offset: number) => {
+        const safeOffset = Math.max(0, Math.min(offset, content.length));
+        const lines = content.slice(0, safeOffset).split("\n");
+        return new vscode.Position(lines.length - 1, lines[lines.length - 1].length);
+      },
+    } as vscode.TextDocument;
+    const editor = {
+      document,
+      edit: async (callback: (builder: vscode.TextEditorEdit) => void) => {
+        const builder = {
+          replace: (range: vscode.Range, text: string) => {
+            replaceArgs = { range, text };
+            return true;
+          },
+        } as unknown as vscode.TextEditorEdit;
+        callback(builder);
+        return true;
+      },
+    } as unknown as vscode.TextEditor;
+
+    Object.defineProperty(vscode.window, "activeTextEditor", {
+      value: editor,
+      configurable: true,
+    });
+
+    await VscodeUtils.refreshEditor();
+
+    assert.ok(replaceArgs);
+    assert.strictEqual(replaceArgs!.text, content);
+    assert.strictEqual(replaceArgs!.range.start.line, 0);
+    assert.strictEqual(replaceArgs!.range.start.character, 0);
+    assert.strictEqual(replaceArgs!.range.end.line, 1);
+    assert.strictEqual(replaceArgs!.range.end.character, 8);
   });
 });
