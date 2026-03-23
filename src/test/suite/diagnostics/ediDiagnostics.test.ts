@@ -10,16 +10,40 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
   let diagnosticsMgr: EdiDiagnosticsMgr;
   let originalGetEdiParser: typeof EdiUtils.getEdiParser;
   let originalGetConfiguration: typeof vscode.workspace.getConfiguration;
+  let originalActiveTextEditor: typeof vscode.window.activeTextEditor;
+  let originalCreateDiagnosticCollection: typeof vscode.languages.createDiagnosticCollection;
+  let originalOnDidChangeActiveTextEditor: typeof vscode.window.onDidChangeActiveTextEditor;
+  let originalOnDidChangeTextDocument: typeof vscode.workspace.onDidChangeTextDocument;
+  let originalOnDidCloseTextDocument: typeof vscode.workspace.onDidCloseTextDocument;
+  let originalOnDidChangeConfiguration: typeof vscode.workspace.onDidChangeConfiguration;
+  let originalClearCache: typeof EdiUtils.clearCache;
 
   setup(() => {
     diagnosticsMgr = new EdiDiagnosticsMgr();
     originalGetEdiParser = EdiUtils.getEdiParser;
     originalGetConfiguration = vscode.workspace.getConfiguration;
+    originalActiveTextEditor = vscode.window.activeTextEditor;
+    originalCreateDiagnosticCollection = vscode.languages.createDiagnosticCollection;
+    originalOnDidChangeActiveTextEditor = vscode.window.onDidChangeActiveTextEditor;
+    originalOnDidChangeTextDocument = vscode.workspace.onDidChangeTextDocument;
+    originalOnDidCloseTextDocument = vscode.workspace.onDidCloseTextDocument;
+    originalOnDidChangeConfiguration = vscode.workspace.onDidChangeConfiguration;
+    originalClearCache = EdiUtils.clearCache;
   });
 
   teardown(() => {
     (EdiUtils as any).getEdiParser = originalGetEdiParser;
     vscode.workspace.getConfiguration = originalGetConfiguration;
+    Object.defineProperty(vscode.window, "activeTextEditor", {
+      value: originalActiveTextEditor,
+      configurable: true,
+    });
+    vscode.languages.createDiagnosticCollection = originalCreateDiagnosticCollection;
+    (vscode.window as any).onDidChangeActiveTextEditor = originalOnDidChangeActiveTextEditor;
+    (vscode.workspace as any).onDidChangeTextDocument = originalOnDidChangeTextDocument;
+    (vscode.workspace as any).onDidCloseTextDocument = originalOnDidCloseTextDocument;
+    (vscode.workspace as any).onDidChangeConfiguration = originalOnDidChangeConfiguration;
+    EdiUtils.clearCache = originalClearCache;
     EdiUtils.clearCache();
   });
 
@@ -338,6 +362,123 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
 
       const qualifierDiagnostics = capturedDiagnostics.filter(diagnostic => diagnostic.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
       assert.deepStrictEqual(qualifierDiagnostics, []);
+    });
+  });
+
+  suite("registerDiagnostics", () => {
+    test("Should create diagnostic collection, refresh active editor and wire listeners", async () => {
+      const activeDocument = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
+      const changedDocument = EdiMockFactory.createMockDocument("GS*PO*1~", "x12");
+      const closedDocument = EdiMockFactory.createMockDocument("ST*850*1~", "x12");
+      const diagnosticCollection = {
+        delete: (uri: vscode.Uri) => {
+          deletedUris.push(uri.toString());
+        },
+      } as unknown as vscode.DiagnosticCollection;
+      const deletedUris: string[] = [];
+      const refreshedDocuments: string[] = [];
+      let activeEditorListener: ((editor: vscode.TextEditor | undefined) => unknown) | undefined;
+      let textDocumentListener: ((event: vscode.TextDocumentChangeEvent) => unknown) | undefined;
+      let closeDocumentListener: ((document: vscode.TextDocument) => unknown) | undefined;
+      let configListener: ((event: vscode.ConfigurationChangeEvent) => unknown) | undefined;
+      let collectionName: string | undefined;
+      let clearCacheCount = 0;
+
+      Object.defineProperty(vscode.window, "activeTextEditor", {
+        value: { document: activeDocument },
+        configurable: true,
+      });
+      vscode.languages.createDiagnosticCollection = (name?: string) => {
+        collectionName = name;
+        return diagnosticCollection;
+      };
+      (vscode.window as any).onDidChangeActiveTextEditor = (listener: (editor: vscode.TextEditor | undefined) => unknown) => {
+        activeEditorListener = listener;
+        return new vscode.Disposable(() => {});
+      };
+      (vscode.workspace as any).onDidChangeTextDocument = (listener: (event: vscode.TextDocumentChangeEvent) => unknown) => {
+        textDocumentListener = listener;
+        return new vscode.Disposable(() => {});
+      };
+      (vscode.workspace as any).onDidCloseTextDocument = (listener: (document: vscode.TextDocument) => unknown) => {
+        closeDocumentListener = listener;
+        return new vscode.Disposable(() => {});
+      };
+      (vscode.workspace as any).onDidChangeConfiguration = (listener: (event: vscode.ConfigurationChangeEvent) => unknown) => {
+        configListener = listener;
+        return new vscode.Disposable(() => {});
+      };
+      diagnosticsMgr.refreshDiagnostics = async (document: vscode.TextDocument) => {
+        refreshedDocuments.push(document.uri.toString());
+      };
+      EdiUtils.clearCache = () => {
+        clearCacheCount++;
+      };
+
+      const disposables = diagnosticsMgr.registerDiagnostics();
+
+      assert.strictEqual(collectionName, constants.diagnostic.diagnosticCollectionId);
+      assert.strictEqual(disposables.length, 5);
+      assert.deepStrictEqual(refreshedDocuments, [activeDocument.uri.toString()]);
+      assert.ok(activeEditorListener);
+      assert.ok(textDocumentListener);
+      assert.ok(closeDocumentListener);
+      assert.ok(configListener);
+
+      await activeEditorListener!({ document: changedDocument } as vscode.TextEditor);
+      await activeEditorListener!(undefined);
+      await textDocumentListener!({ document: changedDocument } as vscode.TextDocumentChangeEvent);
+      closeDocumentListener!({
+        ...closedDocument,
+        isClosed: false,
+      } as vscode.TextDocument);
+      closeDocumentListener!({
+        ...closedDocument,
+        isClosed: true,
+      } as vscode.TextDocument);
+      await configListener!({} as vscode.ConfigurationChangeEvent);
+
+      assert.deepStrictEqual(refreshedDocuments, [
+        activeDocument.uri.toString(),
+        changedDocument.uri.toString(),
+        changedDocument.uri.toString(),
+        activeDocument.uri.toString(),
+      ]);
+      assert.deepStrictEqual(deletedUris, [closedDocument.uri.toString()]);
+      assert.strictEqual(clearCacheCount, 1);
+    });
+
+    test("Should skip initial and configuration refresh when there is no active editor", async () => {
+      let configListener: ((event: vscode.ConfigurationChangeEvent) => unknown) | undefined;
+      Object.defineProperty(vscode.window, "activeTextEditor", {
+        value: undefined,
+        configurable: true,
+      });
+      vscode.languages.createDiagnosticCollection = () => ({
+        delete: () => {},
+      }) as unknown as vscode.DiagnosticCollection;
+      (vscode.window as any).onDidChangeActiveTextEditor = () => new vscode.Disposable(() => {});
+      (vscode.workspace as any).onDidChangeTextDocument = () => new vscode.Disposable(() => {});
+      (vscode.workspace as any).onDidCloseTextDocument = () => new vscode.Disposable(() => {});
+      (vscode.workspace as any).onDidChangeConfiguration = (listener: (event: vscode.ConfigurationChangeEvent) => unknown) => {
+        configListener = listener;
+        return new vscode.Disposable(() => {});
+      };
+
+      let refreshCount = 0;
+      let clearCacheCount = 0;
+      diagnosticsMgr.refreshDiagnostics = async () => {
+        refreshCount++;
+      };
+      EdiUtils.clearCache = () => {
+        clearCacheCount++;
+      };
+
+      diagnosticsMgr.registerDiagnostics();
+      await configListener!({} as vscode.ConfigurationChangeEvent);
+
+      assert.strictEqual(refreshCount, 0);
+      assert.strictEqual(clearCacheCount, 1);
     });
   });
 });
