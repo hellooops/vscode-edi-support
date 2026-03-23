@@ -2,20 +2,25 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 import { EdiDiagnosticsMgr } from "../../../diagnostics/ediDiagnostics";
 import { EdiMockFactory } from "../mocks/ediMockFactory";
-import { DiagnosticErrorSeverity, EdiElement, EdiSegment, ElementType, EdiType, type DiagnoscticsContext, type DiagnosticError } from "../../../parser/entities";
+import { DiagnosticErrorSeverity, DiagnosticErrors, EdiElement, EdiSegment, ElementType, EdiType, type DiagnoscticsContext, type DiagnosticError } from "../../../parser/entities";
 import { EdiUtils } from "../../../utils/ediUtils";
+import * as constants from "../../../constants";
 
 suite("EdiDiagnosticsMgr Test Suite", () => {
   let diagnosticsMgr: EdiDiagnosticsMgr;
   let originalGetEdiParser: typeof EdiUtils.getEdiParser;
+  let originalGetConfiguration: typeof vscode.workspace.getConfiguration;
 
   setup(() => {
     diagnosticsMgr = new EdiDiagnosticsMgr();
     originalGetEdiParser = EdiUtils.getEdiParser;
+    originalGetConfiguration = vscode.workspace.getConfiguration;
   });
 
   teardown(() => {
     (EdiUtils as any).getEdiParser = originalGetEdiParser;
+    vscode.workspace.getConfiguration = originalGetConfiguration;
+    EdiUtils.clearCache();
   });
 
   suite("ediDiagnosticsToVscodeDiagnostics", () => {
@@ -241,6 +246,66 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
       assert.ok(capturedContext);
       assert.strictEqual(capturedContext!.ediType, EdiType.VDA);
       assert.strictEqual(capturedContext!.ignoreRequired, true);
+    });
+
+    test("Should resolve EDIFACT control-segment qualifier diagnostics to the message release", async () => {
+      vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({});
+      const document = EdiMockFactory.createMockDocument(
+        "UNB+UNOA:2+JLR:ZZ+TEST:ZZ+030325:0725+242++DELFOR'\nUNH+1+DELFOR:D:97A:UN'\nBGM+241+20020102084517+5'\nDTM+51:230101:101'\nUNT+4+1'\nUNZ+1+242'",
+        constants.ediDocument.edifact.name,
+      );
+
+      let capturedDiagnostics: readonly vscode.Diagnostic[] = [];
+      const diagnosticsCollection = {
+        set: (_uri: vscode.Uri, diagnostics: readonly vscode.Diagnostic[]) => {
+          capturedDiagnostics = diagnostics;
+        },
+      } as unknown as vscode.DiagnosticCollection;
+
+      await diagnosticsMgr.refreshDiagnostics(document, diagnosticsCollection);
+
+      const qualifierDiagnostics = capturedDiagnostics
+        .filter(diagnostic => diagnostic.code === DiagnosticErrors.QUALIFIER_INVALID_CODE)
+        .map(diagnostic => diagnostic as any);
+
+      assert.strictEqual(qualifierDiagnostics.length, 2);
+      qualifierDiagnostics.forEach(diagnostic => {
+        assert.strictEqual(diagnostic.others.release, "D97A");
+        assert.strictEqual(diagnostic.others.qualifier, "Identification code qualifier");
+        assert.strictEqual(diagnostic.others.code, "ZZ");
+      });
+    });
+
+    test("Should honor custom EDIFACT qualifier overrides for control segments", async () => {
+      vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({
+        [constants.configuration.customSchemas]: {
+          edifact: {
+            D97A: {
+              qualifiers: {
+                "Identification code qualifier": {
+                  ZZ: "<Custom code>",
+                },
+              },
+            },
+          },
+        },
+      });
+      const document = EdiMockFactory.createMockDocument(
+        "UNB+UNOA:2+JLR:ZZ+TEST:ZZ+030325:0725+242++DELFOR'\nUNH+1+DELFOR:D:97A:UN'\nBGM+241+20020102084517+5'\nDTM+51:230101:101'\nUNT+4+1'\nUNZ+1+242'",
+        constants.ediDocument.edifact.name,
+      );
+
+      let capturedDiagnostics: readonly vscode.Diagnostic[] = [];
+      const diagnosticsCollection = {
+        set: (_uri: vscode.Uri, diagnostics: readonly vscode.Diagnostic[]) => {
+          capturedDiagnostics = diagnostics;
+        },
+      } as unknown as vscode.DiagnosticCollection;
+
+      await diagnosticsMgr.refreshDiagnostics(document, diagnosticsCollection);
+
+      const qualifierDiagnostics = capturedDiagnostics.filter(diagnostic => diagnostic.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
+      assert.deepStrictEqual(qualifierDiagnostics, []);
     });
   });
 });

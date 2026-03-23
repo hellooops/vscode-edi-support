@@ -7,6 +7,10 @@ export class AddCodeToQualifierCommand implements ICommandable {
   name: string = constants.commands.addCodeToQualifierCommand.name;
 
   public async command(ediType: Conf_Supported_EdiType, release: string, qualifier: string, code: string, desc: string) {
+    if (!release) {
+      return;
+    }
+
     let customSchemas: Conf_CustomSchema = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customSchemas) ?? {};
     customSchemas = JSON.parse(JSON.stringify(customSchemas));
     Conf_Utils.addQualifier(customSchemas, ediType, release, qualifier, code, desc);

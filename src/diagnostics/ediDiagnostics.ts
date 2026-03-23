@@ -3,6 +3,7 @@ import { EdiType, type DiagnoscticsContext, type DiagnosticError, DiagnosticErro
 import { IDiagnosticsable } from "../interfaces/diagnosticsable";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
+import { type Conf_CustomSchema } from "../interfaces/configurations";
 
 export class DiagnosticsWithContext extends vscode.Diagnostic {
   others: any;
@@ -24,9 +25,11 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     }
 
     const ediDocument = await parser.parse();
+    const customSchemas: Conf_CustomSchema = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customSchemas) ?? {};
 
     const diagnoscticsContext: DiagnoscticsContext = {
       ediType,
+      customSchemas,
       standardOptions: ediDocument.standardOptions,
       ignoreRequired: ediType === EdiType.VDA
     };

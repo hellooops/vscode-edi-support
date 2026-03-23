@@ -1,9 +1,10 @@
 /// <reference path="../../env.d.ts" />
 
-import { EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
+import { EdiQualifier, EdiReleaseSchemaElement, EdiReleaseSchemaSegment } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
 import MessageInfo from "../interfaces/messageInfo";
+import { type Conf_CustomSchema, type Conf_Supported_EdiType, Conf_Utils } from "../interfaces/configurations";
 
 interface IEdiMessageResult<T> {
   getIResult(): T;
@@ -238,6 +239,7 @@ export interface DiagnoscticsContext {
   segment?: EdiSegment;
   element?: EdiElement;
   ediType: string;
+  customSchemas?: Conf_CustomSchema;
   standardOptions: EdiStandardOptions;
   ignoreRequired?: boolean;
 }
@@ -331,23 +333,22 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     }
 
     if (this.ediReleaseSchemaElement.qualifierRef && value) {
-      const codes = this.ediReleaseSchemaElement.getCodes();
-      if (codes) {
-        const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(value);
-        if (!elementValueCode) {
-          errors.push({
-            error: `Invalid code value '${value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
-            code: DiagnosticErrors.QUALIFIER_INVALID_CODE,
-            severity: DiagnosticErrorSeverity.ERROR,
-            errorElement: this,
-            others: {
-              ediType: context.ediType,
-              release: this.ediReleaseSchemaElement._schema?.release,
-              qualifier: this.ediReleaseSchemaElement.qualifierRef,
-              code: value
-            }
-          } as DiagnosticError_QUALIFIER_INVALID_CODE);
-        }
+      const release = this.ediReleaseSchemaElement._schema?.release ?? getRelatedTransactionSetRelease(this.segment);
+      const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(value)
+        ?? getCustomQualifierCode(context, release, this.ediReleaseSchemaElement.qualifierRef, value);
+      if (!elementValueCode) {
+        errors.push({
+          error: `Invalid code value '${value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
+          code: DiagnosticErrors.QUALIFIER_INVALID_CODE,
+          severity: DiagnosticErrorSeverity.ERROR,
+          errorElement: this,
+          others: {
+            ediType: context.ediType,
+            release,
+            qualifier: this.ediReleaseSchemaElement.qualifierRef,
+            code: value
+          }
+        } as DiagnosticError_QUALIFIER_INVALID_CODE);
       }
     }
 
@@ -1317,4 +1318,100 @@ function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalG
     ...children.map(i => i.getFormatString()),
     endSegment,
   ].filter(i => i).join(constants.ediDocument.lineBreak);
+}
+
+function getCustomQualifierCode(context: DiagnoscticsContext, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
+  if (!release || !context.customSchemas) {
+    return null;
+  }
+
+  const qualifiers = Conf_Utils.getQualifiers(context.customSchemas, context.ediType as Conf_Supported_EdiType, release);
+  const matchedQualifier = qualifiers.find(currentQualifier => currentQualifier.qualifier === qualifier && currentQualifier.code === code);
+  if (!matchedQualifier) {
+    return null;
+  }
+
+  return new EdiQualifier(matchedQualifier.code, matchedQualifier.desc);
+}
+
+function getRelatedTransactionSetRelease(segment: EdiSegment): string | undefined {
+  const transactionSet = getRelatedTransactionSet(segment);
+  return transactionSet?.meta.release;
+}
+
+function getRelatedTransactionSet(segment: EdiSegment): EdiTransactionSet | undefined {
+  if (segment.transactionSetParent) {
+    return segment.transactionSetParent;
+  }
+
+  const functionalGroup = segment.functionalGroupParent ?? getRelatedFunctionalGroup(segment);
+  if (functionalGroup) {
+    return functionalGroup.transactionSets.find(transactionSet => isSegmentInTransactionSet(transactionSet, segment))
+      ?? functionalGroup.transactionSets.find(transactionSet => transactionSet.meta.release);
+  }
+
+  const interchange = segment.interchangeParent ?? getRelatedInterchange(segment);
+  if (interchange) {
+    const transactionSets = interchange.functionalGroups.flatMap(functionalGroupItem => functionalGroupItem.transactionSets);
+    return transactionSets.find(transactionSet => isSegmentInTransactionSet(transactionSet, segment))
+      ?? transactionSets.find(transactionSet => transactionSet.meta.release);
+  }
+
+  const document = segment.documentParent;
+  if (!document) {
+    return undefined;
+  }
+
+  return document.interchanges
+    .flatMap(interchangeItem => interchangeItem.functionalGroups)
+    .flatMap(functionalGroupItem => functionalGroupItem.transactionSets)
+    .find(transactionSet => transactionSet.meta.release);
+}
+
+function getRelatedFunctionalGroup(segment: EdiSegment): EdiFunctionalGroup | undefined {
+  const interchange = segment.interchangeParent ?? getRelatedInterchange(segment);
+  if (!interchange) {
+    return undefined;
+  }
+
+  return interchange.functionalGroups.find(functionalGroup => isSegmentInFunctionalGroup(functionalGroup, segment));
+}
+
+function getRelatedInterchange(segment: EdiSegment): EdiInterchange | undefined {
+  const document = segment.documentParent;
+  if (!document) {
+    return undefined;
+  }
+
+  return document.interchanges.find(interchange => isSegmentInInterchange(interchange, segment));
+}
+
+function isSegmentInInterchange(interchange: EdiInterchange, segment: EdiSegment): boolean {
+  return interchange.startSegment === segment
+    || interchange.endSegment === segment
+    || interchange.functionalGroups.some(functionalGroup => isSegmentInFunctionalGroup(functionalGroup, segment));
+}
+
+function isSegmentInFunctionalGroup(functionalGroup: EdiFunctionalGroup, segment: EdiSegment): boolean {
+  return functionalGroup.startSegment === segment
+    || functionalGroup.endSegment === segment
+    || functionalGroup.transactionSets.some(transactionSet => isSegmentInTransactionSet(transactionSet, segment));
+}
+
+function isSegmentInTransactionSet(transactionSet: EdiTransactionSet, segment: EdiSegment): boolean {
+  return transactionSet.startSegment === segment
+    || transactionSet.endSegment === segment
+    || transactionSet.segments.some(currentSegment => isSegmentOrNestedLoopMatch(currentSegment, segment));
+}
+
+function isSegmentOrNestedLoopMatch(currentSegment: EdiSegment, targetSegment: EdiSegment): boolean {
+  if (currentSegment === targetSegment) {
+    return true;
+  }
+
+  if (!currentSegment.isLoop() || !currentSegment.Loop) {
+    return false;
+  }
+
+  return currentSegment.Loop.some(loopSegment => isSegmentOrNestedLoopMatch(loopSegment, targetSegment));
 }
