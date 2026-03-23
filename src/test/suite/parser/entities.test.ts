@@ -196,6 +196,61 @@ suite("Entities Test Suite", () => {
     assert.deepStrictEqual(serviceElement.getErrors(context), []);
   });
 
+  test("EdiElement should honor non-service custom qualifier scopes and preserve missing releases", () => {
+    const { transactionSet } = createHierarchy();
+    transactionSet.meta.release = "00401";
+
+    const regularSegment = createSegment("REF", 0, "~");
+    regularSegment.transactionSetParent = transactionSet;
+    const regularElement = createElement(regularSegment, "01", "ZZ");
+    regularElement.ediReleaseSchemaElement = createSchemaElement({
+      id: "E100",
+      qualifierRef: "Reference qualifier",
+      qualifierCodes: [],
+      release: undefined,
+    });
+    regularSegment.elements = [regularElement];
+
+    const overriddenErrors = regularElement.getErrors(createContext(EdiType.X12, {
+      x12: {
+        "00401": {
+          qualifiers: {
+            "Reference qualifier": {
+              ZZ: "Custom ref",
+            },
+          },
+        },
+      },
+    }));
+
+    const orphanSegment = createSegment("REF", 0, "~");
+    const orphanElement = createElement(orphanSegment, "01", "ZZ");
+    orphanElement.ediReleaseSchemaElement = createSchemaElement({
+      id: "E101",
+      qualifierRef: "Reference qualifier",
+      qualifierCodes: [],
+      release: undefined,
+    });
+    orphanSegment.elements = [orphanElement];
+
+    const orphanErrors = orphanElement.getErrors(createContext(EdiType.X12, {
+      x12: {
+        "00401": {
+          qualifiers: {
+            "Reference qualifier": {
+              ZZ: "Custom ref",
+            },
+          },
+        },
+      },
+    }));
+
+    assert.deepStrictEqual(overriddenErrors, []);
+    assert.strictEqual(orphanErrors.length, 1);
+    assert.strictEqual(orphanErrors[0].code, DiagnosticErrors.QUALIFIER_INVALID_CODE);
+    assert.strictEqual((orphanErrors[0] as any).others.release, undefined);
+  });
+
   test("Transaction set, functional group, interchange and document should report structural errors", () => {
     const { document, interchange, functionalGroup, transactionSet } = createHierarchy();
 
@@ -459,7 +514,7 @@ function createSchemaElement({
   minLength = 0,
   maxLength = 99,
   qualifierRef = "",
-  release = "00401",
+  release,
   qualifierCodes,
 }: {
   id: string;
@@ -468,7 +523,7 @@ function createSchemaElement({
   minLength?: number;
   maxLength?: number;
   qualifierRef?: string;
-  release?: string;
+  release?: string | undefined;
   qualifierCodes?: Array<{ value: string; desc: string }>;
 }) {
   return {
