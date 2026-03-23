@@ -12,6 +12,7 @@ export function run(): Promise<void> {
 	const testsRoot = path.resolve(__dirname, '..');
 	const patterns = [
 		'suite/commands/**/*.test.js',
+		'suite/decorations/**/*.test.js',
 		'suite/diagnostics/**/*.test.js',
 		'suite/providers/**/*.test.js',
 		'suite/utils/ediUtils.test.js',
