@@ -103,6 +103,43 @@ suite("CodeActionEdiProvider Test Suite", () => {
     assert.deepStrictEqual(result, []);
   });
 
+  test("Should preserve _service release for EDIFACT control-segment quick fixes", async () => {
+    const document = EdiMockFactory.createMockDocument("UNB+UNOA:2+JLR:ZZ'", "edifact");
+    const range = new vscode.Range(0, 0, 0, 3);
+    const diagnostic = new DiagnosticsWithContext(
+      range,
+      "invalid code",
+      vscode.DiagnosticSeverity.Error,
+    );
+    diagnostic.source = constants.diagnostic.source;
+    diagnostic.code = DiagnosticErrors.QUALIFIER_INVALID_CODE;
+    diagnostic.others = {
+      ediType: EdiType.EDIFACT,
+      release: "_service",
+      qualifier: "Identification code qualifier",
+      code: "ZZ",
+    };
+
+    const result = await provider.provideCodeActions(
+      document,
+      range,
+      {
+        diagnostics: [diagnostic],
+        only: undefined,
+        triggerKind: vscode.CodeActionTriggerKind.Invoke,
+      },
+      EdiMockFactory.createMockCancellationToken(),
+    );
+
+    assert.ok(result);
+    assert.strictEqual(result.length, 1);
+    assert.deepStrictEqual((result[0] as vscode.CodeAction).command, {
+      title: "Add code 'ZZ' to qualifier 'Identification code qualifier'",
+      command: constants.commands.addCodeToQualifierCommand.name,
+      arguments: [EdiType.EDIFACT, "_service", "Identification code qualifier", "ZZ", "<Custom code>"],
+    });
+  });
+
   test("Should register code action providers for x12, edifact and vda", () => {
     const registeredLanguages: string[] = [];
     vscode.languages.registerCodeActionsProvider = (
