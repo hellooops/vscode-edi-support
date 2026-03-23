@@ -1,5 +1,8 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
+import * as constants from "../../constants";
+import { EdiType } from "../../parser/entities";
+import { EdiUtils } from "../../utils/ediUtils";
 import WebviewProvider from "../../webviews/webviewProvider";
 import { createWebview, ensurePreviewEventsRegistered, previewWebviewTestHooks } from "../../webviews/ediPreviewWebview";
 import { EdiMockFactory } from "./mocks/ediMockFactory";
@@ -154,6 +157,155 @@ suite("EDI Preview Webview Test Suite", () => {
       WebviewProvider.prototype.onSelectionChange = originalOnSelectionChange;
       createdProviders.forEach(provider => provider.disposeCallback?.());
       previewWebviewTestHooks.resetRegistrationState();
+    }
+  });
+
+  test("WebviewProvider should create panel, update content and react to selection changes", async () => {
+    const originalCreateWebviewPanel = vscode.window.createWebviewPanel;
+    const originalShowInformationMessage = vscode.window.showInformationMessage;
+    const originalGetEdiParser = EdiUtils.getEdiParser;
+    const originalGetSegmentOrElementByPosition = EdiUtils.getSegmentOrElementByPosition;
+    const postedMessages: unknown[] = [];
+    const shownMessages: string[] = [];
+    let webviewMessageListener: ((message: any) => unknown) | undefined;
+    let receivedMessageListener: ((message: any) => unknown) | undefined;
+    const panelDisposeListeners: Array<() => unknown> = [];
+    let disposed = false;
+
+    vscode.window.createWebviewPanel = (
+      viewType: string,
+      title: string,
+      showOptions: vscode.ViewColumn | { readonly viewColumn: vscode.ViewColumn; readonly preserveFocus?: boolean },
+      options?: vscode.WebviewOptions & vscode.WebviewPanelOptions,
+    ) => {
+      assert.strictEqual(viewType, constants.webviews.previewViewType);
+      assert.strictEqual(title, "Preview test.x12");
+      const viewColumn = typeof showOptions === "number" ? showOptions : showOptions.viewColumn;
+      assert.strictEqual(viewColumn, vscode.ViewColumn.Two);
+      assert.ok(options);
+      assert.strictEqual(options!.enableScripts, true);
+      assert.strictEqual(options!.retainContextWhenHidden, true);
+
+      return {
+        webview: {
+          html: "",
+          asWebviewUri: (uri: vscode.Uri) => uri,
+          postMessage: async (message: unknown) => {
+            postedMessages.push(message);
+            return true;
+          },
+          onDidReceiveMessage: (listener: (message: any) => unknown) => {
+            if (!webviewMessageListener) {
+              webviewMessageListener = listener;
+            } else {
+              receivedMessageListener = listener;
+            }
+            return new vscode.Disposable(() => {
+              disposed = true;
+            });
+          },
+        },
+        onDidDispose: (listener: () => unknown) => {
+          panelDisposeListeners.push(listener);
+          return new vscode.Disposable(() => {});
+        },
+      } as unknown as vscode.WebviewPanel;
+    };
+    (vscode.window as any).showInformationMessage = async (message: string) => {
+      shownMessages.push(message);
+      return undefined;
+    };
+
+    const provider = new WebviewProvider("test.x12", {
+      extensionPath: "D:\\Dev\\vscode-edi-support",
+      subscriptions: [],
+    } as unknown as vscode.ExtensionContext);
+    const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
+    const ediDocument = {
+      getIResult: () => ({ key: "doc-key" }),
+      getSegments: () => [],
+    };
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        parse: async () => ediDocument,
+      },
+      ediType: EdiType.X12,
+    });
+    (EdiUtils as any).getSegmentOrElementByPosition = () => ({
+      segment: {
+        getIResult: () => ({ key: "segment-key" }),
+      },
+      element: {
+        getIResult: () => ({ key: "element-key" }),
+      },
+    });
+
+    try {
+      provider.onDidDispose(() => {
+        shownMessages.push("disposed");
+      });
+
+      const panel = provider.create(document);
+      assert.ok(panel);
+      assert.ok(provider.panel?.webview.html.includes("EDI Preview"));
+      assert.ok(provider.panel?.webview.html.includes("index.js"));
+      assert.ok(provider.panel?.webview.html.includes("index.css"));
+      await new Promise(resolve => setTimeout(resolve, 0));
+      assert.strictEqual(postedMessages.length, 1);
+      assert.deepStrictEqual(postedMessages[0], {
+        name: "fileChange",
+        data: {
+          key: "doc-key",
+          ediType: EdiType.X12,
+        },
+      });
+
+      await provider.onSelectionChange(0);
+      assert.deepStrictEqual(postedMessages[1], {
+        name: "active",
+        data: {
+          segmentKey: "segment-key",
+          elementKey: "element-key",
+        },
+      });
+
+      await webviewMessageListener!({ message: "hello" });
+      await receivedMessageListener!({ name: "log", data: "debug" });
+      assert.deepStrictEqual(shownMessages, ["hello", "debug"]);
+
+      panelDisposeListeners.forEach(listener => listener());
+      assert.deepStrictEqual(shownMessages, ["hello", "debug", "disposed"]);
+      assert.strictEqual(disposed, true);
+    } finally {
+      vscode.window.createWebviewPanel = originalCreateWebviewPanel;
+      vscode.window.showInformationMessage = originalShowInformationMessage;
+      (EdiUtils as any).getEdiParser = originalGetEdiParser;
+      (EdiUtils as any).getSegmentOrElementByPosition = originalGetSegmentOrElementByPosition;
+    }
+  });
+
+  test("WebviewProvider update should return empty array when parser is unavailable", async () => {
+    const originalGetEdiParser = EdiUtils.getEdiParser;
+    const provider = new WebviewProvider("test.x12", {
+      subscriptions: [],
+    } as unknown as vscode.ExtensionContext);
+    provider.panel = {
+      webview: {
+        postMessage: async () => true,
+      },
+    } as any;
+    const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
+
+    try {
+      (EdiUtils as any).getEdiParser = () => ({
+        parser: undefined,
+        ediType: EdiType.X12,
+      });
+
+      const result = await provider.update(document);
+      assert.deepStrictEqual(result, []);
+    } finally {
+      (EdiUtils as any).getEdiParser = originalGetEdiParser;
     }
   });
 });
