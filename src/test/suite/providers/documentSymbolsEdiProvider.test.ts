@@ -106,6 +106,26 @@ suite("DocumentSymbolsEdiProvider Test Suite", () => {
     assert.strictEqual(begSymbol!.children[0].children[0].name, "BEG01-1(C001)");
   });
 
+  test("Should omit separators symbol when document does not expose a separators segment", async () => {
+    const document = EdiMockFactory.createMockDocument("GS*IN~\nST*850*0001~\nSE*2*0001~", "x12");
+    const ediDocument = createDocumentSymbolFixture();
+    ediDocument.separatorsSegment = undefined;
+
+    stubSymbolRanges(document);
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        parse: async () => ediDocument,
+      },
+      ediType: EdiType.X12,
+    });
+
+    const result = await provider.provideDocumentSymbols(document, EdiMockFactory.createMockCancellationToken()) as vscode.DocumentSymbol[];
+
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].name, "0001");
+    assert.strictEqual(result[0].detail, "Interchange");
+  });
+
   test("Should flatten fake interchange and functional group symbols", () => {
     const document = EdiMockFactory.createMockDocument("ST*850*0002~\nSE*2*0002~", "x12");
     const separators = new EdiDocumentSeparators();
@@ -158,6 +178,49 @@ suite("DocumentSymbolsEdiProvider Test Suite", () => {
 
     assert.strictEqual(result.length, 3);
     assert.deepStrictEqual(registeredLanguages, [EdiType.X12, EdiType.EDIFACT, EdiType.VDA]);
+  });
+
+  test("Should fall back to segment id and keep children empty when segment has no elements", () => {
+    const document = EdiMockFactory.createMockDocument("N1~", "x12");
+    const segment = new EdiSegment("N1", 0, 2, 3, "~");
+
+    stubSymbolRanges(document);
+
+    const symbol = provider.getSegmentSymbols(document, segment);
+
+    assert.strictEqual(symbol.name, "N1");
+    assert.strictEqual(symbol.detail, "N1");
+    assert.deepStrictEqual(symbol.children, []);
+  });
+
+  test("Should fall back to element and component designators when schema descriptions are unavailable", () => {
+    const document = EdiMockFactory.createMockDocument("REF*ZZ:AA~", "x12");
+    const segment = new EdiSegment("REF", 0, 8, 9, "~");
+    const element = new EdiElement(segment, ElementType.dataElement, 3, 5, "*", "REF", segment.startIndex, "01");
+    const component = new EdiElement(segment, ElementType.componentElement, 6, 8, ":", "REF", segment.startIndex, "01-1");
+    element.components = [component];
+
+    stubSymbolRanges(document);
+
+    const symbol = provider.getElementSymbols(document, element);
+
+    assert.strictEqual(symbol.name, "REF01");
+    assert.strictEqual(symbol.detail, "REF01");
+    assert.strictEqual(symbol.children.length, 1);
+    assert.strictEqual(symbol.children[0].name, "REF01-1");
+    assert.strictEqual(symbol.children[0].detail, "REF01-1");
+  });
+
+  test("Should default element children to an empty array when components are unavailable", () => {
+    const document = EdiMockFactory.createMockDocument("REF*ZZ~", "x12");
+    const segment = new EdiSegment("REF", 0, 5, 6, "~");
+    const element = new EdiElement(segment, ElementType.dataElement, 3, 5, "*", "REF", segment.startIndex, "01");
+
+    stubSymbolRanges(document);
+
+    const symbol = provider.getElementSymbols(document, element);
+
+    assert.deepStrictEqual(symbol.children, []);
   });
 });
 
