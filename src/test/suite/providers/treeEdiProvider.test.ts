@@ -71,6 +71,43 @@ suite("TreeEdiProvider Test Suite", () => {
     assert.strictEqual(interchangeItem.description, "0001");
   });
 
+  test("Should return empty root children when editor or parser context is unavailable", async () => {
+    Object.defineProperty(vscode.window, "activeTextEditor", {
+      value: undefined,
+      configurable: true,
+    });
+
+    let result = await provider.getChildren();
+    assert.deepStrictEqual(result, []);
+
+    const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
+    Object.defineProperty(vscode.window, "activeTextEditor", {
+      value: { document },
+      configurable: true,
+    });
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: undefined,
+      ediType: EdiType.X12,
+    });
+
+    result = await provider.getChildren();
+    assert.deepStrictEqual(result, []);
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: { parse: async () => undefined },
+      ediType: EdiType.X12,
+    });
+    result = await provider.getChildren();
+    assert.deepStrictEqual(result, []);
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: { parse: async () => createTreeDocument() },
+      ediType: EdiType.UNKNOWN,
+    });
+    result = await provider.getChildren();
+    assert.deepStrictEqual(result, []);
+  });
+
   test("Should walk from segment to composite element attributes", async () => {
     const ediDocument = createTreeDocument();
     const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
@@ -110,6 +147,70 @@ suite("TreeEdiProvider Test Suite", () => {
     const componentTreeItem = await provider.getTreeItem(componentChildren![0] as any);
     assert.strictEqual(componentTreeItem.label, "BEG01(C002)");
     assert.strictEqual(componentTreeItem.description, "Qualifier");
+  });
+
+  test("Should return loop children and simple element attributes", async () => {
+    const loopSegment = new EdiSegment("PO1Loop1", 0, 5, 6, "~");
+    const childSegment = new EdiSegment("PID", 6, 12, 7, "~");
+    loopSegment.Loop = [childSegment];
+
+    const loopChildren = await provider.getChildren({
+      key: loopSegment.key,
+      type: 4 as any,
+      segment: loopSegment,
+    } as any);
+    assert.strictEqual(loopChildren!.length, 1);
+    assert.strictEqual((loopChildren![0] as any).segment.id, "PID");
+
+    const parentSegment = new EdiSegment("REF", 0, 10, 11, "~");
+    const simpleElement = new EdiElement(parentSegment, ElementType.dataElement, 1, 3, "*", "REF", parentSegment.startIndex, "01");
+    simpleElement.ediReleaseSchemaElement = {
+      id: "128",
+      desc: "Reference qualifier",
+      dataType: "ID",
+      required: true,
+      minLength: 2,
+      maxLength: 3,
+      qualifierRef: "Reference identification qualifier",
+      definition: "Code qualifying the reference identification.",
+      length: 2,
+    } as any;
+
+    const attributeChildren = await provider.getChildren({
+      key: simpleElement.key,
+      type: 5 as any,
+      segment: parentSegment,
+      element: simpleElement,
+    } as any);
+
+    assert.ok(attributeChildren && attributeChildren.length >= 8);
+    const labels = await Promise.all(attributeChildren!.map(async item => (await provider.getTreeItem(item as any)).label));
+    assert.ok(labels.includes("Id"));
+    assert.ok(labels.includes("Description"));
+    assert.ok(labels.includes("Qualifier Ref"));
+  });
+
+  test("Should refresh on command and reject unsupported tree item types", async () => {
+    let refreshCount = 0;
+    provider.refresh = () => {
+      refreshCount++;
+      return undefined as any;
+    };
+
+    provider.command();
+    assert.strictEqual(refreshCount, 1);
+
+    await assert.rejects(
+      async () => provider.getTreeItem({ key: "x", type: 999 } as any),
+      /Unknown tree item type/,
+    );
+  });
+
+  test("Should throw for getParent because it is not implemented", () => {
+    assert.throws(
+      () => provider.getParent!({ key: "x", type: 0 } as any),
+      new RegExp(constants.errors.methodNotImplemented),
+    );
   });
 
   test("Should refresh only for supported documents", () => {
