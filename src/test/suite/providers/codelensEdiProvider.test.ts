@@ -102,6 +102,110 @@ suite("CodelensEdiProvider Test Suite", () => {
     assert.strictEqual(result[result.length - 1].command?.title, "Document Lens");
   });
 
+  test("Should return empty document code lenses when parser is unavailable or parse returns undefined", async () => {
+    const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
+
+    (EdiUtils as any).getEdiParser = () => ({ parser: undefined });
+    let result = await provider.getDocumentCodeLenses(document);
+    assert.deepStrictEqual(result, []);
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        parse: async () => undefined,
+      },
+    });
+    result = await provider.getDocumentCodeLenses(document);
+    assert.deepStrictEqual(result, []);
+  });
+
+  test("Should return empty code lenses when both codelens toggles are disabled", async () => {
+    const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
+    vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({
+      [constants.configuration.enableCodelens]: false,
+      [constants.configuration.enableLoopAnnotations]: false,
+    });
+
+    const result = await provider.provideCodeLenses(document, EdiMockFactory.createMockCancellationToken());
+
+    assert.deepStrictEqual(result, []);
+  });
+
+  test("Should create interchange, functional group and transaction set code lenses when headers are on dedicated lines", () => {
+    const document = EdiMockFactory.createMockDocument("ISA*00*~\nGS*PO*~\nST*850*~", "x12");
+    const firstTransactionSegment = new EdiSegment("ST", 18, 25, 7, "~");
+    const transactionSet = {
+      getId: () => "850",
+      getFirstSegment: () => firstTransactionSegment,
+      segments: [],
+    };
+    const secondTransactionSet = {
+      getId: () => "860",
+      getFirstSegment: () => firstTransactionSegment,
+      segments: [],
+    };
+    const firstGroupSegment = new EdiSegment("GS", 9, 16, 7, "~");
+    const functionalGroup = {
+      getId: () => "PO",
+      getFirstSegment: () => firstGroupSegment,
+      transactionSets: [transactionSet, secondTransactionSet],
+    };
+    const secondFunctionalGroup = {
+      getId: () => "IN",
+      getFirstSegment: () => firstGroupSegment,
+      transactionSets: [],
+    };
+    const firstInterchangeSegment = new EdiSegment("ISA", 0, 7, 7, "~");
+    const interchange = {
+      getId: () => "0001",
+      getFirstSegment: () => firstInterchangeSegment,
+      functionalGroups: [functionalGroup, secondFunctionalGroup],
+    };
+
+    (EdiUtils as any).isOnlySegmentInLine = () => true;
+    (EdiUtils as any).getInterchangeStartPosition = () => new vscode.Position(0, 0);
+    (EdiUtils as any).getFunctionalGroupStartPosition = () => new vscode.Position(1, 0);
+    (EdiUtils as any).getTransactionSetStartPosition = () => new vscode.Position(2, 0);
+
+    const result = provider.getInterchangeCodeLenses(document, interchange as any, true);
+
+    assert.strictEqual(result.length, 5);
+    assert.deepStrictEqual(result.map(item => item.command?.title), [
+      "Interchange [ID=0001]",
+      "Functional Group [ID=PO]",
+      "Transaction Set [ID=850]",
+      "Transaction Set [ID=860]",
+      "Functional Group [ID=IN]",
+    ]);
+  });
+
+  test("Should skip header code lenses when a header segment is not alone on its line", () => {
+    const document = EdiMockFactory.createMockDocument("ISA*00*~GS*PO*~ST*850*~", "x12");
+    const firstTransactionSegment = new EdiSegment("ST", 14, 21, 7, "~");
+    const transactionSet = {
+      getId: () => "850",
+      getFirstSegment: () => firstTransactionSegment,
+      segments: [],
+    };
+    const firstGroupSegment = new EdiSegment("GS", 7, 13, 6, "~");
+    const functionalGroup = {
+      getId: () => "PO",
+      getFirstSegment: () => firstGroupSegment,
+      transactionSets: [transactionSet],
+    };
+    const firstInterchangeSegment = new EdiSegment("ISA", 0, 6, 6, "~");
+    const interchange = {
+      getId: () => "0001",
+      getFirstSegment: () => firstInterchangeSegment,
+      functionalGroups: [functionalGroup],
+    };
+
+    (EdiUtils as any).isOnlySegmentInLine = () => false;
+
+    const result = provider.getInterchangeCodeLenses(document, interchange as any, true);
+
+    assert.deepStrictEqual(result, []);
+  });
+
   test("Should create loop code lenses recursively", () => {
     const document = EdiMockFactory.createMockDocument("PO1*1~\nPID*F~", "x12");
     const outerLoop = new EdiSegment("PO1Loop1", 0, 5, 6, "~");
