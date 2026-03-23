@@ -38,6 +38,51 @@ suite("CompletionItemEdiProvider Test Suite", () => {
     assert.deepStrictEqual(result, []);
   });
 
+  test("Should return empty array when parse result is empty or no segment is resolved", async () => {
+    const document = EdiMockFactory.createMockDocument("BEG*00~", "x12");
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        parse: async () => undefined,
+      },
+    });
+
+    let result = await provider.provideCompletionItems(
+      document,
+      new vscode.Position(0, 0),
+      EdiMockFactory.createMockCancellationToken(),
+      { triggerKind: vscode.CompletionTriggerKind.Invoke } as vscode.CompletionContext,
+    );
+
+    assert.deepStrictEqual(result, []);
+
+    const segment = new EdiSegment("BEG", 0, 5, 6, "~");
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        schema: {
+          ediReleaseSchema: {
+            segments: {
+              BEG: { desc: "Beginning Segment", purpose: "Starts a transaction" },
+            },
+          },
+        },
+        parse: async () => ({
+          getSegments: () => [segment],
+        }),
+      },
+    });
+    (EdiUtils as any).getSegmentOrElementByPosition = () => ({ segment: undefined, element: undefined });
+
+    result = await provider.provideCompletionItems(
+      document,
+      new vscode.Position(0, 0),
+      EdiMockFactory.createMockCancellationToken(),
+      { triggerKind: vscode.CompletionTriggerKind.Invoke } as vscode.CompletionContext,
+    );
+
+    assert.deepStrictEqual(result, []);
+  });
+
   test("Should return segment completion items when cursor is on a segment", async () => {
     const document = EdiMockFactory.createMockDocument("BEG*00~", "x12");
     const segment = new EdiSegment("BEG", 0, 5, 6, "~");
@@ -72,6 +117,50 @@ suite("CompletionItemEdiProvider Test Suite", () => {
     assert.strictEqual(result[0].keepWhitespace, true);
   });
 
+  test("Should return empty segment completion items when schema is missing or has no segments", async () => {
+    const document = EdiMockFactory.createMockDocument("BEG*00~", "x12");
+    const segment = new EdiSegment("BEG", 0, 5, 6, "~");
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        schema: undefined,
+        parse: async () => ({
+          getSegments: () => [segment],
+        }),
+      },
+    });
+    (EdiUtils as any).getSegmentOrElementByPosition = () => ({ segment });
+
+    let result = await provider.provideCompletionItems(
+      document,
+      new vscode.Position(0, 0),
+      EdiMockFactory.createMockCancellationToken(),
+      { triggerKind: vscode.CompletionTriggerKind.Invoke } as vscode.CompletionContext,
+    );
+
+    assert.deepStrictEqual(result, []);
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        schema: {
+          ediReleaseSchema: {},
+        },
+        parse: async () => ({
+          getSegments: () => [segment],
+        }),
+      },
+    });
+
+    result = await provider.provideCompletionItems(
+      document,
+      new vscode.Position(0, 0),
+      EdiMockFactory.createMockCancellationToken(),
+      { triggerKind: vscode.CompletionTriggerKind.Invoke } as vscode.CompletionContext,
+    );
+
+    assert.deepStrictEqual(result, []);
+  });
+
   test("Should return element completion items when cursor is on a qualifier element", async () => {
     const document = EdiMockFactory.createMockDocument("BEG*00~", "x12");
     const segment = new EdiSegment("BEG", 0, 5, 6, "~");
@@ -104,6 +193,38 @@ suite("CompletionItemEdiProvider Test Suite", () => {
     assert.strictEqual(result[0].detail, "Original");
     assert.strictEqual(result[0].documentation, "Original");
     assert.strictEqual(result[0].keepWhitespace, true);
+  });
+
+  test("Should return empty element completion items when qualifier codes are unavailable", async () => {
+    const document = EdiMockFactory.createMockDocument("BEG*00~", "x12");
+    const segment = new EdiSegment("BEG", 0, 5, 6, "~");
+    const element = new EdiElement(segment, ElementType.dataElement, 3, 5, "*", "BEG", 0, "01");
+    element.ediReleaseSchemaElement = {
+      getCodes: () => undefined,
+    } as any;
+
+    (EdiUtils as any).getEdiParser = () => ({
+      parser: {
+        parse: async () => ({
+          getSegments: () => [segment],
+        }),
+      },
+    });
+    (EdiUtils as any).getSegmentOrElementByPosition = () => ({ segment, element });
+
+    const result = await provider.provideCompletionItems(
+      document,
+      new vscode.Position(0, 4),
+      EdiMockFactory.createMockCancellationToken(),
+      { triggerKind: vscode.CompletionTriggerKind.Invoke } as vscode.CompletionContext,
+    );
+
+    assert.deepStrictEqual(result, []);
+  });
+
+  test("Should resolve completion item by returning the same instance", () => {
+    const item = new vscode.CompletionItem("BEG", vscode.CompletionItemKind.Value);
+    assert.strictEqual(provider.resolveCompletionItem!(item, EdiMockFactory.createMockCancellationToken()), item);
   });
 
   test("Should register completion providers for x12 and edifact", () => {
