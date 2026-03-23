@@ -248,7 +248,7 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
       assert.strictEqual(capturedContext!.ignoreRequired, true);
     });
 
-    test("Should resolve EDIFACT control-segment qualifier diagnostics to the message release", async () => {
+    test("Should resolve EDIFACT control-segment qualifier diagnostics to the service scope", async () => {
       vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({});
       const document = EdiMockFactory.createMockDocument(
         "UNB+UNOA:2+JLR:ZZ+TEST:ZZ+030325:0725+242++DELFOR'\nUNH+1+DELFOR:D:97A:UN'\nBGM+241+20020102084517+5'\nDTM+51:230101:101'\nUNT+4+1'\nUNZ+1+242'",
@@ -308,7 +308,7 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
       assert.deepStrictEqual(qualifierDiagnostics, []);
     });
 
-    test("Should keep supporting legacy EDIFACT release-scoped qualifier overrides for control segments", async () => {
+    test("Should keep supporting legacy EDIFACT message-release qualifier overrides for control segments", async () => {
       vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({
         [constants.configuration.customSchemas]: {
           edifact: {
