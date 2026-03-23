@@ -270,13 +270,45 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
 
       assert.strictEqual(qualifierDiagnostics.length, 2);
       qualifierDiagnostics.forEach(diagnostic => {
-        assert.strictEqual(diagnostic.others.release, "D97A");
+        assert.strictEqual(diagnostic.others.release, "_service");
         assert.strictEqual(diagnostic.others.qualifier, "Identification code qualifier");
         assert.strictEqual(diagnostic.others.code, "ZZ");
       });
     });
 
     test("Should honor custom EDIFACT qualifier overrides for control segments", async () => {
+      vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({
+        [constants.configuration.customSchemas]: {
+          edifact: {
+            _service: {
+              qualifiers: {
+                "Identification code qualifier": {
+                  ZZ: "<Custom code>",
+                },
+              },
+            },
+          },
+        },
+      });
+      const document = EdiMockFactory.createMockDocument(
+        "UNB+UNOA:2+JLR:ZZ+TEST:ZZ+030325:0725+242++DELFOR'\nUNH+1+DELFOR:D:97A:UN'\nBGM+241+20020102084517+5'\nDTM+51:230101:101'\nUNT+4+1'\nUNZ+1+242'",
+        constants.ediDocument.edifact.name,
+      );
+
+      let capturedDiagnostics: readonly vscode.Diagnostic[] = [];
+      const diagnosticsCollection = {
+        set: (_uri: vscode.Uri, diagnostics: readonly vscode.Diagnostic[]) => {
+          capturedDiagnostics = diagnostics;
+        },
+      } as unknown as vscode.DiagnosticCollection;
+
+      await diagnosticsMgr.refreshDiagnostics(document, diagnosticsCollection);
+
+      const qualifierDiagnostics = capturedDiagnostics.filter(diagnostic => diagnostic.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
+      assert.deepStrictEqual(qualifierDiagnostics, []);
+    });
+
+    test("Should keep supporting legacy EDIFACT release-scoped qualifier overrides for control segments", async () => {
       vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({
         [constants.configuration.customSchemas]: {
           edifact: {

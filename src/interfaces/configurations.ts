@@ -1,6 +1,4 @@
-import { EdiType } from "../parser/entities";
 import * as constants from "../constants";
-import { EdiQualifier } from "../schemas/schemas";
 
 
 // "ediSupport.customSchemas": {
@@ -35,6 +33,8 @@ export type Conf_CustomSchema = {
 };
 
 export class Conf_Utils {
+  static readonly EDIFACT_SERVICE_SCOPE = "_service";
+
   static addQualifier(conf_schema: Conf_CustomSchema, ediType: Conf_Supported_EdiType, release: string, qualifier: string, code: string, desc: string) {
     if (!conf_schema[ediType]) conf_schema[ediType] = {};
 
@@ -67,5 +67,9 @@ export class Conf_Utils {
         };
       });
     });
+  }
+
+  static getEdifactServiceQualifiers(conf_schema: Conf_CustomSchema | undefined): { qualifier: string, code: string, desc: string }[] {
+    return this.getQualifiers(conf_schema, "edifact", this.EDIFACT_SERVICE_SCOPE);
   }
 }

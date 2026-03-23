@@ -335,7 +335,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     if (this.ediReleaseSchemaElement.qualifierRef && value) {
       const release = this.ediReleaseSchemaElement._schema?.release ?? getRelatedTransactionSetRelease(this.segment);
       const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(value)
-        ?? getCustomQualifierCode(context, release, this.ediReleaseSchemaElement.qualifierRef, value);
+        ?? getCustomQualifierCode(context, this.segment, release, this.ediReleaseSchemaElement.qualifierRef, value);
       if (!elementValueCode) {
         errors.push({
           error: `Invalid code value '${value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
@@ -1320,13 +1320,15 @@ function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalG
   ].filter(i => i).join(constants.ediDocument.lineBreak);
 }
 
-function getCustomQualifierCode(context: DiagnoscticsContext, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
-  if (!release || !context.customSchemas) {
+function getCustomQualifierCode(context: DiagnoscticsContext, segment: EdiSegment, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
+  if (!context.customSchemas) {
     return null;
   }
 
-  const qualifiers = Conf_Utils.getQualifiers(context.customSchemas, context.ediType as Conf_Supported_EdiType, release);
-  const matchedQualifier = qualifiers.find(currentQualifier => currentQualifier.qualifier === qualifier && currentQualifier.code === code);
+  const scopeKeys = getCustomQualifierScopeKeys(context, segment, release);
+  const matchedQualifier = scopeKeys
+    .flatMap(scopeKey => Conf_Utils.getQualifiers(context.customSchemas, context.ediType as Conf_Supported_EdiType, scopeKey))
+    .find(currentQualifier => currentQualifier.qualifier === qualifier && currentQualifier.code === code);
   if (!matchedQualifier) {
     return null;
   }
@@ -1335,6 +1337,10 @@ function getCustomQualifierCode(context: DiagnoscticsContext, release: string | 
 }
 
 function getRelatedTransactionSetRelease(segment: EdiSegment): string | undefined {
+  if (isEdifactServiceSegment(segment)) {
+    return Conf_Utils.EDIFACT_SERVICE_SCOPE;
+  }
+
   const transactionSet = getRelatedTransactionSet(segment);
   return transactionSet?.meta.release;
 }
@@ -1414,4 +1420,28 @@ function isSegmentOrNestedLoopMatch(currentSegment: EdiSegment, targetSegment: E
   }
 
   return currentSegment.Loop.some(loopSegment => isSegmentOrNestedLoopMatch(loopSegment, targetSegment));
+}
+
+function getCustomQualifierScopeKeys(context: DiagnoscticsContext, segment: EdiSegment, release: string | undefined): string[] {
+  if (!release) {
+    return [];
+  }
+
+  if (context.ediType !== EdiType.EDIFACT || release !== Conf_Utils.EDIFACT_SERVICE_SCOPE) {
+    return [release];
+  }
+
+  const fallbackRelease = getRelatedTransactionSet(segment) ?? undefined;
+  const fallbackReleaseKey = fallbackRelease?.meta.release;
+  return [Conf_Utils.EDIFACT_SERVICE_SCOPE, ...(fallbackReleaseKey ? [fallbackReleaseKey] : [])];
+}
+
+function isEdifactServiceSegment(segment: EdiSegment): boolean {
+  return [
+    constants.ediDocument.edifact.segment.UNA,
+    constants.ediDocument.edifact.segment.UNB,
+    constants.ediDocument.edifact.segment.UNG,
+    constants.ediDocument.edifact.segment.UNE,
+    constants.ediDocument.edifact.segment.UNZ,
+  ].includes(segment.id);
 }
