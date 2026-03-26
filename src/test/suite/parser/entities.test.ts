@@ -444,6 +444,66 @@ suite("Entities Test Suite", () => {
     );
   });
 
+  test("Entities should support alternate trailer segments and undefined trailer lookups", () => {
+    const separators = new EdiDocumentSeparators();
+    const document = new EdiDocument(separators, {
+      interchangeStartSegmentName: "UNB",
+      interchangeEndSegmentName: "UNZ",
+      functionalGroupStartSegmentName: "UNG",
+      functionalGroupEndSegmentName: "UNE",
+      transactionSetStartSegmentName: "UNH",
+      transactionSetEndSegmentName: "UNT",
+    });
+    const interchange = new EdiInterchange({ id: "INT" }, document);
+    interchange.startSegment = createSegment("UNB", 0, "'");
+    const functionalGroup = new EdiFunctionalGroup({ id: "GRP" }, interchange);
+    functionalGroup.startSegment = createSegment("UNG", 0, "'");
+    const transactionSet = new EdiTransactionSet({ id: "TS1" }, functionalGroup);
+    transactionSet.startSegment = createSegment("UNH", 0, "'");
+
+    transactionSet.endSegment = createTrailer("UNT", "4", "TS1");
+    functionalGroup.endSegment = createTrailer("UNE", "1", "GRP");
+    interchange.endSegment = createTrailer("UNZ", "1", "INT");
+
+    assert.strictEqual(transactionSet.getEndId(), "TS1");
+    assert.strictEqual(transactionSet.getControlCount(), 4);
+    assert.strictEqual(functionalGroup.getEndId(), "GRP");
+    assert.strictEqual(functionalGroup.getControlCount(), 1);
+    assert.strictEqual(interchange.getEndId(), "INT");
+    assert.strictEqual(interchange.getControlCount(), 1);
+
+    transactionSet.endSegment = createSegment("BAD", 0, "~");
+    functionalGroup.endSegment = createSegment("BAD", 0, "~");
+    interchange.endSegment = createSegment("BAD", 0, "~");
+
+    assert.strictEqual(transactionSet.getEndIdElement(), undefined);
+    assert.strictEqual(transactionSet.getControlCountElement(), undefined);
+    assert.strictEqual(functionalGroup.getEndIdElement(), undefined);
+    assert.strictEqual(functionalGroup.getControlCountElement(), undefined);
+    assert.strictEqual(interchange.getEndIdElement(), undefined);
+    assert.strictEqual(interchange.getControlCountElement(), undefined);
+  });
+
+  test("Functional group should report a missing trailer when the group is active", () => {
+    const { interchange } = createHierarchy();
+    const context = createContext(EdiType.X12, undefined, {
+      separatorsSegmentName: "ISA",
+      interchangeStartSegmentName: "ISA",
+      interchangeEndSegmentName: "IEA",
+      functionalGroupStartSegmentName: "GS",
+      functionalGroupEndSegmentName: "GE",
+      transactionSetStartSegmentName: "ST",
+      transactionSetEndSegmentName: "SE",
+    });
+    const functionalGroup = new EdiFunctionalGroup({ id: "GROUP2" }, interchange);
+    functionalGroup.startSegment = createSegment("GS", 0, "~");
+
+    assert.deepStrictEqual(
+      functionalGroup.getSelfErrors(context).map(error => error.code),
+      [DiagnosticErrors.SEGMENT_NOT_FOUND],
+    );
+  });
+
   test("Interchange should count transaction sets when the first functional group is fake", () => {
     const separators = new EdiDocumentSeparators();
     const document = new EdiDocument(separators, {});
