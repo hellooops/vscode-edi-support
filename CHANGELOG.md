@@ -6,8 +6,25 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.1.6] - 2026-03-26
+
 ### Added
 - Support qualifier code inlay hints, this can be toggled in settings.
+
+### Changed
+- Enhance completion trigger characters for X12 and EDIFACT.
+
+### Fixed
+- Resolve EDIFACT qualifier quick fix release handling.
+- Store EDIFACT service qualifiers under the correct service scope.
+- Fix segment name parsing during schema assembly.
+- Prevent duplicate preview event listener registration.
+- Fix escaped component separator parsing.
+- Guard against null-reference flow when schema loading fails.
+- Implement `resolveCodeAction` to return the provided code action.
+- Fix command name for `toggleLoopAnnotations`.
+- Return empty folding ranges when `ediDocument` is missing.
+- Prevent no-op edits in formatter.
 
 
 ## [2.1.5] - 2026-02-09
