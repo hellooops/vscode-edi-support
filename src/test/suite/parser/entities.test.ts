@@ -288,6 +288,36 @@ suite("Entities Test Suite", () => {
     assert.deepStrictEqual(errors, []);
   });
 
+  test("EdiElement should fall back to the first released transaction set from the document", () => {
+    const { document, transactionSet } = createHierarchy();
+    transactionSet.meta.release = "00401";
+
+    const detachedSegment = createSegment("REF", 0, "~");
+    detachedSegment.documentParent = document;
+    const detachedElement = createElement(detachedSegment, "01", "ZZ");
+    detachedElement.ediReleaseSchemaElement = createSchemaElement({
+      id: "E103",
+      qualifierRef: "Reference qualifier",
+      qualifierCodes: [],
+      release: undefined,
+    });
+    detachedSegment.elements = [detachedElement];
+
+    const errors = detachedElement.getErrors(createContext(EdiType.X12, {
+      x12: {
+        "00401": {
+          qualifiers: {
+            "Reference qualifier": {
+              ZZ: "Document fallback ref",
+            },
+          },
+        },
+      },
+    }));
+
+    assert.deepStrictEqual(errors, []);
+  });
+
   test("Transaction set, functional group, interchange and document should report structural errors", () => {
     const { document, interchange, functionalGroup, transactionSet } = createHierarchy();
 
