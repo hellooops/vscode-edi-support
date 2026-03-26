@@ -318,6 +318,29 @@ suite("Entities Test Suite", () => {
     assert.deepStrictEqual(errors, []);
   });
 
+  test("EdiDocument should auto-create containers for loose segments and expose result helpers", () => {
+    const document = new EdiDocument(new EdiDocumentSeparators(), {
+      separatorsSegmentName: "ISA",
+    });
+    const separatorsSegment = createSegment("ISA", 0, "~");
+    const looseSegment = createSegment("BGM", 0, "~");
+    const trailingComment = new EdiComment(0, 8, "// end");
+
+    document.addSeparatorsSegment(separatorsSegment);
+    document.addSegment(looseSegment);
+    document.commentsAfterDocument.push(trailingComment);
+
+    const result = document.getIResult();
+    const segments = document.getSegments(true);
+
+    assert.strictEqual(result.separatorsSegment?.id, "ISA");
+    assert.strictEqual(result.interchanges.length, 1);
+    assert.strictEqual(result.interchanges[0].functionalGroups[0].transactionSets[0].segments[0].id, "BGM");
+    assert.deepStrictEqual(segments.map(segment => segment.id), ["ISA", "BGM"]);
+    assert.ok(document.toString().includes("BGM~"));
+    assert.ok(document.toString().includes("// end"));
+  });
+
   test("Transaction set, functional group, interchange and document should report structural errors", () => {
     const { document, interchange, functionalGroup, transactionSet } = createHierarchy();
 
