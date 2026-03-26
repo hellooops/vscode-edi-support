@@ -251,6 +251,43 @@ suite("Entities Test Suite", () => {
     assert.strictEqual((orphanErrors[0] as any).others.release, undefined);
   });
 
+  test("EdiElement should resolve transaction-set release for nested loop segments via document traversal", () => {
+    const { document, transactionSet } = createHierarchy();
+    transactionSet.meta.release = "00401";
+
+    const wrapperLoop = createSegment("N1_LOOP", 0, "~");
+    const nestedLoop = createSegment("N2_LOOP", 0, "~");
+    const targetSegment = createSegment("REF", 0, "~");
+    targetSegment.documentParent = document;
+
+    const targetElement = createElement(targetSegment, "01", "ZZ");
+    targetElement.ediReleaseSchemaElement = createSchemaElement({
+      id: "E102",
+      qualifierRef: "Reference qualifier",
+      qualifierCodes: [],
+      release: undefined,
+    });
+    targetSegment.elements = [targetElement];
+
+    nestedLoop.Loop = [targetSegment];
+    wrapperLoop.Loop = [nestedLoop];
+    transactionSet.segments.push(wrapperLoop);
+
+    const errors = targetElement.getErrors(createContext(EdiType.X12, {
+      x12: {
+        "00401": {
+          qualifiers: {
+            "Reference qualifier": {
+              ZZ: "Nested custom ref",
+            },
+          },
+        },
+      },
+    }));
+
+    assert.deepStrictEqual(errors, []);
+  });
+
   test("Transaction set, functional group, interchange and document should report structural errors", () => {
     const { document, interchange, functionalGroup, transactionSet } = createHierarchy();
 
