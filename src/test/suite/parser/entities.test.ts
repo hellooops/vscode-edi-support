@@ -341,6 +341,37 @@ suite("Entities Test Suite", () => {
     assert.ok(document.toString().includes("// end"));
   });
 
+  test("Entities should handle optional comments, empty elements and missing metadata branches", () => {
+    const regularSegment = createSegment("REF", 0, "~");
+    regularSegment.comments.push(new EdiComment(0, 9, "// note"));
+    regularSegment.elements = [createElement(regularSegment, "01", "ZZ")];
+
+    assert.ok(regularSegment.getFormatString().includes("// note"));
+    assert.strictEqual(regularSegment.getIResult().Loop, undefined);
+    assert.strictEqual(regularSegment.getElement(1, 1), null);
+
+    regularSegment.elements = undefined as any;
+    assert.strictEqual(regularSegment.getElement(1), null);
+    assert.deepStrictEqual(regularSegment.getErrors(createContext()), []);
+
+    const { functionalGroup, interchange } = createHierarchy();
+    const releaseOnlySet = new EdiTransactionSet({ release: "00401" }, functionalGroup);
+    const versionOnlySet = new EdiTransactionSet({ version: "850" }, functionalGroup);
+    const emptySet = new EdiTransactionSet({}, functionalGroup);
+    const emptyInterchange = new EdiInterchange({}, interchange.document);
+
+    assert.strictEqual(releaseOnlySet.getFormattedReleaseAndSchemaString(), "00401");
+    assert.strictEqual(versionOnlySet.getFormattedReleaseAndSchemaString(), "850");
+    assert.strictEqual(emptySet.getFormattedReleaseAndSchemaString(), "");
+    assert.strictEqual(emptySet.getFirstSegment(), undefined);
+    assert.strictEqual(emptySet.getLastSegment(), undefined);
+    assert.strictEqual(emptySet.getIResult().startSegment, undefined);
+    assert.strictEqual(emptySet.getIResult().endSegment, undefined);
+    assert.strictEqual(emptyInterchange.getFirstSegment(), undefined);
+    assert.strictEqual(emptyInterchange.getLastSegment(), undefined);
+    assert.strictEqual(emptyInterchange.toString(), "");
+  });
+
   test("Transaction set, functional group, interchange and document should report structural errors", () => {
     const { document, interchange, functionalGroup, transactionSet } = createHierarchy();
 
@@ -387,6 +418,30 @@ suite("Entities Test Suite", () => {
     assert.ok(functionalGroup.getFormatString().includes("ST"));
     assert.ok(interchange.getFormatString().includes("GS"));
     assert.ok(document.getFormatString().includes("ISA"));
+  });
+
+  test("Transaction set and interchange should report missing header and trailer segments", () => {
+    const { document, interchange, functionalGroup } = createHierarchy();
+    const context = createContext(EdiType.X12, undefined, {
+      separatorsSegmentName: "ISA",
+      interchangeStartSegmentName: "ISA",
+      interchangeEndSegmentName: "IEA",
+      functionalGroupStartSegmentName: "GS",
+      functionalGroupEndSegmentName: "GE",
+      transactionSetStartSegmentName: "ST",
+      transactionSetEndSegmentName: "SE",
+    });
+    const missingSegmentsSet = new EdiTransactionSet({}, functionalGroup);
+    const missingSegmentsInterchange = new EdiInterchange({}, document);
+
+    assert.deepStrictEqual(
+      missingSegmentsSet.getSelfErrors(context).map(error => error.code),
+      [DiagnosticErrors.SEGMENT_NOT_FOUND, DiagnosticErrors.SEGMENT_NOT_FOUND],
+    );
+    assert.deepStrictEqual(
+      missingSegmentsInterchange.getSelfErrors(context).map(error => error.code),
+      [DiagnosticErrors.SEGMENT_NOT_FOUND, DiagnosticErrors.SEGMENT_NOT_FOUND],
+    );
   });
 
   test("Interchange should count transaction sets when the first functional group is fake", () => {
