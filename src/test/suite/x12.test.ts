@@ -1,7 +1,7 @@
 import * as assert from "assert";
 
 import { X12Parser } from "../../parser/x12Parser";
-import { EdiSegment, ElementType } from "../../parser/entities";
+import { DiagnosticErrors, EdiSegment, EdiType, ElementType } from "../../parser/entities";
 
 suite("X12 Parser Test Suite", () => {
   suite("Parse Meta", () => {
@@ -305,6 +305,42 @@ suite("X12 Parser Test Suite", () => {
       assert.strictEqual(fg.transactionSets[1].getId(), "0002");
       assert.strictEqual(fg.transactionSets[2].getId(), "0003");
     });
+
+    test("X12 864 DTM02 should fail length validation for release 00307", async () => {
+      const parser = new X12Parser(create864Document("00307", "003070"));
+      const ediDocument = await parser.parse();
+      const dtmSegment = ediDocument.getSegments().find(segment => segment.id === "DTM");
+
+      assert.ok(dtmSegment);
+
+      const dtmErrors = ediDocument
+        .getErrors({
+          ediType: EdiType.X12,
+          standardOptions: ediDocument.standardOptions,
+        })
+        .filter(error => error.errorElement?.segment === dtmSegment);
+
+      assert.deepStrictEqual(dtmErrors.map(error => error.code), [DiagnosticErrors.VALUE_TOO_LONG]);
+      assert.strictEqual(dtmErrors[0].errorElement?.designatorIndex, "02");
+      assert.strictEqual(dtmErrors[0].errorElement?.value, "20000204");
+    });
+
+    test("X12 864 DTM02 should allow the same value for release 00401", async () => {
+      const parser = new X12Parser(create864Document("00401", "004010"));
+      const ediDocument = await parser.parse();
+      const dtmSegment = ediDocument.getSegments().find(segment => segment.id === "DTM");
+
+      assert.ok(dtmSegment);
+
+      const dtmErrors = ediDocument
+        .getErrors({
+          ediType: EdiType.X12,
+          standardOptions: ediDocument.standardOptions,
+        })
+        .filter(error => error.errorElement?.segment === dtmSegment);
+
+      assert.deepStrictEqual(dtmErrors, []);
+    });
   });
 
   suite("Edge Cases and Error Handling", () => {
@@ -482,3 +518,32 @@ suite("X12 Parser Test Suite", () => {
     });
   });
 });
+
+function create864Document(interchangeRelease: string, groupRelease: string): string {
+  return `
+  ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*${interchangeRelease}*000000001*0*P*>~
+  GS*TX*6111470100*1234567890*20000204*0750*1*X*${groupRelease}~
+  ST*864*0001~
+  BMG*00**03~
+  DTM*097*20000204~
+  N1*FR*DERICL  ~
+  MIT*00001~
+  MSG*CALL ME~
+  MSG*THANKS~
+  MIT*00002~
+  MSG*ISA CN 000000015 GS CN 000000015 PRE-PROCESSOR~
+  MSG*DATA FIELD IN ERROR ERROR MESSAGE~
+  MSG*----------------------------~
+  MSG*856                NOT EXPECTING TRANSACTION~
+  MIT*00003~
+  MSG*ISA CN 000000015 GS CN 000000015 SHIP NOTICE 24482100373~
+  MSG*DATA FIELD IN ERROR ERROR MESSAGE~
+  MSG*----------------------------- ~
+  MSG*0047 SHIPMENT IDENTIFICATION NUMBER SENT IN~
+  MSG*BSN02 IS MISSING OR NOT UNIQUE WITHIN THE~
+  MSG*FILE RECEIVED~
+  SE*20*0001~
+  GE*1*1~
+  IEA*00001*000000001~
+  `;
+}
