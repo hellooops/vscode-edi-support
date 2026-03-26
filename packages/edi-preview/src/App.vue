@@ -1,52 +1,42 @@
 <template>
-  <div class="px-2">
-    <div class="mt-4">
-      <InspectorResult
-        v-if="ediDocument"
-        :ediDocument="ediDocument"
-      />
-    </div>
-  </div>
+  <PreviewTreeView
+    v-if="ediDocument"
+    :ediDocument="ediDocument"
+    :active-id="activeId"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, provide, onMounted } from "vue";
+import { nextTick, ref, onMounted } from "vue";
 import useVcm from "@/hooks/useVscodeMessage";
-import InspectorResult from "@/views/Inspector/InspectorResult.vue";
-import useTestData from "./hooks/useTestData";
 import { EdiDocument } from "@/entities";
+import useTestData from "./hooks/useTestData";
+import PreviewTreeView from "@/views/Inspector/PreviewTreeView.vue";
 
 const { onReceiveMessage } = useVcm();
 
 const ediDocument = ref<EdiDocument>();
 const activeId = ref<string>();
-provide("activeId", activeId);
 
 onReceiveMessage("fileChange", (data) => {
   ediDocument.value = data ? new EdiDocument(data) : undefined;
 });
 
-onReceiveMessage("active", (data) => {
+onReceiveMessage("active", async (data) => {
   const activeContext = data as IActiveContext;
   const scrollToId = activeContext?.elementKey || activeContext?.segmentKey;
-  if (scrollToId) {
-    setActiveId(scrollToId);
-    const domElement = document.getElementById(scrollToId)!;
-    const segmentOrElement = ediDocument.value?.getSegmentOrElementByKey(scrollToId)!;
-    const headerOffset = segmentOrElement.getParentHeight();
-    const elementPosition = domElement.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-  
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth"
-    });
-  }
-});
+  activeId.value = scrollToId;
 
-function setActiveId(id: string) {
-  activeId.value = id;
-}
+  if (!scrollToId) {
+    return;
+  }
+
+  await nextTick();
+  document.getElementById(scrollToId)?.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+});
 
 onMounted(() => {
   // Test

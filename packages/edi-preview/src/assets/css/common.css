@@ -1,33 +1,43 @@
 :root {
-  /* Light modern */
-  --vscode-editor-background: #FFFFFF;
-  --vscode-editor-foreground: #3b3b3b;
+  --preview-page-bg: #f3f3f3;
+  --preview-panel-bg: #ffffff;
+  --preview-panel-bg-strong: #fcfcfc;
+  --preview-accent: #007acc;
+  --preview-accent-soft: #d8ecff;
+  --preview-accent-strong: #005a9e;
+  --preview-border: #e5e5e5;
+  --preview-hover: #e8e8e8;
+  --preview-text: #333333;
+  --preview-text-soft: #6e6e6e;
+  --preview-shadow: 0 10px 28px rgba(50, 50, 50, 0.08);
+}
 
-  /* Dark modern */
-  /* --vscode-editor-background: #1F1F1F;
-  --vscode-editor-foreground: #cccccc; */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100vh;
 }
 
 body {
-  background-color: var(--vscode-editor-background);
-  color: var(--vscode-editor-foreground);
-  font-family: var(--vscode-font-family);
-  font-weight: var(--vscode-font-weight);
-  font-size: var(--vscode-font-size);
   margin: 0;
-  padding: 0 20px;
+  color: var(--preview-text);
+  font-family: "Segoe UI Variable", "Segoe UI", "SF Pro Text", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), transparent 36%),
+    linear-gradient(180deg, #fafafa 0%, var(--preview-page-bg) 160px, #ececec 100%);
 }
 
-.invert-color {
-  color: var(--vscode-editor-background);
-  background-color: var(--vscode-editor-foreground);
+button,
+input {
+  font: inherit;
 }
 
-.active-fragment {
-  border-left: 4px;
-  border-style: solid;
-}
-
-.bg-editor {
-  background-color: var(--vscode-editor-background);
+button {
+  color: inherit;
 }

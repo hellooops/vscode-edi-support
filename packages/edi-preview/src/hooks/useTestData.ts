@@ -4300,5 +4300,5 @@ export default function useTestData(): EdiDocument {
   };
   
 
-  return new EdiDocument(vdaTestData);
+  return new EdiDocument(edifactTestData);
 }
