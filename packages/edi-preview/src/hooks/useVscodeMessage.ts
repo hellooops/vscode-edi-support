@@ -14,11 +14,15 @@ function useEvent(eventName: string, func: (event: any) => void) {
 }
 
 export default function useVcm() {
-  function vscodeLog(message: string) {
+  function postMessage(name: string, data?: Vcm["data"]) {
     vscode.postMessage({
-      name: "log",
-      data: message
+      name,
+      data
     });
+  }
+
+  function vscodeLog(message: string) {
+    postMessage("log", message);
   }
 
   function onReceiveMessage(vcmName: string, callback: MessageEventCallback) {
@@ -31,6 +35,7 @@ export default function useVcm() {
   }
 
   return {
+    postMessage,
     vscodeLog,
     onReceiveMessage
   };

@@ -25,7 +25,7 @@ body,
 body {
   margin: 0;
   color: var(--preview-text);
-  font-family: "Segoe UI Variable", "Segoe UI", "SF Pro Text", sans-serif;
+  font-family: Calibri, "Segoe UI Variable", "Segoe UI", "SF Pro Text", sans-serif;
   font-size: 13px;
   font-weight: 400;
   background:

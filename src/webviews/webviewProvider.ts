@@ -10,6 +10,9 @@ export default class WebviewProvider {
   panel?: vscode.WebviewPanel;
   disposeCallback?: () => any;
   ediDocument?: EdiDocument;
+  private webviewReady: boolean = false;
+  private pendingDocumentMessage?: VcmDocument;
+  private pendingActiveMessage?: VcmActiveContext;
 
   constructor(fileName: string, extensionContext: vscode.ExtensionContext) {
     this.fileName = fileName;
@@ -83,7 +86,10 @@ export default class WebviewProvider {
 
   receiveMessages() {
     const e = this.panel!.webview.onDidReceiveMessage(async (message) => {
-      if (message.name === "log") {
+      if (message.name === "ready") {
+        this.webviewReady = true;
+        await this.flushPendingMessages();
+      } else if (message.name === "log") {
         console.log(message.data);
         await vscode.window.showInformationMessage(message.data);
       }
@@ -107,7 +113,7 @@ export default class WebviewProvider {
       name: "fileChange",
       data: iEdiDocument
     };
-    await this.panel!.webview.postMessage(vcm);
+    await this.postMessageWhenReady(vcm);
   }
 
   async onSelectionChange(startOffset: number) {
@@ -119,10 +125,39 @@ export default class WebviewProvider {
         elementKey: element?.getIResult()?.key
       }
     };
-    await this.panel!.webview.postMessage(vcm);
+    await this.postMessageWhenReady(vcm);
   }
 
   onDidDispose(callback: () => any) {
     this.disposeCallback = callback;
+  }
+
+  private async postMessageWhenReady(message: VcmDocument | VcmActiveContext) {
+    if (!this.webviewReady) {
+      if (message.name === "fileChange") {
+        this.pendingDocumentMessage = message as VcmDocument;
+      } else if (message.name === "active") {
+        this.pendingActiveMessage = message as VcmActiveContext;
+      }
+      return;
+    }
+
+    await this.panel!.webview.postMessage(message);
+  }
+
+  private async flushPendingMessages() {
+    if (!this.panel || !this.webviewReady) {
+      return;
+    }
+
+    if (this.pendingDocumentMessage) {
+      await this.panel.webview.postMessage(this.pendingDocumentMessage);
+      this.pendingDocumentMessage = undefined;
+    }
+
+    if (this.pendingActiveMessage) {
+      await this.panel.webview.postMessage(this.pendingActiveMessage);
+      this.pendingActiveMessage = undefined;
+    }
   }
 }

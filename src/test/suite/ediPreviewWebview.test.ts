@@ -251,6 +251,10 @@ suite("EDI Preview Webview Test Suite", () => {
       assert.ok(provider.panel?.webview.html.includes("index.js"));
       assert.ok(provider.panel?.webview.html.includes("index.css"));
       await new Promise(resolve => setTimeout(resolve, 0));
+      assert.strictEqual(postedMessages.length, 0);
+
+      await receivedMessageListener!({ name: "ready" });
+
       assert.strictEqual(postedMessages.length, 1);
       assert.deepStrictEqual(postedMessages[0], {
         name: "fileChange",

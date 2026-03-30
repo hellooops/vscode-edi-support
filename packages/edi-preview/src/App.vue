@@ -13,7 +13,7 @@ import { EdiDocument } from "@/entities";
 import useTestData from "./hooks/useTestData";
 import PreviewTreeView from "@/views/Inspector/PreviewTreeView.vue";
 
-const { onReceiveMessage } = useVcm();
+const { onReceiveMessage, postMessage } = useVcm();
 
 const ediDocument = ref<EdiDocument>();
 const activeId = ref<string>();
@@ -39,6 +39,7 @@ onReceiveMessage("active", async (data) => {
 });
 
 onMounted(() => {
+  postMessage("ready");
   // Test
   // ediDocument.value = useTestData();
   // setActiveId("ele-UNB0201");
