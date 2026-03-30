@@ -174,6 +174,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return {
       key: this.key,
       id: this.id,
+      segmentStr: this.segmentStr,
       desc: this.getDesc(),
       purpose: this.getPurpose(),
       elements: this.elements.map(e => e.getIResult()),

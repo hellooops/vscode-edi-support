@@ -4298,7 +4298,98 @@ export default function useTestData(): EdiDocument {
     ],
     "ediType": "vda"
   };
-  
+
+  hydrateSegmentStrings(x12TestData);
+  hydrateSegmentStrings(edifactTestData);
+  hydrateSegmentStrings(vdaTestData);
 
   return new EdiDocument(edifactTestData);
+}
+
+function hydrateSegmentStrings(ediDocument: IEdiDocument): void {
+  visitSegmentCollection([
+    ediDocument.separatorsSegment,
+    ediDocument.startSegment,
+    ediDocument.endSegment
+  ], ediDocument.ediType);
+
+  ediDocument.interchanges.forEach(interchange => {
+    visitSegmentCollection([
+      interchange.startSegment,
+      interchange.endSegment
+    ], ediDocument.ediType);
+
+    interchange.functionalGroups.forEach(functionalGroup => {
+      visitSegmentCollection([
+        functionalGroup.startSegment,
+        functionalGroup.endSegment
+      ], ediDocument.ediType);
+
+      functionalGroup.transactionSets.forEach(transactionSet => {
+        visitSegmentCollection([
+          transactionSet.startSegment,
+          ...transactionSet.segments,
+          transactionSet.endSegment
+        ], ediDocument.ediType);
+      });
+    });
+  });
+}
+
+function visitSegmentCollection(
+  segments: Array<IEdiSegment | undefined>,
+  ediType: IEdiType | undefined
+): void {
+  segments.forEach(segment => {
+    if (!segment) {
+      return;
+    }
+
+    hydrateSegment(segment, ediType);
+  });
+}
+
+function hydrateSegment(segment: IEdiSegment, ediType: IEdiType | undefined): void {
+  if (segment.Loop?.length) {
+    segment.Loop.forEach(loopSegment => hydrateSegment(loopSegment, ediType));
+    return;
+  }
+
+  segment.segmentStr ??= buildSegmentString(segment, ediType);
+}
+
+function buildSegmentString(segment: IEdiSegment, ediType: IEdiType | undefined): string {
+  if (ediType === "vda") {
+    return `${segment.id}${segment.elements.map(formatVdaElement).join("")}`;
+  }
+
+  if (ediType === "edifact" && segment.id === "UNA") {
+    return `${segment.id}${segment.elements.map(element => formatElementValue(element, ":")).join("")}`;
+  }
+
+  const dataElementSeparator = ediType === "edifact" ? "+" : "*";
+  const componentElementSeparator = ediType === "edifact" ? ":" : ">";
+  const segmentTerminator = ediType === "edifact" ? "'" : "~";
+
+  const payload = segment.elements
+    .map(element => `${dataElementSeparator}${formatElementValue(element, componentElementSeparator)}`)
+    .join("");
+
+  return `${segment.id}${payload}${segmentTerminator}`;
+}
+
+function formatElementValue(element: IEdiElement, componentElementSeparator: string): string {
+  if (element.components?.length) {
+    return element.components
+      .map(component => formatElementValue(component, componentElementSeparator))
+      .join(componentElementSeparator);
+  }
+
+  return element.value ?? "";
+}
+
+function formatVdaElement(element: IEdiElement): string {
+  const value = element.value ?? formatElementValue(element, "");
+  const length = element.length ?? value.length;
+  return value.padEnd(length, " ");
 }

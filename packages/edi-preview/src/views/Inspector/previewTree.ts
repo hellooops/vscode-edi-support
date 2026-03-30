@@ -190,7 +190,7 @@ function buildSegmentNode(segment: EdiSegment, stickyDepth: number): PreviewNode
     kind: "segment",
     title: `${segment.id.toUpperCase()} Segment`,
     subtitle: segment.desc,
-    meta: segment.isLoop() ? "Loop" : undefined,
+    meta: formatSegmentMeta(segment),
     badge: "Required",
     details: compactDetails([
       createDetail("Purpose", segment.purpose),
@@ -263,6 +263,14 @@ function compactText(items: Array<string | undefined>): string[] {
   return items
     .map(item => item?.trim())
     .filter((item): item is string => Boolean(item));
+}
+
+function formatSegmentMeta(segment: EdiSegment): string | undefined {
+  if (segment.isLoop()) {
+    return "Loop";
+  }
+
+  return segment.segmentStr?.trim() || undefined;
 }
 
 function formatPartner(qualifier?: string, id?: string): string | undefined {

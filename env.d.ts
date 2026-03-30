@@ -38,6 +38,7 @@ interface IEdiSegment {
   key: string;
 
   id: string;
+  segmentStr?: string;
   elements: Array<IEdiElement>;
   desc?: string;
   purpose?: string;

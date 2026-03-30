@@ -67,6 +67,7 @@ export class EdiSegment implements TreeItemBase {
   key: any;
 
   id: string;
+  segmentStr?: string;
   elements: EdiElement[];
   desc?: string;
   purpose?: string;
@@ -78,6 +79,7 @@ export class EdiSegment implements TreeItemBase {
   constructor(json: IEdiSegment, parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet) {
     this.key = json.key;
     this.id = json.id;
+    this.segmentStr = json.segmentStr;
     this.desc = json.desc;
     this.purpose = json.purpose;
     this.elements = json.elements?.map(i => new EdiElement(i, this));
