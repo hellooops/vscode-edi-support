@@ -17,7 +17,8 @@
       class="sticky z-[1] flex min-h-[46px] w-full items-start gap-[10px] rounded-[14px] border-0 bg-white/95 px-[10px] py-2 text-left backdrop-blur-sm"
       :class="[
         hasExpandableContent ? 'cursor-pointer hover:bg-[rgba(232,232,232,0.78)]' : 'cursor-default',
-        'max-[600px]:flex-wrap'
+        'max-[600px]:flex-wrap',
+        isOpen ? 'rounded-b-none' : 'rounded-[14px]'
       ]"
       :style="headerStyle"
       @click="$emit('toggle')"
