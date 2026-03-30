@@ -346,6 +346,7 @@
     "buildPreview": "npm --prefix packages/edi-preview run build",
     "copySchema": "node scripts/copySchema.js",
     "package": "npm run build && npx @vscode/vsce package",
+    "install:dev": "npm run build && node scripts/installDevExtension.js",
     "publish": "npm run build && npx @vscode/vsce publish",
     "pre-release-publish": "npm run build && npx @vscode/vsce publish --pre-release"
   },
