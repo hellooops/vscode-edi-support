@@ -33,7 +33,7 @@ export class EdifactParser extends EdiParserBase {
           const subElementFrags = UNB01.split(":");
           if (subElementFrags.length > 1) {
             const syntaxVersion = subElementFrags[1];
-            if (syntaxVersion === "4") {
+            if (syntaxVersion === "4" || syntaxVersion === "X") {
               segment.ediReleaseSchemaSegment = EdiReleaseSchemaSegment.UNB_SYNTAX_4;
               return;
             }

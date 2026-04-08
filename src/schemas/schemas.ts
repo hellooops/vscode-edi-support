@@ -263,7 +263,8 @@ export class EdiReleaseSchemaSegment {
         "1": "Version 1: ISO 9735:1988.",
         "2": "Version 2: ISO 9735:1990.",
         "3": "Version 3: ISO 9735 Amendment 1:1992.",
-        "4": "Version 4: ISO 9735:1998."
+        "4": "Version 4: ISO 9735:1998.",
+        "X": "ISO 9735-11 profile: constrained syntax based on Version 4 (ISO 9735:1998)."
       },
       "Identification code qualifier": {
         "1": "DUNS (Data Universal Numbering System)",
