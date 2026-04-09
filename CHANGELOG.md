@@ -6,6 +6,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [2.2.0] - 2026-04-09
+
+### Added
+- Add a redesigned preview tree with sticky cards for interchange, functional group, transaction set, segment, and element nodes.
+- Show raw segment values directly in preview cards for faster document inspection.
+- Add `npm run install:dev` to package and install a timestamped development VSIX into local VS Code.
+- Add `scripts/generate_edifact_schema.py` to generate EDIFACT release schemas from UNECE source packages.
+- Add EDIFACT release schemas for D17A, D17B, D18A, D18B, D19A, D19B, D20A, D20B, D21A, D21B, D22A, D22B, D23A, and D24A.
+
+### Changed
+- Redesign the preview webview into a hierarchical tree layout with richer node details and smoother active-item navigation.
+- Treat EDIFACT UNB syntax identifier `X` as a Version 4 compatible syntax profile.
+- Extend built-in EDIFACT syntax qualifiers to document the `X` constrained syntax profile.
+
+### Fixed
+- Fix VDA documents failing to render correctly in the preview webview.
+- Wait until the preview webview is ready before posting initial document and active-selection messages.
+
 ## [2.1.6] - 2026-03-26
 
 ### Added
