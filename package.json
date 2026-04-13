@@ -365,6 +365,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "edi-parser": "file:packages/edi-parser",
     "nanoid": "3.3.4"
   }
 }

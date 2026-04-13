@@ -398,7 +398,12 @@
         "根项目中可通过 import \"edi-parser\" 成功解析。",
         "CI 或本地重新安装后不会丢失依赖。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "package.json",
+        "package-lock.json"
+      ],
+      "result_summary": "已将 edi-parser 作为 file 依赖接入根项目并更新 lockfile，当前仓库内可通过包名解析到本地子包入口。"
     },
     {
       "id": "T014",
