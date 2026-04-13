@@ -156,7 +156,24 @@
         "新包内部已有完整 parser 源码闭环。",
         "新包源码在逻辑上可独立编译。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/parser/ediParserBase.ts",
+        "packages/edi-parser/src/parser/edifactParser.ts",
+        "packages/edi-parser/src/parser/x12Parser.ts",
+        "packages/edi-parser/src/parser/vdaParser.ts",
+        "packages/edi-parser/src/parser/entities.ts",
+        "packages/edi-parser/src/parser/segmentScanner.ts",
+        "packages/edi-parser/src/parser/schemaVersionSegmentsContext.ts",
+        "packages/edi-parser/src/schemas/schemas.ts",
+        "packages/edi-parser/src/schemas/edifact_d96a_meta.ts",
+        "packages/edi-parser/src/schemas/x12_00401_meta.ts",
+        "packages/edi-parser/src/utils/utils.ts",
+        "packages/edi-parser/src/interfaces/messageInfo.ts",
+        "packages/edi-parser/src/interfaces/configurations.ts",
+        "packages/edi-parser/src/constants.ts"
+      ],
+      "result_summary": "已将 parser 核心源码、schema 类型源码、纯工具与必要接口复制到新包，当前保持与主项目源码基本等价，尚未开始去耦。"
     },
     {
       "id": "T006",
