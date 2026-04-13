@@ -1,7 +1,9 @@
 import { type Conf_CustomSchema } from "./interfaces/configurations";
 
+export type EdiTypeValue = "x12" | "edifact" | "vda" | "unknown";
+
 export interface SchemaResolverRequest {
-  ediType: "x12" | "edifact" | "vda" | "unknown";
+  ediType: EdiTypeValue;
   release: string;
   version?: string;
 }

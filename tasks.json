@@ -342,7 +342,12 @@
         "外部调用者无需关心具体 parser 子类也可完成解析。",
         "工厂 API 与现有规则一致。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/factory.ts",
+        "packages/edi-parser/src/options.ts"
+      ],
+      "result_summary": "已新增纯字符串识别函数、parser 工厂与一次性 parse 入口，并复用了主项目既有的 X12/EDIFACT/VDA 识别规则。"
     },
     {
       "id": "T012",
