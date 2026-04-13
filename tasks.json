@@ -485,7 +485,11 @@
         "EdiUtils 仍对扩展其余代码提供同样的接口。",
         "parser 已来自新包，且 customSchemas 注入有效。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "src/utils/ediUtils.ts"
+      ],
+      "result_summary": "已将 EdiUtils 内部 parser 创建切换为 edi-parser 包导入，并将 VS Code 配置中的 customSchemas 显式注入新包。"
     },
     {
       "id": "T016",

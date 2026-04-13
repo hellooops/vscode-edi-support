@@ -1,10 +1,23 @@
-import { EdiParserBase } from "../parser/ediParserBase";
-import { EdifactParser } from "../parser/edifactParser";
-import { EdiComment, EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
-import { X12Parser } from "../parser/x12Parser";
-import { VdaParser } from "../parser/vdaParser";
+import {
+  EdiParserBase,
+  EdifactParser,
+  EdiComment,
+  EdiElement,
+  EdiFunctionalGroup,
+  EdiInterchange,
+  EdiSegment,
+  EdiTransactionSet,
+  EdiType,
+  type ParserOptions,
+  VdaParser,
+  X12Parser,
+  isEdifact as isEdifactText,
+  isVda as isVdaText,
+  isX12 as isX12Text
+} from "edi-parser";
 import * as vscode from "vscode";
 import * as constants from "../constants";
+import { type Conf_CustomSchema } from "../interfaces/configurations";
 
 export class EdiUtils {
   static icons = {
@@ -25,13 +38,12 @@ export class EdiUtils {
       return false;
     }
 
-    let content = document.getText();
+    const content = document.getText();
     if (!content) {
       return false;
     }
 
-    content = content.trim();
-    return content.startsWith(constants.ediDocument.x12.segment.ISA);
+    return isX12Text(content);
   }
 
   static isEdifact(document: vscode.TextDocument): boolean {
@@ -43,20 +55,12 @@ export class EdiUtils {
       return false;
     }
 
-    let content = document.getText();
+    const content = document.getText();
     if (!content) {
       return false;
     }
 
-    content = content.trim();
-    if (content.startsWith(`${constants.ediDocument.edifact.segment.UNA}${constants.ediDocument.edifact.defaultSeparators.componentElementSeparator}`) || // UNA:
-        content.startsWith(`${constants.ediDocument.edifact.segment.UNB}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) || // UNB*
-        content.startsWith(`${constants.ediDocument.edifact.segment.UNH}${constants.ediDocument.edifact.defaultSeparators.dataElementSeparator}`) // UNH*
-    ) {
-      return true;
-    }
-
-    return false;
+    return isEdifactText(content);
   }
 
   static isVda(document: vscode.TextDocument): boolean {
@@ -68,19 +72,12 @@ export class EdiUtils {
       return false;
     }
 
-    let content = document.getText();
+    const content = document.getText();
     if (!content) {
       return false;
     }
 
-    content = content.trim();
-    if (content.startsWith(`${constants.ediDocument.vda.segment.segment_511}`) ||
-        content.startsWith(`${constants.ediDocument.vda.segment.segment_711}`)
-    ) {
-      return true;
-    }
-
-    return false;
+    return isVdaText(content);
   }
 
   static isDocumentSupported(document: vscode.TextDocument | undefined | null): boolean {
@@ -125,14 +122,15 @@ export class EdiUtils {
     let ediType: string;
     let parser: EdiParserBase | undefined = undefined;
     const documentContent = document.getText();
+    const parserOptions = EdiUtils.getParserOptions();
     if (EdiUtils.isX12(document)) {
-      parser = new X12Parser(documentContent);
+      parser = new X12Parser(documentContent, parserOptions);
       ediType = EdiType.X12;
     } else if (EdiUtils.isEdifact(document)) {
-      parser = new EdifactParser(documentContent);
+      parser = new EdifactParser(documentContent, parserOptions);
       ediType = EdiType.EDIFACT;
     } else if (EdiUtils.isVda(document)) {
-      parser = new VdaParser(documentContent);
+      parser = new VdaParser(documentContent, parserOptions);
       ediType = EdiType.VDA;
     } else {
       ediType = EdiType.UNKNOWN;
@@ -141,6 +139,16 @@ export class EdiUtils {
     return {
       parser,
       ediType
+    };
+  }
+
+  private static getParserOptions(): ParserOptions {
+    const customSchemas: Conf_CustomSchema = vscode.workspace
+      .getConfiguration(constants.configuration.ediSupport)
+      .get(constants.configuration.customSchemas) ?? {};
+
+    return {
+      customSchemas
     };
   }
 
