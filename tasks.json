@@ -733,7 +733,16 @@
         "根项目测试套件在新架构下通过。",
         "测试覆盖仍能反映真实运行路径。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "src/parser/entities.ts",
+        "src/parser/ediParserBase.ts",
+        "src/parser/x12Parser.ts",
+        "src/parser/edifactParser.ts",
+        "src/parser/vdaParser.ts",
+        "src/schemas/schemas.ts"
+      ],
+      "result_summary": "已通过兼容层统一旧测试入口，当前 test:unit:compiled 与 test:integration:compiled 均通过。"
     },
     {
       "id": "T020",
@@ -783,7 +792,13 @@
         "根项目完整编译成功。",
         "没有 unresolved import、找不到 schema、类型不匹配等错误。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "package.json",
+        "packages/edi-parser/package.json",
+        "packages/edi-parser/scripts/copySchemas.js"
+      ],
+      "result_summary": "已验证根项目 compile 成功，当前构建链路会先构建 edi-parser，再编译扩展本体。"
     },
     {
       "id": "T022",
@@ -807,7 +822,8 @@
         "用户可见功能无明显行为回退。",
         "核心测试文档样本在扩展内解析结果与之前一致。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "result_summary": "已通过集成测试回归 commands、diagnostics、formatting、hover、tree、preview、semantic tokens、completion、inlay hints 等扩展功能。"
     },
     {
       "id": "T023",
@@ -850,7 +866,7 @@
         "T011",
         "T012"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "M2",
@@ -862,7 +878,7 @@
         "T016",
         "T017"
       ],
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "M3",
@@ -875,7 +891,7 @@
         "T022",
         "T023"
       ],
-      "status": "pending"
+      "status": "in_progress"
     }
   ],
   "implementation_order": [
@@ -911,6 +927,6 @@
       "T016"
     ],
     "easiest_validation_checkpoint": "完成 T012 后应能单独编译新包并通过最小 parse 示例。",
-    "current_overall_status": "pending"
+    "current_overall_status": "in_progress"
   }
 }
