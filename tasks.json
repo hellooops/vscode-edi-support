@@ -206,6 +206,36 @@
       "result_summary": "已将 X12、EDIFACT、VDA schema JSON 资源迁入新包，并将复制脚本收紧为只分发资源目录。"
     },
     {
+      "id": "T006A",
+      "title": "补齐 VDA schema 资源文件",
+      "phase": "迁移修复",
+      "priority": "P0",
+      "depends_on": [
+        "T006"
+      ],
+      "main_content": [
+        "补齐 edi-parser 子包中 VDA 02/03 的 release schema 与 version index JSON 文件。",
+        "恢复 VDA parser 通过内置 schema 解析元素与 loop 的能力。",
+        "验证 VDA 单测回归。"
+      ],
+      "attention_points": [
+        "迁移目录存在但资源文件缺失时，运行时不会显式报错，容易被忽略。",
+        "需要同时补齐 release schema 与 *_versions.json。"
+      ],
+      "acceptance_criteria": [
+        "edi-parser 构建产物中包含 VDA 02/03 的 JSON 资源文件。",
+        "VDA 相关解析单测恢复通过。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/schemas/vda/02/02.json",
+        "packages/edi-parser/src/schemas/vda/02/02_versions.json",
+        "packages/edi-parser/src/schemas/vda/03/03.json",
+        "packages/edi-parser/src/schemas/vda/03/03_versions.json"
+      ],
+      "result_summary": "已补齐 VDA 02/03 的 schema 与版本索引资源，VDA parser 的元素与 loop 解析单测已恢复通过。"
+    },
+    {
       "id": "T007",
       "title": "去除 EdiParserBase 中的 VS Code 依赖",
       "phase": "去耦",
