@@ -370,7 +370,11 @@
         "主项目可只通过包名 import 所需能力。",
         "新包导出清晰、稳定、无重复。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/index.ts"
+      ],
+      "result_summary": "已将工厂 API、parser 类、文档模型、诊断类型、schema 类型与 options 统一收敛到包主入口导出。"
     },
     {
       "id": "T013",
