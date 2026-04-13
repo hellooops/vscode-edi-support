@@ -254,7 +254,12 @@
         "无参和带参两种创建方式都能工作。",
         "options 字段职责明确，未引入歧义。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/options.ts",
+        "packages/edi-parser/src/parser/ediParserBase.ts"
+      ],
+      "result_summary": "已引入 ParserOptions / ParseOptions / SchemaResolver 类型，并将 parser 构造签名切换为 options 对象形式，默认无参调用仍可工作。"
     },
     {
       "id": "T009",

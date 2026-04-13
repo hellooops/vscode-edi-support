@@ -2,9 +2,10 @@ import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument,
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
-import { type Conf_Supported_EdiType, type Conf_CustomSchema, Conf_Utils } from "../interfaces/configurations";
+import { type Conf_Supported_EdiType, Conf_Utils } from "../interfaces/configurations";
 import { SegmentScanner } from "./segmentScanner";
 import { SchemaVersionSegmentsContext } from "./schemaVersionSegmentsContext";
+import { type ParserOptions } from "../options";
 
 export abstract class EdiParserBase {
   document: string;
@@ -12,12 +13,12 @@ export abstract class EdiParserBase {
   _separators?: EdiMessageSeparators | null;
   private parseResult?: EdiDocument;
   private parsingPromise?: Promise<EdiDocument>;
-  protected customSchemas?: Conf_CustomSchema;
+  protected options: ParserOptions;
   protected abstract ediType: string;
 
-  public constructor(document: string, customSchemas?: Conf_CustomSchema) {
+  public constructor(document: string, options: ParserOptions = {}) {
     this.document = document;
-    this.customSchemas = customSchemas;
+    this.options = options;
   }
 
   public async parse(): Promise<EdiDocument> {
@@ -388,7 +389,7 @@ export abstract class EdiParserBase {
 
   protected onSchemaLoaded(): void {
     try {
-      const qualifiers = Conf_Utils.getQualifiers(this.customSchemas, this.ediType as Conf_Supported_EdiType, this.schema!.ediReleaseSchema.release);
+      const qualifiers = Conf_Utils.getQualifiers(this.options.customSchemas, this.ediType as Conf_Supported_EdiType, this.schema!.ediReleaseSchema.release);
       qualifiers.forEach(q => {
         this.schema?.ediReleaseSchema?.addQualifier(q.qualifier, q.code, q.desc);
       });
