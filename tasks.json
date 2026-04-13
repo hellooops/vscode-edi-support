@@ -708,7 +708,13 @@
         "新包单测可在普通 Node/TS 环境下运行。",
         "核心解析逻辑具备独立回归保护。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/package.json",
+        "packages/edi-parser/test/public-api.test.js",
+        "package.json"
+      ],
+      "result_summary": "已为 edi-parser 增加独立 mocha 测试，覆盖 detect/createParser/parseEdi、内置 schema、customSchemas、schemaResolver 与 EDIFACT/VDA 关键分支，并已接入根项目 test:all:compiled 链路。"
     },
     {
       "id": "T019",

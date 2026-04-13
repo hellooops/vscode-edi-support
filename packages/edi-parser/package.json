@@ -9,13 +9,15 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "tsc -p ./ && node scripts/copySchemas.js"
+    "build": "tsc -p ./ && node scripts/copySchemas.js",
+    "test": "npm run build && mocha --ui tdd test/**/*.test.js"
   },
   "dependencies": {
     "nanoid": "3.3.4"
   },
   "devDependencies": {
     "@types/node": "16.x",
+    "mocha": "^10.2.0",
     "typescript": "^5.0.4"
   }
 }
