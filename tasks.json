@@ -196,7 +196,14 @@
         "新包构建产物中包含运行时所需全部 schema 资源。",
         "给定 ediType/release/version 可以定位到正确资源。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/schemas/edifact/**/*",
+        "packages/edi-parser/src/schemas/x12/**/*",
+        "packages/edi-parser/src/schemas/vda/**/*",
+        "packages/edi-parser/scripts/copySchemas.js"
+      ],
+      "result_summary": "已将 X12、EDIFACT、VDA schema JSON 资源迁入新包，并将复制脚本收紧为只分发资源目录。"
     },
     {
       "id": "T007",

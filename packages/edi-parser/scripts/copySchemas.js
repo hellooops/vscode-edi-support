@@ -3,6 +3,7 @@ const path = require("path");
 
 const sourceRoot = path.resolve(__dirname, "../src/schemas");
 const targetRoot = path.resolve(__dirname, "../dist/schemas");
+const schemaDirectories = ["edifact", "x12", "vda"];
 
 function removeDirectory(targetPath) {
   if (fs.existsSync(targetPath)) {
@@ -31,4 +32,11 @@ function copyDirectory(sourcePath, targetPath) {
 }
 
 removeDirectory(targetRoot);
-copyDirectory(sourceRoot, targetRoot);
+fs.mkdirSync(targetRoot, { recursive: true });
+
+for (const directoryName of schemaDirectories) {
+  copyDirectory(
+    path.join(sourceRoot, directoryName),
+    path.join(targetRoot, directoryName)
+  );
+}
