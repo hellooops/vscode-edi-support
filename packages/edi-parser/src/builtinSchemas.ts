@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import type { SchemaLoadResult, SchemaResolverRequest } from "./options";
 
 function readJsonFile(filePath: string): unknown | undefined {
   if (!fs.existsSync(filePath)) {
@@ -17,11 +18,7 @@ export function getBuiltInSchema(ediType: "x12" | "edifact" | "vda" | "unknown",
   return readJsonFile(path.resolve(__dirname, "schemas", ediType, release, `${release}.json`));
 }
 
-export function loadBuiltInSchemaBundle(request: {
-  ediType: "x12" | "edifact" | "vda" | "unknown";
-  release: string;
-  version?: string;
-}): { releaseSchema: unknown; versionSchema?: unknown } | undefined {
+export function loadBuiltInSchemaBundle(request: SchemaResolverRequest): SchemaLoadResult | undefined {
   if (request.ediType === "unknown") {
     return undefined;
   }

@@ -312,7 +312,12 @@
         "外部 resolver 可注入自定义 release/version schema。",
         "未提供 resolver 时内置逻辑仍正常工作。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/builtinSchemas.ts",
+        "packages/edi-parser/src/parser/ediParserBase.ts"
+      ],
+      "result_summary": "已支持外部 schemaResolver 优先返回 schema，未命中时自动回退到包内置 schema。"
     },
     {
       "id": "T011",

@@ -342,16 +342,18 @@ export abstract class EdiParserBase {
   async loadSchema(meta: EdiTransactionSetMeta): Promise<boolean> {
     this.schema = undefined;
     if (!meta.release || !meta.version) return false;
-    const builtInSchema = loadBuiltInSchemaBundle({
+    const schemaRequest = {
       ediType: this.ediType as "x12" | "edifact" | "vda" | "unknown",
       release: meta.release,
       version: meta.version
-    });
-    if (!builtInSchema) {
+    };
+    const resolvedSchema = await this.options.schemaResolver?.(schemaRequest);
+    const schemaBundle = resolvedSchema ?? loadBuiltInSchemaBundle(schemaRequest);
+    if (!schemaBundle) {
       return false;
     }
 
-    const ediSchema = new EdiSchema(builtInSchema.releaseSchema, builtInSchema.versionSchema);
+    const ediSchema = new EdiSchema(schemaBundle.releaseSchema, schemaBundle.versionSchema);
     this.schema = ediSchema;
     return true;
   }
