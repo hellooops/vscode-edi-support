@@ -1,11 +1,11 @@
 import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument, type EdiStandardOptions, EdiDocumentBuilder, type EdiInterchangeMeta, type EdiTransactionSetMeta, type EdiFunctionalGroupMeta, EdiType, EdiComment } from "./entities";
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
-import Utils from "../utils/utils";
 import { type Conf_Supported_EdiType, Conf_Utils } from "../interfaces/configurations";
 import { SegmentScanner } from "./segmentScanner";
 import { SchemaVersionSegmentsContext } from "./schemaVersionSegmentsContext";
 import { type ParserOptions } from "../options";
+import { loadBuiltInSchemaBundle } from "../builtinSchemas";
 
 export abstract class EdiParserBase {
   document: string;
@@ -342,49 +342,22 @@ export abstract class EdiParserBase {
   async loadSchema(meta: EdiTransactionSetMeta): Promise<boolean> {
     this.schema = undefined;
     if (!meta.release || !meta.version) return false;
-    let releaseSchema = null;
-    let versionSchema = null;
-    try {
-      releaseSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}.json`);
-    } catch (ex) {
-      if (!this.isExpectedSchemaLoadFailure(ex)) {
-        console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
-      }
+    const builtInSchema = loadBuiltInSchemaBundle({
+      ediType: this.ediType as "x12" | "edifact" | "vda" | "unknown",
+      release: meta.release,
+      version: meta.version
+    });
+    if (!builtInSchema) {
       return false;
     }
 
-    try {
-      const release_versions = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_versions.json`);
-      const versionKey = `${meta.release}_${meta.version}`;
-      if (!release_versions || !release_versions["DocumentTypes"][versionKey]) {
-        return false;
-      }
-
-      // versionSchema = await import(`${this.getSchemaRootPath()}/${meta.release}/${meta.release}_${meta.version}.json`);
-      versionSchema = release_versions["DocumentTypes"][versionKey];
-    } catch (ex) {
-      if (!this.isExpectedSchemaLoadFailure(ex)) {
-        console.error(Utils.formatString(constants.errors.importSchemaError, meta.release), ex);
-      }
-      return false;
-    }
-
-    const ediSchema = new EdiSchema(releaseSchema, versionSchema);
+    const ediSchema = new EdiSchema(builtInSchema.releaseSchema, builtInSchema.versionSchema);
     this.schema = ediSchema;
     return true;
   }
 
   protected unloadSchema(): void {
     this.schema = undefined;
-  }
-
-  private isExpectedSchemaLoadFailure(ex: unknown): boolean {
-    if (!(ex instanceof Error)) {
-      return false;
-    }
-
-    const error = ex as NodeJS.ErrnoException;
-    return error.code === "MODULE_NOT_FOUND" || error.message.includes("Cannot find module");
   }
 
   protected onSchemaLoaded(): void {

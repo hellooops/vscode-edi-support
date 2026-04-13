@@ -283,7 +283,12 @@
         "X12、EDIFACT、VDA 的 schema 可以从新包内部稳定加载。",
         "版本 schema 缺失时返回结果符合既定策略。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/builtinSchemas.ts",
+        "packages/edi-parser/src/parser/ediParserBase.ts"
+      ],
+      "result_summary": "已引入包内置 schema 加载器，并将 parser 的 schema 读取从相对动态 import 切换为本地内置 resolver。"
     },
     {
       "id": "T010",
