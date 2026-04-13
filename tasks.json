@@ -768,7 +768,12 @@
         "单独引用 edi-parser 时可直接 parse 文本。",
         "不依赖 VS Code 或主项目内部路径。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/package.json",
+        "packages/edi-parser/dist/**/*"
+      ],
+      "result_summary": "已通过 npm pack --dry-run 与仓库外临时消费者安装验证，edi-parser 可作为独立包直接解析 X12 文本。"
     },
     {
       "id": "T021",
