@@ -31,10 +31,10 @@ function copyDirectory(sourcePath, targetPath) {
   }
 }
 
-removeDirectory(targetRoot);
 fs.mkdirSync(targetRoot, { recursive: true });
 
 for (const directoryName of schemaDirectories) {
+  removeDirectory(path.join(targetRoot, directoryName));
   copyDirectory(
     path.join(sourceRoot, directoryName),
     path.join(targetRoot, directoryName)

@@ -463,6 +463,34 @@
       "result_summary": "已为子包补齐独立声明文件，当前 build:edi-parser 可以在不依赖根目录 env.d.ts 的情况下单独通过。"
     },
     {
+      "id": "T014B",
+      "title": "保留 schema 模块的编译产物",
+      "phase": "构建修复",
+      "priority": "P0",
+      "depends_on": [
+        "T006",
+        "T012"
+      ],
+      "main_content": [
+        "修复 schema 资源复制脚本，避免覆盖 dist/schemas 下由 TypeScript 生成的模块文件。",
+        "保留 schemas.ts 相关的 js/d.ts 产物，同时继续复制 edifact/x12/vda 资源目录。",
+        "确保根项目从 edi-parser 主入口读取类型时不会缺失 schema 模块声明。"
+      ],
+      "attention_points": [
+        "不要因为复制 JSON 资源而整删整个 dist/schemas 目录。",
+        "改动应只影响构建产物布局，不改 schema 解析逻辑。"
+      ],
+      "acceptance_criteria": [
+        "build:edi-parser 后 dist/schemas 下仍存在 schemas.js / schemas.d.ts。",
+        "edifact/x12/vda 资源目录仍被正常复制。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/scripts/copySchemas.js"
+      ],
+      "result_summary": "已调整 schema 复制脚本为只刷新资源子目录，当前 dist/schemas 下可同时保留 schemas 模块产物与 schema 资源目录。"
+    },
+    {
       "id": "T015",
       "title": "改造 EdiUtils，保留 VS Code 适配层",
       "phase": "集成",
