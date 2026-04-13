@@ -226,7 +226,11 @@
         "新包源码不再 import vscode。",
         "通过 options 传入 customSchemas 时行为与原扩展一致。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/parser/ediParserBase.ts"
+      ],
+      "result_summary": "已移除 edi-parser 内部对 vscode 配置读取的直接依赖，customSchemas 改为通过 parser 构造参数注入。"
     },
     {
       "id": "T008",

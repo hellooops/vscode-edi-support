@@ -2,7 +2,6 @@ import { EdiSegment, EdiElement, ElementType, EdiMessageSeparators, EdiDocument,
 import { EdiSchema } from "../schemas/schemas";
 import * as constants from "../constants";
 import Utils from "../utils/utils";
-import * as vscode from "vscode";
 import { type Conf_Supported_EdiType, type Conf_CustomSchema, Conf_Utils } from "../interfaces/configurations";
 import { SegmentScanner } from "./segmentScanner";
 import { SchemaVersionSegmentsContext } from "./schemaVersionSegmentsContext";
@@ -13,10 +12,12 @@ export abstract class EdiParserBase {
   _separators?: EdiMessageSeparators | null;
   private parseResult?: EdiDocument;
   private parsingPromise?: Promise<EdiDocument>;
+  protected customSchemas?: Conf_CustomSchema;
   protected abstract ediType: string;
 
-  public constructor(document: string) {
+  public constructor(document: string, customSchemas?: Conf_CustomSchema) {
     this.document = document;
+    this.customSchemas = customSchemas;
   }
 
   public async parse(): Promise<EdiDocument> {
@@ -387,8 +388,7 @@ export abstract class EdiParserBase {
 
   protected onSchemaLoaded(): void {
     try {
-      const customSchemas: Conf_CustomSchema = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customSchemas) ?? {};
-      const qualifiers = Conf_Utils.getQualifiers(customSchemas, this.ediType as Conf_Supported_EdiType, this.schema!.ediReleaseSchema.release);
+      const qualifiers = Conf_Utils.getQualifiers(this.customSchemas, this.ediType as Conf_Supported_EdiType, this.schema!.ediReleaseSchema.release);
       qualifiers.forEach(q => {
         this.schema?.ediReleaseSchema?.addQualifier(q.qualifier, q.code, q.desc);
       });
