@@ -329,8 +329,9 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "build:edi-parser": "npm --prefix packages/edi-parser run build",
+    "compile": "npm run build:edi-parser && tsc -p ./",
+    "watch": "npm run build:edi-parser && tsc -watch -p ./",
     "clean:out": "node scripts/cleanOut.js",
     "prepare:runtime": "npm run clean:out && npm run copySchema && npm run compile",
     "build": "npm run prepare:runtime && npm run buildPreview",

@@ -428,7 +428,11 @@
         "根项目一键 build/test 时无需手工先构建子包。",
         "打包产物中包含新包运行所需内容。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "package.json"
+      ],
+      "result_summary": "已新增 build:edi-parser 脚本，并让根项目 compile/watch 先构建 edi-parser，再进入扩展编译流程。"
     },
     {
       "id": "T015",
