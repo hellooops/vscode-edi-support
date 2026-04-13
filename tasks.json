@@ -1,0 +1,675 @@
+{
+  "project": "vscode-edi-support",
+  "goal": "将项目中的 ediParser 提炼为可独立复用的包/库，并让当前 VS Code 扩展反向依赖该包，同时保持现有功能不回退。",
+  "current_state": {
+    "workspace_status": "user_reverted_all_changes",
+    "implementation_started": false,
+    "notes": [
+      "当前仓库里的 parser 逻辑主要位于 src/parser、src/schemas、src/utils/ediUtils.ts。",
+      "核心可复用逻辑基本是纯 TypeScript，但存在少量 VS Code API、配置读取、schema 加载方式耦合。",
+      "本 JSON 仅作为实施拆分清单，不包含任何实际代码改动。"
+    ]
+  },
+  "recommended_target": {
+    "package_form": "仓库内子包",
+    "package_path": "packages/edi-parser",
+    "package_name": "edi-parser",
+    "api_level": "解析核心 + detect + 内置 schema 可覆盖",
+    "extension_strategy": "当前扩展改为依赖新包，VS Code 相关适配仍留在主项目"
+  },
+  "global_acceptance_criteria": [
+    "新包可在非 VS Code 环境中通过纯字符串输入独立完成 EDI 解析。",
+    "当前扩展的 hover、diagnostics、formatting、tree、preview 等功能行为与拆分前保持一致。",
+    "扩展运行时代码不再直接依赖 src/parser 下的旧实现作为事实来源。",
+    "schema 默认随新包分发，且允许调用方通过选项覆盖或注入。",
+    "根项目与新包都能通过编译，核心测试与扩展测试通过。"
+  ],
+  "tasks": [
+    {
+      "id": "T001",
+      "title": "确认拆包边界与最终目录结构",
+      "phase": "设计",
+      "priority": "P0",
+      "depends_on": [],
+      "main_content": [
+        "确定新包仅承载纯解析核心，不包含 VS Code Range、Position、ThemeIcon、TextDocument 等宿主类型。",
+        "确定新包目录结构，例如 src/parser、src/schemas、src/utils、src/interfaces、scripts。",
+        "明确旧代码哪些保留在主项目，哪些迁入新包。"
+      ],
+      "attention_points": [
+        "避免把 extension command、provider、webview 逻辑迁入新包。",
+        "避免后续实现时出现 schema 和 parser 双份事实来源。"
+      ],
+      "acceptance_criteria": [
+        "有明确的迁移清单：迁入、保留、兼容导出三类边界清晰。",
+        "实现者无需再决定新包里放哪些模块。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "docs/edi-parser-boundary.md"
+      ],
+      "result_summary": "已固定新包职责、非职责、目录结构，以及迁入/保留/兼容导出三类边界。"
+    },
+    {
+      "id": "T002",
+      "title": "梳理 parser 运行时依赖图",
+      "phase": "分析",
+      "priority": "P0",
+      "depends_on": [
+        "T001"
+      ],
+      "main_content": [
+        "梳理 src/parser/* 对 src/schemas、src/constants、src/utils、src/interfaces 的依赖。",
+        "标记对 vscode、workspace configuration、动态 import schema 的耦合点。",
+        "识别需要替换的扩展侧 import 入口。"
+      ],
+      "attention_points": [
+        "不要只看 parser 类，还要覆盖 entities、segmentScanner、schemaVersionSegmentsContext。",
+        "要统计测试代码是否直接 import 旧 parser 文件。"
+      ],
+      "acceptance_criteria": [
+        "形成一张可执行依赖表，明确每个模块未来归属。",
+        "没有遗漏根项目中直接 import ../parser/* 或 ../schemas/schemas 的运行时代码。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "docs/edi-parser-dependency-map.md"
+      ],
+      "result_summary": "已确认 parser 主干依赖、唯一必须拆除的 VS Code 核心耦合点，以及扩展运行时与测试侧的旧 import 入口范围。"
+    },
+    {
+      "id": "T003",
+      "title": "定义新包公共 API",
+      "phase": "设计",
+      "priority": "P0",
+      "depends_on": [
+        "T001",
+        "T002"
+      ],
+      "main_content": [
+        "定义对外导出函数：detectEdiType、createParser、parseEdi。",
+        "定义对外导出类和类型：EdiParserBase、X12Parser、EdifactParser、VdaParser、EdiDocument 等。",
+        "定义 ParserOptions、ParseOptions、SchemaResolver 等公共接口。"
+      ],
+      "attention_points": [
+        "公共 API 不能泄漏 VS Code 类型。",
+        "接口需要支持内置 schema、外部 schema resolver、自定义 qualifier 覆盖。"
+      ],
+      "acceptance_criteria": [
+        "公共导出列表固定下来。",
+        "外部调用者只看 API 定义即可使用新包。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "docs/edi-parser-public-api.md"
+      ],
+      "result_summary": "已固定工厂 API、parser 构造签名、schema resolver 结构、options 语义，以及 v1 导出范围。"
+    },
+    {
+      "id": "T004",
+      "title": "创建 packages/edi-parser 子包骨架",
+      "phase": "脚手架",
+      "priority": "P0",
+      "depends_on": [
+        "T003"
+      ],
+      "main_content": [
+        "创建 package.json、tsconfig.json、src/index.ts、scripts 目录等基础结构。",
+        "设置 main/types/exports/build 脚本。",
+        "准备 dist 输出目录策略。"
+      ],
+      "attention_points": [
+        "包名、入口文件、types 声明路径要一致。",
+        "后续 root 项目需要能稳定解析到该包。"
+      ],
+      "acceptance_criteria": [
+        "子包目录结构完整。",
+        "单独运行构建命令时不会因为缺少基础文件而失败。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/package.json",
+        "packages/edi-parser/tsconfig.json",
+        "packages/edi-parser/src/index.ts",
+        "packages/edi-parser/scripts/copySchemas.js"
+      ],
+      "result_summary": "已补齐 edi-parser 子包骨架根文件与基础构建脚本，占位入口已创建，后续可直接承接源码迁移。"
+    },
+    {
+      "id": "T005",
+      "title": "迁移纯核心源码到新包",
+      "phase": "迁移",
+      "priority": "P0",
+      "depends_on": [
+        "T004"
+      ],
+      "main_content": [
+        "迁移 src/parser 下纯核心文件到新包。",
+        "迁移 src/schemas/schemas.ts 以及依赖的 message info 元数据文件。",
+        "迁移 parser 依赖的纯工具与接口文件，例如 utils.ts、messageInfo.ts。"
+      ],
+      "attention_points": [
+        "迁移时先保持逻辑等价，不要一边搬一边重写。",
+        "优先复制后再做去耦修改，便于对比与回归。"
+      ],
+      "acceptance_criteria": [
+        "新包内部已有完整 parser 源码闭环。",
+        "新包源码在逻辑上可独立编译。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T006",
+      "title": "迁移并整理 schema 资源",
+      "phase": "迁移",
+      "priority": "P0",
+      "depends_on": [
+        "T004"
+      ],
+      "main_content": [
+        "把 X12、EDIFACT、VDA 的 schema JSON 资源迁入新包。",
+        "整理 dist 阶段的 schema 复制脚本。",
+        "明确 schema 在运行时的相对路径结构。"
+      ],
+      "attention_points": [
+        "不要遗漏 release_versions.json 这类版本索引文件。",
+        "dist 后的目录结构必须与运行时 resolver 逻辑一致。"
+      ],
+      "acceptance_criteria": [
+        "新包构建产物中包含运行时所需全部 schema 资源。",
+        "给定 ediType/release/version 可以定位到正确资源。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T007",
+      "title": "去除 EdiParserBase 中的 VS Code 依赖",
+      "phase": "去耦",
+      "priority": "P0",
+      "depends_on": [
+        "T005"
+      ],
+      "main_content": [
+        "删除 EdiParserBase 对 vscode.workspace.getConfiguration 的直接读取。",
+        "将 customSchemas 或 qualifierOverrides 改为通过 options 注入。",
+        "保留原有 onSchemaLoaded 行为，但数据来源从宿主配置改为显式参数。"
+      ],
+      "attention_points": [
+        "这个任务是整个拆包成败关键。",
+        "必须保证 EDIFACT service qualifiers、自定义 qualifier 注入逻辑不丢。"
+      ],
+      "acceptance_criteria": [
+        "新包源码不再 import vscode。",
+        "通过 options 传入 customSchemas 时行为与原扩展一致。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T008",
+      "title": "引入 ParserOptions / ParseOptions",
+      "phase": "去耦",
+      "priority": "P0",
+      "depends_on": [
+        "T003",
+        "T007"
+      ],
+      "main_content": [
+        "为 parser 构造器与 parse API 增加 options 参数。",
+        "定义 options 中 customSchemas、schemaResolver、qualifierOverrides 的语义。",
+        "确保旧的直接 new Parser(text) 仍可无参工作。"
+      ],
+      "attention_points": [
+        "要兼顾向后兼容和外部调用便利。",
+        "不要让 options 成为 VS Code 相关对象的大杂烩。"
+      ],
+      "acceptance_criteria": [
+        "无参和带参两种创建方式都能工作。",
+        "options 字段职责明确，未引入歧义。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T009",
+      "title": "实现内置 schema resolver",
+      "phase": "核心能力",
+      "priority": "P0",
+      "depends_on": [
+        "T006",
+        "T008"
+      ],
+      "main_content": [
+        "实现内置 schema 加载器，替代当前依赖相对动态 import 的方式。",
+        "支持根据 ediType/release/version 返回 release schema 与 version schema。",
+        "暴露 getBuiltInSchema 或同类辅助 API。"
+      ],
+      "attention_points": [
+        "要兼容 package dist 后的真实路径。",
+        "要区分真正错误与 schema 不存在这两类情况。"
+      ],
+      "acceptance_criteria": [
+        "X12、EDIFACT、VDA 的 schema 可以从新包内部稳定加载。",
+        "版本 schema 缺失时返回结果符合既定策略。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T010",
+      "title": "支持外部 schemaResolver 覆盖内置 schema",
+      "phase": "核心能力",
+      "priority": "P1",
+      "depends_on": [
+        "T008",
+        "T009"
+      ],
+      "main_content": [
+        "允许调用方提供 schemaResolver 覆盖或扩展内置 schema。",
+        "规定 resolver 返回值结构。",
+        "明确外部 resolver 返回 undefined 时是否回退到内置 schema。"
+      ],
+      "attention_points": [
+        "建议采用“外部优先，未命中回退内置”的策略。",
+        "避免把 resolver 设计得过于复杂。"
+      ],
+      "acceptance_criteria": [
+        "外部 resolver 可注入自定义 release/version schema。",
+        "未提供 resolver 时内置逻辑仍正常工作。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T011",
+      "title": "实现 detect/createParser/parseEdi 工厂 API",
+      "phase": "公共 API",
+      "priority": "P0",
+      "depends_on": [
+        "T003",
+        "T008",
+        "T009"
+      ],
+      "main_content": [
+        "提供纯字符串输入的 detectEdiType。",
+        "提供 createParser(text, options) 返回具体 parser。",
+        "提供 parseEdi(text, options) 直接完成解析。"
+      ],
+      "attention_points": [
+        "unknown 文档的返回约定必须清晰。",
+        "detect 逻辑应尽量复用当前扩展中的识别规则。"
+      ],
+      "acceptance_criteria": [
+        "外部调用者无需关心具体 parser 子类也可完成解析。",
+        "工厂 API 与现有规则一致。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T012",
+      "title": "整理新包的 index 导出面",
+      "phase": "公共 API",
+      "priority": "P0",
+      "depends_on": [
+        "T011"
+      ],
+      "main_content": [
+        "统一从 src/index.ts 导出公共类、类型、函数、schema 类型。",
+        "确保扩展侧和外部调用侧不需要深层路径 import。",
+        "限制内部实现细节暴露。"
+      ],
+      "attention_points": [
+        "不要把纯内部 helper 无脑 export。",
+        "导出面过大后续难以维护。"
+      ],
+      "acceptance_criteria": [
+        "主项目可只通过包名 import 所需能力。",
+        "新包导出清晰、稳定、无重复。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T013",
+      "title": "让根项目识别新子包依赖",
+      "phase": "集成",
+      "priority": "P0",
+      "depends_on": [
+        "T004",
+        "T012"
+      ],
+      "main_content": [
+        "在根 package.json 中添加对 edi-parser 的本地依赖。",
+        "选择 file: 依赖或 workspace 方式，并保证安装链路稳定。",
+        "更新 lockfile 与 node_modules 解析结果。"
+      ],
+      "attention_points": [
+        "要确认本地依赖在当前 npm 行为下是拷贝还是链接。",
+        "后续 build 顺序要和依赖安装方式匹配。"
+      ],
+      "acceptance_criteria": [
+        "根项目中可通过 import \"edi-parser\" 成功解析。",
+        "CI 或本地重新安装后不会丢失依赖。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T014",
+      "title": "调整根项目构建脚本，先构建新包",
+      "phase": "集成",
+      "priority": "P0",
+      "depends_on": [
+        "T004",
+        "T006",
+        "T013"
+      ],
+      "main_content": [
+        "新增 build:parser 或等价脚本。",
+        "在 prepare:runtime、build、test 前确保先产出 edi-parser 的 dist 和 schema 资源。",
+        "确认 VSIX 打包时能包含所需依赖产物。"
+      ],
+      "attention_points": [
+        "不要只改 build，要覆盖 test/prepublish/package 等链路。",
+        "构建顺序错误会导致根项目编译时找不到 types 或 runtime 入口。"
+      ],
+      "acceptance_criteria": [
+        "根项目一键 build/test 时无需手工先构建子包。",
+        "打包产物中包含新包运行所需内容。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T015",
+      "title": "改造 EdiUtils，保留 VS Code 适配层",
+      "phase": "集成",
+      "priority": "P0",
+      "depends_on": [
+        "T008",
+        "T011",
+        "T013"
+      ],
+      "main_content": [
+        "让 EdiUtils 的 parser 创建改为基于新包。",
+        "继续保留 TextDocument、Range、Position、ThemeIcon、语言切换、缓存等 VS Code 逻辑。",
+        "将 workspace customSchemas 读取后通过 options 传给新包。"
+      ],
+      "attention_points": [
+        "不要把 VS Code 逻辑迁回新包。",
+        "缓存行为和 setTextDocumentLanguage 行为要与旧实现一致。"
+      ],
+      "acceptance_criteria": [
+        "EdiUtils 仍对扩展其余代码提供同样的接口。",
+        "parser 已来自新包，且 customSchemas 注入有效。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T016",
+      "title": "替换扩展运行时代码中的 parser/schemas import",
+      "phase": "集成",
+      "priority": "P0",
+      "depends_on": [
+        "T012",
+        "T015"
+      ],
+      "main_content": [
+        "将 diagnostics、providers、decorations、webviews 等运行时代码改为从 edi-parser 导入实体类型和 schema 类型。",
+        "去掉主项目运行时代码对 ../parser/* 与 ../schemas/schemas 的直接依赖。",
+        "只保留扩展内部必须存在的 VS Code 适配代码。"
+      ],
+      "attention_points": [
+        "优先改非测试代码，确保真实运行路径先切换成功。",
+        "completion/tree/hover 等 provider 容易遗漏 schema 类型 import。"
+      ],
+      "acceptance_criteria": [
+        "src 非测试运行时代码完成切换。",
+        "运行时代码搜索结果中不再存在旧 parser 直接依赖。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T017",
+      "title": "决定是否保留旧路径兼容导出",
+      "phase": "兼容",
+      "priority": "P1",
+      "depends_on": [
+        "T016"
+      ],
+      "main_content": [
+        "判断 src/parser/*、src/schemas/schemas.ts 是否保留为 re-export 兼容层。",
+        "如果保留，则改成薄封装，统一转发到 edi-parser。",
+        "如果不保留，则同步调整测试与内部所有旧路径 import。"
+      ],
+      "attention_points": [
+        "兼容层能降低一次性改动量，但会保留少量历史包袱。",
+        "如果保留，要避免双份实现长期并存。"
+      ],
+      "acceptance_criteria": [
+        "兼容策略明确且可执行。",
+        "不存在旧实现和新实现同时生效的歧义。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T018",
+      "title": "补齐新包自身测试",
+      "phase": "测试",
+      "priority": "P0",
+      "depends_on": [
+        "T011",
+        "T012"
+      ],
+      "main_content": [
+        "为 detectEdiType、createParser、parseEdi 编写独立测试。",
+        "覆盖 X12、EDIFACT、VDA、unknown 识别与解析。",
+        "覆盖 schema 加载、customSchemas 注入、特殊 segment 解析。"
+      ],
+      "attention_points": [
+        "新包测试不能依赖 VS Code API。",
+        "要覆盖 ISA、UNA、VDA 定长段等关键分支。"
+      ],
+      "acceptance_criteria": [
+        "新包单测可在普通 Node/TS 环境下运行。",
+        "核心解析逻辑具备独立回归保护。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T019",
+      "title": "更新主项目现有测试适配新包",
+      "phase": "测试",
+      "priority": "P0",
+      "depends_on": [
+        "T015",
+        "T016",
+        "T017"
+      ],
+      "main_content": [
+        "修正受 import 路径变化影响的单测与集成测试。",
+        "如果保留兼容层，则确认测试仍能通过且实际命中新包实现。",
+        "修正 mock 或断言中依赖旧实现细节的地方。"
+      ],
+      "attention_points": [
+        "不要只修到编译通过，要确认测试验证的是新链路。",
+        "EdiUtils 缓存与 parser class instanceof 判断可能受影响。"
+      ],
+      "acceptance_criteria": [
+        "根项目测试套件在新架构下通过。",
+        "测试覆盖仍能反映真实运行路径。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T020",
+      "title": "验证新包单独构建与发布形态",
+      "phase": "验证",
+      "priority": "P1",
+      "depends_on": [
+        "T004",
+        "T006",
+        "T012",
+        "T018"
+      ],
+      "main_content": [
+        "确认 dist 中包含 js、d.ts、schema 资源。",
+        "验证 package.json main/types/files 设置正确。",
+        "用最小示例在仓库外模拟纯 Node 调用。"
+      ],
+      "attention_points": [
+        "很多拆包项目在仓库内可用，但发布后缺 schema 或 types。",
+        "需要至少做一次“消费者视角”验证。"
+      ],
+      "acceptance_criteria": [
+        "单独引用 edi-parser 时可直接 parse 文本。",
+        "不依赖 VS Code 或主项目内部路径。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T021",
+      "title": "执行根项目编译回归",
+      "phase": "验证",
+      "priority": "P0",
+      "depends_on": [
+        "T014",
+        "T016"
+      ],
+      "main_content": [
+        "执行根项目 compile/build。",
+        "确认类型声明、模块解析、运行时入口全部正常。",
+        "排查 package path、dist path、schema path 的集成问题。"
+      ],
+      "attention_points": [
+        "最常见问题是本地依赖未安装、types 指向错误、dist 中缺 schema。",
+        "要同时检查 extension build 和 preview build。"
+      ],
+      "acceptance_criteria": [
+        "根项目完整编译成功。",
+        "没有 unresolved import、找不到 schema、类型不匹配等错误。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T022",
+      "title": "执行扩展功能回归测试",
+      "phase": "验证",
+      "priority": "P0",
+      "depends_on": [
+        "T019",
+        "T021"
+      ],
+      "main_content": [
+        "回归 diagnostics、formatting、hover、tree、preview、semantic tokens、completion、inlay hints。",
+        "验证 X12、EDIFACT、VDA 三类文档。",
+        "重点验证 customSchemas 相关路径。"
+      ],
+      "attention_points": [
+        "tree/preview 与 parser document model 的兼容性尤其关键。",
+        "customSchemas 以前来自 vscode，现在改为 EdiUtils 注入，必须单独验证。"
+      ],
+      "acceptance_criteria": [
+        "用户可见功能无明显行为回退。",
+        "核心测试文档样本在扩展内解析结果与之前一致。"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "T023",
+      "title": "清理遗留与文档补充",
+      "phase": "收尾",
+      "priority": "P2",
+      "depends_on": [
+        "T022"
+      ],
+      "main_content": [
+        "删除不再需要的重复实现、无用脚本、过时注释。",
+        "补充根项目与新包的 README/使用说明。",
+        "记录将来独立发布 npm 或迁出仓库的注意点。"
+      ],
+      "attention_points": [
+        "清理应在功能稳定后进行，不要过早删掉回退抓手。",
+        "文档至少要覆盖主项目如何引用新包、外部如何单独调用。"
+      ],
+      "acceptance_criteria": [
+        "仓库中不存在明显的双份核心实现长期并存。",
+        "后续维护者能快速理解新结构。"
+      ],
+      "status": "pending"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M1",
+      "name": "新包可独立编译",
+      "tasks": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005",
+        "T006",
+        "T007",
+        "T008",
+        "T009",
+        "T011",
+        "T012"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "M2",
+      "name": "扩展切换到新包",
+      "tasks": [
+        "T013",
+        "T014",
+        "T015",
+        "T016",
+        "T017"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "M3",
+      "name": "测试与回归完成",
+      "tasks": [
+        "T018",
+        "T019",
+        "T020",
+        "T021",
+        "T022",
+        "T023"
+      ],
+      "status": "pending"
+    }
+  ],
+  "implementation_order": [
+    "T001",
+    "T002",
+    "T003",
+    "T004",
+    "T005",
+    "T006",
+    "T007",
+    "T008",
+    "T009",
+    "T010",
+    "T011",
+    "T012",
+    "T013",
+    "T014",
+    "T015",
+    "T016",
+    "T019",
+    "T020",
+    "T021",
+    "T022",
+    "T023"
+  ],
+  "summary_for_execution": {
+    "smallest_safe_first_step": "先完成 T001-T003，把拆包边界、公共 API、options/schema 策略锁死，再开始任何代码迁移。",
+    "highest_risk_tasks": [
+      "T007",
+      "T009",
+      "T014",
+      "T015",
+      "T016"
+    ],
+    "easiest_validation_checkpoint": "完成 T012 后应能单独编译新包并通过最小 parse 示例。",
+    "current_overall_status": "pending"
+  }
+}
