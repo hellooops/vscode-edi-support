@@ -236,6 +236,34 @@
       "result_summary": "已补齐 VDA 02/03 的 schema 与版本索引资源，VDA parser 的元素与 loop 解析单测已恢复通过。"
     },
     {
+      "id": "T006B",
+      "title": "补齐 X12 与 EDIFACT schema 资源文件",
+      "phase": "迁移修复",
+      "priority": "P0",
+      "depends_on": [
+        "T006"
+      ],
+      "main_content": [
+        "补齐 edi-parser 子包中 X12 与 EDIFACT 的 release schema 和版本索引 JSON 文件。",
+        "恢复新包在低版本 X12 与完整 EDIFACT 场景下的内置 schema 能力。",
+        "验证 X12/EDIFACT 单测与整体验证链路。"
+      ],
+      "attention_points": [
+        "仅创建目录但未迁移 JSON 文件会造成隐性回归，尤其在旧 release 校验场景下才暴露。",
+        "补齐后需要重新构建子包，确认 dist 中资源完整。"
+      ],
+      "acceptance_criteria": [
+        "edi-parser 子包包含完整的 X12 与 EDIFACT schema 资源文件。",
+        "build:edi-parser 与 test:unit:compiled 通过。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/src/schemas/x12/**/*",
+        "packages/edi-parser/src/schemas/edifact/**/*"
+      ],
+      "result_summary": "已补齐 X12 与 EDIFACT schema 资源文件，当前子包构建通过，单元测试 126 项全部通过。"
+    },
+    {
       "id": "T007",
       "title": "去除 EdiParserBase 中的 VS Code 依赖",
       "phase": "去耦",
