@@ -435,6 +435,34 @@
       "result_summary": "已新增 build:edi-parser 脚本，并让根项目 compile/watch 先构建 edi-parser，再进入扩展编译流程。"
     },
     {
+      "id": "T014A",
+      "title": "补齐 edi-parser 独立构建所需的声明文件",
+      "phase": "构建修复",
+      "priority": "P0",
+      "depends_on": [
+        "T005",
+        "T012"
+      ],
+      "main_content": [
+        "为子包补齐其自身依赖的全局声明文件，避免继续引用根项目 env.d.ts。",
+        "确保 parser entities 中的 IEdi* 类型在子包内可解析。",
+        "恢复 edi-parser build 的独立可执行性。"
+      ],
+      "attention_points": [
+        "修复方式应优先服务于子包独立分发，不要继续把声明耦合回根项目路径。",
+        "先做最小修复，避免在这个步骤顺手大规模重写 entities 类型体系。"
+      ],
+      "acceptance_criteria": [
+        "packages/edi-parser 的 TypeScript 构建不再因缺少 env.d.ts 或 IEdi* 声明而失败。",
+        "新增声明文件可随子包一起存在，不依赖仓库根目录。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/env.d.ts"
+      ],
+      "result_summary": "已为子包补齐独立声明文件，当前 build:edi-parser 可以在不依赖根目录 env.d.ts 的情况下单独通过。"
+    },
+    {
       "id": "T015",
       "title": "改造 EdiUtils，保留 VS Code 适配层",
       "phase": "集成",
