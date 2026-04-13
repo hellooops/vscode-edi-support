@@ -2,8 +2,7 @@ import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
 import Utils from "../utils/utils";
 import { EdiUtils } from "../utils/ediUtils";
-import { EdiDocument, EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
-import { EdiReleaseSchemaElement } from "../schemas/schemas";
+import { EdiDocument, EdiElement, EdiFunctionalGroup, EdiInterchange, EdiReleaseSchemaElement, EdiSegment, EdiTransactionSet, EdiType } from "edi-parser";
 import { ICommandable } from "../interfaces/commandable";
 import * as constants from "../constants";
 

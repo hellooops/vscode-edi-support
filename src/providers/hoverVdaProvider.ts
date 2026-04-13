@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { HoverProviderBase } from "./hoverProviderBase";
 import { Disposable } from "vscode";
-import { EdiType } from "../parser/entities";
+import { EdiType } from "edi-parser";
 import * as constants from "../constants";
 
 export class HoverVdaProvider extends HoverProviderBase {

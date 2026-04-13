@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { EdiElement, EdiSegment } from "../parser/entities";
+import { EdiElement, EdiSegment } from "edi-parser";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 import { StringBuilder } from "../utils/utils";

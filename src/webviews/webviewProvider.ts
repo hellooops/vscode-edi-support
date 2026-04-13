@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as constants from "../constants";
 import * as path from "path";
 import { EdiUtils } from "../utils/ediUtils";
-import { EdiDocument } from "../parser/entities";
+import { EdiDocument } from "edi-parser";
 
 export default class WebviewProvider {
   fileName: string;

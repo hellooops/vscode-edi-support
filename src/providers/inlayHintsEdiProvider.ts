@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiElement, EdiSegment } from "../parser/entities";
+import { EdiElement, EdiSegment } from "edi-parser";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
 

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "../parser/entities";
+import { EdiElement, EdiFunctionalGroup, EdiInterchange, EdiSegment, EdiTransactionSet, EdiType } from "edi-parser";
 import { EdiUtils } from "../utils/ediUtils";
 
 export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider, IProvidable {

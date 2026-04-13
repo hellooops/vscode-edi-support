@@ -1,4 +1,4 @@
-import { EdiType } from "../parser/entities";
+import { EdiType } from "edi-parser";
 import * as constants from "../constants";
 import { type Nullable } from "./utils";
 

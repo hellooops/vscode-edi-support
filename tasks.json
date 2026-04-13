@@ -541,7 +541,31 @@
         "src 非测试运行时代码完成切换。",
         "运行时代码搜索结果中不再存在旧 parser 直接依赖。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "src/diagnostics/ediDiagnostics.ts",
+        "src/webviews/webviewProvider.ts",
+        "src/providers/codeActionEdiProvider.ts",
+        "src/providers/codelensEdiProvider.ts",
+        "src/providers/completionItemEdiProvider.ts",
+        "src/decorations/ediDecorationsAfterLineProvider.ts",
+        "src/providers/documentFormattingEdiProvider.ts",
+        "src/providers/documentSymbolsEdiProvider.ts",
+        "src/providers/foldingRangeEdiProvider.ts",
+        "src/providers/highlightEdiProvider.ts",
+        "src/providers/hoverEdifactProvider.ts",
+        "src/providers/hoverProviderBase.ts",
+        "src/providers/hoverVdaProvider.ts",
+        "src/providers/hoverX12Provider.ts",
+        "src/providers/inlayHintsEdiEdifactProvider.ts",
+        "src/providers/inlayHintsEdiProvider.ts",
+        "src/providers/inlayHintsEdiVdaProvider.ts",
+        "src/providers/inlayHintsEdiX12Provider.ts",
+        "src/providers/semanticTokensProvider.ts",
+        "src/providers/treeEdiProvider.ts",
+        "src/utils/schemaViewerUtils.ts"
+      ],
+      "result_summary": "已将 src 非测试运行时代码里的 parser/entities 与 schemas 类型导入统一切换到 edi-parser 包。"
     },
     {
       "id": "T017",

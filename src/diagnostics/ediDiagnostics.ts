@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { EdiType, type DiagnoscticsContext, type DiagnosticError, DiagnosticErrorSeverity } from "../parser/entities";
+import { EdiType, type DiagnoscticsContext, type DiagnosticError, DiagnosticErrorSeverity } from "edi-parser";
 import { IDiagnosticsable } from "../interfaces/diagnosticsable";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";

@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiElement, EdiType } from "../parser/entities";
+import { EdiElement, EdiType, EdiSchema } from "edi-parser";
 import { EdiUtils } from "../utils/ediUtils";
-import { EdiSchema } from "../schemas/schemas";
 
 export class CompletionItemEdiProvider implements vscode.CompletionItemProvider, IProvidable {
   async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): Promise<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {

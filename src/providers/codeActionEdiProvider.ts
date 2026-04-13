@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { DiagnosticError_QUALIFIER_INVALID_CODE, DiagnosticErrors, EdiType } from "../parser/entities";
+import { DiagnosticError_QUALIFIER_INVALID_CODE, DiagnosticErrors, EdiType } from "edi-parser";
 import * as constants from "../constants";
 import { DiagnosticsWithContext } from "../diagnostics/ediDiagnostics";
 

@@ -1,4 +1,4 @@
-import { EdiType } from "../parser/entities";
+import { EdiType } from "edi-parser";
 import { InlayHintsEdiProvider } from "./inlayHintsEdiProvider";
 
 export class InlayHintsEdiX12Provider extends InlayHintsEdiProvider {

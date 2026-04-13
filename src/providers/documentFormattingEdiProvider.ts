@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { IProvidable } from "../interfaces/providable";
-import { EdiType } from "../parser/entities";
+import { EdiType } from "edi-parser";
 import { EdiUtils } from "../utils/ediUtils";
 
 export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormattingEditProvider, IProvidable {

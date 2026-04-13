@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { EdiType } from "../parser/entities";
+import { EdiType } from "edi-parser";
 import { InlayHintsEdiProvider } from "./inlayHintsEdiProvider";
 import * as constants from "../constants";
 import { EdiUtils } from "../utils/ediUtils";
