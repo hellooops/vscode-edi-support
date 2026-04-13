@@ -617,7 +617,16 @@
         "兼容策略明确且可执行。",
         "不存在旧实现和新实现同时生效的歧义。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "src/parser/entities.ts",
+        "src/parser/ediParserBase.ts",
+        "src/parser/x12Parser.ts",
+        "src/parser/edifactParser.ts",
+        "src/parser/vdaParser.ts",
+        "src/schemas/schemas.ts"
+      ],
+      "result_summary": "已保留旧路径作为薄 re-export 兼容层，统一转发到 edi-parser，避免主项目继续保留双份 parser/schema 事实来源。"
     },
     {
       "id": "T018",
