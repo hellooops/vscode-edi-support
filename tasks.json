@@ -857,7 +857,12 @@
         "仓库中不存在明显的双份核心实现长期并存。",
         "后续维护者能快速理解新结构。"
       ],
-      "status": "pending"
+      "status": "completed",
+      "artifacts": [
+        "README.md",
+        "packages/edi-parser/README.md"
+      ],
+      "result_summary": "已补充根项目与 edi-parser 子包文档，明确仓库结构、主项目依赖关系、外部独立调用方式，以及未来独立发布时需要保留的构建与兼容注意事项。"
     }
   ],
   "milestones": [
@@ -902,7 +907,7 @@
         "T022",
         "T023"
       ],
-      "status": "in_progress"
+      "status": "completed"
     }
   ],
   "implementation_order": [
@@ -938,6 +943,6 @@
       "T016"
     ],
     "easiest_validation_checkpoint": "完成 T012 后应能单独编译新包并通过最小 parse 示例。",
-    "current_overall_status": "in_progress"
+    "current_overall_status": "completed"
   }
 }
