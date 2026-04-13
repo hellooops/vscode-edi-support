@@ -1,12 +1,22 @@
 import * as fs from "fs";
 import * as path from "path";
 
-export function getDocsPath(fileName: string): string {
-  return path.resolve(process.cwd(), "..", "..", "docs", fileName);
+export function getFixturePath(fileName: string): string {
+  const candidates = [
+    path.resolve(__dirname, "..", "fixtures", "messages", fileName),
+    path.resolve(__dirname, "..", "..", "..", "test", "fixtures", "messages", fileName),
+  ];
+  const matchedPath = candidates.find((candidate) => fs.existsSync(candidate));
+
+  if (!matchedPath) {
+    throw new Error(`Fixture not found: ${fileName}`);
+  }
+
+  return matchedPath;
 }
 
-export function readDoc(fileName: string): string {
-  return fs.readFileSync(getDocsPath(fileName), "utf8");
+export function readFixture(fileName: string): string {
+  return fs.readFileSync(getFixturePath(fileName), "utf8");
 }
 
 export function normalizeLineBreaks(text: string, lineBreak: string): string {

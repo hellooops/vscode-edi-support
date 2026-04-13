@@ -1,20 +1,21 @@
 import * as assert from "assert";
 
 import {
+  cloneJson,
   createEdifactDelforDocument,
   createEdifactInvoicDocument,
   createEdifactOrdersDocument,
-  readDoc,
+  readFixture,
   stripTrailingLineBreaks,
 } from "./helpers/fixtures";
 import { edifactParserModule, root } from "./helpers/runtime";
 
-const { createParser, DiagnosticErrors, EdiType, parseEdi } = root as typeof import("../dist");
+const { createParser, DiagnosticErrors, EdiType, loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
 const { EdifactParser } = edifactParserModule as typeof import("../dist/parser/edifactParser");
 
 suite("edi-parser edifact parser", () => {
   test("ORDERS should parse base metadata, message info and UNH composite elements", async () => {
-    const document = await parseEdi(readDoc("sample-orders.edifact"));
+    const document = await parseEdi(readFixture("sample-orders.edifact"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const unhSegment = transactionSet.startSegment!;
 
@@ -29,7 +30,7 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("DESADV should fit nested CPS structures and preserve parent relationships", async () => {
-    const document = await parseEdi(readDoc("DESADV.edifact"));
+    const document = await parseEdi(readFixture("DESADV.edifact"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const cpsLoop = transactionSet.segments.filter((segment) => segment.id === "CPSLoop1")
       .find((segment) => segment.Loop!.some((child) => child.id === "LINLoop1"))!;
@@ -52,6 +53,47 @@ suite("edi-parser edifact parser", () => {
     assert.ok(flattenedIds.includes("CPS"));
     assert.ok(flattenedIds.includes("LIN"));
     assert.ok(!transactionSet.segments.some((segment) => segment.id === "LIN"));
+  });
+
+  test("should parse multiple interchanges and message types from fixture", async () => {
+    const document = await parseEdi(readFixture("EDIFACT-interchanges.edifact"));
+
+    assert.strictEqual(document!.interchanges.length, 2);
+    assert.deepStrictEqual(
+      document!.interchanges.map((interchange) =>
+        interchange.functionalGroups.flatMap((functionalGroup) =>
+          functionalGroup.transactionSets.map((transactionSet) => transactionSet.meta.version),
+        ),
+      ),
+      [["ORDERS", "DESADV"], ["ORDERS"]],
+    );
+    assert.deepStrictEqual(
+      document!.interchanges.map((interchange) =>
+        interchange.functionalGroups.flatMap((functionalGroup) =>
+          functionalGroup.transactionSets.map((transactionSet) => transactionSet.meta.id),
+        ),
+      ),
+      [["001", "002"], ["003"]],
+    );
+  });
+
+  test("should parse grouped and repeated EDIFACT messages across multiple interchanges", async () => {
+    const document = await parseEdi(readFixture("multiple_transactions.edifact"));
+
+    assert.strictEqual(document!.interchanges.length, 2);
+    assert.deepStrictEqual(
+      document!.interchanges.map((interchange) => interchange.functionalGroups.length),
+      [1, 3],
+    );
+    assert.deepStrictEqual(
+      document!.interchanges.map((interchange) =>
+        interchange.functionalGroups.map((functionalGroup) => functionalGroup.transactionSets.map((transactionSet) => transactionSet.meta.id)),
+      ),
+      [
+        [["2261", "2262", "2263"]],
+        [["2264"], ["2265"], ["2266", "2267", "2268"]],
+      ],
+    );
   });
 
   test("INVOIC should switch message type and message info", async () => {
@@ -132,5 +174,46 @@ suite("edi-parser edifact parser", () => {
     assert.strictEqual(segment.elements[1].components!.length, 5);
     assert.strictEqual(segment.elements[1].components![0].value, "ORDERS");
     assert.strictEqual(segment.elements[1].components![4].value, "EAN008");
+  });
+
+  test("should preserve EDIFACT comments and formatting when parsed directly", async () => {
+    const text = [
+      "// lead",
+      "UNA:+.?*'",
+      "UNB+UNOA:2+SENDER:14+RECEIVER:14+140407:0910+0001'",
+      "// before message",
+      "UNH+001+ORDERS:D:96A:UN'",
+      "BGM+220+PO1+9'",
+      "UNT+3+001'",
+      "// tail",
+      "UNZ+1+0001'",
+    ].join("\n");
+    const document = await new EdifactParser(text).parse();
+    const interchange = document.interchanges[0];
+    const transactionSet = interchange.functionalGroups[0].transactionSets[0];
+
+    assert.deepStrictEqual(document.separatorsSegment!.comments.map((comment) => comment.content), ["// lead"]);
+    assert.deepStrictEqual(transactionSet.startSegment!.comments.map((comment) => comment.content), ["// before message"]);
+    assert.deepStrictEqual(interchange.endSegment!.comments.map((comment) => comment.content), ["// tail"]);
+    assert.strictEqual(document.toString(), text);
+  });
+
+  test("should keep parsing when EDIFACT release schema is partially missing", async () => {
+    const partialBundle = cloneJson(loadBuiltInSchemaBundle({
+      ediType: "edifact",
+      release: "D96A",
+      version: "ORDERS",
+    })! as any);
+    delete partialBundle.releaseSchema.Segments.BGM;
+
+    const document = await parseEdi(createEdifactOrdersDocument(), {
+      schemaResolver: () => partialBundle,
+    });
+    const unhSegment = document!.getSegments(true).find((segment) => segment.id === "UNH")!;
+    const bgmSegment = document!.getSegments(true).find((segment) => segment.id === "BGM")!;
+
+    assert.ok(unhSegment.ediReleaseSchemaSegment);
+    assert.strictEqual(bgmSegment.isInvalidSegment, true);
+    assert.strictEqual(bgmSegment.ediReleaseSchemaSegment, undefined);
   });
 });

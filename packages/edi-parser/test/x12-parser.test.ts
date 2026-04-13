@@ -1,22 +1,24 @@
 import * as assert from "assert";
 
 import {
+  cloneJson,
   createUnsupportedReleaseX12Document,
   createX12810Document,
   createX12856Document,
   createX12PurchaseOrderDocument,
-  readDoc,
+  normalizeLineBreaks,
+  readFixture,
   stripTrailingLineBreaks,
 } from "./helpers/fixtures";
 import { parserEntities, root, x12ParserModule } from "./helpers/runtime";
 
-const { parseEdi } = root as typeof import("../dist");
+const { loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
 const { X12Parser } = x12ParserModule as typeof import("../dist/parser/x12Parser");
 const { ElementType } = parserEntities as typeof import("../dist/parser/entities");
 
 suite("edi-parser x12 parser", () => {
   test("850 should parse base metadata, message info and schema-backed segments", async () => {
-    const document = await parseEdi(readDoc("850.x12"));
+    const document = await parseEdi(readFixture("850.x12"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const begSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BEG");
 
@@ -29,7 +31,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("850 should fit N1 and PO1 loops and preserve nested loop structure", async () => {
-    const document = await parseEdi(readDoc("850-loop.edi"));
+    const document = await parseEdi(readFixture("850-loop.edi"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const wrappedSegments = transactionSet.segments;
     const flattenedIds = transactionSet.getSegments(true).map((segment) => segment.id);
@@ -62,6 +64,46 @@ suite("edi-parser x12 parser", () => {
     assert.ok(flattenedIds.includes("PO1"));
     assert.ok(flattenedIds.includes("SLN"));
     assert.ok(!wrappedSegments.some((segment) => segment.id === "SLN"));
+  });
+
+  test("should parse multiple transactions within one functional group from fixture", async () => {
+    const document = await parseEdi(readFixture("multiple_transactions.x12"));
+    const interchange = document!.interchanges[0];
+    const functionalGroup = interchange.functionalGroups[0];
+
+    assert.strictEqual(document!.interchanges.length, 1);
+    assert.strictEqual(interchange.functionalGroups.length, 1);
+    assert.deepStrictEqual(
+      functionalGroup.transactionSets.map((transactionSet) => ({
+        version: transactionSet.meta.version,
+        id: transactionSet.meta.id,
+        flat: transactionSet.getSegments(true).map((segment) => segment.id),
+      })),
+      [
+        { version: "860", id: "0001", flat: ["ST", "BCH", "CUR", "SE"] },
+        { version: "860", id: "0002", flat: ["ST", "BCH", "CUR", "SE"] },
+      ],
+    );
+  });
+
+  test("should parse multiple functional groups from an interchange fixture", async () => {
+    const document = await parseEdi(readFixture("X12-interchanges.x12"));
+    const interchange = document!.interchanges[0];
+
+    assert.strictEqual(document!.interchanges.length, 1);
+    assert.strictEqual(interchange.functionalGroups.length, 2);
+    assert.deepStrictEqual(
+      interchange.functionalGroups.map((functionalGroup) =>
+        functionalGroup.transactionSets.map((transactionSet) => transactionSet.meta.version),
+      ),
+      [["850", "864"], ["850"]],
+    );
+    assert.deepStrictEqual(
+      interchange.functionalGroups.map((functionalGroup) =>
+        functionalGroup.transactionSets.map((transactionSet) => transactionSet.meta.id),
+      ),
+      [["0001", "0002"], ["0003"]],
+    );
   });
 
   test("856 should fit HL loops with nested N1 loop and preserve flattened order", async () => {
@@ -139,6 +181,53 @@ suite("edi-parser x12 parser", () => {
     assert.strictEqual(begSegment!.ediReleaseSchemaSegment, undefined);
   });
 
+  test("should preserve x12 comments and formatting when parsed directly", async () => {
+    const text = readFixture("850-comments.x12");
+    const document = await new X12Parser(text).parse();
+    const interchange = document.interchanges[0];
+    const functionalGroup = interchange.functionalGroups[0];
+    const transactionSet = functionalGroup.transactionSets[0];
+    const begSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BEG")!;
+    const n1Segment = transactionSet.getSegments(true).find((segment) => segment.id === "N1")!;
+
+    assert.deepStrictEqual(interchange.startSegment!.comments.map(normalizeCommentContent), ["// 1"]);
+    assert.deepStrictEqual(functionalGroup.startSegment!.comments.map(normalizeCommentContent), ["// 2", "// 3"]);
+    assert.deepStrictEqual(transactionSet.startSegment!.comments.map(normalizeCommentContent), ["// 4 // 4", "// 5"]);
+    assert.deepStrictEqual(begSegment.comments.map(normalizeCommentContent), ["// 6", "// 7"]);
+    assert.deepStrictEqual(n1Segment.comments.map(normalizeCommentContent), ["// 7.1"]);
+    assert.deepStrictEqual(
+      document.commentsAfterDocument.map(normalizeCommentContent),
+      ["// 13", "// 14", "// 15", "// 16", "//    17", "//18"],
+    );
+    assert.ok(normalizeLineBreaks(document.toString(), "\n").includes("// 7.1\nN1*BT*Example.com Accounts Payable~"));
+  });
+
+  test("should preserve x12 inline comment placement in formatted output", async () => {
+    const text = readFixture("850-comments.x12");
+    const document = await new X12Parser(text).parse();
+
+    assert.strictEqual(normalizeLineBreaks(document.toString(), "\n"), normalizeLineBreaks(text, "\n"));
+  });
+
+  test("should keep parsing when x12 release schema is partially missing", async () => {
+    const partialBundle = cloneJson(loadBuiltInSchemaBundle({
+      ediType: "x12",
+      release: "00401",
+      version: "850",
+    })! as any);
+    delete partialBundle.releaseSchema.Segments.BEG;
+
+    const document = await parseEdi(createX12PurchaseOrderDocument(), {
+      schemaResolver: () => partialBundle,
+    });
+    const begSegment = document!.getSegments(true).find((segment) => segment.id === "BEG")!;
+    const dtmSegment = document!.getSegments(true).find((segment) => segment.id === "DTM")!;
+
+    assert.strictEqual(begSegment.isInvalidSegment, true);
+    assert.strictEqual(begSegment.ediReleaseSchemaSegment, undefined);
+    assert.ok(dtmSegment.ediReleaseSchemaSegment);
+  });
+
   test("should parse documents with LF, CR and no trailing newline when segment separator remains tilde", async () => {
     const lfDocument = await parseEdi(createX12PurchaseOrderDocument("\n"));
     const crDocument = await parseEdi(createX12PurchaseOrderDocument("\r"));
@@ -151,3 +240,7 @@ suite("edi-parser x12 parser", () => {
     assert.strictEqual(noTrailingNewlineDocument!.getSegments(true).at(-1)!.id, "IEA");
   });
 });
+
+function normalizeCommentContent(comment: { content: string }): string {
+  return comment.content.replace(/\r/g, "");
+}

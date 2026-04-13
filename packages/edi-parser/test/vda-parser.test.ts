@@ -1,18 +1,39 @@
 import * as assert from "assert";
 
 import {
+  cloneJson,
   normalizeLineBreaks,
-  readDoc,
+  readFixture,
   stripTrailingLineBreaks,
 } from "./helpers/fixtures";
 import { root, vdaParserModule } from "./helpers/runtime";
 
-const { parseEdi } = root as typeof import("../dist");
+const { loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
 const { VdaParser } = vdaParserModule as typeof import("../dist/parser/vdaParser");
 
 suite("edi-parser vda parser", () => {
+  test("511 auto schema loading should match explicit schema loading for structure and fixed slices", async () => {
+    const text = readFixture("4905.edi");
+    const autoDocument = await parseEdi(text);
+    const explicitParser = new VdaParser(text);
+    await explicitParser.loadSchema({ release: "02", version: "511" });
+    const explicitDocument = await explicitParser.parse();
+    const autoTransactionSet = autoDocument!.interchanges[0].functionalGroups[0].transactionSets[0];
+    const explicitTransactionSet = explicitDocument.interchanges[0].functionalGroups[0].transactionSets[0];
+
+    assert.deepStrictEqual(autoTransactionSet.segments.map((segment) => segment.id), explicitTransactionSet.segments.map((segment) => segment.id));
+    assert.deepStrictEqual(
+      autoTransactionSet.getSegments(true).map((segment) => segment.id),
+      explicitTransactionSet.getSegments(true).map((segment) => segment.id),
+    );
+    assert.deepStrictEqual(
+      autoTransactionSet.getSegments(true)[0].elements.map((element) => element.value),
+      explicitTransactionSet.getSegments(true)[0].elements.map((element) => element.value),
+    );
+  });
+
   test("511/02 should parse metadata and fixed-width element slices", async () => {
-    const text = readDoc("4905.edi");
+    const text = readFixture("4905.edi");
     const parser = new VdaParser(text);
     await parser.loadSchema({ release: "02", version: "511" });
 
@@ -43,7 +64,7 @@ suite("edi-parser vda parser", () => {
   });
 
   test("711/03 should parse metadata, schema-driven elements and nested loop hierarchy", async () => {
-    const text = readDoc("4913.edi");
+    const text = readFixture("4913.edi");
     const parser = new VdaParser(text);
     await parser.loadSchema({ release: "03", version: "711" });
 
@@ -65,8 +86,31 @@ suite("edi-parser vda parser", () => {
     assert.strictEqual(nested714Loop.Loop![0].parentSegment, nested714Loop);
   });
 
+  test("711 auto schema loading should match explicit schema loading for nested loop structure", async () => {
+    const text = readFixture("4913.edi");
+    const autoDocument = await parseEdi(text);
+    const explicitParser = new VdaParser(text);
+    await explicitParser.loadSchema({ release: "03", version: "711" });
+    const explicitDocument = await explicitParser.parse();
+    const autoTransactionSet = autoDocument!.interchanges[0].functionalGroups[0].transactionSets[0];
+    const explicitTransactionSet = explicitDocument.interchanges[0].functionalGroups[0].transactionSets[0];
+
+    assert.deepStrictEqual(
+      autoTransactionSet.getSegments(true).map((segment) => segment.id),
+      explicitTransactionSet.getSegments(true).map((segment) => segment.id),
+    );
+    assert.deepStrictEqual(
+      autoTransactionSet.segments[0].Loop!.map((segment) => segment.id),
+      explicitTransactionSet.segments[0].Loop!.map((segment) => segment.id),
+    );
+    assert.deepStrictEqual(
+      autoTransactionSet.getSegments(true)[0].elements.map((element) => element.value),
+      explicitTransactionSet.getSegments(true)[0].elements.map((element) => element.value),
+    );
+  });
+
   test("should parse LF, CR and no trailing newline VDA documents", async () => {
-    const baseText = readDoc("4905.edi");
+    const baseText = readFixture("4905.edi");
     const lfDocument = await parseEdi(normalizeLineBreaks(baseText, "\n"));
     const crDocument = await parseEdi(normalizeLineBreaks(baseText, "\r"));
     const noTrailingNewlineDocument = await parseEdi(stripTrailingLineBreaks(baseText));
@@ -88,6 +132,27 @@ suite("edi-parser vda parser", () => {
     assert.strictEqual(unknownReleaseDocument!.interchanges[0].functionalGroups[0].transactionSets[0].meta.release, "99");
     assert.strictEqual(unknownReleaseSegment.ediReleaseSchemaSegment, undefined);
     assert.strictEqual(unknownReleaseSegment.elements.length, 0);
+  });
+
+  test("should keep parsing when VDA release schema is partially missing", async () => {
+    const partialBundle = cloneJson(loadBuiltInSchemaBundle({
+      ediType: "vda",
+      release: "02",
+      version: "511",
+    })! as any);
+    delete partialBundle.releaseSchema.Segments["512"];
+
+    const document = await parseEdi(readFixture("4905.edi"), {
+      schemaResolver: () => partialBundle,
+    });
+    const segments = document!.getSegments(true);
+    const first511 = segments.find((segment) => segment.id === "511")!;
+    const first512 = segments.find((segment) => segment.id === "512")!;
+
+    assert.ok(first511.ediReleaseSchemaSegment);
+    assert.strictEqual(first512.isInvalidSegment, true);
+    assert.strictEqual(first512.ediReleaseSchemaSegment, undefined);
+    assert.strictEqual(first512.elements.length, 0);
   });
 });
 

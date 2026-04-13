@@ -8,6 +8,7 @@ import {
   createVda511Document,
   createX12PurchaseOrderDocument,
   createX12PurchaseOrderWithCustomQualifier,
+  readFixture,
 } from "./helpers/fixtures";
 import { root } from "./helpers/runtime";
 
@@ -47,9 +48,27 @@ suite("edi-parser public api", () => {
     assert.strictEqual(createParser("NOT_AN_EDI_DOCUMENT"), undefined);
   });
 
+  test("should return undefined parsers and parse results for empty or whitespace-only input", async () => {
+    assert.strictEqual(createParser(""), undefined);
+    assert.strictEqual(createParser("   \r\n\t"), undefined);
+    assert.strictEqual(await parseEdi(""), undefined);
+    assert.strictEqual(await parseEdi("   \r\n\t"), undefined);
+  });
+
   test("should return undefined parser and parse result for unknown text", async () => {
     assert.strictEqual(createParser("plain text only"), undefined);
     assert.strictEqual(await parseEdi("plain text only"), undefined);
+  });
+
+  test("should detect and parse comment-prefixed x12 documents through the public factory helpers", async () => {
+    const text = readFixture("850-comments.x12");
+    const parser = createParser(text);
+    const document = await parseEdi(text);
+
+    assert.ok(parser instanceof X12Parser);
+    assert.ok(document);
+    assert.strictEqual(document!.interchanges.length, 1);
+    assert.strictEqual(document!.interchanges[0].functionalGroups[0].transactionSets[0].meta.version, "850");
   });
 
   test("should parse x12, edifact and vda documents through parseEdi", async () => {
@@ -83,6 +102,11 @@ suite("edi-parser public api", () => {
       release: "D96A",
       version: "ORDERS",
     }) as any;
+    const vdaBundle = loadBuiltInSchemaBundle({
+      ediType: "vda",
+      release: "02",
+      version: "511",
+    }) as any;
 
     assert.strictEqual(x12ReleaseSchema.Release, "00401");
     assert.ok(x12Bundle);
@@ -91,6 +115,9 @@ suite("edi-parser public api", () => {
     assert.ok(edifactBundle);
     assert.strictEqual(edifactBundle.releaseSchema.Release, "D96A");
     assert.ok(edifactBundle.versionSchema.TransactionSet);
+    assert.ok(vdaBundle);
+    assert.strictEqual(vdaBundle.releaseSchema.Release, "02");
+    assert.ok(vdaBundle.versionSchema.TransactionSet);
   });
 
   test("should return undefined for unknown and missing built-in schema requests", () => {
