@@ -60,6 +60,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   parentSegment?: EdiSegment;
 
   comments: EdiComment[] = [];
+  trailingComments: EdiComment[] = [];
 
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
     this.key = Utils.randomId();
@@ -113,7 +114,8 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
         children: this.comments,
       });
       const segmentStr = `${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
-      return commentsStr ? commentsStr + constants.ediDocument.lineBreak + segmentStr : segmentStr;
+      const segmentWithTrailingComments = segmentStr + formatTrailingComments(this.trailingComments);
+      return commentsStr ? commentsStr + constants.ediDocument.lineBreak + segmentWithTrailingComments : segmentWithTrailingComments;
     }
   }
 
@@ -192,6 +194,10 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
 
   addComment(comment: EdiComment) {
     this.comments.push(comment);
+  }
+
+  addTrailingComment(comment: EdiComment) {
+    this.trailingComments.push(comment);
   }
 }
 
@@ -1177,9 +1183,12 @@ type AfterEndTransactionSetFunc = (transactionSet: EdiTransactionSet) => Promise
 export class EdiDocumentBuilder {
   private options: EdiStandardOptions;
   private ediDocument: EdiDocument;
+  private readonly sourceText: string;
   private interchangeSegment?: EdiSegment;
   private functionalGroupSegment?: EdiSegment;
   private transactionSetStarted: boolean = false;
+  private lastSegment?: EdiSegment;
+  private lastTokenEndIndex: number = 0;
 
   parseInterchangeMetaFunc?: ParseInterchangeMetaFunc;
   parseFunctionalGroupMetaFunc?: ParseFunctionalGroupMetaFunc;
@@ -1192,13 +1201,21 @@ export class EdiDocumentBuilder {
 
   pendingComments: EdiComment[] = [];
 
-  constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions) {
+  constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions, sourceText: string = "") {
     this.ediDocument = new EdiDocument(separators, options);
     this.options = options;
+    this.sourceText = sourceText;
   }
 
   addComment(comment: EdiComment): void {
+    if (this.lastSegment && this.isInlineComment(comment)) {
+      this.lastSegment.addTrailingComment(comment);
+      this.lastTokenEndIndex = comment.endIndex + 1;
+      return;
+    }
+
     this.pendingComments.push(comment);
+    this.lastTokenEndIndex = comment.endIndex + 1;
   }
 
   async addSegment(segment: EdiSegment): Promise<void> {
@@ -1257,6 +1274,9 @@ export class EdiDocumentBuilder {
     } else {
       this.ediDocument.addSegment(segment);
     }
+
+    this.lastSegment = segment;
+    this.lastTokenEndIndex = segment.startIndex + segment.length;
   }
 
   buildEdiDocument(): EdiDocument {
@@ -1299,6 +1319,15 @@ export class EdiDocumentBuilder {
   onAfterEndTransactionSet(afterEndTransactionSetFunc: AfterEndTransactionSetFunc) {
     this.afterEndTransactionSetFunc = afterEndTransactionSetFunc;
   }
+
+  private isInlineComment(comment: EdiComment): boolean {
+    if (!this.sourceText) {
+      return false;
+    }
+
+    const between = this.sourceText.slice(this.lastTokenEndIndex, comment.startIndex);
+    return !/[\r\n]/.test(between);
+  }
 }
 
 function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalGroup | EdiTransactionSet | EdiSegment | EdiComment>({
@@ -1319,6 +1348,16 @@ function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalG
     ...children.map(i => i.getFormatString()),
     endSegment,
   ].filter(i => i).join(constants.ediDocument.lineBreak);
+}
+
+function formatTrailingComments(comments: EdiComment[]): string {
+  if (!comments || comments.length === 0) {
+    return "";
+  }
+
+  return comments.reduce((formatted, comment, index) => {
+    return formatted + (index === 0 ? "" : constants.ediDocument.lineBreak) + comment.getFormatString();
+  }, "");
 }
 
 function getCustomQualifierCode(context: DiagnoscticsContext, segment: EdiSegment, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {

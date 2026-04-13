@@ -188,25 +188,44 @@ suite("edi-parser x12 parser", () => {
     const functionalGroup = interchange.functionalGroups[0];
     const transactionSet = functionalGroup.transactionSets[0];
     const begSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BEG")!;
+    const secondRefSegment = transactionSet.getSegments(true).filter((segment) => segment.id === "REF")[1]!;
     const n1Segment = transactionSet.getSegments(true).find((segment) => segment.id === "N1")!;
+    const cttSegment = transactionSet.getSegments(true).find((segment) => segment.id === "CTT")!;
+    const interchangeEndSegment = interchange.endSegment!;
 
     assert.deepStrictEqual(interchange.startSegment!.comments.map(normalizeCommentContent), ["// 1"]);
-    assert.deepStrictEqual(functionalGroup.startSegment!.comments.map(normalizeCommentContent), ["// 2", "// 3"]);
-    assert.deepStrictEqual(transactionSet.startSegment!.comments.map(normalizeCommentContent), ["// 4 // 4", "// 5"]);
-    assert.deepStrictEqual(begSegment.comments.map(normalizeCommentContent), ["// 6", "// 7"]);
-    assert.deepStrictEqual(n1Segment.comments.map(normalizeCommentContent), ["// 7.1"]);
+    assert.deepStrictEqual(interchange.startSegment!.trailingComments.map(normalizeCommentContent), ["// 2"]);
+    assert.deepStrictEqual(functionalGroup.startSegment!.comments.map(normalizeCommentContent), ["// 3"]);
+    assert.deepStrictEqual(functionalGroup.startSegment!.trailingComments.map(normalizeCommentContent), ["// 4 // 4"]);
+    assert.deepStrictEqual(transactionSet.startSegment!.comments.map(normalizeCommentContent), ["// 5"]);
+    assert.deepStrictEqual(transactionSet.startSegment!.trailingComments.map(normalizeCommentContent), ["// 6"]);
+    assert.deepStrictEqual(begSegment.comments.map(normalizeCommentContent), ["// 7"]);
+    assert.deepStrictEqual(secondRefSegment.trailingComments.map(normalizeCommentContent), ["// 7.1"]);
+    assert.deepStrictEqual(n1Segment.trailingComments.map(normalizeCommentContent), ["// 7.2"]);
+    assert.deepStrictEqual(cttSegment.comments.map(normalizeCommentContent), ["// 9"]);
+    assert.deepStrictEqual(interchangeEndSegment.trailingComments.map(normalizeCommentContent), ["// 13"]);
     assert.deepStrictEqual(
       document.commentsAfterDocument.map(normalizeCommentContent),
-      ["// 13", "// 14", "// 15", "// 16", "//    17", "//18"],
+      ["// 14", "// 15", "// 16", "//    17", "//18"],
     );
-    assert.ok(normalizeLineBreaks(document.toString(), "\n").includes("// 7.1\nN1*BT*Example.com Accounts Payable~"));
+    assert.ok(normalizeLineBreaks(document.toString(), "\n").includes("REF*2H*AD*Ad~// 7.1\nN1*BT*Example.com Accounts Payable~// 7.2"));
   });
 
   test("should preserve x12 inline comment placement in formatted output", async () => {
     const text = readFixture("850-comments.x12");
     const document = await new X12Parser(text).parse();
+    const formatted = normalizeLineBreaks(document.toString(), "\n");
 
-    assert.strictEqual(normalizeLineBreaks(document.toString(), "\n"), normalizeLineBreaks(text, "\n"));
+    assert.ok(formatted.includes("ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~// 2"));
+    assert.ok(formatted.includes("GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~// 4 // 4"));
+    assert.ok(formatted.includes("ST*850*0001~// 6"));
+    assert.ok(formatted.includes("REF*2H*AD*Ad~// 7.1"));
+    assert.ok(formatted.includes("N1*BT*Example.com Accounts Payable~// 7.2"));
+    assert.ok(formatted.includes("N2*asde~// 8"));
+    assert.ok(formatted.includes("CTT*1*200~// 10"));
+    assert.ok(formatted.includes("SE*8*0001~// 11"));
+    assert.ok(formatted.includes("GE*1*7080~// 12"));
+    assert.ok(formatted.includes("IEA*1*000007080~// 13"));
   });
 
   test("should keep parsing when x12 release schema is partially missing", async () => {

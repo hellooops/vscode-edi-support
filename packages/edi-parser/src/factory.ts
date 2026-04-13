@@ -7,7 +7,30 @@ import { VdaParser } from "./parser/vdaParser";
 import { X12Parser } from "./parser/x12Parser";
 
 function normalizeText(text: string): string {
-  return text.trim();
+  return stripLeadingComments(text).trim();
+}
+
+function stripLeadingComments(text: string): string {
+  let content = text.trimStart();
+
+  while (content.startsWith("//")) {
+    const lineBreakIndex = content.search(/\r\n|\n|\r/);
+    if (lineBreakIndex < 0) {
+      return "";
+    }
+
+    content = content.slice(getLineBreakEndIndex(content, lineBreakIndex)).trimStart();
+  }
+
+  return content;
+}
+
+function getLineBreakEndIndex(text: string, lineBreakIndex: number): number {
+  if (text.slice(lineBreakIndex, lineBreakIndex + 2) === "\r\n") {
+    return lineBreakIndex + 2;
+  }
+
+  return lineBreakIndex + 1;
 }
 
 export function isX12(text: string): boolean {
