@@ -491,6 +491,35 @@
       "result_summary": "已调整 schema 复制脚本为只刷新资源子目录，当前 dist/schemas 下可同时保留 schemas 模块产物与 schema 资源目录。"
     },
     {
+      "id": "T014C",
+      "title": "对齐 edi-parser 构建依赖版本",
+      "phase": "构建修复",
+      "priority": "P0",
+      "depends_on": [
+        "T014A",
+        "T014B"
+      ],
+      "main_content": [
+        "将 edi-parser 子包的 TypeScript 与 @types/node 版本对齐到仓库当前基线。",
+        "避免本地 file 依赖在根项目编译时引入额外的 Node 类型冲突。",
+        "确认 build:edi-parser 与根项目 compile 的前置依赖环境一致。"
+      ],
+      "attention_points": [
+        "目标是消除类型冲突，不是通过 skipLibCheck 掩盖问题。",
+        "尽量避免在这个步骤引入新的工具链升级。"
+      ],
+      "acceptance_criteria": [
+        "根项目 compile 不再出现 @types/node 的 Buffer 继承错误。",
+        "edi-parser 子包仍能正常 build。"
+      ],
+      "status": "completed",
+      "artifacts": [
+        "packages/edi-parser/package.json",
+        "package-lock.json"
+      ],
+      "result_summary": "已将 edi-parser 构建依赖对齐到仓库当前基线，并清理子包残留 node_modules；当前 compile 已不再出现 Node typings 的 Buffer 冲突。"
+    },
+    {
       "id": "T015",
       "title": "改造 EdiUtils，保留 VS Code 适配层",
       "phase": "集成",
