@@ -2,7 +2,7 @@ import * as assert from "assert";
 
 import * as constants from "../../../constants";
 import {
-  DiagnoscticsContext,
+  DiagnosticsContext,
   DiagnosticErrors,
   DiagnosticErrorSeverity,
   EdiComment,
@@ -656,7 +656,7 @@ function createContext(
     transactionSetStartSegmentName: "ST",
     transactionSetEndSegmentName: "SE",
   },
-): DiagnoscticsContext {
+): DiagnosticsContext {
   return {
     ediType,
     customSchemas,

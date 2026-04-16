@@ -144,7 +144,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return component;
   }
 
-  public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  public getErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.isInvalidSegment) {
       errors.push({
@@ -207,7 +207,7 @@ export enum ElementType {
 }
 
 interface IDiagnosticErrorAble {
-  getErrors(context: DiagnoscticsContext): DiagnosticError[];
+  getErrors(context: DiagnosticsContext): DiagnosticError[];
 }
 
 export enum DiagnosticErrorSeverity {
@@ -242,7 +242,7 @@ export namespace DiagnosticErrors {
   export const SEGMENT_MAXIMUM_OCCURRENCES_EXCEED = "Edi Support: Segment maximum occurrences exceed";
 }
 
-export interface DiagnoscticsContext {
+export interface DiagnosticsContext {
   segment?: EdiSegment;
   element?: EdiElement;
   ediType: string;
@@ -250,6 +250,8 @@ export interface DiagnoscticsContext {
   standardOptions: EdiStandardOptions;
   ignoreRequired?: boolean;
 }
+
+export type DiagnoscticsContext = DiagnosticsContext;
 
 export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticErrorAble {
   key: string;
@@ -297,7 +299,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     return this.ediReleaseSchemaElement?.id ?? this.getDesignator();
   }
 
-  public getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  public getErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.components && this.components.length > 0) {
       return this.components.reduce((errors: DiagnosticError[], component: EdiElement) => {
@@ -521,7 +523,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     return segments[segments.length - 1];
   }
 
-  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (context.standardOptions.transactionSetStartSegmentName && !this.startSegment) {
       errors.push({
@@ -573,7 +575,7 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     return errors;
   }
 
-  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors = this.getSelfErrors(context);
     return errors.concat(this.segments.flatMap((segment) => segment.getErrors(context)).filter(i => i));
   }
@@ -735,7 +737,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return segments[segments.length - 1];
   }
 
-  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.isFake()) return errors;
     if (context.standardOptions.functionalGroupStartSegmentName && !this.startSegment) {
@@ -788,7 +790,7 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return errors;
   }
 
-  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors = this.getSelfErrors(context);
     return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(context)).filter(i => i));
   }
@@ -955,7 +957,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return segments[segments.length - 1];
   }
 
-  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (context.standardOptions.interchangeStartSegmentName && !this.startSegment) {
       errors.push({
@@ -1007,7 +1009,7 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return errors;
   }
 
-  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors = this.getSelfErrors(context);
     return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(context)).filter(i => i));
   }
@@ -1126,7 +1128,7 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return result;
   }
 
-  getSelfErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.standardOptions.separatorsSegmentName && !this.separatorsSegment) {
       errors.push({
@@ -1139,7 +1141,7 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return errors;
   }
 
-  getErrors(context: DiagnoscticsContext): DiagnosticError[] {
+  getErrors(context: DiagnosticsContext): DiagnosticError[] {
     const errors = this.getSelfErrors(context);
     return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(context)).filter(i => i));
   }
@@ -1360,7 +1362,7 @@ function formatTrailingComments(comments: EdiComment[]): string {
   }, "");
 }
 
-function getCustomQualifierCode(context: DiagnoscticsContext, segment: EdiSegment, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
+function getCustomQualifierCode(context: DiagnosticsContext, segment: EdiSegment, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
   if (!context.customSchemas) {
     return null;
   }
@@ -1462,7 +1464,7 @@ function isSegmentOrNestedLoopMatch(currentSegment: EdiSegment, targetSegment: E
   return currentSegment.Loop.some(loopSegment => isSegmentOrNestedLoopMatch(loopSegment, targetSegment));
 }
 
-function getCustomQualifierScopeKeys(context: DiagnoscticsContext, segment: EdiSegment, release: string | undefined): string[] {
+function getCustomQualifierScopeKeys(context: DiagnosticsContext, segment: EdiSegment, release: string | undefined): string[] {
   if (!release) {
     return [];
   }

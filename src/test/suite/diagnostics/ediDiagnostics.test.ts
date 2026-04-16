@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 import { EdiDiagnosticsMgr } from "../../../diagnostics/ediDiagnostics";
 import { EdiMockFactory } from "../mocks/ediMockFactory";
-import { DiagnosticErrorSeverity, DiagnosticErrors, EdiElement, EdiSegment, ElementType, EdiType, type DiagnoscticsContext, type DiagnosticError } from "../../../parser/entities";
+import { DiagnosticErrorSeverity, DiagnosticErrors, EdiElement, EdiSegment, ElementType, EdiType, type DiagnosticsContext, type DiagnosticError } from "../../../parser/entities";
 import { EdiUtils } from "../../../utils/ediUtils";
 import * as constants from "../../../constants";
 
@@ -206,12 +206,12 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
         },
       ];
 
-      let capturedContext: DiagnoscticsContext | undefined;
+      let capturedContext: DiagnosticsContext | undefined;
       (EdiUtils as any).getEdiParser = () => ({
         parser: {
           parse: async () => ({
             standardOptions: {},
-            getErrors: (context: DiagnoscticsContext) => {
+            getErrors: (context: DiagnosticsContext) => {
               capturedContext = context;
               return diagnosticErrors;
             },
@@ -247,12 +247,12 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
     test("Should pass ignoreRequired=true for VDA diagnostics context", async () => {
       const document = EdiMockFactory.createMockDocument("51102 ", "vda");
 
-      let capturedContext: DiagnoscticsContext | undefined;
+      let capturedContext: DiagnosticsContext | undefined;
       (EdiUtils as any).getEdiParser = () => ({
         parser: {
           parse: async () => ({
             standardOptions: {},
-            getErrors: (context: DiagnoscticsContext) => {
+            getErrors: (context: DiagnosticsContext) => {
               capturedContext = context;
               return [];
             },

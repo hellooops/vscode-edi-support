@@ -17,7 +17,7 @@ const {
   ElementType,
 } = parserEntities as typeof import("../dist/parser/entities");
 const { Conf_Utils } = configurationsModule as typeof import("../dist/interfaces/configurations");
-type DiagnoscticsContext = import("../dist/parser/entities").DiagnoscticsContext;
+type DiagnosticsContext = import("../dist/parser/entities").DiagnosticsContext;
 type EdiStandardOptions = import("../dist/parser/entities").EdiStandardOptions;
 type EdiDocumentType = import("../dist/parser/entities").EdiDocument;
 type EdiInterchangeType = import("../dist/parser/entities").EdiInterchange;
@@ -663,7 +663,7 @@ function createContext(
     transactionSetStartSegmentName: "ST",
     transactionSetEndSegmentName: "SE",
   },
-): DiagnoscticsContext {
+): DiagnosticsContext {
   return {
     ediType,
     customSchemas,

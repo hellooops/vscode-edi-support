@@ -131,7 +131,7 @@
 - `DiagnosticError`
 - `DiagnosticErrorSeverity`
 - `DiagnosticErrors`
-- `DiagnoscticsContext`
+- `DiagnosticsContext`
 
 说明：
 
