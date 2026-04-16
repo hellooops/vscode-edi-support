@@ -17,6 +17,7 @@ const { onReceiveMessage, postMessage } = useVcm();
 
 const ediDocument = ref<EdiDocument>();
 const activeId = ref<string>();
+let scrollRequestId = 0;
 
 onReceiveMessage("fileChange", (data) => {
   ediDocument.value = data ? new EdiDocument(data) : undefined;
@@ -31,11 +32,7 @@ onReceiveMessage("active", async (data) => {
     return;
   }
 
-  await nextTick();
-  document.getElementById(scrollToId)?.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+  await scrollNodeIntoView(scrollToId);
 });
 
 onMounted(() => {
@@ -44,4 +41,33 @@ onMounted(() => {
   // ediDocument.value = useTestData();
   // setActiveId("ele-UNB0201");
 });
+
+async function scrollNodeIntoView(nodeKey: string) {
+  const requestId = ++scrollRequestId;
+
+  for (let attempt = 0; attempt < 8; attempt++) {
+    await nextTick();
+
+    if (requestId !== scrollRequestId) {
+      return;
+    }
+
+    const nodeElement = document.getElementById(nodeKey);
+    if (nodeElement) {
+      nodeElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+      return;
+    }
+
+    await waitForAnimationFrame();
+  }
+}
+
+function waitForAnimationFrame(): Promise<void> {
+  return new Promise(resolve => {
+    window.requestAnimationFrame(() => resolve());
+  });
+}
 </script>
