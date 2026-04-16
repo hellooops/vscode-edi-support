@@ -1,5 +1,5 @@
 import { computed, ref, shallowRef, watch } from "vue";
-import { nodeContainsKey, type PreviewNode } from "@/views/Inspector/previewTree";
+import { nodeContainsNodeKey, type PreviewNode } from "@/views/Inspector/previewTree";
 
 export function usePreviewTreeNodeState(props: {
   node: PreviewNode;
@@ -13,7 +13,7 @@ export function usePreviewTreeNodeState(props: {
   const hasVisibleChildren = computed(() => childNodes.value.length > 0);
   const visibleDetails = computed(() => props.node.details);
   const hasBodyContent = computed(() => visibleDetails.value.length > 0 || props.node.hasChildren);
-  const isActive = computed(() => props.node.key === props.activeId);
+  const isActive = computed(() => props.node.nodeKey === props.activeId);
   const shouldAutoExpand = computed(() => props.node.kind !== "element" || props.node.hasChildren);
   const headerStyle = computed(() => ({
     top: `${props.node.stickyOffset}px`,
@@ -33,7 +33,7 @@ export function usePreviewTreeNodeState(props: {
   watch(
     () => props.activeId,
     activeId => {
-      if (shouldAutoExpand.value && activeId && nodeContainsKey(props.node, activeId)) {
+      if (shouldAutoExpand.value && activeId && nodeContainsNodeKey(props.node, activeId)) {
         isOpen.value = true;
         ensureChildrenLoaded();
       }

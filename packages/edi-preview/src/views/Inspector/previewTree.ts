@@ -24,7 +24,7 @@ export interface PreviewDetail {
 }
 
 export interface PreviewNode {
-  key: string;
+  nodeKey: string;
   kind: PreviewNodeKind;
   title: string;
   subtitle?: string;
@@ -33,7 +33,7 @@ export interface PreviewNode {
   details: PreviewDetail[];
   hasChildren: boolean;
   loadChildren?: () => PreviewNode[];
-  containsKey: (key: string) => boolean;
+  containsNodeKey: (nodeKey: string) => boolean;
   defaultExpanded: boolean;
   stickyOffset: number;
   stickyLayer: number;
@@ -51,12 +51,12 @@ export function buildPreviewNodes(ediDocument: EdiDocument): PreviewNode[] {
   ]);
 }
 
-export function nodeContainsKey(node: PreviewNode, key?: string): boolean {
-  if (!key) {
+export function nodeContainsNodeKey(node: PreviewNode, nodeKey?: string): boolean {
+  if (!nodeKey) {
     return false;
   }
 
-  return node.key === key || node.containsKey(key);
+  return node.nodeKey === nodeKey || node.containsNodeKey(nodeKey);
 }
 
 function buildInterchangeEntries(interchange: EdiInterchange, stickyDepth: number): PreviewNode[] {
@@ -74,7 +74,7 @@ function buildInterchangeEntries(interchange: EdiInterchange, stickyDepth: numbe
   const interchangeId = interchange.id ?? interchange.meta.id ?? "Unknown";
   return [
     createNode({
-      key: interchange.key,
+      nodeKey: interchange.nodeKey,
       kind: "interchange",
       title: `Interchange ID: ${interchangeId}`,
       subtitle: compactText([
@@ -102,7 +102,7 @@ function buildInterchangeEntries(interchange: EdiInterchange, stickyDepth: numbe
       ]),
       hasChildren: Boolean(interchange.startSegment || interchange.functionalGroups.length || interchange.endSegment),
       loadChildren,
-      containsKey: key => interchangeContainsKey(interchange, key),
+      containsNodeKey: nodeKey => interchangeContainsNodeKey(interchange, nodeKey),
       defaultExpanded: true,
       stickyOffset: stickyDepth * PREVIEW_STICKY_STEP,
       stickyLayer: PREVIEW_STICKY_BASE_LAYER - stickyDepth
@@ -125,7 +125,7 @@ function buildFunctionalGroupEntries(functionalGroup: EdiFunctionalGroup, sticky
   const functionalGroupId = functionalGroup.id ?? functionalGroup.meta.id ?? "Unknown";
   return [
     createNode({
-      key: functionalGroup.key,
+      nodeKey: functionalGroup.nodeKey,
       kind: "functional-group",
       title: `Functional Group ID: ${functionalGroupId}`,
       subtitle: "Control envelope",
@@ -140,7 +140,7 @@ function buildFunctionalGroupEntries(functionalGroup: EdiFunctionalGroup, sticky
       ]),
       hasChildren: Boolean(functionalGroup.startSegment || functionalGroup.transactionSets.length || functionalGroup.endSegment),
       loadChildren,
-      containsKey: key => functionalGroupContainsKey(functionalGroup, key),
+      containsNodeKey: nodeKey => functionalGroupContainsNodeKey(functionalGroup, nodeKey),
       defaultExpanded: false,
       stickyOffset: stickyDepth * PREVIEW_STICKY_STEP,
       stickyLayer: PREVIEW_STICKY_BASE_LAYER - stickyDepth
@@ -152,7 +152,7 @@ function buildTransactionSetNode(transactionSet: EdiTransactionSet, stickyDepth:
   const transactionSetId = transactionSet.id ?? transactionSet.meta.id ?? "Unknown";
   const segments = transactionSet.getSegments();
   return createNode({
-    key: transactionSet.key,
+    nodeKey: transactionSet.nodeKey,
     kind: "transaction-set",
     title: `Transaction Set ID: ${transactionSetId}`,
     subtitle: compactText([
@@ -169,7 +169,7 @@ function buildTransactionSetNode(transactionSet: EdiTransactionSet, stickyDepth:
     ]),
     hasChildren: segments.length > 0,
     loadChildren: () => segments.map(segment => buildSegmentNode(segment, stickyDepth + 1)),
-    containsKey: key => transactionSetContainsKey(transactionSet, key),
+    containsNodeKey: nodeKey => transactionSetContainsNodeKey(transactionSet, nodeKey),
     defaultExpanded: true,
     stickyOffset: stickyDepth * PREVIEW_STICKY_STEP,
     stickyLayer: PREVIEW_STICKY_BASE_LAYER - stickyDepth
@@ -186,7 +186,7 @@ function buildSegmentNode(segment: EdiSegment, stickyDepth: number): PreviewNode
     : segment.elements?.map(element => buildElementNode(element, stickyDepth + 1)) ?? [];
 
   return createNode({
-    key: segment.key,
+    nodeKey: segment.nodeKey,
     kind: "segment",
     title: `${segment.id.toUpperCase()} Segment`,
     subtitle: segment.desc,
@@ -198,7 +198,7 @@ function buildSegmentNode(segment: EdiSegment, stickyDepth: number): PreviewNode
     ]),
     hasChildren,
     loadChildren,
-    containsKey: key => segmentContainsKey(segment, key),
+    containsNodeKey: nodeKey => segmentContainsNodeKey(segment, nodeKey),
     defaultExpanded: false,
     stickyOffset: stickyDepth * PREVIEW_STICKY_STEP,
     stickyLayer: PREVIEW_STICKY_BASE_LAYER - stickyDepth
@@ -208,7 +208,7 @@ function buildSegmentNode(segment: EdiSegment, stickyDepth: number): PreviewNode
 function buildElementNode(element: EdiElement, stickyDepth: number): PreviewNode {
   const titleBase = element.id ?? element.designator;
   return createNode({
-    key: element.key,
+    nodeKey: element.nodeKey,
     kind: "element",
     title: `${titleBase}: ${element.desc ?? "Element"}`,
     subtitle: element.definition,
@@ -224,7 +224,7 @@ function buildElementNode(element: EdiElement, stickyDepth: number): PreviewNode
     ]),
     hasChildren: Boolean(element.components?.length),
     loadChildren: () => element.components?.map(component => buildElementNode(component, stickyDepth + 1)) ?? [],
-    containsKey: key => elementContainsKey(element, key),
+    containsNodeKey: nodeKey => elementContainsNodeKey(element, nodeKey),
     defaultExpanded: false,
     stickyOffset: stickyDepth * PREVIEW_STICKY_STEP,
     stickyLayer: PREVIEW_STICKY_BASE_LAYER - stickyDepth
@@ -298,42 +298,42 @@ function formatLength(element: EdiElement): string | undefined {
   return `${element.minLength ?? element.maxLength}`;
 }
 
-function interchangeContainsKey(interchange: EdiInterchange, key: string): boolean {
+function interchangeContainsNodeKey(interchange: EdiInterchange, nodeKey: string): boolean {
   return Boolean(
-    (interchange.startSegment && segmentContainsKey(interchange.startSegment, key))
-    || interchange.functionalGroups.some(functionalGroup => functionalGroupContainsKey(functionalGroup, key))
-    || (interchange.endSegment && segmentContainsKey(interchange.endSegment, key))
+    (interchange.startSegment && segmentContainsNodeKey(interchange.startSegment, nodeKey))
+    || interchange.functionalGroups.some(functionalGroup => functionalGroupContainsNodeKey(functionalGroup, nodeKey))
+    || (interchange.endSegment && segmentContainsNodeKey(interchange.endSegment, nodeKey))
   );
 }
 
-function functionalGroupContainsKey(functionalGroup: EdiFunctionalGroup, key: string): boolean {
+function functionalGroupContainsNodeKey(functionalGroup: EdiFunctionalGroup, nodeKey: string): boolean {
   return Boolean(
-    (functionalGroup.startSegment && segmentContainsKey(functionalGroup.startSegment, key))
-    || functionalGroup.transactionSets.some(transactionSet => transactionSetContainsKey(transactionSet, key))
-    || (functionalGroup.endSegment && segmentContainsKey(functionalGroup.endSegment, key))
+    (functionalGroup.startSegment && segmentContainsNodeKey(functionalGroup.startSegment, nodeKey))
+    || functionalGroup.transactionSets.some(transactionSet => transactionSetContainsNodeKey(transactionSet, nodeKey))
+    || (functionalGroup.endSegment && segmentContainsNodeKey(functionalGroup.endSegment, nodeKey))
   );
 }
 
-function transactionSetContainsKey(transactionSet: EdiTransactionSet, key: string): boolean {
-  return transactionSet.getSegments().some(segment => segmentContainsKey(segment, key));
+function transactionSetContainsNodeKey(transactionSet: EdiTransactionSet, nodeKey: string): boolean {
+  return transactionSet.getSegments().some(segment => segmentContainsNodeKey(segment, nodeKey));
 }
 
-function segmentContainsKey(segment: EdiSegment, key: string): boolean {
-  if (segment.key === key) {
+function segmentContainsNodeKey(segment: EdiSegment, nodeKey: string): boolean {
+  if (segment.nodeKey === nodeKey) {
     return true;
   }
 
   if (segment.isLoop()) {
-    return segment.Loop?.some(loopSegment => segmentContainsKey(loopSegment, key)) ?? false;
+    return segment.Loop?.some(loopSegment => segmentContainsNodeKey(loopSegment, nodeKey)) ?? false;
   }
 
-  return segment.elements?.some(element => elementContainsKey(element, key)) ?? false;
+  return segment.elements?.some(element => elementContainsNodeKey(element, nodeKey)) ?? false;
 }
 
-function elementContainsKey(element: EdiElement, key: string): boolean {
-  if (element.key === key) {
+function elementContainsNodeKey(element: EdiElement, nodeKey: string): boolean {
+  if (element.nodeKey === nodeKey) {
     return true;
   }
 
-  return element.components?.some(component => elementContainsKey(component, key)) ?? false;
+  return element.components?.some(component => elementContainsNodeKey(component, nodeKey)) ?? false;
 }

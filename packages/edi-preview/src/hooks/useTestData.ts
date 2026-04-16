@@ -1,10 +1,15 @@
 import { EdiDocument } from "@/entities";
 
+// Generated from:
+// - src/test/suite/test-files/formatting/x12.prettify.edi
+// - src/test/suite/test-files/formatting/edifact.prettify.edi
+// - docs/4905.edi
+
 export default function useTestData(): EdiDocument {
-  const x12TestData: IEdiDocument = {
+  const x12TestData: IEdiDocument =   {
     "interchanges": [
       {
-        "key": "rqvGj9TmqEjv2Wy7YW6Kl",
+        "nodeKey": "interchange:000007080:0:1127",
         "meta": {
           "senderQualifer": "ZZ",
           "senderID": "DERICL         ",
@@ -17,12 +22,16 @@ export default function useTestData(): EdiDocument {
         "id": "000007080",
         "functionalGroups": [
           {
-            "key": "6fQ-NyFTp-JP_3apWSPhO",
-            "meta": { "date": "20210517", "time": "0643", "id": "7080" },
+            "nodeKey": "functional-group:7080:108:1109",
+            "meta": {
+              "date": "20210517",
+              "time": "0643",
+              "id": "7080"
+            },
             "id": "7080",
             "transactionSets": [
               {
-                "key": "VedUI77nm1ttfBq9S4_vV",
+                "nodeKey": "transaction-set:0001:158:1097",
                 "meta": {
                   "release": "00401",
                   "version": "850",
@@ -36,13 +45,12 @@ export default function useTestData(): EdiDocument {
                 "id": "0001",
                 "segments": [
                   {
-                    "key": "9ECkRhq0IGhp5I8ucynwx",
+                    "nodeKey": "segment:BEG:172:209",
                     "id": "BEG",
-                    "desc": "Beginning Segment for Purchase Order",
-                    "purpose": "To indicate the beginning of the Purchase Order Transaction Set and transmit identifying numbers and dates",
+                    "segmentStr": "BEG*00*BK*0019-1234567-1234**20000130~",
                     "elements": [
                       {
-                        "key": "RrtoET_NMgZdYBJVQlR68",
+                        "nodeKey": "element:BEG01:175:177",
                         "type": "Data Element",
                         "value": "00",
                         "id": "353",
@@ -53,7 +61,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "BEG01"
                       },
                       {
-                        "key": "tjJGNe7aRcZXG3T_ezENt",
+                        "nodeKey": "element:BEG02:178:180",
                         "type": "Data Element",
                         "value": "BK",
                         "id": "92",
@@ -64,7 +72,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "BEG02"
                       },
                       {
-                        "key": "ctg8x8BhHShXOoHKULb8K",
+                        "nodeKey": "element:BEG03:181:198",
                         "type": "Data Element",
                         "value": "0019-1234567-1234",
                         "id": "324",
@@ -77,7 +85,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "BEG03"
                       },
                       {
-                        "key": "2lD4wmke0yFLnPGM_CeLE",
+                        "nodeKey": "element:BEG04:199:199",
                         "type": "Data Element",
                         "value": "",
                         "id": "328",
@@ -90,7 +98,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "BEG04"
                       },
                       {
-                        "key": "EtsRUulRPPIWuQH9RxfOw",
+                        "nodeKey": "element:BEG05:200:208",
                         "type": "Data Element",
                         "value": "20000130",
                         "id": "373",
@@ -102,16 +110,17 @@ export default function useTestData(): EdiDocument {
                         "definition": "Date expressed as CCYYMMDD",
                         "designator": "BEG05"
                       }
-                    ]
+                    ],
+                    "desc": "Beginning Segment for Purchase Order",
+                    "purpose": "To indicate the beginning of the Purchase Order Transaction Set and transmit identifying numbers and dates"
                   },
                   {
-                    "key": "jfSyqsRZibArIsSba5pfq",
+                    "nodeKey": "segment:REF:212:238",
                     "id": "REF",
-                    "desc": "Reference Identification",
-                    "purpose": "To specify identifying information",
+                    "segmentStr": "REF*IA*3688063*VENDOR NAME~",
                     "elements": [
                       {
-                        "key": "K0kv7EFee1qK2eNlkE9D7",
+                        "nodeKey": "element:REF01:215:217",
                         "type": "Data Element",
                         "value": "IA",
                         "id": "128",
@@ -122,7 +131,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "REF01"
                       },
                       {
-                        "key": "sWM94TvDgg5folx-DQxSd",
+                        "nodeKey": "element:REF02:218:225",
                         "type": "Data Element",
                         "value": "3688063",
                         "id": "127",
@@ -135,7 +144,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "REF02"
                       },
                       {
-                        "key": "FMcLcQzkrIC6Y9alihoyy",
+                        "nodeKey": "element:REF03:226:237",
                         "type": "Data Element",
                         "value": "VENDOR NAME",
                         "id": "352",
@@ -147,16 +156,17 @@ export default function useTestData(): EdiDocument {
                         "definition": "A free-form description to clarify the related data elements and their content",
                         "designator": "REF03"
                       }
-                    ]
+                    ],
+                    "desc": "Reference Identification",
+                    "purpose": "To specify identifying information"
                   },
                   {
-                    "key": "ezZqPM8NP2dTfNfQdjN63",
+                    "nodeKey": "segment:REF:241:253",
                     "id": "REF",
-                    "desc": "Reference Identification",
-                    "purpose": "To specify identifying information",
+                    "segmentStr": "REF*2H*AD*Ad~",
                     "elements": [
                       {
-                        "key": "AvbJR1ixnUWlZG3cQYuPk",
+                        "nodeKey": "element:REF01:244:246",
                         "type": "Data Element",
                         "value": "2H",
                         "id": "128",
@@ -167,7 +177,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "REF01"
                       },
                       {
-                        "key": "uHW-x5ky14lcJf45jHBgc",
+                        "nodeKey": "element:REF02:247:249",
                         "type": "Data Element",
                         "value": "AD",
                         "id": "127",
@@ -180,7 +190,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "REF02"
                       },
                       {
-                        "key": "VSdVwUCQxXqTyETAqLRgj",
+                        "nodeKey": "element:REF03:250:252",
                         "type": "Data Element",
                         "value": "Ad",
                         "id": "352",
@@ -192,23 +202,24 @@ export default function useTestData(): EdiDocument {
                         "definition": "A free-form description to clarify the related data elements and their content",
                         "designator": "REF03"
                       }
-                    ]
+                    ],
+                    "desc": "Reference Identification",
+                    "purpose": "To specify identifying information"
                   },
                   {
-                    "key": "Fl3pY4JfwZ5YeVoJpnRWh",
+                    "nodeKey": "loop:SACLoop1:256:291",
                     "id": "SACLoop1",
+                    "elements": [],
                     "desc": "Service, Promotion, Allowance, or Charge Information",
                     "purpose": "To request or identify a service, promotion, allowance, or charge; to specify the amount or percentage for the service, promotion, allowance, or charge",
-                    "elements": [],
                     "Loop": [
                       {
-                        "key": "7eGveLEC4x8yUOVS5Es5Y",
+                        "nodeKey": "segment:SAC:256:270",
                         "id": "SAC",
-                        "desc": "Service, Promotion, Allowance, or Charge Information",
-                        "purpose": "To request or identify a service, promotion, allowance, or charge; to specify the amount or percentage for the service, promotion, allowance, or charge",
+                        "segmentStr": "SAC*A***100.00~",
                         "elements": [
                           {
-                            "key": "J88lTMwhnUxOK9cx_k-d7",
+                            "nodeKey": "element:SAC01:259:260",
                             "type": "Data Element",
                             "value": "A",
                             "id": "248",
@@ -219,7 +230,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "SAC01"
                           },
                           {
-                            "key": "FQawXL1Ci5pED5xFbj_uc",
+                            "nodeKey": "element:SAC02:261:261",
                             "type": "Data Element",
                             "value": "",
                             "id": "1300",
@@ -229,7 +240,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "SAC02"
                           },
                           {
-                            "key": "JBVG0-CTIboxfo-ohqtp-",
+                            "nodeKey": "element:SAC03:262:262",
                             "type": "Data Element",
                             "value": "",
                             "id": "559",
@@ -239,7 +250,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "SAC03"
                           },
                           {
-                            "key": "A5kir-p-VnbcsiHfTDuw1",
+                            "nodeKey": "element:SAC04:263:269",
                             "type": "Data Element",
                             "value": "100.00",
                             "id": "1301",
@@ -251,16 +262,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Agency maintained code identifying the service, promotion, allowance, or charge",
                             "designator": "SAC04"
                           }
-                        ]
+                        ],
+                        "desc": "Service, Promotion, Allowance, or Charge Information",
+                        "purpose": "To request or identify a service, promotion, allowance, or charge; to specify the amount or percentage for the service, promotion, allowance, or charge"
                       },
                       {
-                        "key": "gdAXAGEyRBjy7HTj-Klj1",
+                        "nodeKey": "segment:CUR:273:291",
                         "id": "CUR",
-                        "desc": "Currency",
-                        "purpose": "To specify the currency (dollars, pounds, francs, etc.) used in a transaction",
+                        "segmentStr": "CUR*LZ*USD**VN*USD~",
                         "elements": [
                           {
-                            "key": "GOYvP41vPq-31LNRDoBxW",
+                            "nodeKey": "element:CUR01:276:278",
                             "type": "Data Element",
                             "value": "LZ",
                             "id": "98",
@@ -271,7 +283,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "CUR01"
                           },
                           {
-                            "key": "6GU3co6DHcX_-TLbWTF_h",
+                            "nodeKey": "element:CUR02:279:282",
                             "type": "Data Element",
                             "value": "USD",
                             "id": "100",
@@ -284,7 +296,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "CUR02"
                           },
                           {
-                            "key": "3Evj-H9zZv3K3BosMMgbQ",
+                            "nodeKey": "element:CUR03:283:283",
                             "type": "Data Element",
                             "value": "",
                             "id": "280",
@@ -297,7 +309,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "CUR03"
                           },
                           {
-                            "key": "hEwOKduU2aCm3Xvw6365w",
+                            "nodeKey": "element:CUR04:284:286",
                             "type": "Data Element",
                             "value": "VN",
                             "id": "98",
@@ -308,7 +320,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "CUR04"
                           },
                           {
-                            "key": "xHKxjMmGP8l_VawA_fS4_",
+                            "nodeKey": "element:CUR05:287:290",
                             "type": "Data Element",
                             "value": "USD",
                             "id": "100",
@@ -320,25 +332,26 @@ export default function useTestData(): EdiDocument {
                             "definition": "Code (Standard ISO) for country in whose currency the charges are specified",
                             "designator": "CUR05"
                           }
-                        ]
+                        ],
+                        "desc": "Currency",
+                        "purpose": "To specify the currency (dollars, pounds, francs, etc.) used in a transaction"
                       }
                     ]
                   },
                   {
-                    "key": "oWe083ycq4_c7VFqmVocH",
+                    "nodeKey": "loop:N1Loop1:294:438",
                     "id": "N1Loop1",
+                    "elements": [],
                     "desc": "Name",
                     "purpose": "To identify a party by type of organization, name, and code",
-                    "elements": [],
                     "Loop": [
                       {
-                        "key": "DltT2GehNQrn8otfaCfE_",
+                        "nodeKey": "segment:N1:294:328",
                         "id": "N1",
-                        "desc": "Name",
-                        "purpose": "To identify a party by type of organization, name, and code",
+                        "segmentStr": "N1*BT*Example.com Accounts Payable~",
                         "elements": [
                           {
-                            "key": "22CzyX35wC99ueQynxfZL",
+                            "nodeKey": "element:N101:296:298",
                             "type": "Data Element",
                             "value": "BT",
                             "id": "98",
@@ -349,7 +362,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N101"
                           },
                           {
-                            "key": "cN94xlX3F-AAAef-xvZeq",
+                            "nodeKey": "element:N102:299:327",
                             "type": "Data Element",
                             "value": "Example.com Accounts Payable",
                             "id": "93",
@@ -361,16 +374,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Free-form name",
                             "designator": "N102"
                           }
-                        ]
+                        ],
+                        "desc": "Name",
+                        "purpose": "To identify a party by type of organization, name, and code"
                       },
                       {
-                        "key": "vUGdZBzSlq0qzV49ofBqs",
+                        "nodeKey": "segment:N2:331:338",
                         "id": "N2",
-                        "desc": "Additional Name Information",
-                        "purpose": "To specify additional names or those longer than 35 characters in length",
+                        "segmentStr": "N2*asde~",
                         "elements": [
                           {
-                            "key": "2kf0WoLruIvZjGs2TEmM_",
+                            "nodeKey": "element:N201:333:337",
                             "type": "Data Element",
                             "value": "asde",
                             "id": "93",
@@ -382,16 +396,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Free-form name",
                             "designator": "N201"
                           }
-                        ]
+                        ],
+                        "desc": "Additional Name Information",
+                        "purpose": "To specify additional names or those longer than 35 characters in length"
                       },
                       {
-                        "key": "VYVhV6VK4q5UgIxCIPagr",
+                        "nodeKey": "segment:N3:341:364",
                         "id": "N3",
-                        "desc": "Address Information",
-                        "purpose": "To specify the location of the named party",
+                        "segmentStr": "N3*TNC 3110*PO Box 1296~",
                         "elements": [
                           {
-                            "key": "NEM5JjAiPrHz4_0YtkqXV",
+                            "nodeKey": "element:N301:343:351",
                             "type": "Data Element",
                             "value": "TNC 3110",
                             "id": "166",
@@ -404,7 +419,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N301"
                           },
                           {
-                            "key": "njzfvW5wLzWVeLkjrEgar",
+                            "nodeKey": "element:N302:352:363",
                             "type": "Data Element",
                             "value": "PO Box 1296",
                             "id": "166",
@@ -416,16 +431,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Address information",
                             "designator": "N302"
                           }
-                        ]
+                        ],
+                        "desc": "Address Information",
+                        "purpose": "To specify the location of the named party"
                       },
                       {
-                        "key": "nBEh3BDLKPecZ0FLrG-Ke",
+                        "nodeKey": "segment:N4:367:393",
                         "id": "N4",
-                        "desc": "Geographic Location",
-                        "purpose": "To specify the geographic place of the named party",
+                        "segmentStr": "N4*Minneapolis*MN*55440*US~",
                         "elements": [
                           {
-                            "key": "3U6_JURhhq6sqhgEVq-RC",
+                            "nodeKey": "element:N401:369:380",
                             "type": "Data Element",
                             "value": "Minneapolis",
                             "id": "19",
@@ -438,7 +454,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N401"
                           },
                           {
-                            "key": "usFEbUsSesyJqPZFLTpKQ",
+                            "nodeKey": "element:N402:381:383",
                             "type": "Data Element",
                             "value": "MN",
                             "id": "156",
@@ -451,7 +467,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N402"
                           },
                           {
-                            "key": "ZZtdNnDIHgW4j_V5JiOSm",
+                            "nodeKey": "element:N403:384:389",
                             "type": "Data Element",
                             "value": "55440",
                             "id": "116",
@@ -464,7 +480,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N403"
                           },
                           {
-                            "key": "umsOqx-KvGUhFNIjHJ7Lr",
+                            "nodeKey": "element:N404:390:392",
                             "type": "Data Element",
                             "value": "US",
                             "id": "26",
@@ -476,16 +492,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Code identifying the country",
                             "designator": "N404"
                           }
-                        ]
+                        ],
+                        "desc": "Geographic Location",
+                        "purpose": "To specify the geographic place of the named party"
                       },
                       {
-                        "key": "L8dML2pif3LYxgAp072UE",
+                        "nodeKey": "segment:PER:396:438",
                         "id": "PER",
-                        "desc": "Administrative Communications Contact",
-                        "purpose": "To identify a person or office to whom administrative communications should be directed",
+                        "segmentStr": "PER*CN*EDI*EM*test@ABC.COM*TE*111-222-3333~",
                         "elements": [
                           {
-                            "key": "zSjUwrNXHWWebMloNCEfO",
+                            "nodeKey": "element:PER01:399:401",
                             "type": "Data Element",
                             "value": "CN",
                             "id": "366",
@@ -496,7 +513,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER01"
                           },
                           {
-                            "key": "lqiS5BM5y5bAa3h546NSc",
+                            "nodeKey": "element:PER02:402:405",
                             "type": "Data Element",
                             "value": "EDI",
                             "id": "93",
@@ -509,7 +526,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER02"
                           },
                           {
-                            "key": "Xh1Dv1a_pRJB5EA4OU6JK",
+                            "nodeKey": "element:PER03:406:408",
                             "type": "Data Element",
                             "value": "EM",
                             "id": "365",
@@ -520,7 +537,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER03"
                           },
                           {
-                            "key": "QiPKSk7ZjLSg_qm0pIBg-",
+                            "nodeKey": "element:PER04:409:421",
                             "type": "Data Element",
                             "value": "test@ABC.COM",
                             "id": "364",
@@ -533,7 +550,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER04"
                           },
                           {
-                            "key": "ublwNBGNeDq_JHLQrGLlg",
+                            "nodeKey": "element:PER05:422:424",
                             "type": "Data Element",
                             "value": "TE",
                             "id": "365",
@@ -544,7 +561,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER05"
                           },
                           {
-                            "key": "CRurjbtJ1rqwYPGvjOP9N",
+                            "nodeKey": "element:PER06:425:437",
                             "type": "Data Element",
                             "value": "111-222-3333",
                             "id": "364",
@@ -556,25 +573,26 @@ export default function useTestData(): EdiDocument {
                             "definition": "Complete communications number including country or area code when applicable",
                             "designator": "PER06"
                           }
-                        ]
+                        ],
+                        "desc": "Administrative Communications Contact",
+                        "purpose": "To identify a person or office to whom administrative communications should be directed"
                       }
                     ]
                   },
                   {
-                    "key": "ph0jNJ44il5ayN2WdjUxy",
+                    "nodeKey": "loop:N1Loop1:441:571",
                     "id": "N1Loop1",
+                    "elements": [],
                     "desc": "Name",
                     "purpose": "To identify a party by type of organization, name, and code",
-                    "elements": [],
                     "Loop": [
                       {
-                        "key": "cdSOBFXOzlenMl1JLn98T",
+                        "nodeKey": "segment:N1:441:459",
                         "id": "N1",
-                        "desc": "Name",
-                        "purpose": "To identify a party by type of organization, name, and code",
+                        "segmentStr": "N1*SO*EDI Helpdesk~",
                         "elements": [
                           {
-                            "key": "dWlH6jNZiDLLTZtzPrbh_",
+                            "nodeKey": "element:N101:443:445",
                             "type": "Data Element",
                             "value": "SO",
                             "id": "98",
@@ -585,7 +603,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N101"
                           },
                           {
-                            "key": "WAAarj6iUDj9TleMMouD2",
+                            "nodeKey": "element:N102:446:458",
                             "type": "Data Element",
                             "value": "EDI Helpdesk",
                             "id": "93",
@@ -597,16 +615,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Free-form name",
                             "designator": "N102"
                           }
-                        ]
+                        ],
+                        "desc": "Name",
+                        "purpose": "To identify a party by type of organization, name, and code"
                       },
                       {
-                        "key": "zIKQpFcG4bw6Vk_8eN2W3",
+                        "nodeKey": "segment:N2:462:469",
                         "id": "N2",
-                        "desc": "Additional Name Information",
-                        "purpose": "To specify additional names or those longer than 35 characters in length",
+                        "segmentStr": "N2*Mike~",
                         "elements": [
                           {
-                            "key": "W5micmt_1xYVf2LyIImR1",
+                            "nodeKey": "element:N201:464:468",
                             "type": "Data Element",
                             "value": "Mike",
                             "id": "93",
@@ -618,16 +637,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Free-form name",
                             "designator": "N201"
                           }
-                        ]
+                        ],
+                        "desc": "Additional Name Information",
+                        "purpose": "To specify additional names or those longer than 35 characters in length"
                       },
                       {
-                        "key": "YjzvjDupz_v-Pdo25wqDr",
+                        "nodeKey": "segment:N3:472:495",
                         "id": "N3",
-                        "desc": "Address Information",
-                        "purpose": "To specify the location of the named party",
+                        "segmentStr": "N3*7000 Example Parkway~",
                         "elements": [
                           {
-                            "key": "mfIq3JzllfBzZzYAZ6KR_",
+                            "nodeKey": "element:N301:474:494",
                             "type": "Data Element",
                             "value": "7000 Example Parkway",
                             "id": "166",
@@ -639,16 +659,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Address information",
                             "designator": "N301"
                           }
-                        ]
+                        ],
+                        "desc": "Address Information",
+                        "purpose": "To specify the location of the named party"
                       },
                       {
-                        "key": "e-uhx-uhRZ_3NSNwGW7yX",
+                        "nodeKey": "segment:N4:498:526",
                         "id": "N4",
-                        "desc": "Geographic Location",
-                        "purpose": "To specify the geographic place of the named party",
+                        "segmentStr": "N4*Brooklyn Park*MN*55445*US~",
                         "elements": [
                           {
-                            "key": "hUITyY_ZSNNqiK0Hn9Ksl",
+                            "nodeKey": "element:N401:500:513",
                             "type": "Data Element",
                             "value": "Brooklyn Park",
                             "id": "19",
@@ -661,7 +682,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N401"
                           },
                           {
-                            "key": "8GdxMGAQ_n_-IBwDTK6dI",
+                            "nodeKey": "element:N402:514:516",
                             "type": "Data Element",
                             "value": "MN",
                             "id": "156",
@@ -674,7 +695,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N402"
                           },
                           {
-                            "key": "49HNG6BCQ5ryCidRhq0gP",
+                            "nodeKey": "element:N403:517:522",
                             "type": "Data Element",
                             "value": "55445",
                             "id": "116",
@@ -687,7 +708,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "N403"
                           },
                           {
-                            "key": "5obd4If0WVAnyKPOcR9WB",
+                            "nodeKey": "element:N404:523:525",
                             "type": "Data Element",
                             "value": "US",
                             "id": "26",
@@ -699,16 +720,17 @@ export default function useTestData(): EdiDocument {
                             "definition": "Code identifying the country",
                             "designator": "N404"
                           }
-                        ]
+                        ],
+                        "desc": "Geographic Location",
+                        "purpose": "To specify the geographic place of the named party"
                       },
                       {
-                        "key": "BfMuX3YRpHOos5tUQ91nZ",
+                        "nodeKey": "segment:PER:529:571",
                         "id": "PER",
-                        "desc": "Administrative Communications Contact",
-                        "purpose": "To identify a person or office to whom administrative communications should be directed",
+                        "segmentStr": "PER*CN*EDI*EM*test@ABC.COM*TE*111-222-4444~",
                         "elements": [
                           {
-                            "key": "CQdfpSZ9d8r8eesLTIzOa",
+                            "nodeKey": "element:PER01:532:534",
                             "type": "Data Element",
                             "value": "CN",
                             "id": "366",
@@ -719,7 +741,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER01"
                           },
                           {
-                            "key": "WGyLqujZ1TjV0oj1qDROu",
+                            "nodeKey": "element:PER02:535:538",
                             "type": "Data Element",
                             "value": "EDI",
                             "id": "93",
@@ -732,7 +754,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER02"
                           },
                           {
-                            "key": "7A-E7Crdcq10-E9dlYLm9",
+                            "nodeKey": "element:PER03:539:541",
                             "type": "Data Element",
                             "value": "EM",
                             "id": "365",
@@ -743,7 +765,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER03"
                           },
                           {
-                            "key": "nlQUOwoPjH4CosBKsjbTM",
+                            "nodeKey": "element:PER04:542:554",
                             "type": "Data Element",
                             "value": "test@ABC.COM",
                             "id": "364",
@@ -756,7 +778,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER04"
                           },
                           {
-                            "key": "luVhkw6GiUYACvntQmqUe",
+                            "nodeKey": "element:PER05:555:557",
                             "type": "Data Element",
                             "value": "TE",
                             "id": "365",
@@ -767,7 +789,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PER05"
                           },
                           {
-                            "key": "neHwgFLrUjqbK-JGyxL8Y",
+                            "nodeKey": "element:PER06:558:570",
                             "type": "Data Element",
                             "value": "111-222-4444",
                             "id": "364",
@@ -779,25 +801,26 @@ export default function useTestData(): EdiDocument {
                             "definition": "Complete communications number including country or area code when applicable",
                             "designator": "PER06"
                           }
-                        ]
+                        ],
+                        "desc": "Administrative Communications Contact",
+                        "purpose": "To identify a person or office to whom administrative communications should be directed"
                       }
                     ]
                   },
                   {
-                    "key": "FkJ2HgXmAiNPrN29Q5hlj",
+                    "nodeKey": "loop:PO1Loop1:574:1044",
                     "id": "PO1Loop1",
+                    "elements": [],
                     "desc": "Baseline Item Data",
                     "purpose": "To specify basic and most frequently used line item data",
-                    "elements": [],
                     "Loop": [
                       {
-                        "key": "tVmyguQ-FOcKJCzOY0CnV",
+                        "nodeKey": "segment:PO1:574:659",
                         "id": "PO1",
-                        "desc": "Baseline Item Data",
-                        "purpose": "To specify basic and most frequently used line item data",
+                        "segmentStr": "PO1*1*3*EA*12.3*PE*IN*15013163*SK*7680-02009152*UP*846186077111*CB*790-01-20*EN*12345~",
                         "elements": [
                           {
-                            "key": "UHw1EsyRYFJN9qHjoU3-i",
+                            "nodeKey": "element:PO101:577:578",
                             "type": "Data Element",
                             "value": "1",
                             "id": "350",
@@ -810,7 +833,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO101"
                           },
                           {
-                            "key": "QgULwVV5SiVATnflrFE29",
+                            "nodeKey": "element:PO102:579:580",
                             "type": "Data Element",
                             "value": "3",
                             "id": "330",
@@ -823,7 +846,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO102"
                           },
                           {
-                            "key": "tLXqCfkn5-dvbOVjd1dqe",
+                            "nodeKey": "element:PO103:581:583",
                             "type": "Data Element",
                             "value": "EA",
                             "id": "355",
@@ -834,7 +857,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO103"
                           },
                           {
-                            "key": "MsFVVpkfkTvyZHSSqI_1L",
+                            "nodeKey": "element:PO104:584:588",
                             "type": "Data Element",
                             "value": "12.3",
                             "id": "212",
@@ -847,7 +870,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO104"
                           },
                           {
-                            "key": "jGiGu1TzxhaEibyv6U9tt",
+                            "nodeKey": "element:PO105:589:591",
                             "type": "Data Element",
                             "value": "PE",
                             "id": "639",
@@ -858,7 +881,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO105"
                           },
                           {
-                            "key": "14w6xXRk2z9XCXDVP4Hbg",
+                            "nodeKey": "element:PO106:592:594",
                             "type": "Data Element",
                             "value": "IN",
                             "id": "235",
@@ -869,7 +892,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO106"
                           },
                           {
-                            "key": "Amg41hFyaKFia38eOmI9_",
+                            "nodeKey": "element:PO107:595:603",
                             "type": "Data Element",
                             "value": "15013163",
                             "id": "234",
@@ -882,7 +905,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO107"
                           },
                           {
-                            "key": "ahd-TtnLdVgzXzgKGdPml",
+                            "nodeKey": "element:PO108:604:606",
                             "type": "Data Element",
                             "value": "SK",
                             "id": "235",
@@ -893,7 +916,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO108"
                           },
                           {
-                            "key": "1rr0wPi5oqX6MM6PDtnnM",
+                            "nodeKey": "element:PO109:607:620",
                             "type": "Data Element",
                             "value": "7680-02009152",
                             "id": "234",
@@ -906,7 +929,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO109"
                           },
                           {
-                            "key": "vgQlswUSMHLdyfKOehAY0",
+                            "nodeKey": "element:PO110:621:623",
                             "type": "Data Element",
                             "value": "UP",
                             "id": "235",
@@ -917,7 +940,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO110"
                           },
                           {
-                            "key": "PnJlFthoMhPWS9pYqog76",
+                            "nodeKey": "element:PO111:624:636",
                             "type": "Data Element",
                             "value": "846186077111",
                             "id": "234",
@@ -930,7 +953,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO111"
                           },
                           {
-                            "key": "xI9jdHJknyvKBAcVTsTNn",
+                            "nodeKey": "element:PO112:637:639",
                             "type": "Data Element",
                             "value": "CB",
                             "id": "235",
@@ -941,7 +964,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO112"
                           },
                           {
-                            "key": "G01QTzCJCulEYnIusqNiW",
+                            "nodeKey": "element:PO113:640:649",
                             "type": "Data Element",
                             "value": "790-01-20",
                             "id": "234",
@@ -954,7 +977,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO113"
                           },
                           {
-                            "key": "MeN_u1Np0mX9zYsjWNGPP",
+                            "nodeKey": "element:PO114:650:652",
                             "type": "Data Element",
                             "value": "EN",
                             "id": "235",
@@ -965,7 +988,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO114"
                           },
                           {
-                            "key": "e-36P8f10Rv4IvHiQJ31x",
+                            "nodeKey": "element:PO115:653:658",
                             "type": "Data Element",
                             "value": "12345",
                             "id": "234",
@@ -977,23 +1000,24 @@ export default function useTestData(): EdiDocument {
                             "definition": "Identifying number for a product or service",
                             "designator": "PO115"
                           }
-                        ]
+                        ],
+                        "desc": "Baseline Item Data",
+                        "purpose": "To specify basic and most frequently used line item data"
                       },
                       {
-                        "key": "qOK82662ytV4E9RM6ZZA4",
+                        "nodeKey": "loop:PIDLoop1:662:698",
                         "id": "PIDLoop1",
+                        "elements": [],
                         "desc": "Product/Item Description",
                         "purpose": "To describe a product or process in coded or free-form format",
-                        "elements": [],
                         "Loop": [
                           {
-                            "key": "YFewNq0EOwGTjqE7I6X0G",
+                            "nodeKey": "segment:PID:662:698",
                             "id": "PID",
-                            "desc": "Product/Item Description",
-                            "purpose": "To describe a product or process in coded or free-form format",
+                            "segmentStr": "PID*F*08***WR CARGO SHO 38 BLK SOLID~",
                             "elements": [
                               {
-                                "key": "wtZn_BsNEQ_0Cx7A-xXn9",
+                                "nodeKey": "element:PID01:665:666",
                                 "type": "Data Element",
                                 "value": "F",
                                 "id": "349",
@@ -1004,7 +1028,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID01"
                               },
                               {
-                                "key": "N7D9RB3buj31T5FFyOldf",
+                                "nodeKey": "element:PID02:667:669",
                                 "type": "Data Element",
                                 "value": "08",
                                 "id": "750",
@@ -1015,7 +1039,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID02"
                               },
                               {
-                                "key": "Z-PyiA1BRwdA-9pGRqzoO",
+                                "nodeKey": "element:PID03:670:670",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "559",
@@ -1025,7 +1049,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID03"
                               },
                               {
-                                "key": "qU7irNL4OPBK2xalRfRUY",
+                                "nodeKey": "element:PID04:671:671",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "751",
@@ -1038,7 +1062,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID04"
                               },
                               {
-                                "key": "U9H1K1k7_E7f98nQm8H_j",
+                                "nodeKey": "element:PID05:672:697",
                                 "type": "Data Element",
                                 "value": "WR CARGO SHO 38 BLK SOLID",
                                 "id": "352",
@@ -1050,18 +1074,19 @@ export default function useTestData(): EdiDocument {
                                 "definition": "A free-form description to clarify the related data elements and their content",
                                 "designator": "PID05"
                               }
-                            ]
+                            ],
+                            "desc": "Product/Item Description",
+                            "purpose": "To describe a product or process in coded or free-form format"
                           }
                         ]
                       },
                       {
-                        "key": "YxjHYC1Z5sq6Wly8_oAZv",
+                        "nodeKey": "segment:MSG:701:721",
                         "id": "MSG",
-                        "desc": "Message Text",
-                        "purpose": "To provide a free-form format that allows the transmission of text information",
+                        "segmentStr": "MSG*Mail In or Store~",
                         "elements": [
                           {
-                            "key": "9wQEjEDXGbkduTbAvj55f",
+                            "nodeKey": "element:MSG01:704:720",
                             "type": "Data Element",
                             "value": "Mail In or Store",
                             "id": "933",
@@ -1073,23 +1098,24 @@ export default function useTestData(): EdiDocument {
                             "definition": "Free-form message text",
                             "designator": "MSG01"
                           }
-                        ]
+                        ],
+                        "desc": "Message Text",
+                        "purpose": "To provide a free-form format that allows the transmission of text information"
                       },
                       {
-                        "key": "wqHURt5g0JhSDcH5AcGPC",
+                        "nodeKey": "loop:PKGLoop1:724:743",
                         "id": "PKGLoop1",
+                        "elements": [],
                         "desc": "Marking, Packaging, Loading",
                         "purpose": "To describe marking, packaging, loading, and unloading requirements",
-                        "elements": [],
                         "Loop": [
                           {
-                            "key": "GWIvQoEpgaMqSrtVPEBiH",
+                            "nodeKey": "segment:PKG:724:743",
                             "id": "PKG",
-                            "desc": "Marking, Packaging, Loading",
-                            "purpose": "To describe marking, packaging, loading, and unloading requirements",
+                            "segmentStr": "PKG*F*WM***GIFTWRAP~",
                             "elements": [
                               {
-                                "key": "5yrxW3z0U-npVV-FpJgCp",
+                                "nodeKey": "element:PKG01:727:728",
                                 "type": "Data Element",
                                 "value": "F",
                                 "id": "349",
@@ -1100,7 +1126,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PKG01"
                               },
                               {
-                                "key": "tMmX9u0gnsURrpB1S8xl4",
+                                "nodeKey": "element:PKG02:729:731",
                                 "type": "Data Element",
                                 "value": "WM",
                                 "id": "753",
@@ -1111,7 +1137,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PKG02"
                               },
                               {
-                                "key": "_jiI1k_lTw0CY-v2oQUCh",
+                                "nodeKey": "element:PKG03:732:732",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "559",
@@ -1121,7 +1147,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PKG03"
                               },
                               {
-                                "key": "aixGuvzcbGq5jwXQunqIa",
+                                "nodeKey": "element:PKG04:733:733",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "754",
@@ -1134,7 +1160,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PKG04"
                               },
                               {
-                                "key": "nhFSK6qTm2hatc3XtalpX",
+                                "nodeKey": "element:PKG05:734:742",
                                 "type": "Data Element",
                                 "value": "GIFTWRAP",
                                 "id": "352",
@@ -1146,25 +1172,26 @@ export default function useTestData(): EdiDocument {
                                 "definition": "A free-form description to clarify the related data elements and their content",
                                 "designator": "PKG05"
                               }
-                            ]
+                            ],
+                            "desc": "Marking, Packaging, Loading",
+                            "purpose": "To describe marking, packaging, loading, and unloading requirements"
                           }
                         ]
                       },
                       {
-                        "key": "EZMxJ7rF0Cmq2Of_BozeO",
+                        "nodeKey": "loop:N9Loop2:746:804",
                         "id": "N9Loop2",
+                        "elements": [],
                         "desc": "Reference Identification",
                         "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
-                        "elements": [],
                         "Loop": [
                           {
-                            "key": "Tm7-ZJIg9lGhKo24ZHAXO",
+                            "nodeKey": "segment:N9:746:804",
                             "id": "N9",
-                            "desc": "Reference Identification",
-                            "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
+                            "segmentStr": "N9*L1*MESSAGE*This item must be returned within 90 days of~",
                             "elements": [
                               {
-                                "key": "5-y_pBqxlt_sFLJh89RrQ",
+                                "nodeKey": "element:N901:748:750",
                                 "type": "Data Element",
                                 "value": "L1",
                                 "id": "128",
@@ -1175,7 +1202,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "N901"
                               },
                               {
-                                "key": "oqT1SUIKWWVxraf05hzRT",
+                                "nodeKey": "element:N902:751:758",
                                 "type": "Data Element",
                                 "value": "MESSAGE",
                                 "id": "127",
@@ -1188,7 +1215,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "N902"
                               },
                               {
-                                "key": "XGsDzYbKcgYPGcyu120k6",
+                                "nodeKey": "element:N903:759:803",
                                 "type": "Data Element",
                                 "value": "This item must be returned within 90 days of",
                                 "id": "369",
@@ -1200,25 +1227,26 @@ export default function useTestData(): EdiDocument {
                                 "definition": "Free-form descriptive text",
                                 "designator": "N903"
                               }
-                            ]
+                            ],
+                            "desc": "Reference Identification",
+                            "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier"
                           }
                         ]
                       },
                       {
-                        "key": "4x1POo2-FvCSIWIuhIDLE",
+                        "nodeKey": "loop:N9Loop2:807:836",
                         "id": "N9Loop2",
+                        "elements": [],
                         "desc": "Reference Identification",
                         "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
-                        "elements": [],
                         "Loop": [
                           {
-                            "key": "l_RFCLw8-ylMpAIKLmTgh",
+                            "nodeKey": "segment:N9:807:836",
                             "id": "N9",
-                            "desc": "Reference Identification",
-                            "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
+                            "segmentStr": "N9*L1*MESSAGE* the ship date.~",
                             "elements": [
                               {
-                                "key": "maqpZUfxEjMJ2uq6JlRSA",
+                                "nodeKey": "element:N901:809:811",
                                 "type": "Data Element",
                                 "value": "L1",
                                 "id": "128",
@@ -1229,7 +1257,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "N901"
                               },
                               {
-                                "key": "eiLVdIYFgiJQMqdNfCvzX",
+                                "nodeKey": "element:N902:812:819",
                                 "type": "Data Element",
                                 "value": "MESSAGE",
                                 "id": "127",
@@ -1242,7 +1270,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "N902"
                               },
                               {
-                                "key": "0jLn4nuffN1fZHi2GW4Bm",
+                                "nodeKey": "element:N903:820:835",
                                 "type": "Data Element",
                                 "value": " the ship date.",
                                 "id": "369",
@@ -1254,25 +1282,26 @@ export default function useTestData(): EdiDocument {
                                 "definition": "Free-form descriptive text",
                                 "designator": "N903"
                               }
-                            ]
+                            ],
+                            "desc": "Reference Identification",
+                            "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier"
                           }
                         ]
                       },
                       {
-                        "key": "98iyUtsFFqT0Suk40sIu2",
+                        "nodeKey": "loop:N1Loop3:839:880",
                         "id": "N1Loop3",
+                        "elements": [],
                         "desc": "Name",
                         "purpose": "To identify a party by type of organization, name, and code",
-                        "elements": [],
                         "Loop": [
                           {
-                            "key": "6e7o-TaVJSsnRXIAsIndL",
+                            "nodeKey": "segment:N1:839:852",
                             "id": "N1",
-                            "desc": "Name",
-                            "purpose": "To identify a party by type of organization, name, and code",
+                            "segmentStr": "N1*ST*Company~",
                             "elements": [
                               {
-                                "key": "V_xMhVBFQJNufeN9_AzW5",
+                                "nodeKey": "element:N101:841:843",
                                 "type": "Data Element",
                                 "value": "ST",
                                 "id": "98",
@@ -1283,7 +1312,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "N101"
                               },
                               {
-                                "key": "u4YeYTOYM7JwCdd28rjf1",
+                                "nodeKey": "element:N102:844:851",
                                 "type": "Data Element",
                                 "value": "Company",
                                 "id": "93",
@@ -1295,23 +1324,24 @@ export default function useTestData(): EdiDocument {
                                 "definition": "Free-form name",
                                 "designator": "N102"
                               }
-                            ]
+                            ],
+                            "desc": "Name",
+                            "purpose": "To identify a party by type of organization, name, and code"
                           },
                           {
-                            "key": "nNiJacIdZhZ9cjEVhktVF",
+                            "nodeKey": "loop:LDTLoop2:855:880",
                             "id": "LDTLoop2",
+                            "elements": [],
                             "desc": "Lead Time",
                             "purpose": "To specify lead time for availability of products and services",
-                            "elements": [],
                             "Loop": [
                               {
-                                "key": "sXpQSS_wDdRFpAoiqMStv",
+                                "nodeKey": "segment:LDT:855:867",
                                 "id": "LDT",
-                                "desc": "Lead Time",
-                                "purpose": "To specify lead time for availability of products and services",
+                                "segmentStr": "LDT*AA*10*AA~",
                                 "elements": [
                                   {
-                                    "key": "Qu2Jwue_Yq96SA3bg5XLI",
+                                    "nodeKey": "element:LDT01:858:860",
                                     "type": "Data Element",
                                     "value": "AA",
                                     "id": "345",
@@ -1322,7 +1352,7 @@ export default function useTestData(): EdiDocument {
                                     "designator": "LDT01"
                                   },
                                   {
-                                    "key": "RPCeKiiOh_NLDxCkkgRN9",
+                                    "nodeKey": "element:LDT02:861:863",
                                     "type": "Data Element",
                                     "value": "10",
                                     "id": "380",
@@ -1335,7 +1365,7 @@ export default function useTestData(): EdiDocument {
                                     "designator": "LDT02"
                                   },
                                   {
-                                    "key": "UYB5uvZjGAUh45jR-PSwk",
+                                    "nodeKey": "element:LDT03:864:866",
                                     "type": "Data Element",
                                     "value": "AA",
                                     "id": "344",
@@ -1345,16 +1375,17 @@ export default function useTestData(): EdiDocument {
                                     "definition": "Code indicating the time period or interval",
                                     "designator": "LDT03"
                                   }
-                                ]
+                                ],
+                                "desc": "Lead Time",
+                                "purpose": "To specify lead time for availability of products and services"
                               },
                               {
-                                "key": "9B0OfD5J9ciUb9XNYUaEr",
+                                "nodeKey": "segment:QTY:870:880",
                                 "id": "QTY",
-                                "desc": "Quantity",
-                                "purpose": "To specify quantity information",
+                                "segmentStr": "QTY*10*100~",
                                 "elements": [
                                   {
-                                    "key": "OQ2grPQ8yFRyVfFvDAZaE",
+                                    "nodeKey": "element:QTY01:873:875",
                                     "type": "Data Element",
                                     "value": "10",
                                     "id": "673",
@@ -1365,7 +1396,7 @@ export default function useTestData(): EdiDocument {
                                     "designator": "QTY01"
                                   },
                                   {
-                                    "key": "BH83ZIUnFH9VnY9xleRND",
+                                    "nodeKey": "element:QTY02:876:879",
                                     "type": "Data Element",
                                     "value": "100",
                                     "id": "380",
@@ -1377,27 +1408,28 @@ export default function useTestData(): EdiDocument {
                                     "definition": "Numeric value of quantity",
                                     "designator": "QTY02"
                                   }
-                                ]
+                                ],
+                                "desc": "Quantity",
+                                "purpose": "To specify quantity information"
                               }
                             ]
                           }
                         ]
                       },
                       {
-                        "key": "ZEmTKjFIHBRBn9DXkA1zv",
+                        "nodeKey": "loop:SLNLoop1:883:1044",
                         "id": "SLNLoop1",
+                        "elements": [],
                         "desc": "Subline Item Detail",
                         "purpose": "To specify product subline detail item data",
-                        "elements": [],
                         "Loop": [
                           {
-                            "key": "8Su9gH8f9PK_2Rm34yeVb",
+                            "nodeKey": "segment:SLN:883:966",
                             "id": "SLN",
-                            "desc": "Subline Item Detail",
-                            "purpose": "To specify product subline detail item data",
+                            "segmentStr": "SLN*1**I*1*EA*3.55***IN*2456987*SK*123456*UP*105647894512*CB*123-12-1239*UA*3456787~",
                             "elements": [
                               {
-                                "key": "_cP0LLBIeahsxkULYTpjd",
+                                "nodeKey": "element:SLN01:886:887",
                                 "type": "Data Element",
                                 "value": "1",
                                 "id": "350",
@@ -1410,7 +1442,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN01"
                               },
                               {
-                                "key": "jvJLJgCVxJ5ctUP7Hu43_",
+                                "nodeKey": "element:SLN02:888:888",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "350",
@@ -1423,7 +1455,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN02"
                               },
                               {
-                                "key": "yhMdimmdI9Z4b4WflBgmY",
+                                "nodeKey": "element:SLN03:889:890",
                                 "type": "Data Element",
                                 "value": "I",
                                 "id": "662",
@@ -1434,7 +1466,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN03"
                               },
                               {
-                                "key": "GR_sPmNv0CyahRDZLMa_7",
+                                "nodeKey": "element:SLN04:891:892",
                                 "type": "Data Element",
                                 "value": "1",
                                 "id": "380",
@@ -1447,12 +1479,12 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN04"
                               },
                               {
-                                "key": "kfSmcR2Ogyx9nJ_6ICVc7",
+                                "nodeKey": "element:SLN05:893:895",
                                 "type": "Data Element",
                                 "value": "EA",
                                 "components": [
                                   {
-                                    "key": "uDyzi9bYBQ-cUEtTftt7t",
+                                    "nodeKey": "element:SLN0501:893:895",
                                     "type": "Component Element",
                                     "value": "EA",
                                     "id": "355",
@@ -1466,11 +1498,11 @@ export default function useTestData(): EdiDocument {
                                 "id": "C001",
                                 "desc": "Composite Unit of Measure",
                                 "required": false,
-                                "definition": "To identify a composite unit of measure\\n\\n(See Figures Appendix for examples of use)",
+                                "definition": "To identify a composite unit of measure\n\n(See Figures Appendix for examples of use)",
                                 "designator": "SLN05"
                               },
                               {
-                                "key": "_kIo72WDg7y01UPbafOuc",
+                                "nodeKey": "element:SLN06:896:900",
                                 "type": "Data Element",
                                 "value": "3.55",
                                 "id": "212",
@@ -1483,7 +1515,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN06"
                               },
                               {
-                                "key": "jY5m_OCU75Acn6cMpMU8w",
+                                "nodeKey": "element:SLN07:901:901",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "639",
@@ -1493,7 +1525,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN07"
                               },
                               {
-                                "key": "ZHO2pXSCFLkSBs1pGrnvv",
+                                "nodeKey": "element:SLN08:902:902",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "662",
@@ -1503,7 +1535,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN08"
                               },
                               {
-                                "key": "-8G1nkTYKcDDpZ9Q5ug8V",
+                                "nodeKey": "element:SLN09:903:905",
                                 "type": "Data Element",
                                 "value": "IN",
                                 "id": "235",
@@ -1514,7 +1546,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN09"
                               },
                               {
-                                "key": "79Ys-jA4XkF8WmHztijRI",
+                                "nodeKey": "element:SLN10:906:913",
                                 "type": "Data Element",
                                 "value": "2456987",
                                 "id": "234",
@@ -1527,7 +1559,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN10"
                               },
                               {
-                                "key": "BEFuWr0h16z0Z_0NEydNB",
+                                "nodeKey": "element:SLN11:914:916",
                                 "type": "Data Element",
                                 "value": "SK",
                                 "id": "235",
@@ -1538,7 +1570,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN11"
                               },
                               {
-                                "key": "fuY4ZxeieG_BoYr5SR7xU",
+                                "nodeKey": "element:SLN12:917:923",
                                 "type": "Data Element",
                                 "value": "123456",
                                 "id": "234",
@@ -1551,7 +1583,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN12"
                               },
                               {
-                                "key": "Q6R_JLBcY9tyVhsgquOJA",
+                                "nodeKey": "element:SLN13:924:926",
                                 "type": "Data Element",
                                 "value": "UP",
                                 "id": "235",
@@ -1562,7 +1594,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN13"
                               },
                               {
-                                "key": "D_mh9lMSBerLOBaR8fPQJ",
+                                "nodeKey": "element:SLN14:927:939",
                                 "type": "Data Element",
                                 "value": "105647894512",
                                 "id": "234",
@@ -1575,7 +1607,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN14"
                               },
                               {
-                                "key": "iZAVAVhPI42B-bsEOnDZi",
+                                "nodeKey": "element:SLN15:940:942",
                                 "type": "Data Element",
                                 "value": "CB",
                                 "id": "235",
@@ -1586,7 +1618,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN15"
                               },
                               {
-                                "key": "Cc0aBmeK3fWnjgcJoB8pB",
+                                "nodeKey": "element:SLN16:943:954",
                                 "type": "Data Element",
                                 "value": "123-12-1239",
                                 "id": "234",
@@ -1599,7 +1631,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN16"
                               },
                               {
-                                "key": "CiaHSMH7WiHvlG1WwhAe3",
+                                "nodeKey": "element:SLN17:955:957",
                                 "type": "Data Element",
                                 "value": "UA",
                                 "id": "235",
@@ -1610,7 +1642,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "SLN17"
                               },
                               {
-                                "key": "MQVQqDXVRRpG1gKpO146V",
+                                "nodeKey": "element:SLN18:958:965",
                                 "type": "Data Element",
                                 "value": "3456787",
                                 "id": "234",
@@ -1622,16 +1654,17 @@ export default function useTestData(): EdiDocument {
                                 "definition": "Identifying number for a product or service",
                                 "designator": "SLN18"
                               }
-                            ]
+                            ],
+                            "desc": "Subline Item Detail",
+                            "purpose": "To specify product subline detail item data"
                           },
                           {
-                            "key": "VAmF9DABShEhhttt5PIPu",
+                            "nodeKey": "segment:PID:969:1001",
                             "id": "PID",
-                            "desc": "Product/Item Description",
-                            "purpose": "To describe a product or process in coded or free-form format",
+                            "segmentStr": "PID*F*08***Component Description~",
                             "elements": [
                               {
-                                "key": "R2bZDmEjFWQ5OneMBB88u",
+                                "nodeKey": "element:PID01:972:973",
                                 "type": "Data Element",
                                 "value": "F",
                                 "id": "349",
@@ -1642,7 +1675,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID01"
                               },
                               {
-                                "key": "BNsKiPtNrs995_f2R9Ebb",
+                                "nodeKey": "element:PID02:974:976",
                                 "type": "Data Element",
                                 "value": "08",
                                 "id": "750",
@@ -1653,7 +1686,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID02"
                               },
                               {
-                                "key": "Fr3u3OOYK5sWT_YnttJPv",
+                                "nodeKey": "element:PID03:977:977",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "559",
@@ -1663,7 +1696,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID03"
                               },
                               {
-                                "key": "Ps7J8yHo9SSxv-t5wWoR4",
+                                "nodeKey": "element:PID04:978:978",
                                 "type": "Data Element",
                                 "value": "",
                                 "id": "751",
@@ -1676,7 +1709,7 @@ export default function useTestData(): EdiDocument {
                                 "designator": "PID04"
                               },
                               {
-                                "key": "S098T-R7V8r0DmGLcOjSX",
+                                "nodeKey": "element:PID05:979:1000",
                                 "type": "Data Element",
                                 "value": "Component Description",
                                 "id": "352",
@@ -1688,23 +1721,24 @@ export default function useTestData(): EdiDocument {
                                 "definition": "A free-form description to clarify the related data elements and their content",
                                 "designator": "PID05"
                               }
-                            ]
+                            ],
+                            "desc": "Product/Item Description",
+                            "purpose": "To describe a product or process in coded or free-form format"
                           },
                           {
-                            "key": "E-UjEokYT6WSETtcxryj_",
+                            "nodeKey": "loop:N9Loop3:1004:1044",
                             "id": "N9Loop3",
+                            "elements": [],
                             "desc": "Reference Identification",
                             "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
-                            "elements": [],
                             "Loop": [
                               {
-                                "key": "gGddY_4AWUeiMxvjcsFhS",
+                                "nodeKey": "segment:N9:1004:1030",
                                 "id": "N9",
-                                "desc": "Reference Identification",
-                                "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier",
+                                "segmentStr": "N9*L1*MESSAGE*Subline Item~",
                                 "elements": [
                                   {
-                                    "key": "utAgoXdBuuWr50UI8Nrnr",
+                                    "nodeKey": "element:N901:1006:1008",
                                     "type": "Data Element",
                                     "value": "L1",
                                     "id": "128",
@@ -1715,7 +1749,7 @@ export default function useTestData(): EdiDocument {
                                     "designator": "N901"
                                   },
                                   {
-                                    "key": "wJsnjBViwdaJS4KUJWye7",
+                                    "nodeKey": "element:N902:1009:1016",
                                     "type": "Data Element",
                                     "value": "MESSAGE",
                                     "id": "127",
@@ -1728,7 +1762,7 @@ export default function useTestData(): EdiDocument {
                                     "designator": "N902"
                                   },
                                   {
-                                    "key": "tqp_Sk1bjTyfe31AakOdC",
+                                    "nodeKey": "element:N903:1017:1029",
                                     "type": "Data Element",
                                     "value": "Subline Item",
                                     "id": "369",
@@ -1740,16 +1774,17 @@ export default function useTestData(): EdiDocument {
                                     "definition": "Free-form descriptive text",
                                     "designator": "N903"
                                   }
-                                ]
+                                ],
+                                "desc": "Reference Identification",
+                                "purpose": "To transmit identifying information as specified by the Reference Identification Qualifier"
                               },
                               {
-                                "key": "JHWH3t2jbik-W3fPa3fme",
+                                "nodeKey": "segment:MSG:1033:1044",
                                 "id": "MSG",
-                                "desc": "Message Text",
-                                "purpose": "To provide a free-form format that allows the transmission of text information",
+                                "segmentStr": "MSG*3 Items~",
                                 "elements": [
                                   {
-                                    "key": "xI3bK3bIrIDCvE57UhHRn",
+                                    "nodeKey": "element:MSG01:1036:1043",
                                     "type": "Data Element",
                                     "value": "3 Items",
                                     "id": "933",
@@ -1761,7 +1796,9 @@ export default function useTestData(): EdiDocument {
                                     "definition": "Free-form message text",
                                     "designator": "MSG01"
                                   }
-                                ]
+                                ],
+                                "desc": "Message Text",
+                                "purpose": "To provide a free-form format that allows the transmission of text information"
                               }
                             ]
                           }
@@ -1770,20 +1807,19 @@ export default function useTestData(): EdiDocument {
                     ]
                   },
                   {
-                    "key": "S2DkcCd52OIKmrPcJD4ZR",
+                    "nodeKey": "loop:PO1Loop1:1047:1072",
                     "id": "PO1Loop1",
+                    "elements": [],
                     "desc": "Baseline Item Data",
                     "purpose": "To specify basic and most frequently used line item data",
-                    "elements": [],
                     "Loop": [
                       {
-                        "key": "TC0XFwv7rertyadelxCOm",
+                        "nodeKey": "segment:PO1:1047:1072",
                         "id": "PO1",
-                        "desc": "Baseline Item Data",
-                        "purpose": "To specify basic and most frequently used line item data",
+                        "segmentStr": "PO1*2*3*EA*12.3*PE*IN*123~",
                         "elements": [
                           {
-                            "key": "b5mFFL0CRx5xqkroBzHG2",
+                            "nodeKey": "element:PO101:1050:1051",
                             "type": "Data Element",
                             "value": "2",
                             "id": "350",
@@ -1796,7 +1832,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO101"
                           },
                           {
-                            "key": "jP_uLpI2UoyLBbk-8MQVi",
+                            "nodeKey": "element:PO102:1052:1053",
                             "type": "Data Element",
                             "value": "3",
                             "id": "330",
@@ -1809,7 +1845,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO102"
                           },
                           {
-                            "key": "wibIUSY6jy4g70lcpRk3M",
+                            "nodeKey": "element:PO103:1054:1056",
                             "type": "Data Element",
                             "value": "EA",
                             "id": "355",
@@ -1820,7 +1856,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO103"
                           },
                           {
-                            "key": "UMlUqzzcIpku94REA3rlJ",
+                            "nodeKey": "element:PO104:1057:1061",
                             "type": "Data Element",
                             "value": "12.3",
                             "id": "212",
@@ -1833,7 +1869,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO104"
                           },
                           {
-                            "key": "HDFKLOvRxPVZeeHf8kxKS",
+                            "nodeKey": "element:PO105:1062:1064",
                             "type": "Data Element",
                             "value": "PE",
                             "id": "639",
@@ -1844,7 +1880,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO105"
                           },
                           {
-                            "key": "JoUyC4mcmdn86OPrZKrTD",
+                            "nodeKey": "element:PO106:1065:1067",
                             "type": "Data Element",
                             "value": "IN",
                             "id": "235",
@@ -1855,7 +1891,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "PO106"
                           },
                           {
-                            "key": "xQ9RySTq4tgH-ge1EfhJC",
+                            "nodeKey": "element:PO107:1068:1071",
                             "type": "Data Element",
                             "value": "123",
                             "id": "234",
@@ -1867,25 +1903,26 @@ export default function useTestData(): EdiDocument {
                             "definition": "Identifying number for a product or service",
                             "designator": "PO107"
                           }
-                        ]
+                        ],
+                        "desc": "Baseline Item Data",
+                        "purpose": "To specify basic and most frequently used line item data"
                       }
                     ]
                   },
                   {
-                    "key": "cwGvCtUVg2de5S3UQJILU",
+                    "nodeKey": "loop:CTTLoop1:1075:1084",
                     "id": "CTTLoop1",
+                    "elements": [],
                     "desc": "Transaction Totals",
                     "purpose": "To transmit a hash total for a specific element in the transaction set",
-                    "elements": [],
                     "Loop": [
                       {
-                        "key": "uBjI3P1SL9vpodv1WYnM2",
+                        "nodeKey": "segment:CTT:1075:1084",
                         "id": "CTT",
-                        "desc": "Transaction Totals",
-                        "purpose": "To transmit a hash total for a specific element in the transaction set",
+                        "segmentStr": "CTT*1*200~",
                         "elements": [
                           {
-                            "key": "d5ZgudMe3WBDI_1UGHboA",
+                            "nodeKey": "element:CTT01:1078:1079",
                             "type": "Data Element",
                             "value": "1",
                             "id": "354",
@@ -1898,7 +1935,7 @@ export default function useTestData(): EdiDocument {
                             "designator": "CTT01"
                           },
                           {
-                            "key": "3W8wo_dopME9viLrLQdOI",
+                            "nodeKey": "element:CTT02:1080:1083",
                             "type": "Data Element",
                             "value": "200",
                             "id": "347",
@@ -1907,22 +1944,23 @@ export default function useTestData(): EdiDocument {
                             "required": false,
                             "minLength": 1,
                             "maxLength": 10,
-                            "definition": "Sum of values of the specified data element. All values in the data element will be summed without regard to decimal points (explicit or implicit) or signs. Truncation will occur on the left most digits if the sum is greater than the maximum size of the hash total of the data element.\\n\\nExample:\\n-.0018 First occurrence of value being hashed.\\n.18 Second occurrence of value being hashed.\\n1.8 Third occurrence of value being hashed.\\n18.01 Fourth occurrence of value being hashed.\\n---------\\n1855 Hash total prior to truncation.\\n855 Hash total after truncation to three-digit field.",
+                            "definition": "Sum of values of the specified data element. All values in the data element will be summed without regard to decimal points (explicit or implicit) or signs. Truncation will occur on the left most digits if the sum is greater than the maximum size of the hash total of the data element.\n\nExample:\n-.0018 First occurrence of value being hashed.\n.18 Second occurrence of value being hashed.\n1.8 Third occurrence of value being hashed.\n18.01 Fourth occurrence of value being hashed.\n---------\n1855 Hash total prior to truncation.\n855 Hash total after truncation to three-digit field.",
                             "designator": "CTT02"
                           }
-                        ]
+                        ],
+                        "desc": "Transaction Totals",
+                        "purpose": "To transmit a hash total for a specific element in the transaction set"
                       }
                     ]
                   }
                 ],
                 "startSegment": {
-                  "key": "DhL1qt-ezT_YEoVcBIv1G",
+                  "nodeKey": "segment:ST:158:169",
                   "id": "ST",
-                  "desc": "Transaction Set Header",
-                  "purpose": "To indicate the start of a transaction set and to assign a control number",
+                  "segmentStr": "ST*850*0001~",
                   "elements": [
                     {
-                      "key": "IL1ggpJCVNHlA3e35tX7Q",
+                      "nodeKey": "element:ST01:160:163",
                       "type": "Data Element",
                       "value": "850",
                       "id": "143",
@@ -1936,7 +1974,7 @@ export default function useTestData(): EdiDocument {
                       "designator": "ST01"
                     },
                     {
-                      "key": "PuyHJ9-l3_m53PtIRuijc",
+                      "nodeKey": "element:ST02:164:168",
                       "type": "Data Element",
                       "value": "0001",
                       "id": "329",
@@ -1948,16 +1986,17 @@ export default function useTestData(): EdiDocument {
                       "definition": "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set",
                       "designator": "ST02"
                     }
-                  ]
+                  ],
+                  "desc": "Transaction Set Header",
+                  "purpose": "To indicate the start of a transaction set and to assign a control number"
                 },
                 "endSegment": {
-                  "key": "vDZusoTGSpo9GzIE6lZ6I",
+                  "nodeKey": "segment:SE:1087:1097",
                   "id": "SE",
-                  "desc": "Transaction Set Trailer",
-                  "purpose": "To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)",
+                  "segmentStr": "SE*32*0001~",
                   "elements": [
                     {
-                      "key": "R5cQ-BelK-Db56G5pIhAw",
+                      "nodeKey": "element:SE01:1089:1091",
                       "type": "Data Element",
                       "value": "32",
                       "id": "96",
@@ -1970,7 +2009,7 @@ export default function useTestData(): EdiDocument {
                       "designator": "SE01"
                     },
                     {
-                      "key": "yyDXLy_WTlzpBj82h-xos",
+                      "nodeKey": "element:SE02:1092:1096",
                       "type": "Data Element",
                       "value": "0001",
                       "id": "329",
@@ -1982,18 +2021,19 @@ export default function useTestData(): EdiDocument {
                       "definition": "Identifying control number that must be unique within the transaction set functional group assigned by the originator for a transaction set",
                       "designator": "SE02"
                     }
-                  ]
+                  ],
+                  "desc": "Transaction Set Trailer",
+                  "purpose": "To indicate the end of the transaction set and provide the count of the transmitted segments (including the beginning (ST) and ending (SE) segments)"
                 }
               }
             ],
             "startSegment": {
-              "key": "d77Wln2amdJQKQo4GpPY2",
+              "nodeKey": "segment:GS:108:155",
               "id": "GS",
-              "desc": "Functional Group Header",
-              "purpose": "To indicate the beginning of a functional group and to provide control information",
+              "segmentStr": "GS*PO*DERICL*TEST01*20210517*0643*7080*X*004010~",
               "elements": [
                 {
-                  "key": "MI9Sdsu2VSfvSroiu95HT",
+                  "nodeKey": "element:GS01:110:112",
                   "type": "Data Element",
                   "value": "PO",
                   "id": "479",
@@ -2005,7 +2045,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS01"
                 },
                 {
-                  "key": "Tek_M-FDzBE99EQtBuk91",
+                  "nodeKey": "element:GS02:113:119",
                   "type": "Data Element",
                   "value": "DERICL",
                   "id": "142",
@@ -2017,7 +2057,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS02"
                 },
                 {
-                  "key": "3z4CdYde5EXTZFogLKdOz",
+                  "nodeKey": "element:GS03:120:126",
                   "type": "Data Element",
                   "value": "TEST01",
                   "id": "124",
@@ -2029,7 +2069,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS03"
                 },
                 {
-                  "key": "YLs9vsAx63TTTze-1YGMf",
+                  "nodeKey": "element:GS04:127:135",
                   "type": "Data Element",
                   "value": "20210517",
                   "id": "373",
@@ -2041,7 +2081,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS04"
                 },
                 {
-                  "key": "clzCQTGkr43evBag3PJ6j",
+                  "nodeKey": "element:GS05:136:140",
                   "type": "Data Element",
                   "value": "0643",
                   "id": "337",
@@ -2053,7 +2093,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS05"
                 },
                 {
-                  "key": "foNW4dQNcDt54QJsWf12w",
+                  "nodeKey": "element:GS06:141:145",
                   "type": "Data Element",
                   "value": "7080",
                   "id": "28",
@@ -2065,7 +2105,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS06"
                 },
                 {
-                  "key": "Com6NpvtMMLx_XS5Looup",
+                  "nodeKey": "element:GS07:146:147",
                   "type": "Data Element",
                   "value": "X",
                   "id": "455",
@@ -2077,7 +2117,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GS07"
                 },
                 {
-                  "key": "NT827h2drcEs5msik5238",
+                  "nodeKey": "element:GS08:148:154",
                   "type": "Data Element",
                   "value": "004010",
                   "id": "480",
@@ -2088,16 +2128,17 @@ export default function useTestData(): EdiDocument {
                   "definition": "Code indicating the version, release, subrelease, and industry identifier of the EDI standard being used, including the GS and GE segments; if code in DE455 in GS segment is X, then in DE 480 positions 1-3 are the version number; positions 4-6 are the release and subrelease, level of the version; and positions 7-12 are the industry or trade association identifiers (optionally assigned by user); if code in DE455 in GS segment is T, then other formats are allowed",
                   "designator": "GS08"
                 }
-              ]
+              ],
+              "desc": "Functional Group Header",
+              "purpose": "To indicate the beginning of a functional group and to provide control information"
             },
             "endSegment": {
-              "key": "LrWqYiq4qBj2GPQJhyTzX",
+              "nodeKey": "segment:GE:1100:1109",
               "id": "GE",
-              "desc": "Functional Group Trailer",
-              "purpose": "To indicate the end of a functional group and to provide control information",
+              "segmentStr": "GE*1*7080~",
               "elements": [
                 {
-                  "key": "SPqVUipbJR2qLlUpY7LNf",
+                  "nodeKey": "element:GE01:1102:1103",
                   "type": "Data Element",
                   "value": "1",
                   "id": "97",
@@ -2109,7 +2150,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "GE01"
                 },
                 {
-                  "key": "vhawzNOvPAVVnvNaKlr03",
+                  "nodeKey": "element:GE02:1104:1108",
                   "type": "Data Element",
                   "value": "7080",
                   "id": "28",
@@ -2120,18 +2161,19 @@ export default function useTestData(): EdiDocument {
                   "definition": "Assigned number originated and maintained by the sender",
                   "designator": "GE02"
                 }
-              ]
+              ],
+              "desc": "Functional Group Trailer",
+              "purpose": "To indicate the end of a functional group and to provide control information"
             }
           }
         ],
         "startSegment": {
-          "key": "wHB_DwHaIPNzaujeh-TYn",
+          "nodeKey": "segment:ISA:0:105",
           "id": "ISA",
-          "desc": "Interchange Control Header",
-          "purpose": "To start and identify an interchange of zero or more functional groups and interchange-related control segments",
+          "segmentStr": "ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~",
           "elements": [
             {
-              "key": "EumOwQGDzAVZGxQfFlmMd",
+              "nodeKey": "element:ISA01:3:5",
               "type": "Data Element",
               "value": "00",
               "id": "I01",
@@ -2143,7 +2185,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA01"
             },
             {
-              "key": "IbYetD7tyd84-7xLae40Q",
+              "nodeKey": "element:ISA02:6:16",
               "type": "Data Element",
               "value": "          ",
               "id": "I02",
@@ -2155,7 +2197,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA02"
             },
             {
-              "key": "VBCLZhiavbtgkqxTdHZEQ",
+              "nodeKey": "element:ISA03:17:19",
               "type": "Data Element",
               "value": "00",
               "id": "I03",
@@ -2167,7 +2209,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA03"
             },
             {
-              "key": "Iu8kAvAA-04ye0uoVqdnO",
+              "nodeKey": "element:ISA04:20:30",
               "type": "Data Element",
               "value": "          ",
               "id": "I04",
@@ -2179,7 +2221,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA04"
             },
             {
-              "key": "5rL3c6ma984dCBhDCVlz3",
+              "nodeKey": "element:ISA05:31:33",
               "type": "Data Element",
               "value": "ZZ",
               "id": "I05",
@@ -2191,7 +2233,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA05"
             },
             {
-              "key": "AHJww4tVqM5Dh4DIMzAKf",
+              "nodeKey": "element:ISA06:34:49",
               "type": "Data Element",
               "value": "DERICL         ",
               "id": "I06",
@@ -2203,7 +2245,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA06"
             },
             {
-              "key": "fxRQ_RTYyYkJbBbiHb9EM",
+              "nodeKey": "element:ISA07:50:52",
               "type": "Data Element",
               "value": "ZZ",
               "id": "I05",
@@ -2215,7 +2257,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA07"
             },
             {
-              "key": "Mj1u8ZiQSkUMXagAnYffD",
+              "nodeKey": "element:ISA08:53:68",
               "type": "Data Element",
               "value": "TEST01         ",
               "id": "I07",
@@ -2227,7 +2269,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA08"
             },
             {
-              "key": "0rH5U89X6FIksD--S67PL",
+              "nodeKey": "element:ISA09:69:75",
               "type": "Data Element",
               "value": "210517",
               "id": "I08",
@@ -2239,7 +2281,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA09"
             },
             {
-              "key": "mZJxH-a1RR74knrBLvrMP",
+              "nodeKey": "element:ISA10:76:80",
               "type": "Data Element",
               "value": "0643",
               "id": "I09",
@@ -2251,7 +2293,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA10"
             },
             {
-              "key": "0ZpUIAegeXmYOTCimHIUj",
+              "nodeKey": "element:ISA11:81:82",
               "type": "Data Element",
               "value": "U",
               "id": "I10",
@@ -2263,7 +2305,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA11"
             },
             {
-              "key": "jIRdItA7HJRyu9vsvyiXp",
+              "nodeKey": "element:ISA12:83:88",
               "type": "Data Element",
               "value": "00401",
               "id": "I11",
@@ -2275,7 +2317,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA12"
             },
             {
-              "key": "m4PKf7akF5wzOEixAN0Sz",
+              "nodeKey": "element:ISA13:89:98",
               "type": "Data Element",
               "value": "000007080",
               "id": "I12",
@@ -2287,7 +2329,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA13"
             },
             {
-              "key": "uK-Grf1VYPvPBzIMJnEYT",
+              "nodeKey": "element:ISA14:99:100",
               "type": "Data Element",
               "value": "0",
               "id": "I13",
@@ -2299,7 +2341,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA14"
             },
             {
-              "key": "UtYmBdc_rKyNYBrlts4wS",
+              "nodeKey": "element:ISA15:101:102",
               "type": "Data Element",
               "value": "P",
               "id": "I14",
@@ -2311,7 +2353,7 @@ export default function useTestData(): EdiDocument {
               "designator": "ISA15"
             },
             {
-              "key": "aLbg5uIP6zyXQFlxviHZV",
+              "nodeKey": "element:ISA16:103:104",
               "type": "Data Element",
               "value": ">",
               "id": "I15",
@@ -2322,16 +2364,17 @@ export default function useTestData(): EdiDocument {
               "definition": "Type is not applicable; the component element separator is a delimiter and not a data element; this field provides the delimiter used to separate component data elements within a composite data structure; this value must be different than the data element separator and the segment terminator",
               "designator": "ISA16"
             }
-          ]
+          ],
+          "desc": "Interchange Control Header",
+          "purpose": "To start and identify an interchange of zero or more functional groups and interchange-related control segments"
         },
         "endSegment": {
-          "key": "cam_46AhS0Jzn_EENJii2",
+          "nodeKey": "segment:IEA:1112:1127",
           "id": "IEA",
-          "desc": "Interchange Control Trailer",
-          "purpose": "To define the end of an interchange of zero or more functional groups and interchange-related control segments",
+          "segmentStr": "IEA*1*000007080~",
           "elements": [
             {
-              "key": "3UepDz3jM23EbCQv_iIpH",
+              "nodeKey": "element:IEA01:1115:1116",
               "type": "Data Element",
               "value": "1",
               "id": "I16",
@@ -2343,7 +2386,7 @@ export default function useTestData(): EdiDocument {
               "designator": "IEA01"
             },
             {
-              "key": "BbU7dH7Wjz-JNijeHldvC",
+              "nodeKey": "element:IEA02:1117:1126",
               "type": "Data Element",
               "value": "000007080",
               "id": "I12",
@@ -2354,18 +2397,19 @@ export default function useTestData(): EdiDocument {
               "definition": "A control number assigned by the interchange sender",
               "designator": "IEA02"
             }
-          ]
+          ],
+          "desc": "Interchange Control Trailer",
+          "purpose": "To define the end of an interchange of zero or more functional groups and interchange-related control segments"
         }
       }
     ],
     "ediType": "x12"
   };
-  
 
-  const edifactTestData: IEdiDocument = {
+  const edifactTestData: IEdiDocument =   {
     "interchanges": [
       {
-        "key": "WLMdasynygbRaVqJhUjEK",
+        "nodeKey": "interchange:5:11:689",
         "meta": {
           "senderID": "<Sender GLN>",
           "senderQualifer": "14",
@@ -2373,19 +2417,18 @@ export default function useTestData(): EdiDocument {
           "receiverQualifer": "14",
           "date": "140407",
           "time": "0910",
-          "id": "0001"
+          "id": "5"
         },
-        "id": "0001",
+        "id": "5",
         "functionalGroups": [
           {
-            "key": "2EyBXWpF18-84j-urg21p",
+            "nodeKey": "functional-group:none:93:679",
             "meta": {},
-            "id": "",
             "transactionSets": [
               {
-                "key": "3zZTOyrXeBclREr24zDA0",
+                "nodeKey": "transaction-set:1:93:679",
                 "meta": {
-                  "id": "001",
+                  "id": "1",
                   "version": "ORDERS",
                   "messageInfo": {
                     "name": "Purchase order",
@@ -2394,21 +2437,20 @@ export default function useTestData(): EdiDocument {
                   },
                   "release": "D96A"
                 },
-                "id": "001",
+                "id": "1",
                 "segments": [
                   {
-                    "key": "wdxUG9u-bE1MyXSOIEG7x",
+                    "nodeKey": "segment:BGM:124:142",
                     "id": "BGM",
-                    "desc": "BEGINNING OF MESSAGE",
-                    "purpose": "To indicate the type and function of a message and to transmit the identifying number.",
+                    "segmentStr": "BGM+220+1AA1TEST+9'",
                     "elements": [
                       {
-                        "key": "0JP3DKLO5IGJOK6k6icPw",
+                        "nodeKey": "element:BGM01:127:130",
                         "type": "Data Element",
                         "value": "220",
                         "components": [
                           {
-                            "key": "wSz1GYrI1DdblhlUtjDxq",
+                            "nodeKey": "element:BGM0101:127:130",
                             "type": "Component Element",
                             "value": "220",
                             "id": "1001",
@@ -2429,9 +2471,9 @@ export default function useTestData(): EdiDocument {
                         "designator": "BGM01"
                       },
                       {
-                        "key": "XY2xJ_epXWFbrT9XDZcLp",
+                        "nodeKey": "element:BGM02:131:139",
                         "type": "Data Element",
-                        "value": "PO1",
+                        "value": "1AA1TEST",
                         "id": "1004",
                         "desc": "DOCUMENT/MESSAGE NUMBER",
                         "dataType": "AN",
@@ -2442,7 +2484,7 @@ export default function useTestData(): EdiDocument {
                         "designator": "BGM02"
                       },
                       {
-                        "key": "U_rR4dxQdZJ87OYLykBDF",
+                        "nodeKey": "element:BGM03:140:141",
                         "type": "Data Element",
                         "value": "9",
                         "id": "1225",
@@ -2455,19 +2497,1767 @@ export default function useTestData(): EdiDocument {
                         "definition": "Code indicating the function of the message.",
                         "designator": "BGM03"
                       }
+                    ],
+                    "desc": "BEGINNING OF MESSAGE",
+                    "purpose": "To indicate the type and function of a message and to transmit the identifying number."
+                  },
+                  {
+                    "nodeKey": "segment:DTM:145:165",
+                    "id": "DTM",
+                    "segmentStr": "DTM+137:20140407:102'",
+                    "elements": [
+                      {
+                        "nodeKey": "element:DTM01:148:164",
+                        "type": "Data Element",
+                        "value": "137:20140407:102",
+                        "components": [
+                          {
+                            "nodeKey": "element:DTM0101:148:151",
+                            "type": "Component Element",
+                            "value": "137",
+                            "id": "2005",
+                            "desc": "Date/time/period qualifier",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Document/message date/time",
+                            "definition": "Code giving specific meaning to a date, time or period.",
+                            "designator": "DTM0101"
+                          },
+                          {
+                            "nodeKey": "element:DTM0102:152:160",
+                            "type": "Component Element",
+                            "value": "20140407",
+                            "id": "2380",
+                            "desc": "Date/time/period",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 35,
+                            "definition": "The value of a date, a date and time, a time or of a period in a specified representation.",
+                            "designator": "DTM0102"
+                          },
+                          {
+                            "nodeKey": "element:DTM0103:161:164",
+                            "type": "Component Element",
+                            "value": "102",
+                            "id": "2379",
+                            "desc": "Date/time/period format qualifier",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "CCYYMMDD",
+                            "definition": "Specification of the representation of a date, a date and time or of a period.",
+                            "designator": "DTM0103"
+                          }
+                        ],
+                        "id": "C507",
+                        "desc": "DATE/TIME/PERIOD",
+                        "required": true,
+                        "definition": "Date and/or time, or period relevant to the specified date/time/period type.",
+                        "designator": "DTM01"
+                      }
+                    ],
+                    "desc": "DATE/TIME/PERIOD",
+                    "purpose": "To specify date, and/or time, or period."
+                  },
+                  {
+                    "nodeKey": "segment:DTM:168:187",
+                    "id": "DTM",
+                    "segmentStr": "DTM+63:20140421:102'",
+                    "elements": [
+                      {
+                        "nodeKey": "element:DTM01:171:186",
+                        "type": "Data Element",
+                        "value": "63:20140421:102",
+                        "components": [
+                          {
+                            "nodeKey": "element:DTM0101:171:173",
+                            "type": "Component Element",
+                            "value": "63",
+                            "id": "2005",
+                            "desc": "Date/time/period qualifier",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Delivery date/time, latest",
+                            "definition": "Code giving specific meaning to a date, time or period.",
+                            "designator": "DTM0101"
+                          },
+                          {
+                            "nodeKey": "element:DTM0102:174:182",
+                            "type": "Component Element",
+                            "value": "20140421",
+                            "id": "2380",
+                            "desc": "Date/time/period",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 35,
+                            "definition": "The value of a date, a date and time, a time or of a period in a specified representation.",
+                            "designator": "DTM0102"
+                          },
+                          {
+                            "nodeKey": "element:DTM0103:183:186",
+                            "type": "Component Element",
+                            "value": "102",
+                            "id": "2379",
+                            "desc": "Date/time/period format qualifier",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "CCYYMMDD",
+                            "definition": "Specification of the representation of a date, a date and time or of a period.",
+                            "designator": "DTM0103"
+                          }
+                        ],
+                        "id": "C507",
+                        "desc": "DATE/TIME/PERIOD",
+                        "required": true,
+                        "definition": "Date and/or time, or period relevant to the specified date/time/period type.",
+                        "designator": "DTM01"
+                      }
+                    ],
+                    "desc": "DATE/TIME/PERIOD",
+                    "purpose": "To specify date, and/or time, or period."
+                  },
+                  {
+                    "nodeKey": "segment:DTM:190:209",
+                    "id": "DTM",
+                    "segmentStr": "DTM+64:20140414:102'",
+                    "elements": [
+                      {
+                        "nodeKey": "element:DTM01:193:208",
+                        "type": "Data Element",
+                        "value": "64:20140414:102",
+                        "components": [
+                          {
+                            "nodeKey": "element:DTM0101:193:195",
+                            "type": "Component Element",
+                            "value": "64",
+                            "id": "2005",
+                            "desc": "Date/time/period qualifier",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Delivery date/time, earliest",
+                            "definition": "Code giving specific meaning to a date, time or period.",
+                            "designator": "DTM0101"
+                          },
+                          {
+                            "nodeKey": "element:DTM0102:196:204",
+                            "type": "Component Element",
+                            "value": "20140414",
+                            "id": "2380",
+                            "desc": "Date/time/period",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 35,
+                            "definition": "The value of a date, a date and time, a time or of a period in a specified representation.",
+                            "designator": "DTM0102"
+                          },
+                          {
+                            "nodeKey": "element:DTM0103:205:208",
+                            "type": "Component Element",
+                            "value": "102",
+                            "id": "2379",
+                            "desc": "Date/time/period format qualifier",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "CCYYMMDD",
+                            "definition": "Specification of the representation of a date, a date and time or of a period.",
+                            "designator": "DTM0103"
+                          }
+                        ],
+                        "id": "C507",
+                        "desc": "DATE/TIME/PERIOD",
+                        "required": true,
+                        "definition": "Date and/or time, or period relevant to the specified date/time/period type.",
+                        "designator": "DTM01"
+                      }
+                    ],
+                    "desc": "DATE/TIME/PERIOD",
+                    "purpose": "To specify date, and/or time, or period."
+                  },
+                  {
+                    "nodeKey": "loop:RFFLoop1:212:230",
+                    "id": "RFFLoop1",
+                    "elements": [],
+                    "desc": "REFERENCE",
+                    "purpose": "To specify a reference.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:RFF:212:230",
+                        "id": "RFF",
+                        "segmentStr": "RFF+ADE:FIRSTORDER'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:RFF01:215:229",
+                            "type": "Data Element",
+                            "value": "ADE:FIRSTORDER",
+                            "components": [
+                              {
+                                "nodeKey": "element:RFF0101:215:218",
+                                "type": "Component Element",
+                                "value": "ADE",
+                                "id": "1153",
+                                "desc": "Reference qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Account number",
+                                "definition": "Code giving specific meaning to a reference segment or a reference number.",
+                                "designator": "RFF0101"
+                              },
+                              {
+                                "nodeKey": "element:RFF0102:219:229",
+                                "type": "Component Element",
+                                "value": "FIRSTORDER",
+                                "id": "1154",
+                                "desc": "Reference number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier.",
+                                "designator": "RFF0102"
+                              }
+                            ],
+                            "id": "C506",
+                            "desc": "REFERENCE",
+                            "required": true,
+                            "definition": "Identification of a reference.",
+                            "designator": "RFF01"
+                          }
+                        ],
+                        "desc": "REFERENCE",
+                        "purpose": "To specify a reference."
+                      }
                     ]
+                  },
+                  {
+                    "nodeKey": "loop:RFFLoop1:233:244",
+                    "id": "RFFLoop1",
+                    "elements": [],
+                    "desc": "REFERENCE",
+                    "purpose": "To specify a reference.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:RFF:233:244",
+                        "id": "RFF",
+                        "segmentStr": "RFF+PD:1704'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:RFF01:236:243",
+                            "type": "Data Element",
+                            "value": "PD:1704",
+                            "components": [
+                              {
+                                "nodeKey": "element:RFF0101:236:238",
+                                "type": "Component Element",
+                                "value": "PD",
+                                "id": "1153",
+                                "desc": "Reference qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Promotion deal number",
+                                "definition": "Code giving specific meaning to a reference segment or a reference number.",
+                                "designator": "RFF0101"
+                              },
+                              {
+                                "nodeKey": "element:RFF0102:239:243",
+                                "type": "Component Element",
+                                "value": "1704",
+                                "id": "1154",
+                                "desc": "Reference number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier.",
+                                "designator": "RFF0102"
+                              }
+                            ],
+                            "id": "C506",
+                            "desc": "REFERENCE",
+                            "required": true,
+                            "definition": "Identification of a reference.",
+                            "designator": "RFF01"
+                          }
+                        ],
+                        "desc": "REFERENCE",
+                        "purpose": "To specify a reference."
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:RFFLoop1:247:259",
+                    "id": "RFFLoop1",
+                    "elements": [],
+                    "desc": "REFERENCE",
+                    "purpose": "To specify a reference.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:RFF:247:259",
+                        "id": "RFF",
+                        "segmentStr": "RFF+CR:ABCD5'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:RFF01:250:258",
+                            "type": "Data Element",
+                            "value": "CR:ABCD5",
+                            "components": [
+                              {
+                                "nodeKey": "element:RFF0101:250:252",
+                                "type": "Component Element",
+                                "value": "CR",
+                                "id": "1153",
+                                "desc": "Reference qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Customer reference number",
+                                "definition": "Code giving specific meaning to a reference segment or a reference number.",
+                                "designator": "RFF0101"
+                              },
+                              {
+                                "nodeKey": "element:RFF0102:253:258",
+                                "type": "Component Element",
+                                "value": "ABCD5",
+                                "id": "1154",
+                                "desc": "Reference number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier.",
+                                "designator": "RFF0102"
+                              }
+                            ],
+                            "id": "C506",
+                            "desc": "REFERENCE",
+                            "required": true,
+                            "definition": "Identification of a reference.",
+                            "designator": "RFF01"
+                          }
+                        ],
+                        "desc": "REFERENCE",
+                        "purpose": "To specify a reference."
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:NADLoop1:262:285",
+                    "id": "NADLoop1",
+                    "elements": [],
+                    "desc": "NAME AND ADDRESS",
+                    "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:NAD:262:285",
+                        "id": "NAD",
+                        "segmentStr": "NAD+BY+5450534000024::9'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:NAD01:265:267",
+                            "type": "Data Element",
+                            "value": "BY",
+                            "id": "3035",
+                            "desc": "PARTY QUALIFIER",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Buyer",
+                            "definition": "Code giving specific meaning to a party.",
+                            "designator": "NAD01"
+                          },
+                          {
+                            "nodeKey": "element:NAD02:268:284",
+                            "type": "Data Element",
+                            "value": "5450534000024::9",
+                            "components": [
+                              {
+                                "nodeKey": "element:NAD0201:268:281",
+                                "type": "Component Element",
+                                "value": "5450534000024",
+                                "id": "3039",
+                                "desc": "Party id. identification",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Code identifying a party involved in a transaction.",
+                                "designator": "NAD0201"
+                              },
+                              {
+                                "nodeKey": "element:NAD0202:282:282",
+                                "type": "Component Element",
+                                "value": "",
+                                "id": "1131",
+                                "desc": "Code list qualifier",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "definition": "Identification of a code list.",
+                                "designator": "NAD0202"
+                              },
+                              {
+                                "nodeKey": "element:NAD0203:283:284",
+                                "type": "Component Element",
+                                "value": "9",
+                                "id": "3055",
+                                "desc": "Code list responsible agency, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "EAN (International Article Numbering association)",
+                                "definition": "Code identifying the agency responsible for a code list.",
+                                "designator": "NAD0203"
+                              }
+                            ],
+                            "id": "C082",
+                            "desc": "PARTY IDENTIFICATION DETAILS",
+                            "required": false,
+                            "definition": "Identification of a transaction party by code.",
+                            "designator": "NAD02"
+                          }
+                        ],
+                        "desc": "NAME AND ADDRESS",
+                        "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207."
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:NADLoop1:288:312",
+                    "id": "NADLoop1",
+                    "elements": [],
+                    "desc": "NAME AND ADDRESS",
+                    "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:NAD:288:312",
+                        "id": "NAD",
+                        "segmentStr": "NAD+SU+<Supplier GLN>::9'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:NAD01:291:293",
+                            "type": "Data Element",
+                            "value": "SU",
+                            "id": "3035",
+                            "desc": "PARTY QUALIFIER",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Supplier",
+                            "definition": "Code giving specific meaning to a party.",
+                            "designator": "NAD01"
+                          },
+                          {
+                            "nodeKey": "element:NAD02:294:311",
+                            "type": "Data Element",
+                            "value": "<Supplier GLN>::9",
+                            "components": [
+                              {
+                                "nodeKey": "element:NAD0201:294:308",
+                                "type": "Component Element",
+                                "value": "<Supplier GLN>",
+                                "id": "3039",
+                                "desc": "Party id. identification",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Code identifying a party involved in a transaction.",
+                                "designator": "NAD0201"
+                              },
+                              {
+                                "nodeKey": "element:NAD0202:309:309",
+                                "type": "Component Element",
+                                "value": "",
+                                "id": "1131",
+                                "desc": "Code list qualifier",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "definition": "Identification of a code list.",
+                                "designator": "NAD0202"
+                              },
+                              {
+                                "nodeKey": "element:NAD0203:310:311",
+                                "type": "Component Element",
+                                "value": "9",
+                                "id": "3055",
+                                "desc": "Code list responsible agency, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "EAN (International Article Numbering association)",
+                                "definition": "Code identifying the agency responsible for a code list.",
+                                "designator": "NAD0203"
+                              }
+                            ],
+                            "id": "C082",
+                            "desc": "PARTY IDENTIFICATION DETAILS",
+                            "required": false,
+                            "definition": "Identification of a transaction party by code.",
+                            "designator": "NAD02"
+                          }
+                        ],
+                        "desc": "NAME AND ADDRESS",
+                        "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207."
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:NADLoop1:315:347",
+                    "id": "NADLoop1",
+                    "elements": [],
+                    "desc": "NAME AND ADDRESS",
+                    "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:NAD:315:347",
+                        "id": "NAD",
+                        "segmentStr": "NAD+DP+5450534000109::9+++++++GB'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:NAD01:318:320",
+                            "type": "Data Element",
+                            "value": "DP",
+                            "id": "3035",
+                            "desc": "PARTY QUALIFIER",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Delivery party",
+                            "definition": "Code giving specific meaning to a party.",
+                            "designator": "NAD01"
+                          },
+                          {
+                            "nodeKey": "element:NAD02:321:337",
+                            "type": "Data Element",
+                            "value": "5450534000109::9",
+                            "components": [
+                              {
+                                "nodeKey": "element:NAD0201:321:334",
+                                "type": "Component Element",
+                                "value": "5450534000109",
+                                "id": "3039",
+                                "desc": "Party id. identification",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Code identifying a party involved in a transaction.",
+                                "designator": "NAD0201"
+                              },
+                              {
+                                "nodeKey": "element:NAD0202:335:335",
+                                "type": "Component Element",
+                                "value": "",
+                                "id": "1131",
+                                "desc": "Code list qualifier",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "definition": "Identification of a code list.",
+                                "designator": "NAD0202"
+                              },
+                              {
+                                "nodeKey": "element:NAD0203:336:337",
+                                "type": "Component Element",
+                                "value": "9",
+                                "id": "3055",
+                                "desc": "Code list responsible agency, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "EAN (International Article Numbering association)",
+                                "definition": "Code identifying the agency responsible for a code list.",
+                                "designator": "NAD0203"
+                              }
+                            ],
+                            "id": "C082",
+                            "desc": "PARTY IDENTIFICATION DETAILS",
+                            "required": false,
+                            "definition": "Identification of a transaction party by code.",
+                            "designator": "NAD02"
+                          },
+                          {
+                            "nodeKey": "element:NAD03:338:338",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "C058",
+                            "desc": "NAME AND ADDRESS",
+                            "required": false,
+                            "definition": "Unstructured name and address: one to five lines.",
+                            "designator": "NAD03"
+                          },
+                          {
+                            "nodeKey": "element:NAD04:339:339",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "C080",
+                            "desc": "PARTY NAME",
+                            "required": false,
+                            "definition": "Identification of a transaction party by name, one to five lines. Party name may be formatted.",
+                            "designator": "NAD04"
+                          },
+                          {
+                            "nodeKey": "element:NAD05:340:340",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "C059",
+                            "desc": "STREET",
+                            "required": false,
+                            "definition": "Street address and/or PO Box number in a structured address: one to three lines.",
+                            "designator": "NAD05"
+                          },
+                          {
+                            "nodeKey": "element:NAD06:341:341",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "3164",
+                            "desc": "CITY NAME",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 35,
+                            "definition": "Name of a city (a town, a village) for addressing purposes.",
+                            "designator": "NAD06"
+                          },
+                          {
+                            "nodeKey": "element:NAD07:342:342",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "3229",
+                            "desc": "COUNTRY SUB-ENTITY IDENTIFICATION",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 9,
+                            "definition": "Identification of the name of sub-entities (state, province) defined by appropriate governmental agencies.",
+                            "designator": "NAD07"
+                          },
+                          {
+                            "nodeKey": "element:NAD08:343:343",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "3251",
+                            "desc": "POSTCODE IDENTIFICATION",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 9,
+                            "definition": "Code defining postal zones or addresses.",
+                            "designator": "NAD08"
+                          },
+                          {
+                            "nodeKey": "element:NAD09:344:346",
+                            "type": "Data Element",
+                            "value": "GB",
+                            "id": "3207",
+                            "desc": "COUNTRY, CODED",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "definition": "Identification of the name of a country or other geographical entity as specified in ISO 3166.",
+                            "designator": "NAD09"
+                          }
+                        ],
+                        "desc": "NAME AND ADDRESS",
+                        "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207."
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:NADLoop1:350:446",
+                    "id": "NADLoop1",
+                    "elements": [],
+                    "desc": "NAME AND ADDRESS",
+                    "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:NAD:350:425",
+                        "id": "NAD",
+                        "segmentStr": "NAD+IV+5450534007139::9++Test:Name2+Test Street:Steet2+Beijing++EC2A 2FA+GB'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:NAD01:353:355",
+                            "type": "Data Element",
+                            "value": "IV",
+                            "id": "3035",
+                            "desc": "PARTY QUALIFIER",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Invoicee",
+                            "definition": "Code giving specific meaning to a party.",
+                            "designator": "NAD01"
+                          },
+                          {
+                            "nodeKey": "element:NAD02:356:372",
+                            "type": "Data Element",
+                            "value": "5450534007139::9",
+                            "components": [
+                              {
+                                "nodeKey": "element:NAD0201:356:369",
+                                "type": "Component Element",
+                                "value": "5450534007139",
+                                "id": "3039",
+                                "desc": "Party id. identification",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Code identifying a party involved in a transaction.",
+                                "designator": "NAD0201"
+                              },
+                              {
+                                "nodeKey": "element:NAD0202:370:370",
+                                "type": "Component Element",
+                                "value": "",
+                                "id": "1131",
+                                "desc": "Code list qualifier",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "definition": "Identification of a code list.",
+                                "designator": "NAD0202"
+                              },
+                              {
+                                "nodeKey": "element:NAD0203:371:372",
+                                "type": "Component Element",
+                                "value": "9",
+                                "id": "3055",
+                                "desc": "Code list responsible agency, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "EAN (International Article Numbering association)",
+                                "definition": "Code identifying the agency responsible for a code list.",
+                                "designator": "NAD0203"
+                              }
+                            ],
+                            "id": "C082",
+                            "desc": "PARTY IDENTIFICATION DETAILS",
+                            "required": false,
+                            "definition": "Identification of a transaction party by code.",
+                            "designator": "NAD02"
+                          },
+                          {
+                            "nodeKey": "element:NAD03:373:373",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "C058",
+                            "desc": "NAME AND ADDRESS",
+                            "required": false,
+                            "definition": "Unstructured name and address: one to five lines.",
+                            "designator": "NAD03"
+                          },
+                          {
+                            "nodeKey": "element:NAD04:374:384",
+                            "type": "Data Element",
+                            "value": "Test:Name2",
+                            "components": [
+                              {
+                                "nodeKey": "element:NAD0401:374:378",
+                                "type": "Component Element",
+                                "value": "Test",
+                                "id": "3036",
+                                "desc": "Party name",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Name of a party involved in a transaction.",
+                                "designator": "NAD0401"
+                              },
+                              {
+                                "nodeKey": "element:NAD0402:379:384",
+                                "type": "Component Element",
+                                "value": "Name2",
+                                "id": "3036",
+                                "desc": "Party name",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Name of a party involved in a transaction.",
+                                "designator": "NAD0402"
+                              }
+                            ],
+                            "id": "C080",
+                            "desc": "PARTY NAME",
+                            "required": false,
+                            "definition": "Identification of a transaction party by name, one to five lines. Party name may be formatted.",
+                            "designator": "NAD04"
+                          },
+                          {
+                            "nodeKey": "element:NAD05:385:403",
+                            "type": "Data Element",
+                            "value": "Test Street:Steet2",
+                            "components": [
+                              {
+                                "nodeKey": "element:NAD0501:385:396",
+                                "type": "Component Element",
+                                "value": "Test Street",
+                                "id": "3042",
+                                "desc": "Street and number/p.o. box",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Street and number in plain language, or Post Office Box No.",
+                                "designator": "NAD0501"
+                              },
+                              {
+                                "nodeKey": "element:NAD0502:397:403",
+                                "type": "Component Element",
+                                "value": "Steet2",
+                                "id": "3042",
+                                "desc": "Street and number/p.o. box",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "Street and number in plain language, or Post Office Box No.",
+                                "designator": "NAD0502"
+                              }
+                            ],
+                            "id": "C059",
+                            "desc": "STREET",
+                            "required": false,
+                            "definition": "Street address and/or PO Box number in a structured address: one to three lines.",
+                            "designator": "NAD05"
+                          },
+                          {
+                            "nodeKey": "element:NAD06:404:411",
+                            "type": "Data Element",
+                            "value": "Beijing",
+                            "id": "3164",
+                            "desc": "CITY NAME",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 35,
+                            "definition": "Name of a city (a town, a village) for addressing purposes.",
+                            "designator": "NAD06"
+                          },
+                          {
+                            "nodeKey": "element:NAD07:412:412",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "3229",
+                            "desc": "COUNTRY SUB-ENTITY IDENTIFICATION",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 9,
+                            "definition": "Identification of the name of sub-entities (state, province) defined by appropriate governmental agencies.",
+                            "designator": "NAD07"
+                          },
+                          {
+                            "nodeKey": "element:NAD08:413:421",
+                            "type": "Data Element",
+                            "value": "EC2A 2FA",
+                            "id": "3251",
+                            "desc": "POSTCODE IDENTIFICATION",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 9,
+                            "definition": "Code defining postal zones or addresses.",
+                            "designator": "NAD08"
+                          },
+                          {
+                            "nodeKey": "element:NAD09:422:424",
+                            "type": "Data Element",
+                            "value": "GB",
+                            "id": "3207",
+                            "desc": "COUNTRY, CODED",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "definition": "Identification of the name of a country or other geographical entity as specified in ISO 3166.",
+                            "designator": "NAD09"
+                          }
+                        ],
+                        "desc": "NAME AND ADDRESS",
+                        "purpose": "To specify the name/address and their related function, either by CO82 only and/or unstructured by CO58 or structured by CO80 thru 3207."
+                      },
+                      {
+                        "nodeKey": "loop:RFFLoop2:428:446",
+                        "id": "RFFLoop2",
+                        "elements": [],
+                        "desc": "REFERENCE",
+                        "purpose": "To specify a reference.",
+                        "Loop": [
+                          {
+                            "nodeKey": "segment:RFF:428:446",
+                            "id": "RFF",
+                            "segmentStr": "RFF+VA:GB727255821'",
+                            "elements": [
+                              {
+                                "nodeKey": "element:RFF01:431:445",
+                                "type": "Data Element",
+                                "value": "VA:GB727255821",
+                                "components": [
+                                  {
+                                    "nodeKey": "element:RFF0101:431:433",
+                                    "type": "Component Element",
+                                    "value": "VA",
+                                    "id": "1153",
+                                    "desc": "Reference qualifier",
+                                    "dataType": "AN",
+                                    "required": true,
+                                    "minLength": 0,
+                                    "maxLength": 3,
+                                    "codeValue": "VAT registration number",
+                                    "definition": "Code giving specific meaning to a reference segment or a reference number.",
+                                    "designator": "RFF0101"
+                                  },
+                                  {
+                                    "nodeKey": "element:RFF0102:434:445",
+                                    "type": "Component Element",
+                                    "value": "GB727255821",
+                                    "id": "1154",
+                                    "desc": "Reference number",
+                                    "dataType": "AN",
+                                    "required": false,
+                                    "minLength": 0,
+                                    "maxLength": 35,
+                                    "definition": "Identification number the nature and function of which can be qualified by an entry in data element 1153 Reference qualifier.",
+                                    "designator": "RFF0102"
+                                  }
+                                ],
+                                "id": "C506",
+                                "desc": "REFERENCE",
+                                "required": true,
+                                "definition": "Identification of a reference.",
+                                "designator": "RFF01"
+                              }
+                            ],
+                            "desc": "REFERENCE",
+                            "purpose": "To specify a reference."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:CUXLoop1:449:460",
+                    "id": "CUXLoop1",
+                    "elements": [],
+                    "desc": "CURRENCIES",
+                    "purpose": "To specify currencies used in the transaction and relevant details for the rate of exchange.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:CUX:449:460",
+                        "id": "CUX",
+                        "segmentStr": "CUX+2:EUR:9'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:CUX01:452:459",
+                            "type": "Data Element",
+                            "value": "2:EUR:9",
+                            "components": [
+                              {
+                                "nodeKey": "element:CUX0101:452:453",
+                                "type": "Component Element",
+                                "value": "2",
+                                "id": "6347",
+                                "desc": "Currency details qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Reference currency",
+                                "definition": "Specification of the usage to which the currency relates.",
+                                "designator": "CUX0101"
+                              },
+                              {
+                                "nodeKey": "element:CUX0102:454:457",
+                                "type": "Component Element",
+                                "value": "EUR",
+                                "id": "6345",
+                                "desc": "Currency, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "definition": "Identification of the name or symbol of the monetary unit involved in the transaction.",
+                                "designator": "CUX0102"
+                              },
+                              {
+                                "nodeKey": "element:CUX0103:458:459",
+                                "type": "Component Element",
+                                "value": "9",
+                                "id": "6343",
+                                "desc": "Currency qualifier",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Order currency",
+                                "definition": "Code giving specific meaning to data element 6345 Currency.",
+                                "designator": "CUX0103"
+                              }
+                            ],
+                            "id": "C504",
+                            "desc": "CURRENCY DETAILS",
+                            "required": false,
+                            "definition": "The usage to which a currency relates.",
+                            "designator": "CUX01"
+                          }
+                        ],
+                        "desc": "CURRENCIES",
+                        "purpose": "To specify currencies used in the transaction and relevant details for the rate of exchange."
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:LINLoop1:463:538",
+                    "id": "LINLoop1",
+                    "elements": [],
+                    "desc": "LINE ITEM",
+                    "purpose": "To identify a line item and configuration.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:LIN:463:486",
+                        "id": "LIN",
+                        "segmentStr": "LIN+1++9783898307529:EN'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:LIN01:466:467",
+                            "type": "Data Element",
+                            "value": "1",
+                            "id": "1082",
+                            "desc": "LINE ITEM NUMBER",
+                            "dataType": "N",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 6,
+                            "definition": "Serial number designating each separate item within a series of articles.",
+                            "designator": "LIN01"
+                          },
+                          {
+                            "nodeKey": "element:LIN02:468:468",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "1229",
+                            "desc": "ACTION REQUEST/NOTIFICATION, CODED",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "definition": "Code specifying the action to be taken or already taken.",
+                            "designator": "LIN02"
+                          },
+                          {
+                            "nodeKey": "element:LIN03:469:485",
+                            "type": "Data Element",
+                            "value": "9783898307529:EN",
+                            "components": [
+                              {
+                                "nodeKey": "element:LIN0301:469:482",
+                                "type": "Component Element",
+                                "value": "9783898307529",
+                                "id": "7140",
+                                "desc": "Item number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "A number allocated to a group or item.",
+                                "designator": "LIN0301"
+                              },
+                              {
+                                "nodeKey": "element:LIN0302:483:485",
+                                "type": "Component Element",
+                                "value": "EN",
+                                "id": "7143",
+                                "desc": "Item number type, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "International Article Numbering Association (EAN)",
+                                "definition": "Identification of the type of item number.",
+                                "designator": "LIN0302"
+                              }
+                            ],
+                            "id": "C212",
+                            "desc": "ITEM NUMBER IDENTIFICATION",
+                            "required": false,
+                            "definition": "Goods identification for a specified source.",
+                            "designator": "LIN03"
+                          }
+                        ],
+                        "desc": "LINE ITEM",
+                        "purpose": "To identify a line item and configuration."
+                      },
+                      {
+                        "nodeKey": "segment:PIA:489:512",
+                        "id": "PIA",
+                        "segmentStr": "PIA+5+3899408268X-39:SA'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:PIA01:492:493",
+                            "type": "Data Element",
+                            "value": "5",
+                            "id": "4347",
+                            "desc": "PRODUCT ID. FUNCTION QUALIFIER",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Product identification",
+                            "definition": "Indication of the function of the product code.",
+                            "designator": "PIA01"
+                          },
+                          {
+                            "nodeKey": "element:PIA02:494:511",
+                            "type": "Data Element",
+                            "value": "3899408268X-39:SA",
+                            "components": [
+                              {
+                                "nodeKey": "element:PIA0201:494:508",
+                                "type": "Component Element",
+                                "value": "3899408268X-39",
+                                "id": "7140",
+                                "desc": "Item number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "A number allocated to a group or item.",
+                                "designator": "PIA0201"
+                              },
+                              {
+                                "nodeKey": "element:PIA0202:509:511",
+                                "type": "Component Element",
+                                "value": "SA",
+                                "id": "7143",
+                                "desc": "Item number type, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Supplier's article number",
+                                "definition": "Identification of the type of item number.",
+                                "designator": "PIA0202"
+                              }
+                            ],
+                            "id": "C212",
+                            "desc": "ITEM NUMBER IDENTIFICATION",
+                            "required": true,
+                            "definition": "Goods identification for a specified source.",
+                            "designator": "PIA02"
+                          }
+                        ],
+                        "desc": "ADDITIONAL PRODUCT ID",
+                        "purpose": "To specify additional or substitutional item identification codes."
+                      },
+                      {
+                        "nodeKey": "segment:QTY:515:523",
+                        "id": "QTY",
+                        "segmentStr": "QTY+21:5'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:QTY01:518:522",
+                            "type": "Data Element",
+                            "value": "21:5",
+                            "components": [
+                              {
+                                "nodeKey": "element:QTY0101:518:520",
+                                "type": "Component Element",
+                                "value": "21",
+                                "id": "6063",
+                                "desc": "Quantity qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Ordered quantity",
+                                "definition": "Code giving specific meaning to a quantity.",
+                                "designator": "QTY0101"
+                              },
+                              {
+                                "nodeKey": "element:QTY0102:521:522",
+                                "type": "Component Element",
+                                "value": "5",
+                                "id": "6060",
+                                "desc": "Quantity",
+                                "dataType": "N",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 15,
+                                "definition": "Numeric value of a quantity.",
+                                "designator": "QTY0102"
+                              }
+                            ],
+                            "id": "C186",
+                            "desc": "QUANTITY DETAILS",
+                            "required": true,
+                            "definition": "Quantity information in a transaction, qualified when relevant.",
+                            "designator": "QTY01"
+                          }
+                        ],
+                        "desc": "QUANTITY",
+                        "purpose": "To specify a pertinent quantity."
+                      },
+                      {
+                        "nodeKey": "loop:PRILoop1:526:538",
+                        "id": "PRILoop1",
+                        "elements": [],
+                        "desc": "PRICE DETAILS",
+                        "purpose": "To specify price information.",
+                        "Loop": [
+                          {
+                            "nodeKey": "segment:PRI:526:538",
+                            "id": "PRI",
+                            "segmentStr": "PRI+AAA:27.5'",
+                            "elements": [
+                              {
+                                "nodeKey": "element:PRI01:529:537",
+                                "type": "Data Element",
+                                "value": "AAA:27.5",
+                                "components": [
+                                  {
+                                    "nodeKey": "element:PRI0101:529:532",
+                                    "type": "Component Element",
+                                    "value": "AAA",
+                                    "id": "5125",
+                                    "desc": "Price qualifier",
+                                    "dataType": "AN",
+                                    "required": true,
+                                    "minLength": 0,
+                                    "maxLength": 3,
+                                    "codeValue": "Calculation net",
+                                    "definition": "Identification of a type of price.",
+                                    "designator": "PRI0101"
+                                  },
+                                  {
+                                    "nodeKey": "element:PRI0102:533:537",
+                                    "type": "Component Element",
+                                    "value": "27.5",
+                                    "id": "5118",
+                                    "desc": "Price",
+                                    "dataType": "N",
+                                    "required": false,
+                                    "minLength": 0,
+                                    "maxLength": 15,
+                                    "definition": "The monetary value associated with a purchase or sale of an article, product or service.",
+                                    "designator": "PRI0102"
+                                  }
+                                ],
+                                "id": "C509",
+                                "desc": "PRICE INFORMATION",
+                                "required": false,
+                                "definition": "Identification of price type, price and related details.",
+                                "designator": "PRI01"
+                              }
+                            ],
+                            "desc": "PRICE DETAILS",
+                            "purpose": "To specify price information."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:LINLoop1:541:590",
+                    "id": "LINLoop1",
+                    "elements": [],
+                    "desc": "LINE ITEM",
+                    "purpose": "To identify a line item and configuration.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:LIN:541:563",
+                        "id": "LIN",
+                        "segmentStr": "LIN+2++390787706322:UP'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:LIN01:544:545",
+                            "type": "Data Element",
+                            "value": "2",
+                            "id": "1082",
+                            "desc": "LINE ITEM NUMBER",
+                            "dataType": "N",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 6,
+                            "definition": "Serial number designating each separate item within a series of articles.",
+                            "designator": "LIN01"
+                          },
+                          {
+                            "nodeKey": "element:LIN02:546:546",
+                            "type": "Data Element",
+                            "value": "",
+                            "id": "1229",
+                            "desc": "ACTION REQUEST/NOTIFICATION, CODED",
+                            "dataType": "AN",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "definition": "Code specifying the action to be taken or already taken.",
+                            "designator": "LIN02"
+                          },
+                          {
+                            "nodeKey": "element:LIN03:547:562",
+                            "type": "Data Element",
+                            "value": "390787706322:UP",
+                            "components": [
+                              {
+                                "nodeKey": "element:LIN0301:547:559",
+                                "type": "Component Element",
+                                "value": "390787706322",
+                                "id": "7140",
+                                "desc": "Item number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "A number allocated to a group or item.",
+                                "designator": "LIN0301"
+                              },
+                              {
+                                "nodeKey": "element:LIN0302:560:562",
+                                "type": "Component Element",
+                                "value": "UP",
+                                "id": "7143",
+                                "desc": "Item number type, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "UPC (Universal product code)",
+                                "definition": "Identification of the type of item number.",
+                                "designator": "LIN0302"
+                              }
+                            ],
+                            "id": "C212",
+                            "desc": "ITEM NUMBER IDENTIFICATION",
+                            "required": false,
+                            "definition": "Goods identification for a specified source.",
+                            "designator": "LIN03"
+                          }
+                        ],
+                        "desc": "LINE ITEM",
+                        "purpose": "To identify a line item and configuration."
+                      },
+                      {
+                        "nodeKey": "segment:QTY:566:574",
+                        "id": "QTY",
+                        "segmentStr": "QTY+21:1'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:QTY01:569:573",
+                            "type": "Data Element",
+                            "value": "21:1",
+                            "components": [
+                              {
+                                "nodeKey": "element:QTY0101:569:571",
+                                "type": "Component Element",
+                                "value": "21",
+                                "id": "6063",
+                                "desc": "Quantity qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Ordered quantity",
+                                "definition": "Code giving specific meaning to a quantity.",
+                                "designator": "QTY0101"
+                              },
+                              {
+                                "nodeKey": "element:QTY0102:572:573",
+                                "type": "Component Element",
+                                "value": "1",
+                                "id": "6060",
+                                "desc": "Quantity",
+                                "dataType": "N",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 15,
+                                "definition": "Numeric value of a quantity.",
+                                "designator": "QTY0102"
+                              }
+                            ],
+                            "id": "C186",
+                            "desc": "QUANTITY DETAILS",
+                            "required": true,
+                            "definition": "Quantity information in a transaction, qualified when relevant.",
+                            "designator": "QTY01"
+                          }
+                        ],
+                        "desc": "QUANTITY",
+                        "purpose": "To specify a pertinent quantity."
+                      },
+                      {
+                        "nodeKey": "loop:PRILoop1:577:590",
+                        "id": "PRILoop1",
+                        "elements": [],
+                        "desc": "PRICE DETAILS",
+                        "purpose": "To specify price information.",
+                        "Loop": [
+                          {
+                            "nodeKey": "segment:PRI:577:590",
+                            "id": "PRI",
+                            "segmentStr": "PRI+AAA:10.87'",
+                            "elements": [
+                              {
+                                "nodeKey": "element:PRI01:580:589",
+                                "type": "Data Element",
+                                "value": "AAA:10.87",
+                                "components": [
+                                  {
+                                    "nodeKey": "element:PRI0101:580:583",
+                                    "type": "Component Element",
+                                    "value": "AAA",
+                                    "id": "5125",
+                                    "desc": "Price qualifier",
+                                    "dataType": "AN",
+                                    "required": true,
+                                    "minLength": 0,
+                                    "maxLength": 3,
+                                    "codeValue": "Calculation net",
+                                    "definition": "Identification of a type of price.",
+                                    "designator": "PRI0101"
+                                  },
+                                  {
+                                    "nodeKey": "element:PRI0102:584:589",
+                                    "type": "Component Element",
+                                    "value": "10.87",
+                                    "id": "5118",
+                                    "desc": "Price",
+                                    "dataType": "N",
+                                    "required": false,
+                                    "minLength": 0,
+                                    "maxLength": 15,
+                                    "definition": "The monetary value associated with a purchase or sale of an article, product or service.",
+                                    "designator": "PRI0102"
+                                  }
+                                ],
+                                "id": "C509",
+                                "desc": "PRICE INFORMATION",
+                                "required": false,
+                                "definition": "Identification of price type, price and related details.",
+                                "designator": "PRI01"
+                              }
+                            ],
+                            "desc": "PRICE DETAILS",
+                            "purpose": "To specify price information."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "loop:LINLoop1:593:650",
+                    "id": "LINLoop1",
+                    "elements": [],
+                    "desc": "LINE ITEM",
+                    "purpose": "To identify a line item and configuration.",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:LIN:593:598",
+                        "id": "LIN",
+                        "segmentStr": "LIN+3'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:LIN01:596:597",
+                            "type": "Data Element",
+                            "value": "3",
+                            "id": "1082",
+                            "desc": "LINE ITEM NUMBER",
+                            "dataType": "N",
+                            "required": false,
+                            "minLength": 0,
+                            "maxLength": 6,
+                            "definition": "Serial number designating each separate item within a series of articles.",
+                            "designator": "LIN01"
+                          }
+                        ],
+                        "desc": "LINE ITEM",
+                        "purpose": "To identify a line item and configuration."
+                      },
+                      {
+                        "nodeKey": "segment:PIA:601:624",
+                        "id": "PIA",
+                        "segmentStr": "PIA+5+3899408268X-39:SA'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:PIA01:604:605",
+                            "type": "Data Element",
+                            "value": "5",
+                            "id": "4347",
+                            "desc": "PRODUCT ID. FUNCTION QUALIFIER",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Product identification",
+                            "definition": "Indication of the function of the product code.",
+                            "designator": "PIA01"
+                          },
+                          {
+                            "nodeKey": "element:PIA02:606:623",
+                            "type": "Data Element",
+                            "value": "3899408268X-39:SA",
+                            "components": [
+                              {
+                                "nodeKey": "element:PIA0201:606:620",
+                                "type": "Component Element",
+                                "value": "3899408268X-39",
+                                "id": "7140",
+                                "desc": "Item number",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 35,
+                                "definition": "A number allocated to a group or item.",
+                                "designator": "PIA0201"
+                              },
+                              {
+                                "nodeKey": "element:PIA0202:621:623",
+                                "type": "Component Element",
+                                "value": "SA",
+                                "id": "7143",
+                                "desc": "Item number type, coded",
+                                "dataType": "AN",
+                                "required": false,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Supplier's article number",
+                                "definition": "Identification of the type of item number.",
+                                "designator": "PIA0202"
+                              }
+                            ],
+                            "id": "C212",
+                            "desc": "ITEM NUMBER IDENTIFICATION",
+                            "required": true,
+                            "definition": "Goods identification for a specified source.",
+                            "designator": "PIA02"
+                          }
+                        ],
+                        "desc": "ADDITIONAL PRODUCT ID",
+                        "purpose": "To specify additional or substitutional item identification codes."
+                      },
+                      {
+                        "nodeKey": "segment:QTY:627:635",
+                        "id": "QTY",
+                        "segmentStr": "QTY+21:3'",
+                        "elements": [
+                          {
+                            "nodeKey": "element:QTY01:630:634",
+                            "type": "Data Element",
+                            "value": "21:3",
+                            "components": [
+                              {
+                                "nodeKey": "element:QTY0101:630:632",
+                                "type": "Component Element",
+                                "value": "21",
+                                "id": "6063",
+                                "desc": "Quantity qualifier",
+                                "dataType": "AN",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 3,
+                                "codeValue": "Ordered quantity",
+                                "definition": "Code giving specific meaning to a quantity.",
+                                "designator": "QTY0101"
+                              },
+                              {
+                                "nodeKey": "element:QTY0102:633:634",
+                                "type": "Component Element",
+                                "value": "3",
+                                "id": "6060",
+                                "desc": "Quantity",
+                                "dataType": "N",
+                                "required": true,
+                                "minLength": 0,
+                                "maxLength": 15,
+                                "definition": "Numeric value of a quantity.",
+                                "designator": "QTY0102"
+                              }
+                            ],
+                            "id": "C186",
+                            "desc": "QUANTITY DETAILS",
+                            "required": true,
+                            "definition": "Quantity information in a transaction, qualified when relevant.",
+                            "designator": "QTY01"
+                          }
+                        ],
+                        "desc": "QUANTITY",
+                        "purpose": "To specify a pertinent quantity."
+                      },
+                      {
+                        "nodeKey": "loop:PRILoop1:638:650",
+                        "id": "PRILoop1",
+                        "elements": [],
+                        "desc": "PRICE DETAILS",
+                        "purpose": "To specify price information.",
+                        "Loop": [
+                          {
+                            "nodeKey": "segment:PRI:638:650",
+                            "id": "PRI",
+                            "segmentStr": "PRI+AAA:3.85'",
+                            "elements": [
+                              {
+                                "nodeKey": "element:PRI01:641:649",
+                                "type": "Data Element",
+                                "value": "AAA:3.85",
+                                "components": [
+                                  {
+                                    "nodeKey": "element:PRI0101:641:644",
+                                    "type": "Component Element",
+                                    "value": "AAA",
+                                    "id": "5125",
+                                    "desc": "Price qualifier",
+                                    "dataType": "AN",
+                                    "required": true,
+                                    "minLength": 0,
+                                    "maxLength": 3,
+                                    "codeValue": "Calculation net",
+                                    "definition": "Identification of a type of price.",
+                                    "designator": "PRI0101"
+                                  },
+                                  {
+                                    "nodeKey": "element:PRI0102:645:649",
+                                    "type": "Component Element",
+                                    "value": "3.85",
+                                    "id": "5118",
+                                    "desc": "Price",
+                                    "dataType": "N",
+                                    "required": false,
+                                    "minLength": 0,
+                                    "maxLength": 15,
+                                    "definition": "The monetary value associated with a purchase or sale of an article, product or service.",
+                                    "designator": "PRI0102"
+                                  }
+                                ],
+                                "id": "C509",
+                                "desc": "PRICE INFORMATION",
+                                "required": false,
+                                "definition": "Identification of price type, price and related details.",
+                                "designator": "PRI01"
+                              }
+                            ],
+                            "desc": "PRICE DETAILS",
+                            "purpose": "To specify price information."
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "nodeKey": "segment:UNS:653:658",
+                    "id": "UNS",
+                    "segmentStr": "UNS+S'",
+                    "elements": [
+                      {
+                        "nodeKey": "element:UNS01:656:657",
+                        "type": "Data Element",
+                        "value": "S",
+                        "id": "0081",
+                        "desc": "SECTION IDENTIFICATION",
+                        "dataType": "A",
+                        "required": true,
+                        "minLength": 1,
+                        "maxLength": 1,
+                        "codeValue": "Detail/summary section separation",
+                        "definition": "Separates sections in a message.",
+                        "designator": "UNS01"
+                      }
+                    ],
+                    "purpose": "To separate header, detail and summary sections of a message."
+                  },
+                  {
+                    "nodeKey": "segment:CNT:661:668",
+                    "id": "CNT",
+                    "segmentStr": "CNT+2:3'",
+                    "elements": [
+                      {
+                        "nodeKey": "element:CNT01:664:667",
+                        "type": "Data Element",
+                        "value": "2:3",
+                        "components": [
+                          {
+                            "nodeKey": "element:CNT0101:664:665",
+                            "type": "Component Element",
+                            "value": "2",
+                            "id": "6069",
+                            "desc": "Control qualifier",
+                            "dataType": "AN",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 3,
+                            "codeValue": "Number of line items in message",
+                            "definition": "Determines the source data elements in the message which forms the basis for 6066 Control value.",
+                            "designator": "CNT0101"
+                          },
+                          {
+                            "nodeKey": "element:CNT0102:666:667",
+                            "type": "Component Element",
+                            "value": "3",
+                            "id": "6066",
+                            "desc": "Control value",
+                            "dataType": "N",
+                            "required": true,
+                            "minLength": 0,
+                            "maxLength": 18,
+                            "definition": "Value obtained from summing the values specified by the Control Qualifier throughout the message (Hash total).",
+                            "designator": "CNT0102"
+                          }
+                        ],
+                        "id": "C270",
+                        "desc": "CONTROL",
+                        "required": true,
+                        "definition": "Control total for checking integrity of a message or part of a message.",
+                        "designator": "CNT01"
+                      }
+                    ],
+                    "desc": "CONTROL TOTAL",
+                    "purpose": "To provide control total."
                   }
                 ],
                 "startSegment": {
-                  "key": "P1e6I7RC_ZvRQxeZPzUlt",
+                  "nodeKey": "segment:UNH:93:121",
                   "id": "UNH",
-                  "desc": "Message header",
-                  "purpose": "To head, identify and specify a message.",
+                  "segmentStr": "UNH+1+ORDERS:D:96A:UN:EAN008'",
                   "elements": [
                     {
-                      "key": "Rz4u5WDLudY6cJiA6p_Ey",
+                      "nodeKey": "element:UNH01:96:97",
                       "type": "Data Element",
-                      "value": "001",
+                      "value": "1",
                       "id": "0062",
                       "desc": "MESSAGE REFERENCE NUMBER",
                       "dataType": "AN",
@@ -2478,12 +4268,12 @@ export default function useTestData(): EdiDocument {
                       "designator": "UNH01"
                     },
                     {
-                      "key": "y-JgLkRsbSv9IMLszCNQa",
+                      "nodeKey": "element:UNH02:98:120",
                       "type": "Data Element",
-                      "value": "ORDERS:D:96A:UN:EAN001",
+                      "value": "ORDERS:D:96A:UN:EAN008",
                       "components": [
                         {
-                          "key": "9HEgQfvnZfiqBfVzbRBEB",
+                          "nodeKey": "element:UNH0201:98:104",
                           "type": "Component Element",
                           "value": "ORDERS",
                           "id": "0065",
@@ -2497,7 +4287,7 @@ export default function useTestData(): EdiDocument {
                           "designator": "UNH0201"
                         },
                         {
-                          "key": "39SEfOKABTT7cFRuffJzA",
+                          "nodeKey": "element:UNH0202:105:106",
                           "type": "Component Element",
                           "value": "D",
                           "id": "0052",
@@ -2510,7 +4300,7 @@ export default function useTestData(): EdiDocument {
                           "designator": "UNH0202"
                         },
                         {
-                          "key": "bp7SwcYBOi0Ei-PvJzkp2",
+                          "nodeKey": "element:UNH0203:107:110",
                           "type": "Component Element",
                           "value": "96A",
                           "id": "0054",
@@ -2523,7 +4313,7 @@ export default function useTestData(): EdiDocument {
                           "designator": "UNH0203"
                         },
                         {
-                          "key": "S5Qt55ewTTz5tMzfaaGwY",
+                          "nodeKey": "element:UNH0204:111:113",
                           "type": "Component Element",
                           "value": "UN",
                           "id": "0051",
@@ -2537,9 +4327,9 @@ export default function useTestData(): EdiDocument {
                           "designator": "UNH0204"
                         },
                         {
-                          "key": "d0r2ecdFj5QbBIYnWe1rh",
+                          "nodeKey": "element:UNH0205:114:120",
                           "type": "Component Element",
-                          "value": "EAN001",
+                          "value": "EAN008",
                           "id": "0057",
                           "desc": "Association assigned code",
                           "dataType": "AN",
@@ -2556,215 +4346,19 @@ export default function useTestData(): EdiDocument {
                       "definition": "Identification of the type, version etc. of the message being interchanged.",
                       "designator": "UNH02"
                     }
-                  ]
-                },
-                "endSegment": {
-                  "key": "iQsiCvZbtKrahe7Z2f1rr",
-                  "id": "UNT",
-                  "desc": "Message trailer",
-                  "purpose": "To end and check the completeness of a message.",
-                  "elements": [
-                    {
-                      "key": "yMIlE_2dRX1uluOMpk4M2",
-                      "type": "Data Element",
-                      "value": "3",
-                      "id": "0074",
-                      "desc": "NUMBER OF SEGMENTS IN A MESSAGE",
-                      "dataType": "N",
-                      "required": true,
-                      "minLength": 0,
-                      "maxLength": 6,
-                      "definition": "Control count of number of segments in a message.",
-                      "designator": "UNT01"
-                    },
-                    {
-                      "key": "1RmUGFuob4386WLGFWRIU",
-                      "type": "Data Element",
-                      "value": "001",
-                      "id": "0062",
-                      "desc": "MESSAGE REFERENCE NUMBER",
-                      "dataType": "AN",
-                      "required": true,
-                      "minLength": 0,
-                      "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender.",
-                      "designator": "UNT02"
-                    }
-                  ]
-                }
-              },
-              {
-                "key": "iN5i-tnbOSEo2-qsOL3nx",
-                "meta": {
-                  "id": "002",
-                  "version": "DESADV",
-                  "messageInfo": {
-                    "name": "Despatch advice",
-                    "version": "DESADV",
-                    "introduction": "A message specifying details for goods despatched or ready for despatch under agreed conditions.\\nThe United Nations Despatch Advice Message serves both as a specification for Delivery Despatch Advice and also as a Returns Despatch Advice message. Throughout this document, the reference to 'Despatch Advice' may be interpreted as conveying the wider meaning of 'Delivery Despatch Advice/Returns Despatch Advice'."
-                  },
-                  "release": "D96A"
-                },
-                "id": "002",
-                "segments": [
-                  {
-                    "key": "iR-P_ODD2tJjFbebmlWmi",
-                    "id": "BGM",
-                    "desc": "BEGINNING OF MESSAGE",
-                    "purpose": "To indicate the type and function of a message and to transmit the identifying number.",
-                    "elements": [
-                      {
-                        "key": "Y8eRmSlYXD4myepKJDJJg",
-                        "type": "Data Element",
-                        "value": "351",
-                        "components": [
-                          {
-                            "key": "-8gOflv4Ral89yf0PGGL-",
-                            "type": "Component Element",
-                            "value": "351",
-                            "id": "1001",
-                            "desc": "Document/message name, coded",
-                            "dataType": "AN",
-                            "required": false,
-                            "minLength": 0,
-                            "maxLength": 3,
-                            "codeValue": "Despatch advice",
-                            "definition": "Document/message identifier expressed in code.",
-                            "designator": "BGM0101"
-                          }
-                        ],
-                        "id": "C002",
-                        "desc": "DOCUMENT/MESSAGE NAME",
-                        "required": false,
-                        "definition": "Identification of a type of document/message by code or name. Code preferred.",
-                        "designator": "BGM01"
-                      },
-                      {
-                        "key": "DPWX1mWJ-f-p55NVb9EJx",
-                        "type": "Data Element",
-                        "value": "20171229",
-                        "id": "1004",
-                        "desc": "DOCUMENT/MESSAGE NUMBER",
-                        "dataType": "AN",
-                        "required": false,
-                        "minLength": 0,
-                        "maxLength": 35,
-                        "definition": "Reference number assigned to the document/message by the issuer.",
-                        "designator": "BGM02"
-                      }
-                    ]
-                  }
-                ],
-                "startSegment": {
-                  "key": "qmAQ5ZYxIKkr8nFS2uyl2",
-                  "id": "UNH",
+                  ],
                   "desc": "Message header",
-                  "purpose": "To head, identify and specify a message.",
-                  "elements": [
-                    {
-                      "key": "KAImJ854An0C485ab7xPS",
-                      "type": "Data Element",
-                      "value": "002",
-                      "id": "0062",
-                      "desc": "MESSAGE REFERENCE NUMBER",
-                      "dataType": "AN",
-                      "required": true,
-                      "minLength": 0,
-                      "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender.",
-                      "designator": "UNH01"
-                    },
-                    {
-                      "key": "Hu9OftGhiDhFChtvg0_0o",
-                      "type": "Data Element",
-                      "value": "DESADV:D:96A:UN:EAN001",
-                      "components": [
-                        {
-                          "key": "JJrEOWMR3ZGBhGzNfxL6W",
-                          "type": "Component Element",
-                          "value": "DESADV",
-                          "id": "0065",
-                          "desc": "Message type identifier",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 6,
-                          "codeValue": "Despatch advice message",
-                          "definition": "Code identifying a type of message and assigned by its controlling agency.",
-                          "designator": "UNH0201"
-                        },
-                        {
-                          "key": "ZwSPf3zXhMJdTTI2Bg_XU",
-                          "type": "Component Element",
-                          "value": "D",
-                          "id": "0052",
-                          "desc": "Message type version number",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 3,
-                          "definition": "Version number of a message type.",
-                          "designator": "UNH0202"
-                        },
-                        {
-                          "key": "gOeGqVzO8D_SrPsf5e-1G",
-                          "type": "Component Element",
-                          "value": "96A",
-                          "id": "0054",
-                          "desc": "Message type release number",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 3,
-                          "definition": "Release number within the current message type version number (0052).",
-                          "designator": "UNH0203"
-                        },
-                        {
-                          "key": "9Cb_tjue8k4r57FqAk0yl",
-                          "type": "Component Element",
-                          "value": "UN",
-                          "id": "0051",
-                          "desc": "Controlling agency",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 2,
-                          "codeValue": "UN/ECE/TRADE/WP.4, United Nations Standard Messages (UNSM)",
-                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type.",
-                          "designator": "UNH0204"
-                        },
-                        {
-                          "key": "hiw-m100GooVmw_Q-NuLV",
-                          "type": "Component Element",
-                          "value": "EAN001",
-                          "id": "0057",
-                          "desc": "Association assigned code",
-                          "dataType": "AN",
-                          "required": false,
-                          "minLength": 0,
-                          "maxLength": 6,
-                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message.",
-                          "designator": "UNH0205"
-                        }
-                      ],
-                      "id": "S009",
-                      "desc": "MESSAGE IDENTIFIER",
-                      "required": true,
-                      "definition": "Identification of the type, version etc. of the message being interchanged.",
-                      "designator": "UNH02"
-                    }
-                  ]
+                  "purpose": "To head, identify and specify a message."
                 },
                 "endSegment": {
-                  "key": "so6DnUKTmJkTEu1pLJ5Kw",
+                  "nodeKey": "segment:UNT:671:679",
                   "id": "UNT",
-                  "desc": "Message trailer",
-                  "purpose": "To end and check the completeness of a message.",
+                  "segmentStr": "UNT+28+1'",
                   "elements": [
                     {
-                      "key": "m7KQjALYj-UDKhvGwGMW4",
+                      "nodeKey": "element:UNT01:674:676",
                       "type": "Data Element",
-                      "value": "3",
+                      "value": "28",
                       "id": "0074",
                       "desc": "NUMBER OF SEGMENTS IN A MESSAGE",
                       "dataType": "N",
@@ -2775,9 +4369,9 @@ export default function useTestData(): EdiDocument {
                       "designator": "UNT01"
                     },
                     {
-                      "key": "bv7z_NNEb5usQ_Qo07iQd",
+                      "nodeKey": "element:UNT02:677:678",
                       "type": "Data Element",
-                      "value": "002",
+                      "value": "1",
                       "id": "0062",
                       "desc": "MESSAGE REFERENCE NUMBER",
                       "dataType": "AN",
@@ -2787,25 +4381,26 @@ export default function useTestData(): EdiDocument {
                       "definition": "Unique message reference assigned by the sender.",
                       "designator": "UNT02"
                     }
-                  ]
+                  ],
+                  "desc": "Message trailer",
+                  "purpose": "To end and check the completeness of a message."
                 }
               }
             ]
           }
         ],
         "startSegment": {
-          "key": "4ydJ8uGra-JlTsEDVNBt3",
+          "nodeKey": "segment:UNB:11:90",
           "id": "UNB",
-          "desc": "Interchange header",
-          "purpose": "To start, identify and specify an interchange.",
+          "segmentStr": "UNB+UNOA:2+<Sender GLN>:14+<Receiver GLN>:14+140407:0910+5+000000001+++1+EANCOM'",
           "elements": [
             {
-              "key": "S5haD5VUndRDM_0OhLGJ6",
+              "nodeKey": "element:UNB01:14:20",
               "type": "Data Element",
               "value": "UNOA:2",
               "components": [
                 {
-                  "key": "m25ZMnr0CDEbysXVRv9Yw",
+                  "nodeKey": "element:UNB0101:14:18",
                   "type": "Component Element",
                   "value": "UNOA",
                   "id": "0001",
@@ -2814,11 +4409,12 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 4,
                   "maxLength": 4,
+                  "codeValue": "UN/ECE level A: As defined in the basic code table of ISO 646 with the exceptions of lower case letters, alternative graphic character allocations and national or application-oriented graphic character allocations.",
                   "definition": "Coded identification of the agency controlling a syntax and syntax level used in an interchange.",
                   "designator": "UNB0101"
                 },
                 {
-                  "key": "MufpRhuGLUHkDLrhy3N0O",
+                  "nodeKey": "element:UNB0102:19:20",
                   "type": "Component Element",
                   "value": "2",
                   "id": "0002",
@@ -2827,6 +4423,7 @@ export default function useTestData(): EdiDocument {
                   "required": true,
                   "minLength": 1,
                   "maxLength": 1,
+                  "codeValue": "Version 2: ISO 9735:1990.",
                   "definition": "Version number of the syntax identified in the syntax identifier (0001)",
                   "designator": "UNB0102"
                 }
@@ -2838,12 +4435,12 @@ export default function useTestData(): EdiDocument {
               "designator": "UNB01"
             },
             {
-              "key": "z806FUQDVRdyTf856aD9h",
+              "nodeKey": "element:UNB02:21:36",
               "type": "Data Element",
               "value": "<Sender GLN>:14",
               "components": [
                 {
-                  "key": "_YMLUHHi6JT8WsEsFzmfG",
+                  "nodeKey": "element:UNB0201:21:33",
                   "type": "Component Element",
                   "value": "<Sender GLN>",
                   "id": "0004",
@@ -2856,7 +4453,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "UNB0201"
                 },
                 {
-                  "key": "-pClHHk7Aflv8BuTY_gQP",
+                  "nodeKey": "element:UNB0202:34:36",
                   "type": "Component Element",
                   "value": "14",
                   "id": "0007",
@@ -2865,6 +4462,7 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 1,
                   "maxLength": 4,
+                  "codeValue": "GS1",
                   "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
                   "designator": "UNB0202"
                 }
@@ -2876,12 +4474,12 @@ export default function useTestData(): EdiDocument {
               "designator": "UNB02"
             },
             {
-              "key": "JtoqS5N_3g6laPZ80As5M",
+              "nodeKey": "element:UNB03:37:54",
               "type": "Data Element",
               "value": "<Receiver GLN>:14",
               "components": [
                 {
-                  "key": "5_u292KHV3kT6p1ojFjkd",
+                  "nodeKey": "element:UNB0301:37:51",
                   "type": "Component Element",
                   "value": "<Receiver GLN>",
                   "id": "0010",
@@ -2894,7 +4492,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "UNB0301"
                 },
                 {
-                  "key": "-OsfgfjBYOj5rqxEprITL",
+                  "nodeKey": "element:UNB0302:52:54",
                   "type": "Component Element",
                   "value": "14",
                   "id": "0007",
@@ -2903,6 +4501,7 @@ export default function useTestData(): EdiDocument {
                   "required": false,
                   "minLength": 1,
                   "maxLength": 4,
+                  "codeValue": "GS1",
                   "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
                   "designator": "UNB0302"
                 }
@@ -2914,12 +4513,12 @@ export default function useTestData(): EdiDocument {
               "designator": "UNB03"
             },
             {
-              "key": "8FNqbU-qBcjB0ZStYDnsR",
+              "nodeKey": "element:UNB04:55:66",
               "type": "Data Element",
               "value": "140407:0910",
               "components": [
                 {
-                  "key": "nR0ojekcgYH-VFr1xuMUl",
+                  "nodeKey": "element:UNB0401:55:61",
                   "type": "Component Element",
                   "value": "140407",
                   "id": "0017",
@@ -2932,7 +4531,7 @@ export default function useTestData(): EdiDocument {
                   "designator": "UNB0401"
                 },
                 {
-                  "key": "PUrp5aMEhyTZgaeY9hNxi",
+                  "nodeKey": "element:UNB0402:62:66",
                   "type": "Component Element",
                   "value": "0910",
                   "id": "0019",
@@ -2952,9 +4551,9 @@ export default function useTestData(): EdiDocument {
               "designator": "UNB04"
             },
             {
-              "key": "cK0q-vowfN0_D0h9gpJFS",
+              "nodeKey": "element:UNB05:67:68",
               "type": "Data Element",
-              "value": "0001",
+              "value": "5",
               "id": "0020",
               "desc": "Interchange control reference",
               "dataType": "AN",
@@ -2963,455 +4562,96 @@ export default function useTestData(): EdiDocument {
               "maxLength": 14,
               "definition": "Unique reference assigned by the sender to an interchange.",
               "designator": "UNB05"
-            }
-          ]
-        },
-        "endSegment": {
-          "key": "j14hAnrsxxYVtxh1DD0Vx",
-          "id": "UNZ",
-          "desc": "Interchange trailer",
-          "purpose": "To end and check the completeness of an interchange.",
-          "elements": [
-            {
-              "key": "5g4YmmJnBFhz5JxXRQuFm",
-              "type": "Data Element",
-              "value": "2",
-              "id": "0036",
-              "desc": "Interchange control count",
-              "required": true,
-              "minLength": 1,
-              "maxLength": 6,
-              "definition": "Count either of the number of messages or, if used, of the number of functional groups in an interchange.",
-              "designator": "UNZ01"
             },
             {
-              "key": "Kr8QxJY5ncAbuOQSlN9jt",
+              "nodeKey": "element:UNB06:69:78",
               "type": "Data Element",
-              "value": "0001",
-              "id": "0020",
-              "desc": "Interchange control reference",
-              "required": true,
+              "value": "000000001",
+              "components": [
+                {
+                  "nodeKey": "element:UNB0601:69:78",
+                  "type": "Component Element",
+                  "value": "000000001",
+                  "id": "0022",
+                  "desc": "Recipient's reference/password",
+                  "dataType": "AN",
+                  "required": true,
+                  "minLength": 1,
+                  "maxLength": 14,
+                  "definition": "Unique reference assigned by the recipient to the data interchange or a password to the recipient's system or to a third party network as specified in the partners interchange agreement.",
+                  "designator": "UNB0601"
+                }
+              ],
+              "id": "S005",
+              "desc": "Recipient's reference, password",
+              "required": false,
+              "definition": "Reference or password as agreed between the communicating partners.",
+              "designator": "UNB06"
+            },
+            {
+              "nodeKey": "element:UNB07:79:79",
+              "type": "Data Element",
+              "value": "",
+              "id": "0026",
+              "desc": "Application reference",
+              "dataType": "AN",
+              "required": false,
               "minLength": 1,
               "maxLength": 14,
-              "definition": "Unique reference assigned by the sender to an interchange.",
-              "designator": "UNZ02"
+              "definition": "Identification of the application area assigned by the sender, to which the messages in the interchange relate e.g. the message identifier if all the messages in the interchange are of the same type.",
+              "designator": "UNB07"
+            },
+            {
+              "nodeKey": "element:UNB08:80:80",
+              "type": "Data Element",
+              "value": "",
+              "id": "0029",
+              "desc": "Processing priority code",
+              "dataType": "AN",
+              "required": false,
+              "minLength": 1,
+              "maxLength": 1,
+              "definition": "Code determined by the sender requesting processing priority for the interchange.",
+              "designator": "UNB08"
+            },
+            {
+              "nodeKey": "element:UNB09:81:82",
+              "type": "Data Element",
+              "value": "1",
+              "id": "0031",
+              "desc": "Acknowledgement request",
+              "dataType": "N",
+              "required": false,
+              "minLength": 1,
+              "maxLength": 1,
+              "codeValue": "Acknowledgement requested",
+              "definition": "Code determined by the sender for acknowledgement of the interchange.",
+              "designator": "UNB09"
+            },
+            {
+              "nodeKey": "element:UNB10:83:89",
+              "type": "Data Element",
+              "value": "EANCOM",
+              "id": "0032",
+              "desc": "Communications agreement ID",
+              "dataType": "AN",
+              "required": false,
+              "minLength": 1,
+              "maxLength": 35,
+              "definition": "Identification by name or code of the type of agreement under which the interchange takes place.",
+              "designator": "UNB10"
             }
-          ]
-        }
-      },
-      {
-        "key": "2gpckBK6DcxXpn7R6VtTk",
-        "meta": {
-          "senderID": "<Sender GLN>",
-          "senderQualifer": "14",
-          "receiverID": "<Receiver GLN>",
-          "receiverQualifer": "14",
-          "date": "140407",
-          "time": "0910",
-          "id": "0002"
-        },
-        "id": "0002",
-        "functionalGroups": [
-          {
-            "key": "alk6cfDI2dQvfX_g_Zmq-",
-            "meta": {},
-            "id": "",
-            "transactionSets": [
-              {
-                "key": "JLAN_sFQMCqKO2TfWpYuS",
-                "meta": {
-                  "id": "003",
-                  "version": "ORDERS",
-                  "messageInfo": {
-                    "name": "Purchase order",
-                    "version": "ORDERS",
-                    "introduction": "A message specifying details for goods or services ordered under conditions agreed between the seller and the buyer."
-                  },
-                  "release": "D96A"
-                },
-                "id": "003",
-                "segments": [
-                  {
-                    "key": "gA8-3dueB4INi1Qz0hz_H",
-                    "id": "BGM",
-                    "desc": "BEGINNING OF MESSAGE",
-                    "purpose": "To indicate the type and function of a message and to transmit the identifying number.",
-                    "elements": [
-                      {
-                        "key": "vQJFX2Mg3vwMwAyfTa5aw",
-                        "type": "Data Element",
-                        "value": "220",
-                        "components": [
-                          {
-                            "key": "sgMNLpcpnF2wMfH8e7QXN",
-                            "type": "Component Element",
-                            "value": "220",
-                            "id": "1001",
-                            "desc": "Document/message name, coded",
-                            "dataType": "AN",
-                            "required": false,
-                            "minLength": 0,
-                            "maxLength": 3,
-                            "codeValue": "Order",
-                            "definition": "Document/message identifier expressed in code.",
-                            "designator": "BGM0101"
-                          }
-                        ],
-                        "id": "C002",
-                        "desc": "DOCUMENT/MESSAGE NAME",
-                        "required": false,
-                        "definition": "Identification of a type of document/message by code or name. Code preferred.",
-                        "designator": "BGM01"
-                      },
-                      {
-                        "key": "Dl-_m0VwYII7_nGCTJVC2",
-                        "type": "Data Element",
-                        "value": "PO3",
-                        "id": "1004",
-                        "desc": "DOCUMENT/MESSAGE NUMBER",
-                        "dataType": "AN",
-                        "required": false,
-                        "minLength": 0,
-                        "maxLength": 35,
-                        "definition": "Reference number assigned to the document/message by the issuer.",
-                        "designator": "BGM02"
-                      },
-                      {
-                        "key": "F2U0e6RiA_w6qOU-w73Kx",
-                        "type": "Data Element",
-                        "value": "9",
-                        "id": "1225",
-                        "desc": "MESSAGE FUNCTION, CODED",
-                        "dataType": "AN",
-                        "required": false,
-                        "minLength": 0,
-                        "maxLength": 3,
-                        "codeValue": "Original",
-                        "definition": "Code indicating the function of the message.",
-                        "designator": "BGM03"
-                      }
-                    ]
-                  }
-                ],
-                "startSegment": {
-                  "key": "GJUntUZS2JSZLTYkGQLNq",
-                  "id": "UNH",
-                  "desc": "Message header",
-                  "purpose": "To head, identify and specify a message.",
-                  "elements": [
-                    {
-                      "key": "D103KV7Ema1uhyfbbMr08",
-                      "type": "Data Element",
-                      "value": "003",
-                      "id": "0062",
-                      "desc": "MESSAGE REFERENCE NUMBER",
-                      "dataType": "AN",
-                      "required": true,
-                      "minLength": 0,
-                      "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender.",
-                      "designator": "UNH01"
-                    },
-                    {
-                      "key": "VlVogaHeh4UJ7BBqsJdVr",
-                      "type": "Data Element",
-                      "value": "ORDERS:D:96A:UN:EAN001",
-                      "components": [
-                        {
-                          "key": "5BPc_MPE17gMkMpcDBKs0",
-                          "type": "Component Element",
-                          "value": "ORDERS",
-                          "id": "0065",
-                          "desc": "Message type identifier",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 6,
-                          "codeValue": "Purchase order message",
-                          "definition": "Code identifying a type of message and assigned by its controlling agency.",
-                          "designator": "UNH0201"
-                        },
-                        {
-                          "key": "6HHDlSOTBz-z_Fb10YZoJ",
-                          "type": "Component Element",
-                          "value": "D",
-                          "id": "0052",
-                          "desc": "Message type version number",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 3,
-                          "definition": "Version number of a message type.",
-                          "designator": "UNH0202"
-                        },
-                        {
-                          "key": "R21Lk9PKVzd5s45Hlrm-3",
-                          "type": "Component Element",
-                          "value": "96A",
-                          "id": "0054",
-                          "desc": "Message type release number",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 3,
-                          "definition": "Release number within the current message type version number (0052).",
-                          "designator": "UNH0203"
-                        },
-                        {
-                          "key": "Urwza7tMFk_ahEOkdRpiM",
-                          "type": "Component Element",
-                          "value": "UN",
-                          "id": "0051",
-                          "desc": "Controlling agency",
-                          "dataType": "AN",
-                          "required": true,
-                          "minLength": 0,
-                          "maxLength": 2,
-                          "codeValue": "UN/ECE/TRADE/WP.4, United Nations Standard Messages (UNSM)",
-                          "definition": "Code to identify the agency controlling the specification, maintenance and publication of the message type.",
-                          "designator": "UNH0204"
-                        },
-                        {
-                          "key": "VX3ATA6Apex85JJmGg-K-",
-                          "type": "Component Element",
-                          "value": "EAN001",
-                          "id": "0057",
-                          "desc": "Association assigned code",
-                          "dataType": "AN",
-                          "required": false,
-                          "minLength": 0,
-                          "maxLength": 6,
-                          "definition": "A code assigned by the association responsible for the design and maintenance of the message type concerned, which further identifies the message.",
-                          "designator": "UNH0205"
-                        }
-                      ],
-                      "id": "S009",
-                      "desc": "MESSAGE IDENTIFIER",
-                      "required": true,
-                      "definition": "Identification of the type, version etc. of the message being interchanged.",
-                      "designator": "UNH02"
-                    }
-                  ]
-                },
-                "endSegment": {
-                  "key": "0jgbIregToYuOdfnaQgIX",
-                  "id": "UNT",
-                  "desc": "Message trailer",
-                  "purpose": "To end and check the completeness of a message.",
-                  "elements": [
-                    {
-                      "key": "pKNkNn4uW_C-l1-fpmgSO",
-                      "type": "Data Element",
-                      "value": "3",
-                      "id": "0074",
-                      "desc": "NUMBER OF SEGMENTS IN A MESSAGE",
-                      "dataType": "N",
-                      "required": true,
-                      "minLength": 0,
-                      "maxLength": 6,
-                      "definition": "Control count of number of segments in a message.",
-                      "designator": "UNT01"
-                    },
-                    {
-                      "key": "NiMWmVKZE_rAqmL4BNifZ",
-                      "type": "Data Element",
-                      "value": "003",
-                      "id": "0062",
-                      "desc": "MESSAGE REFERENCE NUMBER",
-                      "dataType": "AN",
-                      "required": true,
-                      "minLength": 0,
-                      "maxLength": 14,
-                      "definition": "Unique message reference assigned by the sender.",
-                      "designator": "UNT02"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ],
-        "startSegment": {
-          "key": "vlPzz7LHx5iFJ2s-3NAAH",
-          "id": "UNB",
+          ],
           "desc": "Interchange header",
-          "purpose": "To start, identify and specify an interchange.",
-          "elements": [
-            {
-              "key": "6w9VUslXb_dc9gi2M0VPS",
-              "type": "Data Element",
-              "value": "UNOA:2",
-              "components": [
-                {
-                  "key": "h0SRD8AzItlpHq7uRR0Te",
-                  "type": "Component Element",
-                  "value": "UNOA",
-                  "id": "0001",
-                  "desc": "Syntax identifier",
-                  "dataType": "AN",
-                  "required": true,
-                  "minLength": 4,
-                  "maxLength": 4,
-                  "definition": "Coded identification of the agency controlling a syntax and syntax level used in an interchange.",
-                  "designator": "UNB0101"
-                },
-                {
-                  "key": "zL24fHtdhRsFcg6SvB9MR",
-                  "type": "Component Element",
-                  "value": "2",
-                  "id": "0002",
-                  "desc": "Syntax version number",
-                  "dataType": "N",
-                  "required": true,
-                  "minLength": 1,
-                  "maxLength": 1,
-                  "definition": "Version number of the syntax identified in the syntax identifier (0001)",
-                  "designator": "UNB0102"
-                }
-              ],
-              "id": "S001",
-              "desc": "Syntax identifier",
-              "required": true,
-              "definition": "Identification of the agency controlling the syntax and indication of syntax level.",
-              "designator": "UNB01"
-            },
-            {
-              "key": "Vvc6m7cJGy5xSm6s3rn-n",
-              "type": "Data Element",
-              "value": "<Sender GLN>:14",
-              "components": [
-                {
-                  "key": "d64GR-JPFdEye62A1ZcUv",
-                  "type": "Component Element",
-                  "value": "<Sender GLN>",
-                  "id": "0004",
-                  "desc": "Sender identification",
-                  "dataType": "AN",
-                  "required": true,
-                  "minLength": 1,
-                  "maxLength": 35,
-                  "definition": "Name or coded representation of the sender of a data interchange.",
-                  "designator": "UNB0201"
-                },
-                {
-                  "key": "XYJL_oAYWx3jRPV264egV",
-                  "type": "Component Element",
-                  "value": "14",
-                  "id": "0007",
-                  "desc": "Partner identification code qualifier",
-                  "dataType": "AN",
-                  "required": false,
-                  "minLength": 1,
-                  "maxLength": 4,
-                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
-                  "designator": "UNB0202"
-                }
-              ],
-              "id": "S002",
-              "desc": "Interchange sender",
-              "required": true,
-              "definition": "Identification of the sender of the interchange.",
-              "designator": "UNB02"
-            },
-            {
-              "key": "quGecEwmoGyrS3TYQa-nK",
-              "type": "Data Element",
-              "value": "<Receiver GLN>:14",
-              "components": [
-                {
-                  "key": "88MVvZnrTvOIY_5CClO6b",
-                  "type": "Component Element",
-                  "value": "<Receiver GLN>",
-                  "id": "0010",
-                  "desc": "Recipient identification",
-                  "dataType": "AN",
-                  "required": true,
-                  "minLength": 1,
-                  "maxLength": 35,
-                  "definition": "Name or coded representation of the recipient of a data interchange.",
-                  "designator": "UNB0301"
-                },
-                {
-                  "key": "Q5ls8utn2M4EHiF73Ek7V",
-                  "type": "Component Element",
-                  "value": "14",
-                  "id": "0007",
-                  "desc": "Partner identification code qualifier",
-                  "dataType": "AN",
-                  "required": false,
-                  "minLength": 1,
-                  "maxLength": 4,
-                  "definition": "Qualifier referring to the source of codes for the identifiers of interchanging partners.",
-                  "designator": "UNB0302"
-                }
-              ],
-              "id": "S003",
-              "desc": "Interchange recipient",
-              "required": true,
-              "definition": "Identification of the recipient of the interchange.",
-              "designator": "UNB03"
-            },
-            {
-              "key": "PjiJEeTwbE7fg5rSLLozN",
-              "type": "Data Element",
-              "value": "140407:0910",
-              "components": [
-                {
-                  "key": "Kger6oJYAP1AfuyAoGMc_",
-                  "type": "Component Element",
-                  "value": "140407",
-                  "id": "0017",
-                  "desc": "Date of preparation",
-                  "dataType": "N",
-                  "required": true,
-                  "minLength": 6,
-                  "maxLength": 6,
-                  "definition": "Local date when an interchange or a functional group was prepared.",
-                  "designator": "UNB0401"
-                },
-                {
-                  "key": "S4AFmAj4cKRaCJou__SpU",
-                  "type": "Component Element",
-                  "value": "0910",
-                  "id": "0019",
-                  "desc": "Time of preparation",
-                  "dataType": "N",
-                  "required": false,
-                  "minLength": 4,
-                  "maxLength": 4,
-                  "definition": "Local time of day when an interchange or a functional group was prepared.",
-                  "designator": "UNB0402"
-                }
-              ],
-              "id": "S004",
-              "desc": "Date/time of preparation",
-              "required": true,
-              "definition": "Date and time of preparation of the interchange.",
-              "designator": "UNB04"
-            },
-            {
-              "key": "9T3auLIq9rxupw_yVWF_P",
-              "type": "Data Element",
-              "value": "0002",
-              "id": "0020",
-              "desc": "Interchange control reference",
-              "dataType": "AN",
-              "required": true,
-              "minLength": 1,
-              "maxLength": 14,
-              "definition": "Unique reference assigned by the sender to an interchange.",
-              "designator": "UNB05"
-            }
-          ]
+          "purpose": "To start, identify and specify an interchange."
         },
         "endSegment": {
-          "key": "07oGoA0tFXJGHCmRCI1l8",
+          "nodeKey": "segment:UNZ:682:689",
           "id": "UNZ",
-          "desc": "Interchange trailer",
-          "purpose": "To end and check the completeness of an interchange.",
+          "segmentStr": "UNZ+1+5'",
           "elements": [
             {
-              "key": "NDV4pkXLfDmyySWrCR-23",
+              "nodeKey": "element:UNZ01:685:686",
               "type": "Data Element",
               "value": "1",
               "id": "0036",
@@ -3423,9 +4663,9 @@ export default function useTestData(): EdiDocument {
               "designator": "UNZ01"
             },
             {
-              "key": "Gk1GcT8te_wNospT1QuqL",
+              "nodeKey": "element:UNZ02:687:688",
               "type": "Data Element",
-              "value": "0002",
+              "value": "5",
               "id": "0020",
               "desc": "Interchange control reference",
               "required": true,
@@ -3434,18 +4674,19 @@ export default function useTestData(): EdiDocument {
               "definition": "Unique reference assigned by the sender to an interchange.",
               "designator": "UNZ02"
             }
-          ]
+          ],
+          "desc": "Interchange trailer",
+          "purpose": "To end and check the completeness of an interchange."
         }
       }
     ],
     "separatorsSegment": {
-      "key": "qz3p_GRjR_GkACQ0LQGle",
+      "nodeKey": "segment:UNA:0:8",
       "id": "UNA",
-      "desc": "Delimiter String Advice",
-      "purpose": "To start, identify and specify an interchange.",
+      "segmentStr": "UNA:+.?*'",
       "elements": [
         {
-          "key": "NdhQF1slFrupHbVyx9sun",
+          "nodeKey": "element:UNA01:3:3",
           "type": "Data Element",
           "value": ":",
           "id": "UNA01",
@@ -3457,7 +4698,7 @@ export default function useTestData(): EdiDocument {
           "designator": "UNA01"
         },
         {
-          "key": "pPGeH33DR40FdQJc_nbaQ",
+          "nodeKey": "element:UNA02:4:4",
           "type": "Data Element",
           "value": "+",
           "id": "UNA02",
@@ -3469,7 +4710,7 @@ export default function useTestData(): EdiDocument {
           "designator": "UNA02"
         },
         {
-          "key": "zZ-Ck1u0dSYY_6H0V8Wtg",
+          "nodeKey": "element:UNA03:5:5",
           "type": "Data Element",
           "value": ".",
           "id": "UNA03",
@@ -3481,7 +4722,7 @@ export default function useTestData(): EdiDocument {
           "designator": "UNA03"
         },
         {
-          "key": "Kt8oDMadNGRYcTwf5BmdU",
+          "nodeKey": "element:UNA04:6:6",
           "type": "Data Element",
           "value": "?",
           "id": "UNA04",
@@ -3493,7 +4734,7 @@ export default function useTestData(): EdiDocument {
           "designator": "UNA04"
         },
         {
-          "key": "Z0x7ISeERemy1mY_47wUy",
+          "nodeKey": "element:UNA05:7:7",
           "type": "Data Element",
           "value": "*",
           "id": "UNA05",
@@ -3504,792 +4745,813 @@ export default function useTestData(): EdiDocument {
           "definition": "Space",
           "designator": "UNA05"
         }
-      ]
+      ],
+      "desc": "Delimiter String Advice",
+      "purpose": "To start, identify and specify an interchange."
     },
     "ediType": "edifact"
   };
 
-  const vdaTestData: IEdiDocument = {
+  const vdaTestData: IEdiDocument =   {
     "interchanges": [
       {
-        "key": "Hhvk0GcCK4YgcAVEjtbSo",
+        "nodeKey": "interchange:none:0:778",
         "meta": {},
         "functionalGroups": [
           {
-            "key": "jelhFpgkrzjG-_zSjewwl",
+            "nodeKey": "functional-group:none:0:778",
             "meta": {},
-            "id": "",
             "transactionSets": [
               {
-                "key": "8Mb6XI4I0gpp_WOtRM7z0",
+                "nodeKey": "transaction-set:00001:0:778",
                 "meta": {
-                  "id": "00002",
                   "release": "02",
-                  "version": "511"
+                  "version": "511",
+                  "id": "00001"
                 },
-                "id": "00002",
+                "id": "00001",
                 "segments": [
                   {
-                    "key": "s8kWGN_qzxboP2XZNJCTv",
-                    "id": "511",
-                    "elements": [
-                      {
-                        "key": "-ByHpuOsI4rjJn2sOfpqO",
-                        "type": "Data Element",
-                        "value": "02",
-                        "desc": "Version Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 2,
-                        "designator": "51101"
-                      },
-                      {
-                        "key": "rX2nY-s7YspKkw_LJQTKn",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Customer Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51102"
-                      },
-                      {
-                        "key": "JFRBslGtiMj81o_QufUl2",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Supplier Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51103"
-                      },
-                      {
-                        "key": "bWS1_0cYpeW8SZ43snWYh",
-                        "type": "Data Element",
-                        "value": "99999",
-                        "desc": "Old Transmission Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 5,
-                        "designator": "51104"
-                      },
-                      {
-                        "key": "exomlIMIeU89gfNC7NYlq",
-                        "type": "Data Element",
-                        "value": "00001",
-                        "desc": "New Transmission Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 5,
-                        "designator": "51105"
-                      },
-                      {
-                        "key": "STIahk_-f5oY8oIrf1opn",
-                        "type": "Data Element",
-                        "value": "250124",
-                        "desc": "Transmission Date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51106"
-                      },
-                      {
-                        "key": "o2j1nMonbNjjxtpvH0ckt",
-                        "type": "Data Element",
-                        "value": "111231",
-                        "desc": "Date Of Zero",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51107"
-                      },
-                      {
-                        "key": "KtDz4OhbfVVJs7wZEo_U2",
-                        "type": "Data Element",
-                        "value": "                                                                                   ",
-                        "desc": "Empty",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 83,
-                        "designator": "51108"
-                      }
-                    ]
-                  },
-                  {
-                    "key": "CiIh7pE_HVGiRu-Jdsrhw",
-                    "id": "512",
-                    "elements": [
-                      {
-                        "key": "YYZoOnxEt3mzVaddpwJFt",
-                        "type": "Data Element",
-                        "value": "01",
-                        "desc": "Version Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 2,
-                        "designator": "51201"
-                      },
-                      {
-                        "key": "r23-BBGJehLNoztAb_GCp",
-                        "type": "Data Element",
-                        "value": "030",
-                        "desc": "Plant Customer",
-                        "dataType": "AN",
-                        "required": true,
-                        "codeValue": "Component plant Berlin",
-                        "length": 3,
-                        "designator": "51202"
-                      },
-                      {
-                        "key": "eIgnOq_qF4GS7Bkbj43tY",
-                        "type": "Data Element",
-                        "value": "187      ",
-                        "desc": "New Call Off Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51203"
-                      },
-                      {
-                        "key": "8TvlnYeEvjSHRZ4YexVbq",
-                        "type": "Data Element",
-                        "value": "121115",
-                        "desc": "New Call Off Date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51204"
-                      },
-                      {
-                        "key": "UgtEv_i8UfzxTzx-oVyAe",
-                        "type": "Data Element",
-                        "value": "186      ",
-                        "desc": "Old Call Off Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51205"
-                      },
-                      {
-                        "key": "o3f1X5c88R_zutJ5tbK4c",
-                        "type": "Data Element",
-                        "value": "121109",
-                        "desc": "Old Call Off Date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51206"
-                      },
-                      {
-                        "key": "g15WhyihoDqs9uk-xh9kT",
-                        "type": "Data Element",
-                        "value": "1514280009100         ",
-                        "desc": "Customer Part Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 22,
-                        "designator": "51207"
-                      },
-                      {
-                        "key": "36K2JWrRlhGwhEcx8dGS0",
-                        "type": "Data Element",
-                        "value": "                      ",
-                        "desc": "Supplier Part Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 22,
-                        "designator": "51208"
-                      },
-                      {
-                        "key": "cFv4qkyCR_SoqAqX4h_XU",
-                        "type": "Data Element",
-                        "value": "CGF-56026482",
-                        "desc": "Purchase Order Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 12,
-                        "designator": "51209"
-                      },
-                      {
-                        "key": "LLpIlo4AFGaN_hpiCDcs_",
-                        "type": "Data Element",
-                        "value": "A 13 ",
-                        "desc": "Unloading Point",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 5,
-                        "designator": "51210"
-                      },
-                      {
-                        "key": "xjQY0inhKHDcLPRzExI9J",
-                        "type": "Data Element",
-                        "value": "    ",
-                        "desc": "Code Of Customer",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 4,
-                        "designator": "51211"
-                      },
-                      {
-                        "key": "-uC7rKvFPc6R7BaNf7C6I",
-                        "type": "Data Element",
-                        "value": "ST",
-                        "desc": "Unit Of Measurement",
-                        "dataType": "AN",
-                        "required": true,
-                        "codeValue": "Piece",
-                        "length": 2,
-                        "designator": "51212"
-                      },
-                      {
-                        "key": "Xv-iRti0023tNNO5sbWHQ",
-                        "type": "Data Element",
-                        "value": "L",
-                        "desc": "Delivery Interval",
-                        "dataType": "AN",
-                        "required": true,
-                        "codeValue": "In accordance with delivery date",
-                        "length": 1,
-                        "designator": "51213"
-                      },
-                      {
-                        "key": "VXfwgDTp6eocZjTeLGy9G",
-                        "type": "Data Element",
-                        "value": " ",
-                        "desc": "Inclusive Production Release",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 1,
-                        "designator": "51214"
-                      },
-                      {
-                        "key": "DtgKl7mXDnVbjvaU_sAtf",
-                        "type": "Data Element",
-                        "value": " ",
-                        "desc": "Material Release",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 1,
-                        "designator": "51215"
-                      },
-                      {
-                        "key": "sYk787U178pKkOvf54Z3u",
-                        "type": "Data Element",
-                        "value": " ",
-                        "desc": "Code Usage",
-                        "dataType": "AN",
-                        "required": true,
-                        "codeValue": "Invalid code value",
-                        "length": 1,
-                        "designator": "51216"
-                      },
-                      {
-                        "key": "4NysXGejZAzW11wLZ-jDS",
-                        "type": "Data Element",
-                        "value": "       ",
-                        "desc": "Allocation",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51217"
-                      },
-                      {
-                        "key": "-UnhDCE4EMYbJII_WikhE",
-                        "type": "Data Element",
-                        "value": "       ",
-                        "desc": "Warehouse Location",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51218"
-                      },
-                      {
-                        "key": "05FEZb0gaYOl6tVRKpcBx",
-                        "type": "Data Element",
-                        "value": "     ",
-                        "desc": "Empty",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 5,
-                        "designator": "51219"
-                      }
-                    ]
-                  },
-                  {
-                    "key": "y-Au-UTZf5ypx4nUryWEl",
-                    "id": "513",
-                    "elements": [
-                      {
-                        "key": "oPaz1c4FNtVFYccWaZFR8",
-                        "type": "Data Element",
-                        "value": "01",
-                        "desc": "Version Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 2,
-                        "designator": "51301"
-                      },
-                      {
-                        "key": "QbOvffgZClQsufKFvnS4H",
-                        "type": "Data Element",
-                        "value": "121113",
-                        "desc": "Entry Date Last delivery",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51302"
-                      },
-                      {
-                        "key": "yUIQ0DKlpeprmwPZ7h7ZX",
-                        "type": "Data Element",
-                        "value": "432701  ",
-                        "desc": "Delivery Note Number last delivery",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 8,
-                        "designator": "51303"
-                      },
-                      {
-                        "key": "JchStOvIEN7GTf5_dY7oP",
-                        "type": "Data Element",
-                        "value": "      ",
-                        "desc": "Delivery Note Date last delivery",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51304"
-                      },
-                      {
-                        "key": "-aJab5GXx1m_cudkrZYJP",
-                        "type": "Data Element",
-                        "value": "000000346000",
-                        "desc": "Quantity Last Delivery",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 12,
-                        "designator": "51305"
-                      },
-                      {
-                        "key": "HVg4oXe2BNvD9_TzNF02z",
-                        "type": "Data Element",
-                        "value": "0000019427",
-                        "desc": "Cumulative Figure",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 10,
-                        "designator": "51306"
-                      },
-                      {
-                        "key": "od3cW25nuk-VdJ7StuMuj",
-                        "type": "Data Element",
-                        "value": "121115",
-                        "desc": "Call Off Date 1",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51307"
-                      },
-                      {
-                        "key": "-Cvlbh7970hfGi3aMM5a0",
-                        "type": "Data Element",
-                        "value": "000000000",
-                        "desc": "Call Off Quantity 1",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51308"
-                      },
-                      {
-                        "key": "M-qhn5ND5xj63G57CmTYC",
-                        "type": "Data Element",
-                        "value": "000000",
-                        "desc": "Call Off Date 2",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51309"
-                      },
-                      {
-                        "key": "I8Ukg-v4Kwz5ND1y6JuNC",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Call Off Quantity 2",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51310"
-                      },
-                      {
-                        "key": "yPdHwEZdwxXp-YNKLpSjs",
-                        "type": "Data Element",
-                        "value": "      ",
-                        "desc": "Call Off Date 3",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51311"
-                      },
-                      {
-                        "key": "Pb92k1j2IdcluLmlyaPJZ",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Call Off Quantity 3",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51312"
-                      },
-                      {
-                        "key": "NhT6QwPgcfB1CJgfTYqUp",
-                        "type": "Data Element",
-                        "value": "      ",
-                        "desc": "Call Off Date 4",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51313"
-                      },
-                      {
-                        "key": "OBS7uLXIA_j4TBySMt2j-",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Call Off Quantity 4",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51314"
-                      },
-                      {
-                        "key": "OM3p24HMjm2DcKMQqD9Jv",
-                        "type": "Data Element",
-                        "value": "      ",
-                        "desc": "Call Off Date 5",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51315"
-                      },
-                      {
-                        "key": "yWAhla1XWhBFy9IRBR9cB",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Call Off Quantity 5",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51316"
-                      },
-                      {
-                        "key": "VU_Eqnb2zLIsAvdj3E9sa",
-                        "type": "Data Element",
-                        "value": "      ",
-                        "desc": "Empty",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51317"
-                      }
-                    ]
-                  },
-                  {
-                    "key": "jqQU2i-fIVYlOz18qNjC1",
-                    "id": "515",
-                    "elements": [
-                      {
-                        "key": "A-fC__8H13tYbtaWGm8Aq",
-                        "type": "Data Element",
-                        "value": "01",
-                        "desc": "Version Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 2,
-                        "designator": "51501"
-                      },
-                      {
-                        "key": "RZRk8BdgXAyGxmkXDQFW-",
-                        "type": "Data Element",
-                        "value": "000000",
-                        "desc": "Production Authorisation, start date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51502"
-                      },
-                      {
-                        "key": "0HtkXIcAjy9eRN2odZJra",
-                        "type": "Data Element",
-                        "value": "130213",
-                        "desc": "Production Authorisation, end date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51503"
-                      },
-                      {
-                        "key": "pt-5G-Wg9AyUZyd_ZgnIg",
-                        "type": "Data Element",
-                        "value": "0000000000",
-                        "desc": "Production Authorisation, cumulative quantity",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 10,
-                        "designator": "51504"
-                      },
-                      {
-                        "key": "ceVMq7M2DQt7osWSjrv_L",
-                        "type": "Data Element",
-                        "value": "000000",
-                        "desc": "Material Authorisation, start date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51505"
-                      },
-                      {
-                        "key": "YJM2ccKIgh3AJKx8n8xhP",
-                        "type": "Data Element",
-                        "value": "130315",
-                        "desc": "Material Authorisation, end date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51506"
-                      },
-                      {
-                        "key": "zbAd89PVUDotJSjRowvh-",
-                        "type": "Data Element",
-                        "value": "0000000000",
-                        "desc": "Material Authorisation, cumulative demand",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 10,
-                        "designator": "51507"
-                      },
-                      {
-                        "key": "fpUkKKyCym5KXMFk-YQ56",
-                        "type": "Data Element",
-                        "value": "                      ",
-                        "desc": "FPSD Article Code",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 22,
-                        "designator": "51508"
-                      },
-                      {
-                        "key": "4eHaWtkHWhaDeup3_lWEQ",
-                        "type": "Data Element",
-                        "value": "         ",
-                        "desc": "Sub Supplier",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 9,
-                        "designator": "51509"
-                      },
-                      {
-                        "key": "R7pNtqWQja8RmNy7jcXzE",
-                        "type": "Data Element",
-                        "value": "000000",
-                        "desc": "Planning Horizon Date",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 6,
-                        "designator": "51510"
-                      },
-                      {
-                        "key": "Z5ATEk_MxZR-hCAnSMq2c",
-                        "type": "Data Element",
-                        "value": "              ",
-                        "desc": "Point Of Use",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 14,
-                        "designator": "51511"
-                      },
-                      {
-                        "key": "DWUxh1beybkkJgUmxKfdd",
-                        "type": "Data Element",
-                        "value": "          ",
-                        "desc": "Cumulative Received Quantity before resetting it to zero",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 10,
-                        "designator": "51512"
-                      },
-                      {
-                        "key": "ov98KOa2MTpPJswhExsfd",
-                        "type": "Data Element",
-                        "value": "                  ",
-                        "desc": "Empty",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 18,
-                        "designator": "51513"
-                      }
-                    ]
-                  },
-                  {
-                    "key": "6jZjseaVyLO2k__57Lpi7",
-                    "id": "518",
-                    "elements": [
-                      {
-                        "key": "Zd4fxqz7A8NrY9FurgIPv",
-                        "type": "Data Element",
-                        "value": "01",
-                        "desc": "Version Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 2,
-                        "designator": "51801"
-                      },
-                      {
-                        "key": "Y9nS1MNUK4cjG0Eyf7hUe",
-                        "type": "Data Element",
-                        "value": "07-08140295/04                          ",
-                        "desc": "Call Off Text 1",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 40,
-                        "designator": "51802"
-                      },
-                      {
-                        "key": "MAlN99bsrk-7qZrL0uY50",
-                        "type": "Data Element",
-                        "value": "23-09140029                             ",
-                        "desc": "Call Off Text 2",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 40,
-                        "designator": "51803"
-                      },
-                      {
-                        "key": "NN6pJD1_5dGJ2DMFYJCz1",
-                        "type": "Data Element",
-                        "value": "                                        ",
-                        "desc": "Call Off Text 3",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 40,
-                        "designator": "51804"
-                      },
-                      {
-                        "key": "_wbIepTL2R0ivsXKofK5j",
-                        "type": "Data Element",
-                        "value": "   ",
-                        "desc": "Empty",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 3,
-                        "designator": "51805"
-                      }
-                    ]
-                  },
-                  {
-                    "key": "wWHEUDfqjq7FS5IORSu2J",
-                    "id": "519",
-                    "elements": [
-                      {
-                        "key": "aqMel-gST2ovzu-_cF9G1",
-                        "type": "Data Element",
-                        "value": "01",
-                        "desc": "Version Number",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 2,
-                        "designator": "51901"
-                      },
-                      {
-                        "key": "jDdplOmCdhdmLNXAJ6GXu",
-                        "type": "Data Element",
-                        "value": "0000001",
-                        "desc": "Counter Record 511",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51902"
-                      },
-                      {
-                        "key": "UsTdxSLuVI92sms2AKZkk",
-                        "type": "Data Element",
-                        "value": "0000001",
-                        "desc": "Counter Record 512",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51903"
-                      },
-                      {
-                        "key": "LZq8KJNAZrXGsism_DlSx",
-                        "type": "Data Element",
-                        "value": "0000001",
-                        "desc": "Counter Record 513",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51904"
-                      },
-                      {
-                        "key": "rvLWeeKhUZOSQyNLTpwG7",
-                        "type": "Data Element",
-                        "value": "0000000",
-                        "desc": "Counter Record 514",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51905"
-                      },
-                      {
-                        "key": "JnQtIUapwukmBRMFJSQR-",
-                        "type": "Data Element",
-                        "value": "0000000",
-                        "desc": "Counter Record 517",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51906"
-                      },
-                      {
-                        "key": "uyJ5zvi0Gbewqr__l63QV",
-                        "type": "Data Element",
-                        "value": "0000001",
-                        "desc": "Counter Record 518",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51907"
-                      },
-                      {
-                        "key": "vaC4SIetQXaNa0pb7HVPS",
-                        "type": "Data Element",
-                        "value": "0000001",
-                        "desc": "Counter Record 519",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51908"
-                      },
-                      {
-                        "key": "9hcWgxWKXJB04NQkbvRrZ",
-                        "type": "Data Element",
-                        "value": "0000001",
-                        "desc": "Counter Record 515",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 7,
-                        "designator": "51909"
-                      },
-                      {
-                        "key": "QOYXm5eBGQHM0oYVLOmbP",
-                        "type": "Data Element",
-                        "value": "                                                                   ",
-                        "desc": "Empty",
-                        "dataType": "AN",
-                        "required": true,
-                        "length": 67,
-                        "designator": "51910"
+                    "nodeKey": "loop:512Loop:130:648",
+                    "id": "512Loop",
+                    "elements": [],
+                    "desc": "Delivery Instruction Data",
+                    "Loop": [
+                      {
+                        "nodeKey": "segment:512:130:258",
+                        "id": "512",
+                        "segmentStr": "51201030187      121115186      1211091514280009100                               CGF-56026482A 13     STL                      ",
+                        "elements": [
+                          {
+                            "nodeKey": "element:51201:133:134",
+                            "type": "Data Element",
+                            "value": "01",
+                            "desc": "Version Number",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 2,
+                            "designator": "51201"
+                          },
+                          {
+                            "nodeKey": "element:51202:135:137",
+                            "type": "Data Element",
+                            "value": "030",
+                            "desc": "Plant Customer",
+                            "dataType": "AN",
+                            "required": true,
+                            "codeValue": "Component plant Berlin",
+                            "length": 3,
+                            "designator": "51202"
+                          },
+                          {
+                            "nodeKey": "element:51203:138:146",
+                            "type": "Data Element",
+                            "value": "187      ",
+                            "desc": "New Call Off Number",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 9,
+                            "designator": "51203"
+                          },
+                          {
+                            "nodeKey": "element:51204:147:152",
+                            "type": "Data Element",
+                            "value": "121115",
+                            "desc": "New Call Off Date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51204"
+                          },
+                          {
+                            "nodeKey": "element:51205:153:161",
+                            "type": "Data Element",
+                            "value": "186      ",
+                            "desc": "Old Call Off Number",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 9,
+                            "designator": "51205"
+                          },
+                          {
+                            "nodeKey": "element:51206:162:167",
+                            "type": "Data Element",
+                            "value": "121109",
+                            "desc": "Old Call Off Date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51206"
+                          },
+                          {
+                            "nodeKey": "element:51207:168:189",
+                            "type": "Data Element",
+                            "value": "1514280009100         ",
+                            "desc": "Customer Part Number",
+                            "dataType": "AN",
+                            "required": true,
+                            "length": 22,
+                            "designator": "51207"
+                          },
+                          {
+                            "nodeKey": "element:51208:190:211",
+                            "type": "Data Element",
+                            "value": "                      ",
+                            "desc": "Supplier Part Number",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 22,
+                            "designator": "51208"
+                          },
+                          {
+                            "nodeKey": "element:51209:212:223",
+                            "type": "Data Element",
+                            "value": "CGF-56026482",
+                            "desc": "Purchase Order Number",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 12,
+                            "designator": "51209"
+                          },
+                          {
+                            "nodeKey": "element:51210:224:228",
+                            "type": "Data Element",
+                            "value": "A 13 ",
+                            "desc": "Unloading Point",
+                            "dataType": "AN",
+                            "required": true,
+                            "length": 5,
+                            "designator": "51210"
+                          },
+                          {
+                            "nodeKey": "element:51211:229:232",
+                            "type": "Data Element",
+                            "value": "    ",
+                            "desc": "Code Of Customer",
+                            "dataType": "AN",
+                            "required": true,
+                            "length": 4,
+                            "designator": "51211"
+                          },
+                          {
+                            "nodeKey": "element:51212:233:234",
+                            "type": "Data Element",
+                            "value": "ST",
+                            "desc": "Unit Of Measurement",
+                            "dataType": "AN",
+                            "required": true,
+                            "codeValue": "Piece",
+                            "length": 2,
+                            "designator": "51212"
+                          },
+                          {
+                            "nodeKey": "element:51213:235:235",
+                            "type": "Data Element",
+                            "value": "L",
+                            "desc": "Delivery Interval",
+                            "dataType": "AN",
+                            "required": true,
+                            "codeValue": "In accordance with delivery date",
+                            "length": 1,
+                            "designator": "51213"
+                          },
+                          {
+                            "nodeKey": "element:51214:236:236",
+                            "type": "Data Element",
+                            "value": " ",
+                            "desc": "Inclusive Production Release",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 1,
+                            "designator": "51214"
+                          },
+                          {
+                            "nodeKey": "element:51215:237:237",
+                            "type": "Data Element",
+                            "value": " ",
+                            "desc": "Material Release",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 1,
+                            "designator": "51215"
+                          },
+                          {
+                            "nodeKey": "element:51216:238:238",
+                            "type": "Data Element",
+                            "value": " ",
+                            "desc": "Code Usage",
+                            "dataType": "AN",
+                            "required": true,
+                            "codeValue": "Invalid code value",
+                            "length": 1,
+                            "designator": "51216"
+                          },
+                          {
+                            "nodeKey": "element:51217:239:245",
+                            "type": "Data Element",
+                            "value": "       ",
+                            "desc": "Allocation",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 7,
+                            "designator": "51217"
+                          },
+                          {
+                            "nodeKey": "element:51218:246:252",
+                            "type": "Data Element",
+                            "value": "       ",
+                            "desc": "Warehouse Location",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 7,
+                            "designator": "51218"
+                          },
+                          {
+                            "nodeKey": "element:51219:253:257",
+                            "type": "Data Element",
+                            "value": "     ",
+                            "desc": "Empty",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 5,
+                            "designator": "51219"
+                          }
+                        ],
+                        "desc": "Delivery Instruction Data"
+                      },
+                      {
+                        "nodeKey": "segment:513:260:388",
+                        "id": "513",
+                        "segmentStr": "51301121113432701        0000003460000000019427121115000000000000000                                                            ",
+                        "elements": [
+                          {
+                            "nodeKey": "element:51301:263:264",
+                            "type": "Data Element",
+                            "value": "01",
+                            "desc": "Version Number",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 2,
+                            "designator": "51301"
+                          },
+                          {
+                            "nodeKey": "element:51302:265:270",
+                            "type": "Data Element",
+                            "value": "121113",
+                            "desc": "Entry Date Last delivery",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51302"
+                          },
+                          {
+                            "nodeKey": "element:51303:271:278",
+                            "type": "Data Element",
+                            "value": "432701  ",
+                            "desc": "Delivery Note Number last delivery",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 8,
+                            "designator": "51303"
+                          },
+                          {
+                            "nodeKey": "element:51304:279:284",
+                            "type": "Data Element",
+                            "value": "      ",
+                            "desc": "Delivery Note Date last delivery",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51304"
+                          },
+                          {
+                            "nodeKey": "element:51305:285:296",
+                            "type": "Data Element",
+                            "value": "000000346000",
+                            "desc": "Quantity Last Delivery",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 12,
+                            "designator": "51305"
+                          },
+                          {
+                            "nodeKey": "element:51306:297:306",
+                            "type": "Data Element",
+                            "value": "0000019427",
+                            "desc": "Cumulative Figure",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 10,
+                            "designator": "51306"
+                          },
+                          {
+                            "nodeKey": "element:51307:307:312",
+                            "type": "Data Element",
+                            "value": "121115",
+                            "desc": "Call Off Date 1",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51307"
+                          },
+                          {
+                            "nodeKey": "element:51308:313:321",
+                            "type": "Data Element",
+                            "value": "000000000",
+                            "desc": "Call Off Quantity 1",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 9,
+                            "designator": "51308"
+                          },
+                          {
+                            "nodeKey": "element:51309:322:327",
+                            "type": "Data Element",
+                            "value": "000000",
+                            "desc": "Call Off Date 2",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 6,
+                            "designator": "51309"
+                          },
+                          {
+                            "nodeKey": "element:51310:328:336",
+                            "type": "Data Element",
+                            "value": "         ",
+                            "desc": "Call Off Quantity 2",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 9,
+                            "designator": "51310"
+                          },
+                          {
+                            "nodeKey": "element:51311:337:342",
+                            "type": "Data Element",
+                            "value": "      ",
+                            "desc": "Call Off Date 3",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 6,
+                            "designator": "51311"
+                          },
+                          {
+                            "nodeKey": "element:51312:343:351",
+                            "type": "Data Element",
+                            "value": "         ",
+                            "desc": "Call Off Quantity 3",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 9,
+                            "designator": "51312"
+                          },
+                          {
+                            "nodeKey": "element:51313:352:357",
+                            "type": "Data Element",
+                            "value": "      ",
+                            "desc": "Call Off Date 4",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 6,
+                            "designator": "51313"
+                          },
+                          {
+                            "nodeKey": "element:51314:358:366",
+                            "type": "Data Element",
+                            "value": "         ",
+                            "desc": "Call Off Quantity 4",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 9,
+                            "designator": "51314"
+                          },
+                          {
+                            "nodeKey": "element:51315:367:372",
+                            "type": "Data Element",
+                            "value": "      ",
+                            "desc": "Call Off Date 5",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 6,
+                            "designator": "51315"
+                          },
+                          {
+                            "nodeKey": "element:51316:373:381",
+                            "type": "Data Element",
+                            "value": "         ",
+                            "desc": "Call Off Quantity 5",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 9,
+                            "designator": "51316"
+                          },
+                          {
+                            "nodeKey": "element:51317:382:387",
+                            "type": "Data Element",
+                            "value": "      ",
+                            "desc": "Empty",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 6,
+                            "designator": "51317"
+                          }
+                        ],
+                        "desc": "Reconciliation and Schedule Data"
+                      },
+                      {
+                        "nodeKey": "segment:515:390:518",
+                        "id": "515",
+                        "segmentStr": "5150100000013021300000000000000001303150000000000                               000000                                          ",
+                        "elements": [
+                          {
+                            "nodeKey": "element:51501:393:394",
+                            "type": "Data Element",
+                            "value": "01",
+                            "desc": "Version Number",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 2,
+                            "designator": "51501"
+                          },
+                          {
+                            "nodeKey": "element:51502:395:400",
+                            "type": "Data Element",
+                            "value": "000000",
+                            "desc": "Production Authorisation, start date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51502"
+                          },
+                          {
+                            "nodeKey": "element:51503:401:406",
+                            "type": "Data Element",
+                            "value": "130213",
+                            "desc": "Production Authorisation, end date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51503"
+                          },
+                          {
+                            "nodeKey": "element:51504:407:416",
+                            "type": "Data Element",
+                            "value": "0000000000",
+                            "desc": "Production Authorisation, cumulative quantity",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 10,
+                            "designator": "51504"
+                          },
+                          {
+                            "nodeKey": "element:51505:417:422",
+                            "type": "Data Element",
+                            "value": "000000",
+                            "desc": "Material Authorisation, start date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51505"
+                          },
+                          {
+                            "nodeKey": "element:51506:423:428",
+                            "type": "Data Element",
+                            "value": "130315",
+                            "desc": "Material Authorisation, end date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51506"
+                          },
+                          {
+                            "nodeKey": "element:51507:429:438",
+                            "type": "Data Element",
+                            "value": "0000000000",
+                            "desc": "Material Authorisation, cumulative demand",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 10,
+                            "designator": "51507"
+                          },
+                          {
+                            "nodeKey": "element:51508:439:460",
+                            "type": "Data Element",
+                            "value": "                      ",
+                            "desc": "FPSD Article Code",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 22,
+                            "designator": "51508"
+                          },
+                          {
+                            "nodeKey": "element:51509:461:469",
+                            "type": "Data Element",
+                            "value": "         ",
+                            "desc": "Sub Supplier",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 9,
+                            "designator": "51509"
+                          },
+                          {
+                            "nodeKey": "element:51510:470:475",
+                            "type": "Data Element",
+                            "value": "000000",
+                            "desc": "Planning Horizon Date",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 6,
+                            "designator": "51510"
+                          },
+                          {
+                            "nodeKey": "element:51511:476:489",
+                            "type": "Data Element",
+                            "value": "              ",
+                            "desc": "Point Of Use",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 14,
+                            "designator": "51511"
+                          },
+                          {
+                            "nodeKey": "element:51512:490:499",
+                            "type": "Data Element",
+                            "value": "          ",
+                            "desc": "Cumulative Received Quantity before resetting it to zero",
+                            "dataType": "N",
+                            "required": false,
+                            "length": 10,
+                            "designator": "51512"
+                          },
+                          {
+                            "nodeKey": "element:51513:500:517",
+                            "type": "Data Element",
+                            "value": "                  ",
+                            "desc": "Empty",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 18,
+                            "designator": "51513"
+                          }
+                        ],
+                        "desc": "Supplementary Data"
+                      },
+                      {
+                        "nodeKey": "segment:518:520:648",
+                        "id": "518",
+                        "segmentStr": "5180107-08140295/04                          23-09140029                                                                        ",
+                        "elements": [
+                          {
+                            "nodeKey": "element:51801:523:524",
+                            "type": "Data Element",
+                            "value": "01",
+                            "desc": "Version Number",
+                            "dataType": "N",
+                            "required": true,
+                            "length": 2,
+                            "designator": "51801"
+                          },
+                          {
+                            "nodeKey": "element:51802:525:564",
+                            "type": "Data Element",
+                            "value": "07-08140295/04                          ",
+                            "desc": "Call Off Text 1",
+                            "dataType": "AN",
+                            "required": true,
+                            "length": 40,
+                            "designator": "51802"
+                          },
+                          {
+                            "nodeKey": "element:51803:565:604",
+                            "type": "Data Element",
+                            "value": "23-09140029                             ",
+                            "desc": "Call Off Text 2",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 40,
+                            "designator": "51803"
+                          },
+                          {
+                            "nodeKey": "element:51804:605:644",
+                            "type": "Data Element",
+                            "value": "                                        ",
+                            "desc": "Call Off Text 3",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 40,
+                            "designator": "51804"
+                          },
+                          {
+                            "nodeKey": "element:51805:645:647",
+                            "type": "Data Element",
+                            "value": "   ",
+                            "desc": "Empty",
+                            "dataType": "AN",
+                            "required": false,
+                            "length": 3,
+                            "designator": "51805"
+                          }
+                        ],
+                        "desc": "Text Data"
                       }
                     ]
                   }
-                ]
+                ],
+                "startSegment": {
+                  "nodeKey": "segment:511:0:128",
+                  "id": "511",
+                  "segmentStr": "51102                  9999900001250124111231                                                                                   ",
+                  "elements": [
+                    {
+                      "nodeKey": "element:51101:3:4",
+                      "type": "Data Element",
+                      "value": "02",
+                      "desc": "Version Number",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 2,
+                      "designator": "51101"
+                    },
+                    {
+                      "nodeKey": "element:51102:5:13",
+                      "type": "Data Element",
+                      "value": "         ",
+                      "desc": "Customer Number",
+                      "dataType": "AN",
+                      "required": true,
+                      "length": 9,
+                      "designator": "51102"
+                    },
+                    {
+                      "nodeKey": "element:51103:14:22",
+                      "type": "Data Element",
+                      "value": "         ",
+                      "desc": "Supplier Number",
+                      "dataType": "AN",
+                      "required": true,
+                      "length": 9,
+                      "designator": "51103"
+                    },
+                    {
+                      "nodeKey": "element:51104:23:27",
+                      "type": "Data Element",
+                      "value": "99999",
+                      "desc": "Old Transmission Number",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 5,
+                      "designator": "51104"
+                    },
+                    {
+                      "nodeKey": "element:51105:28:32",
+                      "type": "Data Element",
+                      "value": "00001",
+                      "desc": "New Transmission Number",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 5,
+                      "designator": "51105"
+                    },
+                    {
+                      "nodeKey": "element:51106:33:38",
+                      "type": "Data Element",
+                      "value": "250124",
+                      "desc": "Transmission Date",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 6,
+                      "designator": "51106"
+                    },
+                    {
+                      "nodeKey": "element:51107:39:44",
+                      "type": "Data Element",
+                      "value": "111231",
+                      "desc": "Date Of Zero",
+                      "dataType": "N",
+                      "required": false,
+                      "length": 6,
+                      "designator": "51107"
+                    },
+                    {
+                      "nodeKey": "element:51108:45:127",
+                      "type": "Data Element",
+                      "value": "                                                                                   ",
+                      "desc": "Empty",
+                      "dataType": "AN",
+                      "required": false,
+                      "length": 83,
+                      "designator": "51108"
+                    }
+                  ],
+                  "desc": "Interchange Header"
+                },
+                "endSegment": {
+                  "nodeKey": "segment:519:650:778",
+                  "id": "519",
+                  "segmentStr": "5190100000010000001000000100000000000000000000100000010000001                                                                   ",
+                  "elements": [
+                    {
+                      "nodeKey": "element:51901:653:654",
+                      "type": "Data Element",
+                      "value": "01",
+                      "desc": "Version Number",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 2,
+                      "designator": "51901"
+                    },
+                    {
+                      "nodeKey": "element:51902:655:661",
+                      "type": "Data Element",
+                      "value": "0000001",
+                      "desc": "Counter Record 511",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51902"
+                    },
+                    {
+                      "nodeKey": "element:51903:662:668",
+                      "type": "Data Element",
+                      "value": "0000001",
+                      "desc": "Counter Record 512",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51903"
+                    },
+                    {
+                      "nodeKey": "element:51904:669:675",
+                      "type": "Data Element",
+                      "value": "0000001",
+                      "desc": "Counter Record 513",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51904"
+                    },
+                    {
+                      "nodeKey": "element:51905:676:682",
+                      "type": "Data Element",
+                      "value": "0000000",
+                      "desc": "Counter Record 514",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51905"
+                    },
+                    {
+                      "nodeKey": "element:51906:683:689",
+                      "type": "Data Element",
+                      "value": "0000000",
+                      "desc": "Counter Record 517",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51906"
+                    },
+                    {
+                      "nodeKey": "element:51907:690:696",
+                      "type": "Data Element",
+                      "value": "0000001",
+                      "desc": "Counter Record 518",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51907"
+                    },
+                    {
+                      "nodeKey": "element:51908:697:703",
+                      "type": "Data Element",
+                      "value": "0000001",
+                      "desc": "Counter Record 519",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51908"
+                    },
+                    {
+                      "nodeKey": "element:51909:704:710",
+                      "type": "Data Element",
+                      "value": "0000001",
+                      "desc": "Counter Record 515",
+                      "dataType": "N",
+                      "required": true,
+                      "length": 7,
+                      "designator": "51909"
+                    },
+                    {
+                      "nodeKey": "element:51910:711:777",
+                      "type": "Data Element",
+                      "value": "                                                                   ",
+                      "desc": "Empty",
+                      "dataType": "AN",
+                      "required": false,
+                      "length": 67,
+                      "designator": "51910"
+                    }
+                  ],
+                  "desc": "Interchange Trailer"
+                }
               }
             ]
           }
@@ -4299,97 +5561,7 @@ export default function useTestData(): EdiDocument {
     "ediType": "vda"
   };
 
-  hydrateSegmentStrings(x12TestData);
-  hydrateSegmentStrings(edifactTestData);
-  hydrateSegmentStrings(vdaTestData);
-
+  void x12TestData;
+  void vdaTestData;
   return new EdiDocument(edifactTestData);
-}
-
-function hydrateSegmentStrings(ediDocument: IEdiDocument): void {
-  visitSegmentCollection([
-    ediDocument.separatorsSegment,
-    ediDocument.startSegment,
-    ediDocument.endSegment
-  ], ediDocument.ediType);
-
-  ediDocument.interchanges.forEach(interchange => {
-    visitSegmentCollection([
-      interchange.startSegment,
-      interchange.endSegment
-    ], ediDocument.ediType);
-
-    interchange.functionalGroups.forEach(functionalGroup => {
-      visitSegmentCollection([
-        functionalGroup.startSegment,
-        functionalGroup.endSegment
-      ], ediDocument.ediType);
-
-      functionalGroup.transactionSets.forEach(transactionSet => {
-        visitSegmentCollection([
-          transactionSet.startSegment,
-          ...transactionSet.segments,
-          transactionSet.endSegment
-        ], ediDocument.ediType);
-      });
-    });
-  });
-}
-
-function visitSegmentCollection(
-  segments: Array<IEdiSegment | undefined>,
-  ediType: IEdiType | undefined
-): void {
-  segments.forEach(segment => {
-    if (!segment) {
-      return;
-    }
-
-    hydrateSegment(segment, ediType);
-  });
-}
-
-function hydrateSegment(segment: IEdiSegment, ediType: IEdiType | undefined): void {
-  if (segment.Loop?.length) {
-    segment.Loop.forEach(loopSegment => hydrateSegment(loopSegment, ediType));
-    return;
-  }
-
-  segment.segmentStr ??= buildSegmentString(segment, ediType);
-}
-
-function buildSegmentString(segment: IEdiSegment, ediType: IEdiType | undefined): string {
-  if (ediType === "vda") {
-    return `${segment.id}${segment.elements.map(formatVdaElement).join("")}`;
-  }
-
-  if (ediType === "edifact" && segment.id === "UNA") {
-    return `${segment.id}${segment.elements.map(element => formatElementValue(element, ":")).join("")}`;
-  }
-
-  const dataElementSeparator = ediType === "edifact" ? "+" : "*";
-  const componentElementSeparator = ediType === "edifact" ? ":" : ">";
-  const segmentTerminator = ediType === "edifact" ? "'" : "~";
-
-  const payload = segment.elements
-    .map(element => `${dataElementSeparator}${formatElementValue(element, componentElementSeparator)}`)
-    .join("");
-
-  return `${segment.id}${payload}${segmentTerminator}`;
-}
-
-function formatElementValue(element: IEdiElement, componentElementSeparator: string): string {
-  if (element.components?.length) {
-    return element.components
-      .map(component => formatElementValue(component, componentElementSeparator))
-      .join(componentElementSeparator);
-  }
-
-  return element.value ?? "";
-}
-
-function formatVdaElement(element: IEdiElement): string {
-  const value = element.value ?? formatElementValue(element, "");
-  const length = element.length ?? value.length;
-  return value.padEnd(length, " ");
 }

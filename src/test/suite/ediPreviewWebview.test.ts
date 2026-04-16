@@ -221,10 +221,7 @@ suite("EDI Preview Webview Test Suite", () => {
       subscriptions: [],
     } as unknown as vscode.ExtensionContext);
     const document = EdiMockFactory.createMockDocument("ISA*00*~", "x12");
-    const ediDocument = {
-      getIResult: () => ({ key: "doc-key" }),
-      getSegments: () => [],
-    };
+    const ediDocument = createPreviewTestDocument();
     (EdiUtils as any).getEdiParser = () => ({
       parser: {
         parse: async () => ediDocument,
@@ -232,12 +229,8 @@ suite("EDI Preview Webview Test Suite", () => {
       ediType: EdiType.X12,
     });
     (EdiUtils as any).getSegmentOrElementByPosition = () => ({
-      segment: {
-        getIResult: () => ({ key: "segment-key" }),
-      },
-      element: {
-        getIResult: () => ({ key: "element-key" }),
-      },
+      segment: ediDocument.interchanges[0].startSegment,
+      element: ediDocument.interchanges[0].startSegment!.elements[0],
     });
 
     try {
@@ -259,7 +252,46 @@ suite("EDI Preview Webview Test Suite", () => {
       assert.deepStrictEqual(postedMessages[0], {
         name: "fileChange",
         data: {
-          key: "doc-key",
+          interchanges: [
+            {
+              nodeKey: "interchange:0001:0:8",
+              meta: {
+                id: "0001",
+              },
+              id: "0001",
+              functionalGroups: [],
+              startSegment: {
+                nodeKey: "segment:ISA:0:8",
+                id: "ISA",
+                segmentStr: undefined,
+                elements: [
+                  {
+                    nodeKey: "element:ISA01:1:3",
+                    type: "Data Element",
+                    value: undefined,
+                    components: undefined,
+                    id: undefined,
+                    desc: undefined,
+                    dataType: undefined,
+                    required: undefined,
+                    minLength: undefined,
+                    maxLength: undefined,
+                    codeValue: undefined,
+                    definition: undefined,
+                    length: undefined,
+                    designator: "ISA01",
+                  },
+                ],
+                desc: undefined,
+                purpose: undefined,
+                Loop: undefined,
+              },
+              endSegment: undefined,
+            },
+          ],
+          separatorsSegment: undefined,
+          startSegment: undefined,
+          endSegment: undefined,
           ediType: EdiType.X12,
         },
       });
@@ -268,8 +300,8 @@ suite("EDI Preview Webview Test Suite", () => {
       assert.deepStrictEqual(postedMessages[1], {
         name: "active",
         data: {
-          segmentKey: "segment-key",
-          elementKey: "element-key",
+          segmentNodeKey: "segment:ISA:0:8",
+          elementNodeKey: "element:ISA01:1:3",
         },
       });
 
@@ -313,3 +345,22 @@ suite("EDI Preview Webview Test Suite", () => {
     }
   });
 });
+
+function createPreviewTestDocument() {
+  const {
+    EdiDocument,
+    EdiDocumentSeparators,
+    EdiElement,
+    EdiInterchange,
+    EdiSegment,
+    ElementType,
+  } = require("../../parser/entities") as typeof import("../../parser/entities");
+  const document = new EdiDocument(new EdiDocumentSeparators(), EdiType.X12, {});
+  const interchange = new EdiInterchange({ id: "0001" }, document);
+  const segment = new EdiSegment("ISA", 0, 8, 9, "~");
+  const element = new EdiElement(segment, ElementType.dataElement, 1, 3, "*", "ISA", segment.startIndex, "01");
+  segment.elements = [element];
+  interchange.startSegment = segment;
+  document.interchanges = [interchange];
+  return document;
+}

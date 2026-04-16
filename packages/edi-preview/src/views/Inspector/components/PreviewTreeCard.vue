@@ -1,6 +1,6 @@
 <template>
   <section
-    :id="node.key"
+    :id="node.nodeKey"
     class="relative isolate rounded-[14px] border bg-white/95"
     :class="[
       isActive
@@ -53,7 +53,7 @@
 
     <div v-if="isOpen && hasBodyContent" class="relative z-[1] px-[10px] pb-[10px] pl-[42px] max-[600px]:pl-[14px]">
       <div v-if="visibleDetails.length" class="pb-1">
-        <div v-for="detail in visibleDetails" :key="`${node.key}-${detail.label}`" class="flex items-start gap-2 py-1 text-[var(--preview-text-soft)] max-[600px]:flex-col max-[600px]:gap-1">
+        <div v-for="detail in visibleDetails" :key="`${node.nodeKey}-${detail.label}`" class="flex items-start gap-2 py-1 text-[var(--preview-text-soft)] max-[600px]:flex-col max-[600px]:gap-1">
           <span class="basis-[120px] shrink-0 max-[600px]:basis-auto">{{ detail.label }}:</span>
           <span class="min-w-0 text-[var(--preview-text)]" :class="detail.mono ? 'font-mono leading-[1.45]' : 'leading-[1.45]'">{{ detail.value }}</span>
         </div>

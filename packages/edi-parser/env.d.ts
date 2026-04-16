@@ -1,7 +1,6 @@
 type IElementType = "Data Element" | "Component Element";
 
 interface IEdiElement {
-  key: string;
   type: IElementType;
   value?: string;
   components?: IEdiElement[];
@@ -18,7 +17,6 @@ interface IEdiElement {
 }
 
 interface IEdiSegment {
-  key: string;
   id: string;
   segmentStr?: string;
   elements: Array<IEdiElement>;
@@ -43,7 +41,6 @@ interface IEdiTransactionSetMeta {
 }
 
 interface IEdiTransactionSet {
-  key: string;
   meta: IEdiTransactionSetMeta;
   id?: string;
   segments: IEdiSegment[];
@@ -58,7 +55,6 @@ interface IEdiFunctionalGroupMeta {
 }
 
 interface IEdiFunctionalGroup {
-  key: string;
   meta: IEdiFunctionalGroupMeta;
   id?: string;
   transactionSets: IEdiTransactionSet[];
@@ -77,7 +73,6 @@ interface IEdiInterchangeMeta {
 }
 
 interface IEdiInterchange {
-  key: string;
   meta: IEdiInterchangeMeta;
   id?: string;
   functionalGroups: IEdiFunctionalGroup[];

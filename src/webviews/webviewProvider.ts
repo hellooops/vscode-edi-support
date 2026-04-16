@@ -3,6 +3,8 @@ import * as constants from "../constants";
 import * as path from "path";
 import { EdiUtils } from "../utils/ediUtils";
 import { EdiDocument } from "edi-parser";
+import { buildPreviewDocument } from "./previewDocument";
+import { getElementNodeKey, getSegmentNodeKey } from "./previewNodeKeys";
 
 export default class WebviewProvider {
   fileName: string;
@@ -107,11 +109,9 @@ export default class WebviewProvider {
   
     const ediDocument = await parser.parse();
     this.ediDocument = ediDocument;
-    const iEdiDocument = ediDocument.getIResult();
-    iEdiDocument.ediType = ediType as IEdiType;
     const vcm: VcmDocument = {
       name: "fileChange",
-      data: iEdiDocument
+      data: buildPreviewDocument(ediDocument, ediType as IEdiType)
     };
     await this.postMessageWhenReady(vcm);
   }
@@ -121,8 +121,8 @@ export default class WebviewProvider {
     const vcm: VcmActiveContext = {
       name: "active",
       data: {
-        segmentKey: segment?.getIResult()?.key,
-        elementKey: element?.getIResult()?.key
+        segmentNodeKey: segment ? getSegmentNodeKey(segment) : undefined,
+        elementNodeKey: segment && element ? getElementNodeKey(segment, element) : undefined
       }
     };
     await this.postMessageWhenReady(vcm);

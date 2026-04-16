@@ -14,7 +14,7 @@
   >
     <PreviewTreeNode
       v-for="child in childNodes"
-      :key="child.key"
+      :key="child.nodeKey"
       :node="child"
       :active-id="activeId"
       :depth="depth + 1"

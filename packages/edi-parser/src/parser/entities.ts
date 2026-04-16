@@ -37,8 +37,6 @@ export class EdiComment {
 }
 
 export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticErrorAble {
-  key: string;
-
   public id: string;
   public startIndex: number;
   public endIndex: number;
@@ -64,8 +62,6 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
   trailingComments: EdiComment[] = [];
 
   constructor(id: string, startIndex: number, endIndex: number, length: number, endingDelimiter: string) {
-    this.key = Utils.randomId();
-
     this.id = id;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
@@ -175,7 +171,6 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
 
   getIResult(): IEdiSegment {
     return {
-      key: this.key,
       id: this.id,
       segmentStr: this.segmentStr,
       desc: this.getDesc(),
@@ -252,8 +247,6 @@ export namespace DiagnosticErrors {
 }
 
 export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticErrorAble {
-  key: string;
-
   public type: ElementType;
   public value?: string;
   public startIndex: number;
@@ -268,8 +261,6 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
   public segment: EdiSegment;
 
   constructor(segment: EdiSegment, type: ElementType, startIndex: number, endIndex: number, separator: string, segmentName: string, segmentStartIndex: number, designatorIndex: string) {
-    this.key = Utils.randomId();
-
     this.segment = segment;
     this.type = type;
     this.startIndex = startIndex;
@@ -388,7 +379,6 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     }
 
     return {
-      key: this.key,
       type: this.type,
       value: this.value,
       components: this.components?.map(e => e.getIResult()),
@@ -428,7 +418,6 @@ export interface EdiTransactionSetMeta {
 }
 
 export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>, IDiagnosticErrorAble {
-  key: string;
   meta: EdiTransactionSetMeta;
 
   segments: EdiSegment[];
@@ -439,7 +428,6 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
   functionalGroup: EdiFunctionalGroup;
 
   constructor(meta: EdiTransactionSetMeta, functionalGroup: EdiFunctionalGroup) {
-    this.key = Utils.randomId();
     this.meta = meta;
 
     this.segments = [];
@@ -448,7 +436,6 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
 
   getIResult(): IEdiTransactionSet {
     return {
-      key: this.key,
       meta: this.meta,
       id: this.getId(),
 
@@ -615,7 +602,6 @@ export interface EdiFunctionalGroupMeta {
 }
 
 export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup>, IDiagnosticErrorAble {
-  key: string;
   meta: EdiFunctionalGroupMeta;
 
   transactionSets: EdiTransactionSet[];
@@ -628,7 +614,6 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
   private hasActiveTransactionSet: boolean = false;
 
   constructor(meta: EdiFunctionalGroupMeta, interchange: EdiInterchange) {
-    this.key = Utils.randomId();
     this.meta = meta;
 
     this.transactionSets = [];
@@ -637,7 +622,6 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
 
   getIResult(): IEdiFunctionalGroup {
     return {
-      key: this.key,
       meta: this.meta,
       id: this.getId(),
 
@@ -824,7 +808,6 @@ export interface EdiInterchangeMeta {
 }
 
 export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiagnosticErrorAble {
-  key: string;
   meta: EdiInterchangeMeta;
 
   // TODO(Deric): Meta info
@@ -838,7 +821,6 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
   private hasActiveFunctionalGroup: boolean = false;
 
   constructor(meta: EdiInterchangeMeta, document: EdiDocument) {
-    this.key = Utils.randomId();
     this.meta = meta;
     this.functionalGroups = [];
     this.document = document;
@@ -850,7 +832,6 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
 
   getIResult(): IEdiInterchange {
     return {
-      key: this.key,
       meta: this.meta,
       id: this.getId(),
 

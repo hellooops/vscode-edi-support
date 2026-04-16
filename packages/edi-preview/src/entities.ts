@@ -6,7 +6,7 @@ export interface TreeItemBase {
 }
 
 export class EdiElement implements TreeItemBase {
-  key: string;
+  nodeKey: string;
 
   type: IElementType;
   value?: string;
@@ -28,7 +28,7 @@ export class EdiElement implements TreeItemBase {
   parentElement?: EdiElement;
 
   constructor(json: IEdiElement, segment: EdiSegment, parentElement?: EdiElement) {
-    this.key = json.key;
+    this.nodeKey = json.nodeKey;
     this.type = json.type;
     this.value = json.value;
 
@@ -64,7 +64,7 @@ export class EdiElement implements TreeItemBase {
 }
 
 export class EdiSegment implements TreeItemBase {
-  key: any;
+  nodeKey: string;
 
   id: string;
   segmentStr?: string;
@@ -77,7 +77,7 @@ export class EdiSegment implements TreeItemBase {
   parentSegment?: EdiSegment;
 
   constructor(json: IEdiSegment, parent: EdiDocument | EdiInterchange | EdiFunctionalGroup | EdiTransactionSet) {
-    this.key = json.key;
+    this.nodeKey = json.nodeKey;
     this.id = json.id;
     this.segmentStr = json.segmentStr;
     this.desc = json.desc;
@@ -111,7 +111,7 @@ export class EdiSegment implements TreeItemBase {
 }
 
 export class EdiTransactionSet implements TreeItemBase {
-  key: string;
+  nodeKey: string;
   meta: IEdiTransactionSetMeta;
   id?: string;
   
@@ -123,7 +123,7 @@ export class EdiTransactionSet implements TreeItemBase {
   functionalGroup: EdiFunctionalGroup;
 
   constructor(json: IEdiTransactionSet, functionalGroup: EdiFunctionalGroup) {
-    this.key = json.key;
+    this.nodeKey = json.nodeKey;
     this.meta = json.meta;
     this.id = json.id;
 
@@ -153,7 +153,7 @@ export class EdiTransactionSet implements TreeItemBase {
 }
 
 export class EdiFunctionalGroup implements TreeItemBase {
-  key: string;
+  nodeKey: string;
   meta: IEdiFunctionalGroupMeta;
   id?: string;
   
@@ -165,7 +165,7 @@ export class EdiFunctionalGroup implements TreeItemBase {
   interchange: EdiInterchange;
 
   constructor(json: IEdiFunctionalGroup, interchange: EdiInterchange) {
-    this.key = json.key;
+    this.nodeKey = json.nodeKey;
     this.meta = json.meta;
     this.id = json.id;
 
@@ -200,7 +200,7 @@ export class EdiFunctionalGroup implements TreeItemBase {
 }
 
 export class EdiInterchange implements TreeItemBase {
-  key: string;
+  nodeKey: string;
   meta: IEdiInterchangeMeta;
   id?: string;
 
@@ -212,7 +212,7 @@ export class EdiInterchange implements TreeItemBase {
   ediDocument: EdiDocument;
 
   constructor(json: IEdiInterchange, ediDocument: EdiDocument) {
-    this.key = json.key;
+    this.nodeKey = json.nodeKey;
     this.meta = json.meta;
     this.id = json.id;
 
@@ -278,17 +278,17 @@ export class EdiDocument implements TreeItemBase {
     return result;
   }
 
-  getSegmentOrElementByKey(key: string): EdiSegment | EdiElement | undefined {
+  getSegmentOrElementByNodeKey(nodeKey: string): EdiSegment | EdiElement | undefined {
     const segments = this.getSegments();
     const flatSegments = Utils.flatSegments(segments); // Loop and nonloop segments are in the same level
     for (const segment of flatSegments) {
-      if (segment.key === key) return segment;
+      if (segment.nodeKey === nodeKey) return segment;
       if (segment.elements) {
         for (const dataEle of segment.elements) {
-          if (dataEle.key === key) return dataEle;
+          if (dataEle.nodeKey === nodeKey) return dataEle;
           if (dataEle.components) {
             for (const compEle of dataEle.components) {
-              if (compEle.key === key) return compEle;
+              if (compEle.nodeKey === nodeKey) return compEle;
             }
           }
         }

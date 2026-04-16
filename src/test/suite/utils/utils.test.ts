@@ -68,14 +68,6 @@ suite("Utils Test Suite", () => {
     assert.strictEqual(Utils.getValueAsBoolean(0), false);
   });
 
-  test("randomId should return non-empty ids", () => {
-    const id1 = Utils.randomId();
-    const id2 = Utils.randomId();
-
-    assert.strictEqual(typeof id1, "string");
-    assert.strictEqual(id1.length > 0, true);
-    assert.strictEqual(id1 === id2, false);
-  });
 });
 
 suite("StringBuilder Test Suite", () => {

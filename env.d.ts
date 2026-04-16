@@ -13,7 +13,7 @@ type VcmFileChange = VcmTemplate<{
 type IElementType = "Data Element" | "Component Element";
 
 interface IEdiElement {
-  key: string;
+  nodeKey: string;
 
   type: IElementType;
   value?: string;
@@ -35,7 +35,7 @@ interface IEdiElement {
 }
 
 interface IEdiSegment {
-  key: string;
+  nodeKey: string;
 
   id: string;
   segmentStr?: string;
@@ -61,7 +61,7 @@ interface IEdiTransactionSetMeta {
 }
 
 interface IEdiTransactionSet {
-  key: string;
+  nodeKey: string;
   meta: IEdiTransactionSetMeta;
   id?: string;
 
@@ -78,7 +78,7 @@ interface IEdiFunctionalGroupMeta {
 }
 
 interface IEdiFunctionalGroup {
-  key: string;
+  nodeKey: string;
   meta: IEdiFunctionalGroupMeta;
   id?: string;
 
@@ -99,7 +99,7 @@ interface IEdiInterchangeMeta {
 }
 
 interface IEdiInterchange {
-  key: string;
+  nodeKey: string;
   meta: IEdiInterchangeMeta;
   id?: string;
 
@@ -122,8 +122,8 @@ interface IEdiDocument {
 type VcmDocument = VcmTemplate<IEdiDocument>;
 
 type IActiveContext = {
-  segmentKey: string | undefined;
-  elementKey: string | undefined;
+  segmentNodeKey: string | undefined;
+  elementNodeKey: string | undefined;
 }
 
 type VcmActiveContext = VcmTemplate<IActiveContext>;

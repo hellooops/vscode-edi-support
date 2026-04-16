@@ -155,7 +155,7 @@ suite("TreeEdiProvider Test Suite", () => {
     loopSegment.Loop = [childSegment];
 
     const loopChildren = await provider.getChildren({
-      key: loopSegment.key,
+      key: "loop:PO1Loop1:6:12",
       type: 4 as any,
       segment: loopSegment,
     } as any);
@@ -177,7 +177,7 @@ suite("TreeEdiProvider Test Suite", () => {
     } as any;
 
     const attributeChildren = await provider.getChildren({
-      key: simpleElement.key,
+      key: "element:REF01:1:3",
       type: 5 as any,
       segment: parentSegment,
       element: simpleElement,

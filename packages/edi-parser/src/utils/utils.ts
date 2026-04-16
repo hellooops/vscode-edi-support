@@ -1,5 +1,3 @@
-import { nanoid } from "nanoid";
-
 export type Nullable<T> = T | null | undefined;
 
 export default class Utils {
@@ -63,10 +61,6 @@ export default class Utils {
     } else {
       return !!value;
     }
-  }
-
-  static randomId(): string {
-    return nanoid();
   }
 }
 

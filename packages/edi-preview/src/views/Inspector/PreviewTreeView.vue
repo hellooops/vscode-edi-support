@@ -7,7 +7,7 @@
       <div v-if="treeNodes.length" class="space-y-[10px]">
         <PreviewTreeNode
           v-for="node in treeNodes"
-          :key="node.key"
+          :key="node.nodeKey"
           :node="node"
           :active-id="activeId"
           :depth="0"

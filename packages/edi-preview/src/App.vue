@@ -24,7 +24,7 @@ onReceiveMessage("fileChange", (data) => {
 
 onReceiveMessage("active", async (data) => {
   const activeContext = data as IActiveContext;
-  const scrollToId = activeContext?.elementKey || activeContext?.segmentKey;
+  const scrollToId = activeContext?.elementNodeKey || activeContext?.segmentNodeKey;
   activeId.value = scrollToId;
 
   if (!scrollToId) {
