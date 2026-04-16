@@ -17,7 +17,6 @@ const {
   detectEdiType,
   DiagnosticErrors,
   EdifactParser,
-  EdiType,
   getBuiltInSchema,
   loadBuiltInSchemaBundle,
   parseEdi,
@@ -169,10 +168,8 @@ suite("edi-parser public api", () => {
 
     assert.ok(document);
 
-    const qualifierErrors = document.getErrors({
-      ediType: EdiType.X12,
-      standardOptions: document.standardOptions,
-    }).filter(error => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
+    const qualifierErrors = document.getErrors()
+      .filter(error => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
 
     assert.deepStrictEqual(qualifierErrors, []);
   });
@@ -250,21 +247,8 @@ suite("edi-parser public api", () => {
     });
     const document = await parser!.parse();
     const unaSegment = document.separatorsSegment;
-    const qualifierErrors = document.getErrors({
-      ediType: EdiType.EDIFACT,
-      customSchemas: {
-        edifact: {
-          _service: {
-            qualifiers: {
-              "Identification code qualifier": {
-                ZZ: "Mutually agreed qualifier",
-              },
-            },
-          },
-        },
-      },
-      standardOptions: document.standardOptions,
-    }).filter(error => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
+    const qualifierErrors = document.getErrors()
+      .filter(error => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
 
     assert.ok(unaSegment);
     assert.strictEqual(unaSegment.id, "UNA");

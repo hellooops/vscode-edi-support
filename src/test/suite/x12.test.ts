@@ -314,10 +314,7 @@ suite("X12 Parser Test Suite", () => {
       assert.ok(dtmSegment);
 
       const dtmErrors = ediDocument
-        .getErrors({
-          ediType: EdiType.X12,
-          standardOptions: ediDocument.standardOptions,
-        })
+        .getErrors()
         .filter(error => error.errorElement?.segment === dtmSegment);
 
       assert.deepStrictEqual(dtmErrors.map(error => error.code), [DiagnosticErrors.VALUE_TOO_LONG]);
@@ -333,10 +330,7 @@ suite("X12 Parser Test Suite", () => {
       assert.ok(dtmSegment);
 
       const dtmErrors = ediDocument
-        .getErrors({
-          ediType: EdiType.X12,
-          standardOptions: ediDocument.standardOptions,
-        })
+        .getErrors()
         .filter(error => error.errorElement?.segment === dtmSegment);
 
       assert.deepStrictEqual(dtmErrors, []);

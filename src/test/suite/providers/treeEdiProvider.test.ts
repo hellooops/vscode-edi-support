@@ -263,7 +263,7 @@ function createTreeDocument(): EdiDocument {
   const separators = new EdiDocumentSeparators();
   separators.segmentSeparator = "~";
   separators.dataElementSeparator = "*";
-  const ediDocument = new EdiDocument(separators, {
+  const ediDocument = new EdiDocument(separators, EdiType.X12, {
     interchangeStartSegmentName: "ISA",
     interchangeEndSegmentName: "IEA",
     functionalGroupStartSegmentName: "GS",

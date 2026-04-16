@@ -5,6 +5,7 @@ import * as constants from "../constants";
 import Utils from "../utils/utils";
 import MessageInfo from "../interfaces/messageInfo";
 import { type Conf_CustomSchema, type Conf_Supported_EdiType, Conf_Utils } from "../interfaces/configurations";
+import { type EdiTypeValue } from "../options";
 
 interface IEdiMessageResult<T> {
   getIResult(): T;
@@ -144,7 +145,7 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     return component;
   }
 
-  public getErrors(context: DiagnosticsContext): DiagnosticError[] {
+  public getErrors(options: EdiErrorOptions = {}): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.isInvalidSegment) {
       errors.push({
@@ -165,11 +166,11 @@ export class EdiSegment implements IEdiMessageResult<IEdiSegment>, IDiagnosticEr
     }
 
     if (this.isLoop()) {
-      errors.push(...this.Loop!.flatMap(i => i.getErrors(context)));
+      errors.push(...this.Loop!.flatMap(i => i.getErrors(options)));
     }
 
     if (!this.elements) return errors;
-    return errors.concat(this.elements.flatMap(el => el.getErrors(context)));
+    return errors.concat(this.elements.flatMap(el => el.getErrors(options)));
   }
 
   getIResult(): IEdiSegment {
@@ -206,8 +207,16 @@ export enum ElementType {
   componentElement = "Component Element"
 }
 
+export interface EdiValidationOptions {
+  customSchemas?: Conf_CustomSchema;
+}
+
+export interface EdiErrorOptions {
+  ignoreRequired?: boolean;
+}
+
 interface IDiagnosticErrorAble {
-  getErrors(context: DiagnosticsContext): DiagnosticError[];
+  getErrors(options?: EdiErrorOptions): DiagnosticError[];
 }
 
 export enum DiagnosticErrorSeverity {
@@ -241,17 +250,6 @@ export namespace DiagnosticErrors {
   export const SEGMENT_NOT_FOUND = "Edi Support: Segment not found";
   export const SEGMENT_MAXIMUM_OCCURRENCES_EXCEED = "Edi Support: Segment maximum occurrences exceed";
 }
-
-export interface DiagnosticsContext {
-  segment?: EdiSegment;
-  element?: EdiElement;
-  ediType: string;
-  customSchemas?: Conf_CustomSchema;
-  standardOptions: EdiStandardOptions;
-  ignoreRequired?: boolean;
-}
-
-export type DiagnoscticsContext = DiagnosticsContext;
 
 export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticErrorAble {
   key: string;
@@ -299,11 +297,11 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     return this.ediReleaseSchemaElement?.id ?? this.getDesignator();
   }
 
-  public getErrors(context: DiagnosticsContext): DiagnosticError[] {
+  public getErrors(options: EdiErrorOptions = {}): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.components && this.components.length > 0) {
       return this.components.reduce((errors: DiagnosticError[], component: EdiElement) => {
-        return errors.concat(component.getErrors(context).filter(i => i));
+        return errors.concat(component.getErrors(options).filter(i => i));
       }, errors);
     }
 
@@ -311,7 +309,10 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       return errors;
     }
 
-    const value = context.ediType === EdiType.VDA ? this.value?.trimEnd() : this.value;
+    const document = getRelatedDocument(this.segment);
+    const ediType = document?.ediType ?? EdiType.UNKNOWN;
+    const ignoreRequired = options.ignoreRequired ?? false;
+    const value = ediType === EdiType.VDA ? this.value?.trimEnd() : this.value;
     const idOrDesignator = this.getIdOrDesignator();
 
     if (value && value.length > this.ediReleaseSchemaElement.maxLength) {
@@ -332,7 +333,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
       });
     }
 
-    if (!context.ignoreRequired && this.ediReleaseSchemaElement?.required && !value) {
+    if (!ignoreRequired && this.ediReleaseSchemaElement?.required && !value) {
       errors.push({
         error: `Element ${idOrDesignator} is required.`,
         code: DiagnosticErrors.VALUE_REQUIRED,
@@ -344,7 +345,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
     if (this.ediReleaseSchemaElement.qualifierRef && value) {
       const release = this.ediReleaseSchemaElement._schema?.release ?? getRelatedTransactionSetRelease(this.segment);
       const elementValueCode = this.ediReleaseSchemaElement.getCodeOrNullByValue(value)
-        ?? getCustomQualifierCode(context, this.segment, release, this.ediReleaseSchemaElement.qualifierRef, value);
+        ?? getCustomQualifierCode(this.segment, release, this.ediReleaseSchemaElement.qualifierRef, value);
       if (!elementValueCode) {
         errors.push({
           error: `Invalid code value '${value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
@@ -352,7 +353,7 @@ export class EdiElement implements IEdiMessageResult<IEdiElement>, IDiagnosticEr
           severity: DiagnosticErrorSeverity.ERROR,
           errorElement: this,
           others: {
-            ediType: context.ediType,
+            ediType,
             release,
             qualifier: this.ediReleaseSchemaElement.qualifierRef,
             code: value
@@ -413,10 +414,10 @@ export class EdiMessageSeparators {
 }
 
 export class EdiType {
-  static X12 = constants.ediDocument.x12.name;
-  static EDIFACT = constants.ediDocument.edifact.name;
-  static VDA = constants.ediDocument.vda.name;
-  static UNKNOWN = "unknown";
+  static X12: EdiTypeValue = constants.ediDocument.x12.name as EdiTypeValue;
+  static EDIFACT: EdiTypeValue = constants.ediDocument.edifact.name as EdiTypeValue;
+  static VDA: EdiTypeValue = constants.ediDocument.vda.name as EdiTypeValue;
+  static UNKNOWN: EdiTypeValue = "unknown";
 }
 
 export interface EdiTransactionSetMeta {
@@ -523,18 +524,20 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     return segments[segments.length - 1];
   }
 
-  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
+  getSelfErrors(): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
-    if (context.standardOptions.transactionSetStartSegmentName && !this.startSegment) {
+    const document = getRelatedDocument(this);
+    const standardOptions = document?.standardOptions;
+    if (standardOptions?.transactionSetStartSegmentName && !this.startSegment) {
       errors.push({
-        error: `Segment ${context.standardOptions.transactionSetStartSegmentName} not found.`,
+        error: `Segment ${standardOptions.transactionSetStartSegmentName} not found.`,
         code: DiagnosticErrors.SEGMENT_NOT_FOUND,
         severity: DiagnosticErrorSeverity.ERROR,
       });
     }
-    if (context.standardOptions.transactionSetEndSegmentName && !this.endSegment) {
+    if (standardOptions?.transactionSetEndSegmentName && !this.endSegment) {
       errors.push({
-        error: `Segment ${context.standardOptions.transactionSetEndSegmentName} not found.`,
+        error: `Segment ${standardOptions.transactionSetEndSegmentName} not found.`,
         code: DiagnosticErrors.SEGMENT_NOT_FOUND,
         severity: DiagnosticErrorSeverity.ERROR,
       });
@@ -565,19 +568,19 @@ export class EdiTransactionSet implements IEdiMessageResult<IEdiTransactionSet>,
     }
 
     if (this.startSegment) {
-      errors.push(...this.startSegment.getErrors(context));
+      errors.push(...this.startSegment.getErrors());
     }
 
     if (this.endSegment) {
-      errors.push(...this.endSegment.getErrors(context));
+      errors.push(...this.endSegment.getErrors());
     }
 
     return errors;
   }
 
-  getErrors(context: DiagnosticsContext): DiagnosticError[] {
-    const errors = this.getSelfErrors(context);
-    return errors.concat(this.segments.flatMap((segment) => segment.getErrors(context)).filter(i => i));
+  getErrors(options: EdiErrorOptions = {}): DiagnosticError[] {
+    const errors = this.getSelfErrors();
+    return errors.concat(this.segments.flatMap((segment) => segment.getErrors(options)).filter(i => i));
   }
 
   getFormattedReleaseAndSchemaString(): string {
@@ -737,19 +740,21 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     return segments[segments.length - 1];
   }
 
-  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
+  getSelfErrors(): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
+    const document = getRelatedDocument(this);
+    const standardOptions = document?.standardOptions;
     if (this.isFake()) return errors;
-    if (context.standardOptions.functionalGroupStartSegmentName && !this.startSegment) {
+    if (standardOptions?.functionalGroupStartSegmentName && !this.startSegment) {
       errors.push({
-        error: `Segment ${context.standardOptions.functionalGroupStartSegmentName} not found.`,
+        error: `Segment ${standardOptions.functionalGroupStartSegmentName} not found.`,
         code: DiagnosticErrors.SEGMENT_NOT_FOUND,
         severity: DiagnosticErrorSeverity.ERROR,
       });
     }
-    if (context.standardOptions.functionalGroupEndSegmentName && !this.endSegment) {
+    if (standardOptions?.functionalGroupEndSegmentName && !this.endSegment) {
       errors.push({
-        error: `Segment ${context.standardOptions.functionalGroupEndSegmentName} not found.`,
+        error: `Segment ${standardOptions.functionalGroupEndSegmentName} not found.`,
         code: DiagnosticErrors.SEGMENT_NOT_FOUND,
         severity: DiagnosticErrorSeverity.ERROR,
       });
@@ -780,19 +785,19 @@ export class EdiFunctionalGroup implements IEdiMessageResult<IEdiFunctionalGroup
     }
 
     if (this.startSegment) {
-      errors.push(...this.startSegment.getErrors(context));
+      errors.push(...this.startSegment.getErrors());
     }
 
     if (this.endSegment) {
-      errors.push(...this.endSegment.getErrors(context));
+      errors.push(...this.endSegment.getErrors());
     }
 
     return errors;
   }
 
-  getErrors(context: DiagnosticsContext): DiagnosticError[] {
-    const errors = this.getSelfErrors(context);
-    return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(context)).filter(i => i));
+  getErrors(options: EdiErrorOptions = {}): DiagnosticError[] {
+    const errors = this.getSelfErrors();
+    return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(options)).filter(i => i));
   }
 
   getFormatString(): string {
@@ -957,18 +962,19 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     return segments[segments.length - 1];
   }
 
-  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
+  getSelfErrors(): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
-    if (context.standardOptions.interchangeStartSegmentName && !this.startSegment) {
+    const standardOptions = this.document.standardOptions;
+    if (standardOptions.interchangeStartSegmentName && !this.startSegment) {
       errors.push({
-        error: `Segment ${context.standardOptions.interchangeStartSegmentName} not found.`,
+        error: `Segment ${standardOptions.interchangeStartSegmentName} not found.`,
         code: DiagnosticErrors.SEGMENT_NOT_FOUND,
         severity: DiagnosticErrorSeverity.ERROR,
       });
     }
-    if (context.standardOptions.interchangeEndSegmentName && !this.endSegment) {
+    if (standardOptions.interchangeEndSegmentName && !this.endSegment) {
       errors.push({
-        error: `Segment ${context.standardOptions.interchangeEndSegmentName} not found.`,
+        error: `Segment ${standardOptions.interchangeEndSegmentName} not found.`,
         code: DiagnosticErrors.SEGMENT_NOT_FOUND,
         severity: DiagnosticErrorSeverity.ERROR,
       });
@@ -999,19 +1005,19 @@ export class EdiInterchange implements IEdiMessageResult<IEdiInterchange>, IDiag
     }
 
     if (this.startSegment) {
-      errors.push(...this.startSegment.getErrors(context));
+      errors.push(...this.startSegment.getErrors());
     }
 
     if (this.endSegment) {
-      errors.push(...this.endSegment.getErrors(context));
+      errors.push(...this.endSegment.getErrors());
     }
 
     return errors;
   }
 
-  getErrors(context: DiagnosticsContext): DiagnosticError[] {
-    const errors = this.getSelfErrors(context);
-    return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(context)).filter(i => i));
+  getErrors(options: EdiErrorOptions = {}): DiagnosticError[] {
+    const errors = this.getSelfErrors();
+    return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(options)).filter(i => i));
   }
 
   getFormatString(): string {
@@ -1036,6 +1042,7 @@ export class EdiDocumentSeparators {
 
 export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnosticErrorAble {
   separators: EdiDocumentSeparators;
+  ediType: EdiTypeValue;
 
   separatorsSegment?: EdiSegment; // ISA
   startSegment?: EdiSegment;
@@ -1043,14 +1050,22 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
   endSegment?: EdiSegment;
 
   standardOptions: EdiStandardOptions;
+  validationOptions: EdiValidationOptions;
 
   commentsAfterDocument: EdiComment[] = [];
 
   private hasActiveInterchange: boolean = false;
 
-  constructor(separators: EdiDocumentSeparators, standardOptions: EdiStandardOptions) {
+  constructor(
+    separators: EdiDocumentSeparators,
+    ediType: EdiTypeValue,
+    standardOptions: EdiStandardOptions,
+    validationOptions: EdiValidationOptions = {}
+  ) {
     this.separators = separators;
+    this.ediType = ediType;
     this.standardOptions = standardOptions;
+    this.validationOptions = validationOptions;
     this.interchanges = [];
   }
 
@@ -1128,7 +1143,7 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return result;
   }
 
-  getSelfErrors(context: DiagnosticsContext): DiagnosticError[] {
+  getSelfErrors(): DiagnosticError[] {
     const errors: DiagnosticError[] = [];
     if (this.standardOptions.separatorsSegmentName && !this.separatorsSegment) {
       errors.push({
@@ -1141,9 +1156,9 @@ export class EdiDocument implements IEdiMessageResult<IEdiDocument>, IDiagnostic
     return errors;
   }
 
-  getErrors(context: DiagnosticsContext): DiagnosticError[] {
-    const errors = this.getSelfErrors(context);
-    return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(context)).filter(i => i));
+  getErrors(options: EdiErrorOptions = {}): DiagnosticError[] {
+    const errors = this.getSelfErrors();
+    return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(options)).filter(i => i));
   }
 
   getFormatString(): string {
@@ -1185,6 +1200,8 @@ type AfterEndTransactionSetFunc = (transactionSet: EdiTransactionSet) => Promise
 export class EdiDocumentBuilder {
   private options: EdiStandardOptions;
   private ediDocument: EdiDocument;
+  private readonly ediType: EdiTypeValue;
+  private readonly validationOptions: EdiValidationOptions;
   private readonly sourceText: string;
   private interchangeSegment?: EdiSegment;
   private functionalGroupSegment?: EdiSegment;
@@ -1203,8 +1220,16 @@ export class EdiDocumentBuilder {
 
   pendingComments: EdiComment[] = [];
 
-  constructor(separators: EdiDocumentSeparators, options: EdiStandardOptions, sourceText: string = "") {
-    this.ediDocument = new EdiDocument(separators, options);
+  constructor(
+    separators: EdiDocumentSeparators,
+    ediType: EdiTypeValue,
+    options: EdiStandardOptions,
+    validationOptions: EdiValidationOptions = {},
+    sourceText: string = ""
+  ) {
+    this.ediType = ediType;
+    this.validationOptions = validationOptions;
+    this.ediDocument = new EdiDocument(separators, ediType, options, validationOptions);
     this.options = options;
     this.sourceText = sourceText;
   }
@@ -1362,14 +1387,16 @@ function formatTrailingComments(comments: EdiComment[]): string {
   }, "");
 }
 
-function getCustomQualifierCode(context: DiagnosticsContext, segment: EdiSegment, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
-  if (!context.customSchemas) {
+function getCustomQualifierCode(segment: EdiSegment, release: string | undefined, qualifier: string, code: string): EdiQualifier | null {
+  const document = getRelatedDocument(segment);
+  const customSchemas = document?.validationOptions.customSchemas;
+  if (!customSchemas) {
     return null;
   }
 
-  const scopeKeys = getCustomQualifierScopeKeys(context, segment, release);
+  const scopeKeys = getCustomQualifierScopeKeys(segment, release);
   const matchedQualifier = scopeKeys
-    .flatMap(scopeKey => Conf_Utils.getQualifiers(context.customSchemas, context.ediType as Conf_Supported_EdiType, scopeKey))
+    .flatMap(scopeKey => Conf_Utils.getQualifiers(customSchemas, (document?.ediType ?? EdiType.UNKNOWN) as Conf_Supported_EdiType, scopeKey))
     .find(currentQualifier => currentQualifier.qualifier === qualifier && currentQualifier.code === code);
   if (!matchedQualifier) {
     return null;
@@ -1385,6 +1412,25 @@ function getRelatedTransactionSetRelease(segment: EdiSegment): string | undefine
 
   const transactionSet = getRelatedTransactionSet(segment);
   return transactionSet?.meta.release;
+}
+
+function getRelatedDocument(segment: EdiSegment | EdiTransactionSet | EdiFunctionalGroup | EdiInterchange): EdiDocument | undefined {
+  if (segment instanceof EdiInterchange) {
+    return segment.document;
+  }
+
+  if (segment instanceof EdiFunctionalGroup) {
+    return segment.interchange.document;
+  }
+
+  if (segment instanceof EdiTransactionSet) {
+    return segment.functionalGroup.interchange.document;
+  }
+
+  return segment.documentParent
+    ?? segment.interchangeParent?.document
+    ?? segment.functionalGroupParent?.interchange.document
+    ?? segment.transactionSetParent?.functionalGroup.interchange.document;
 }
 
 function getRelatedTransactionSet(segment: EdiSegment): EdiTransactionSet | undefined {
@@ -1464,12 +1510,13 @@ function isSegmentOrNestedLoopMatch(currentSegment: EdiSegment, targetSegment: E
   return currentSegment.Loop.some(loopSegment => isSegmentOrNestedLoopMatch(loopSegment, targetSegment));
 }
 
-function getCustomQualifierScopeKeys(context: DiagnosticsContext, segment: EdiSegment, release: string | undefined): string[] {
+function getCustomQualifierScopeKeys(segment: EdiSegment, release: string | undefined): string[] {
   if (!release) {
     return [];
   }
 
-  if (context.ediType !== EdiType.EDIFACT || release !== Conf_Utils.EDIFACT_SERVICE_SCOPE) {
+  const ediType = getRelatedDocument(segment)?.ediType ?? EdiType.UNKNOWN;
+  if (ediType !== EdiType.EDIFACT || release !== Conf_Utils.EDIFACT_SERVICE_SCOPE) {
     return [release];
   }
 

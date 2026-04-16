@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 import { EdiDiagnosticsMgr } from "../../../diagnostics/ediDiagnostics";
 import { EdiMockFactory } from "../mocks/ediMockFactory";
-import { DiagnosticErrorSeverity, DiagnosticErrors, EdiElement, EdiSegment, ElementType, EdiType, type DiagnosticsContext, type DiagnosticError } from "../../../parser/entities";
+import { DiagnosticErrorSeverity, DiagnosticErrors, EdiElement, EdiSegment, ElementType, EdiType, type EdiErrorOptions, type DiagnosticError } from "../../../parser/entities";
 import { EdiUtils } from "../../../utils/ediUtils";
 import * as constants from "../../../constants";
 
@@ -206,13 +206,13 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
         },
       ];
 
-      let capturedContext: DiagnosticsContext | undefined;
+      let capturedOptions: EdiErrorOptions | undefined;
       (EdiUtils as any).getEdiParser = () => ({
         parser: {
           parse: async () => ({
             standardOptions: {},
-            getErrors: (context: DiagnosticsContext) => {
-              capturedContext = context;
+            getErrors: (options?: EdiErrorOptions) => {
+              capturedOptions = options;
               return diagnosticErrors;
             },
           }),
@@ -239,21 +239,19 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
       assert.strictEqual(setDiagnostics![0].message, "first error");
       assert.strictEqual(setDiagnostics![1].message, "second warning");
 
-      assert.ok(capturedContext);
-      assert.strictEqual(capturedContext!.ediType, EdiType.X12);
-      assert.strictEqual(capturedContext!.ignoreRequired, false);
+      assert.deepStrictEqual(capturedOptions, { ignoreRequired: false });
     });
 
-    test("Should pass ignoreRequired=true for VDA diagnostics context", async () => {
+    test("Should pass ignoreRequired=true for VDA diagnostics options", async () => {
       const document = EdiMockFactory.createMockDocument("51102 ", "vda");
 
-      let capturedContext: DiagnosticsContext | undefined;
+      let capturedOptions: EdiErrorOptions | undefined;
       (EdiUtils as any).getEdiParser = () => ({
         parser: {
           parse: async () => ({
             standardOptions: {},
-            getErrors: (context: DiagnosticsContext) => {
-              capturedContext = context;
+            getErrors: (options?: EdiErrorOptions) => {
+              capturedOptions = options;
               return [];
             },
           }),
@@ -267,9 +265,7 @@ suite("EdiDiagnosticsMgr Test Suite", () => {
 
       await diagnosticsMgr.refreshDiagnostics(document, diagnosticsCollection);
 
-      assert.ok(capturedContext);
-      assert.strictEqual(capturedContext!.ediType, EdiType.VDA);
-      assert.strictEqual(capturedContext!.ignoreRequired, true);
+      assert.deepStrictEqual(capturedOptions, { ignoreRequired: true });
     });
 
     test("Should resolve EDIFACT control-segment qualifier diagnostics to the service scope", async () => {

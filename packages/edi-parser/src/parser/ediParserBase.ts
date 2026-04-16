@@ -60,7 +60,15 @@ export abstract class EdiParserBase {
   private async parseDocumentInternal(): Promise<EdiDocument> {
     const separators = this.getMessageSeparators();
     const standardOptions = this.getStardardOptions();
-    const ediDocumentBuilder: EdiDocumentBuilder = new EdiDocumentBuilder(separators, standardOptions, this.document);
+    const ediDocumentBuilder: EdiDocumentBuilder = new EdiDocumentBuilder(
+      separators,
+      this.ediType as "x12" | "edifact" | "vda" | "unknown",
+      standardOptions,
+      {
+        customSchemas: this.options.customSchemas
+      },
+      this.document
+    );
     ediDocumentBuilder.onParseInterchangeMeta((interchangeSegment) => {
       return this.parseInterchangeMeta(interchangeSegment);
     });

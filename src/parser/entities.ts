@@ -16,12 +16,12 @@ export {
 } from "edi-parser";
 
 export type {
-  DiagnosticsContext,
-  DiagnoscticsContext,
   DiagnosticError,
   DiagnosticError_QUALIFIER_INVALID_CODE,
+  EdiErrorOptions,
   EdiFunctionalGroupMeta,
   EdiInterchangeMeta,
   EdiStandardOptions,
+  EdiValidationOptions,
   EdiTransactionSetMeta
 } from "edi-parser";

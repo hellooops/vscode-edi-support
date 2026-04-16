@@ -1,9 +1,8 @@
 import * as vscode from "vscode";
-import { EdiType, type DiagnosticsContext, type DiagnosticError, DiagnosticErrorSeverity } from "edi-parser";
+import { EdiType, type DiagnosticError, DiagnosticErrorSeverity } from "edi-parser";
 import { IDiagnosticsable } from "../interfaces/diagnosticsable";
 import { EdiUtils } from "../utils/ediUtils";
 import * as constants from "../constants";
-import { type Conf_CustomSchema } from "../interfaces/configurations";
 
 export class DiagnosticsWithContext extends vscode.Diagnostic {
   others: any;
@@ -25,15 +24,9 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
     }
 
     const ediDocument = await parser.parse();
-    const customSchemas: Conf_CustomSchema = vscode.workspace.getConfiguration(constants.configuration.ediSupport).get(constants.configuration.customSchemas) ?? {};
-
-    const diagnosticsContext: DiagnosticsContext = {
-      ediType,
-      customSchemas,
-      standardOptions: ediDocument.standardOptions,
+    const errors = ediDocument.getErrors({
       ignoreRequired: ediType === EdiType.VDA
-    };
-    const errors = ediDocument.getErrors(diagnosticsContext);
+    });
     const vscodeDiagnostics = errors.map(error => this.ediDiagnosticsToVscodeDiagnostics(document, error));
     ediDiagnostics.set(document.uri, vscodeDiagnostics);
   }

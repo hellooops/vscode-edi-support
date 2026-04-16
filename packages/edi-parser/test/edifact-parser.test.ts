@@ -10,7 +10,7 @@ import {
 } from "./helpers/fixtures";
 import { edifactParserModule, root } from "./helpers/runtime";
 
-const { createParser, DiagnosticErrors, EdiType, loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
+const { createParser, DiagnosticErrors, loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
 const { EdifactParser } = edifactParserModule as typeof import("../dist/parser/edifactParser");
 
 suite("edi-parser edifact parser", () => {
@@ -120,21 +120,8 @@ suite("edi-parser edifact parser", () => {
       },
     })!;
     const document = await parser.parse();
-    const qualifierErrors = document.getErrors({
-      ediType: EdiType.EDIFACT,
-      customSchemas: {
-        edifact: {
-          _service: {
-            qualifiers: {
-              "Identification code qualifier": {
-                ZZ: "Mutually agreed qualifier",
-              },
-            },
-          },
-        },
-      },
-      standardOptions: document.standardOptions,
-    }).filter((error) => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
+    const qualifierErrors = document.getErrors()
+      .filter((error) => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
 
     assert.deepStrictEqual(qualifierErrors, []);
   });

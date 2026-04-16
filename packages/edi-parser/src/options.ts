@@ -24,3 +24,4 @@ export interface ParserOptions {
 }
 
 export type ParseOptions = ParserOptions;
+export type { EdiErrorOptions, EdiValidationOptions } from "./parser/entities";

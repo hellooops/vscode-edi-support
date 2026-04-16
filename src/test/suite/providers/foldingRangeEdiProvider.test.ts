@@ -86,7 +86,7 @@ suite("FoldingRangeEdiProvider Test Suite", () => {
     const document = EdiMockFactory.createMockDocument("ST~\nSE~", "x12");
     const separators = new EdiDocumentSeparators();
     separators.segmentSeparator = "~";
-    const ediDocument = new EdiDocument(separators, {
+    const ediDocument = new EdiDocument(separators, EdiType.X12, {
       interchangeStartSegmentName: "ISA",
       interchangeEndSegmentName: "IEA",
       functionalGroupStartSegmentName: "GS",
@@ -146,7 +146,7 @@ function createFoldingFixture() {
   const separators = new EdiDocumentSeparators();
   separators.segmentSeparator = "~";
 
-  const ediDocument = new EdiDocument(separators, {
+  const ediDocument = new EdiDocument(separators, EdiType.X12, {
     interchangeStartSegmentName: "ISA",
     interchangeEndSegmentName: "IEA",
     functionalGroupStartSegmentName: "GS",

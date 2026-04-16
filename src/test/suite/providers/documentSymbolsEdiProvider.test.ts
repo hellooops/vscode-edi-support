@@ -132,7 +132,7 @@ suite("DocumentSymbolsEdiProvider Test Suite", () => {
     separators.segmentSeparator = "~";
     separators.dataElementSeparator = "*";
 
-    const ediDocument = new EdiDocument(separators, {
+    const ediDocument = new EdiDocument(separators, EdiType.X12, {
       interchangeStartSegmentName: "ISA",
       interchangeEndSegmentName: "IEA",
       functionalGroupStartSegmentName: "GS",
@@ -229,7 +229,7 @@ function createDocumentSymbolFixture(): EdiDocument {
   separators.segmentSeparator = "~";
   separators.dataElementSeparator = "*";
 
-  const ediDocument = new EdiDocument(separators, {
+  const ediDocument = new EdiDocument(separators, EdiType.X12, {
     interchangeStartSegmentName: "ISA",
     interchangeEndSegmentName: "IEA",
     functionalGroupStartSegmentName: "GS",

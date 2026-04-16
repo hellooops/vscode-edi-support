@@ -14,6 +14,8 @@ export {
 
 export type {
   EdiTypeValue,
+  EdiErrorOptions,
+  EdiValidationOptions,
   ParseOptions,
   ParserOptions,
   SchemaLoadResult,
@@ -44,8 +46,6 @@ export {
 } from "./parser/entities";
 
 export type {
-  DiagnosticsContext,
-  DiagnoscticsContext,
   DiagnosticError,
   DiagnosticError_QUALIFIER_INVALID_CODE,
   EdiFunctionalGroupMeta,

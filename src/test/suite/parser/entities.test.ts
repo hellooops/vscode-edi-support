@@ -2,7 +2,6 @@ import * as assert from "assert";
 
 import * as constants from "../../../constants";
 import {
-  DiagnosticsContext,
   DiagnosticErrors,
   DiagnosticErrorSeverity,
   EdiComment,
@@ -35,14 +34,13 @@ suite("Entities Test Suite", () => {
     const regularSegment = new EdiSegment("REF", 0, 8, 9, "~");
     regularSegment.ediReleaseSchemaSegment = { desc: "Reference", purpose: "Lookup" } as any;
     const element = createElement(regularSegment, "01", "ZZ");
-    const component = createComponent(regularSegment, "01-1", "AA");
+    const component = createComponent(regularSegment, "0101", "AA");
     element.components = [component];
     regularSegment.elements = [element];
     regularSegment.isInvalidSegment = true;
     regularSegment.segmentMaximumOccurrencesExceed = { expect: 1, actual: 2 };
 
-    const context = createContext();
-    const errors = regularSegment.getErrors(context);
+    const errors = regularSegment.getErrors();
 
     assert.strictEqual(comment.getFormatString(), "// header");
     assert.strictEqual(comment.toString(), "// header");
@@ -73,7 +71,7 @@ suite("Entities Test Suite", () => {
   test("EdiElement should validate values, delegate composite errors and render identifiers", () => {
     const segment = new EdiSegment("REF", 0, 8, 9, "~");
     const componentParent = createElement(segment, "01", "PARENT");
-    const componentChild = createComponent(segment, "01-1", "TOO-LONG");
+    const componentChild = createComponent(segment, "0101", "TOO-LONG");
     componentChild.ediReleaseSchemaElement = createSchemaElement({
       id: "C001",
       minLength: 1,
@@ -81,7 +79,7 @@ suite("Entities Test Suite", () => {
     });
     componentParent.components = [componentChild];
 
-    const compositeErrors = componentParent.getErrors(createContext());
+    const compositeErrors = componentParent.getErrors();
 
     const invalidQualifierElement = createElement(segment, "02", "Z");
     invalidQualifierElement.ediReleaseSchemaElement = createSchemaElement({
@@ -102,12 +100,14 @@ suite("Entities Test Suite", () => {
       maxLength: 3,
     });
 
-    const vdaElement = createElement(segment, "04", "AB   ");
+    const vdaElement = createElement(segment, "04", "AB");
     vdaElement.ediReleaseSchemaElement = createSchemaElement({
       id: "E003",
       minLength: 1,
       maxLength: 2,
     });
+    const vdaDocument = new EdiDocument(new EdiDocumentSeparators(), EdiType.VDA, {});
+    segment.documentParent = vdaDocument;
 
     const validCodeElement = createElement(segment, "05", "ZZ");
     validCodeElement.ediReleaseSchemaElement = createSchemaElement({
@@ -127,9 +127,9 @@ suite("Entities Test Suite", () => {
 
     const noSchemaElement = createElement(segment, "07", "ANY");
 
-    const invalidErrors = invalidQualifierElement.getErrors(createContext());
-    const requiredErrors = requiredElement.getErrors(createContext());
-    const vdaErrors = vdaElement.getErrors(createContext(EdiType.VDA));
+    const invalidErrors = invalidQualifierElement.getErrors();
+    const requiredErrors = requiredElement.getErrors();
+    const vdaErrors = vdaElement.getErrors();
 
     assert.deepStrictEqual(compositeErrors.map(error => error.code), [DiagnosticErrors.VALUE_TOO_LONG]);
     assert.strictEqual(invalidQualifierElement.getDesignator(), "REF02");
@@ -147,19 +147,31 @@ suite("Entities Test Suite", () => {
     assert.strictEqual(noSchemaElement.isComposite(), false);
     assert.strictEqual(validCodeElement.getIResult().codeValue, "Buyer");
     assert.strictEqual(invalidCodeElement.getIResult().codeValue, "Invalid code value");
-    assert.strictEqual(noSchemaElement.getErrors(createContext()).length, 0);
+    assert.strictEqual(noSchemaElement.getErrors().length, 0);
     assert.strictEqual(validCodeElement.toString(), "*ZZ");
   });
 
   test("EdiElement should resolve EDIFACT service qualifier overrides through release fallback", () => {
     const separators = new EdiDocumentSeparators();
-    const document = new EdiDocument(separators, {
+    const document = new EdiDocument(separators, EdiType.EDIFACT, {
       interchangeStartSegmentName: "UNB",
       interchangeEndSegmentName: "UNZ",
       functionalGroupStartSegmentName: "UNG",
       functionalGroupEndSegmentName: "UNE",
       transactionSetStartSegmentName: "UNH",
       transactionSetEndSegmentName: "UNT",
+    }, {
+      customSchemas: {
+        edifact: {
+          D97A: {
+            qualifiers: {
+              "Identification code qualifier": {
+                ZZ: "<Custom code>",
+              },
+            },
+          },
+        },
+      },
     });
     const interchange = document.startInterchange({ id: "242" }, createSegment("UNB", 0, "'"));
     const functionalGroup = interchange.startFunctionalGroup({ id: "1" }, createSegment("UNG", 0, "'"));
@@ -177,23 +189,11 @@ suite("Entities Test Suite", () => {
     const messageSegment = new EdiSegment("BGM", 0, 0, 0, "'");
     transactionSet.addSegment(messageSegment);
 
-    const context = createContext(EdiType.EDIFACT, {
-      edifact: {
-        D97A: {
-          qualifiers: {
-            "Identification code qualifier": {
-              ZZ: "<Custom code>",
-            },
-          },
-        },
-      },
-    });
-
     document.interchanges = [interchange];
     interchange.functionalGroups = [functionalGroup];
     functionalGroup.transactionSets = [transactionSet];
 
-    assert.deepStrictEqual(serviceElement.getErrors(context), []);
+    assert.deepStrictEqual(serviceElement.getErrors(), []);
   });
 
   test("EdiElement should honor non-service custom qualifier scopes and preserve missing releases", () => {
@@ -211,17 +211,7 @@ suite("Entities Test Suite", () => {
     });
     regularSegment.elements = [regularElement];
 
-    const overriddenErrors = regularElement.getErrors(createContext(EdiType.X12, {
-      x12: {
-        "00401": {
-          qualifiers: {
-            "Reference qualifier": {
-              ZZ: "Custom ref",
-            },
-          },
-        },
-      },
-    }));
+    const overriddenErrors = regularElement.getErrors();
 
     const orphanSegment = createSegment("REF", 0, "~");
     const orphanElement = createElement(orphanSegment, "01", "ZZ");
@@ -233,17 +223,7 @@ suite("Entities Test Suite", () => {
     });
     orphanSegment.elements = [orphanElement];
 
-    const orphanErrors = orphanElement.getErrors(createContext(EdiType.X12, {
-      x12: {
-        "00401": {
-          qualifiers: {
-            "Reference qualifier": {
-              ZZ: "Custom ref",
-            },
-          },
-        },
-      },
-    }));
+    const orphanErrors = orphanElement.getErrors();
 
     assert.deepStrictEqual(overriddenErrors, []);
     assert.strictEqual(orphanErrors.length, 1);
@@ -273,17 +253,7 @@ suite("Entities Test Suite", () => {
     wrapperLoop.Loop = [nestedLoop];
     transactionSet.segments.push(wrapperLoop);
 
-    const errors = targetElement.getErrors(createContext(EdiType.X12, {
-      x12: {
-        "00401": {
-          qualifiers: {
-            "Reference qualifier": {
-              ZZ: "Nested custom ref",
-            },
-          },
-        },
-      },
-    }));
+    const errors = targetElement.getErrors();
 
     assert.deepStrictEqual(errors, []);
   });
@@ -303,23 +273,13 @@ suite("Entities Test Suite", () => {
     });
     detachedSegment.elements = [detachedElement];
 
-    const errors = detachedElement.getErrors(createContext(EdiType.X12, {
-      x12: {
-        "00401": {
-          qualifiers: {
-            "Reference qualifier": {
-              ZZ: "Document fallback ref",
-            },
-          },
-        },
-      },
-    }));
+    const errors = detachedElement.getErrors();
 
     assert.deepStrictEqual(errors, []);
   });
 
   test("EdiDocument should auto-create containers for loose segments and expose result helpers", () => {
-    const document = new EdiDocument(new EdiDocumentSeparators(), {
+    const document = new EdiDocument(new EdiDocumentSeparators(), EdiType.X12, {
       separatorsSegmentName: "ISA",
     });
     const separatorsSegment = createSegment("ISA", 0, "~");
@@ -352,7 +312,7 @@ suite("Entities Test Suite", () => {
 
     regularSegment.elements = undefined as any;
     assert.strictEqual(regularSegment.getElement(1), null);
-    assert.deepStrictEqual(regularSegment.getErrors(createContext()), []);
+    assert.deepStrictEqual(regularSegment.getErrors(), []);
 
     const { functionalGroup, interchange } = createHierarchy();
     const releaseOnlySet = new EdiTransactionSet({ release: "00401" }, functionalGroup);
@@ -382,20 +342,10 @@ suite("Entities Test Suite", () => {
     functionalGroup.endSegment = createTrailer("GE", "2", "BADGROUP");
     interchange.endSegment = createTrailer("IEA", "3", "BADINT");
 
-    const context = createContext(EdiType.X12, undefined, {
-      separatorsSegmentName: "ISA",
-      interchangeStartSegmentName: "ISA",
-      interchangeEndSegmentName: "IEA",
-      functionalGroupStartSegmentName: "GS",
-      functionalGroupEndSegmentName: "GE",
-      transactionSetStartSegmentName: "ST",
-      transactionSetEndSegmentName: "SE",
-    });
-
-    const transactionErrors = transactionSet.getSelfErrors(context);
-    const functionalGroupErrors = functionalGroup.getSelfErrors(context);
-    const interchangeErrors = interchange.getSelfErrors(context);
-    const documentErrors = document.getErrors(context);
+    const transactionErrors = transactionSet.getSelfErrors();
+    const functionalGroupErrors = functionalGroup.getSelfErrors();
+    const interchangeErrors = interchange.getSelfErrors();
+    const documentErrors = document.getErrors();
 
     assert.deepStrictEqual(transactionErrors.map(error => error.code), [
       DiagnosticErrors.INVALID_VALUE,
@@ -422,31 +372,22 @@ suite("Entities Test Suite", () => {
 
   test("Transaction set and interchange should report missing header and trailer segments", () => {
     const { document, interchange, functionalGroup } = createHierarchy();
-    const context = createContext(EdiType.X12, undefined, {
-      separatorsSegmentName: "ISA",
-      interchangeStartSegmentName: "ISA",
-      interchangeEndSegmentName: "IEA",
-      functionalGroupStartSegmentName: "GS",
-      functionalGroupEndSegmentName: "GE",
-      transactionSetStartSegmentName: "ST",
-      transactionSetEndSegmentName: "SE",
-    });
     const missingSegmentsSet = new EdiTransactionSet({}, functionalGroup);
     const missingSegmentsInterchange = new EdiInterchange({}, document);
 
     assert.deepStrictEqual(
-      missingSegmentsSet.getSelfErrors(context).map(error => error.code),
+      missingSegmentsSet.getSelfErrors().map(error => error.code),
       [DiagnosticErrors.SEGMENT_NOT_FOUND, DiagnosticErrors.SEGMENT_NOT_FOUND],
     );
     assert.deepStrictEqual(
-      missingSegmentsInterchange.getSelfErrors(context).map(error => error.code),
+      missingSegmentsInterchange.getSelfErrors().map(error => error.code),
       [DiagnosticErrors.SEGMENT_NOT_FOUND, DiagnosticErrors.SEGMENT_NOT_FOUND],
     );
   });
 
   test("Entities should support alternate trailer segments and undefined trailer lookups", () => {
     const separators = new EdiDocumentSeparators();
-    const document = new EdiDocument(separators, {
+    const document = new EdiDocument(separators, EdiType.EDIFACT, {
       interchangeStartSegmentName: "UNB",
       interchangeEndSegmentName: "UNZ",
       functionalGroupStartSegmentName: "UNG",
@@ -486,27 +427,18 @@ suite("Entities Test Suite", () => {
 
   test("Functional group should report a missing trailer when the group is active", () => {
     const { interchange } = createHierarchy();
-    const context = createContext(EdiType.X12, undefined, {
-      separatorsSegmentName: "ISA",
-      interchangeStartSegmentName: "ISA",
-      interchangeEndSegmentName: "IEA",
-      functionalGroupStartSegmentName: "GS",
-      functionalGroupEndSegmentName: "GE",
-      transactionSetStartSegmentName: "ST",
-      transactionSetEndSegmentName: "SE",
-    });
     const functionalGroup = new EdiFunctionalGroup({ id: "GROUP2" }, interchange);
     functionalGroup.startSegment = createSegment("GS", 0, "~");
 
     assert.deepStrictEqual(
-      functionalGroup.getSelfErrors(context).map(error => error.code),
+      functionalGroup.getSelfErrors().map(error => error.code),
       [DiagnosticErrors.SEGMENT_NOT_FOUND],
     );
   });
 
   test("Interchange should count transaction sets when the first functional group is fake", () => {
     const separators = new EdiDocumentSeparators();
-    const document = new EdiDocument(separators, {});
+    const document = new EdiDocument(separators, EdiType.UNKNOWN, {});
     const interchange = new EdiInterchange({ id: "242" }, document);
     const fakeGroup = interchange.startFunctionalGroup({ id: "FG1" }, undefined);
     fakeGroup.startTransactionSet({ id: "0001", release: "D97A" }, undefined);
@@ -518,7 +450,7 @@ suite("Entities Test Suite", () => {
 
   test("EdiDocumentBuilder should route segments through configured lifecycle hooks", async () => {
     const separators = new EdiDocumentSeparators();
-    const builder = new EdiDocumentBuilder(separators, {
+    const builder = new EdiDocumentBuilder(separators, EdiType.EDIFACT, {
       separatorsSegmentName: "UNA",
       interchangeStartSegmentName: "UNB",
       interchangeEndSegmentName: "UNZ",
@@ -597,7 +529,7 @@ suite("Entities Test Suite", () => {
 
   test("EdiDocumentBuilder should auto-start transaction sets when no start segment is configured", async () => {
     const separators = new EdiDocumentSeparators();
-    const builder = new EdiDocumentBuilder(separators, {
+    const builder = new EdiDocumentBuilder(separators, EdiType.X12, {
       transactionSetEndSegmentName: "SE",
     });
     const hookCalls: string[] = [];
@@ -644,29 +576,9 @@ suite("Entities Test Suite", () => {
   });
 });
 
-function createContext(
-  ediType: string = EdiType.X12,
-  customSchemas?: any,
-  standardOptions = {
-    separatorsSegmentName: "ISA",
-    interchangeStartSegmentName: "ISA",
-    interchangeEndSegmentName: "IEA",
-    functionalGroupStartSegmentName: "GS",
-    functionalGroupEndSegmentName: "GE",
-    transactionSetStartSegmentName: "ST",
-    transactionSetEndSegmentName: "SE",
-  },
-): DiagnosticsContext {
-  return {
-    ediType,
-    customSchemas,
-    standardOptions,
-  };
-}
-
 function createHierarchy() {
   const separators = new EdiDocumentSeparators();
-  const document = new EdiDocument(separators, {
+  const document = new EdiDocument(separators, EdiType.X12, {
     separatorsSegmentName: "ISA",
     interchangeStartSegmentName: "ISA",
     interchangeEndSegmentName: "IEA",
@@ -674,6 +586,18 @@ function createHierarchy() {
     functionalGroupEndSegmentName: "GE",
     transactionSetStartSegmentName: "ST",
     transactionSetEndSegmentName: "SE",
+  }, {
+    customSchemas: {
+      x12: {
+        "00401": {
+          qualifiers: {
+            "Reference qualifier": {
+              ZZ: "Custom ref",
+            },
+          },
+        },
+      },
+    },
   });
   const interchange = document.startInterchange({ id: "INT1" }, createSegment("ISA", 0, "~"));
   const functionalGroup = interchange.startFunctionalGroup({ id: "GROUP1" }, createSegment("GS", 0, "~"));
