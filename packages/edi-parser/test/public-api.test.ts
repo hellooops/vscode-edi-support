@@ -23,8 +23,18 @@ const {
   VdaParser,
   X12Parser,
 } = root as typeof import("../dist");
+type IEdiDocument = import("../dist").IEdiDocument;
 
 suite("edi-parser public api", () => {
+  test("should export snapshot dto types and toObject-compatible documents", async () => {
+    const document = await parseEdi(createX12PurchaseOrderDocument());
+    const snapshot: IEdiDocument = document!.toObject();
+
+    assert.strictEqual(snapshot.ediType, "x12");
+    assert.strictEqual(snapshot.interchanges.length, 1);
+    assert.strictEqual(snapshot.interchanges[0].functionalGroups[0].transactionSets[0].segments[0].id, "BEG");
+  });
+
   test("should detect x12, edifact, vda and unknown texts", () => {
     assert.strictEqual(detectEdiType(createX12PurchaseOrderDocument()), "x12");
     assert.strictEqual(detectEdiType(createEdifactOrdersDocument()), "edifact");

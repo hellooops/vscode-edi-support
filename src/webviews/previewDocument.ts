@@ -88,7 +88,7 @@ function toPreviewElement(segment: EdiSegment, element: EdiElement): IPreviewEdi
     required: element.ediReleaseSchemaElement?.required,
     minLength: element.ediReleaseSchemaElement?.minLength,
     maxLength: element.ediReleaseSchemaElement?.maxLength,
-    codeValue: element.getIResult().codeValue,
+    codeValue: element.toObject().codeValue,
     definition: element.ediReleaseSchemaElement?.definition,
     length: element.ediReleaseSchemaElement?.length,
     designator: element.getDesignator(),

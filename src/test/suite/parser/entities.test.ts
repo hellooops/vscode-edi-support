@@ -64,7 +64,7 @@ suite("Entities Test Suite", () => {
     ]);
     assert.strictEqual(regularSegment.isLoop(), false);
     assert.strictEqual(regularSegment.isHeaderSegment(), true);
-    assert.strictEqual(regularSegment.getIResult().desc, "Reference");
+    assert.strictEqual(regularSegment.toObject().desc, "Reference");
     assert.strictEqual(regularSegment.toString(), "REF*ZZ~");
   });
 
@@ -145,8 +145,8 @@ suite("Entities Test Suite", () => {
     assert.deepStrictEqual(vdaErrors, []);
     assert.strictEqual(componentParent.isComposite(), true);
     assert.strictEqual(noSchemaElement.isComposite(), false);
-    assert.strictEqual(validCodeElement.getIResult().codeValue, "Buyer");
-    assert.strictEqual(invalidCodeElement.getIResult().codeValue, "Invalid code value");
+    assert.strictEqual(validCodeElement.toObject().codeValue, "Buyer");
+    assert.strictEqual(invalidCodeElement.toObject().codeValue, "Invalid code value");
     assert.strictEqual(noSchemaElement.getErrors().length, 0);
     assert.strictEqual(validCodeElement.toString(), "*ZZ");
   });
@@ -290,7 +290,7 @@ suite("Entities Test Suite", () => {
     document.addSegment(looseSegment);
     document.commentsAfterDocument.push(trailingComment);
 
-    const result = document.getIResult();
+    const result = document.toObject();
     const segments = document.getSegments(true);
 
     assert.strictEqual(result.separatorsSegment?.id, "ISA");
@@ -307,7 +307,7 @@ suite("Entities Test Suite", () => {
     regularSegment.elements = [createElement(regularSegment, "01", "ZZ")];
 
     assert.ok(regularSegment.getFormatString().includes("// note"));
-    assert.strictEqual(regularSegment.getIResult().Loop, undefined);
+    assert.strictEqual(regularSegment.toObject().Loop, undefined);
     assert.strictEqual(regularSegment.getElement(1, 1), null);
 
     regularSegment.elements = undefined as any;
@@ -325,8 +325,8 @@ suite("Entities Test Suite", () => {
     assert.strictEqual(emptySet.getFormattedReleaseAndSchemaString(), "");
     assert.strictEqual(emptySet.getFirstSegment(), undefined);
     assert.strictEqual(emptySet.getLastSegment(), undefined);
-    assert.strictEqual(emptySet.getIResult().startSegment, undefined);
-    assert.strictEqual(emptySet.getIResult().endSegment, undefined);
+    assert.strictEqual(emptySet.toObject().startSegment, undefined);
+    assert.strictEqual(emptySet.toObject().endSegment, undefined);
     assert.strictEqual(emptyInterchange.getFirstSegment(), undefined);
     assert.strictEqual(emptyInterchange.getLastSegment(), undefined);
     assert.strictEqual(emptyInterchange.toString(), "");

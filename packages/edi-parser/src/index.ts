@@ -48,7 +48,13 @@ export {
 export type {
   DiagnosticError,
   DiagnosticError_QUALIFIER_INVALID_CODE,
+  IEdiDocument,
+  IEdiElement,
+  IEdiFunctionalGroup,
   EdiFunctionalGroupMeta,
+  IEdiInterchange,
+  IEdiSegment,
+  IEdiTransactionSet,
   EdiInterchangeMeta,
   EdiStandardOptions,
   EdiTransactionSetMeta
