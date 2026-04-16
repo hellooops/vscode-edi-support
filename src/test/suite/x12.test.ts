@@ -21,9 +21,9 @@ suite("X12 Parser Test Suite", () => {
       // Verify Interchange Meta
       assert.strictEqual(ediDocument.interchanges.length, 1);
       assert.ok(ediDocument.interchanges[0].meta !== undefined);
-      assert.strictEqual(ediDocument.interchanges[0].meta.senderQualifer, "ZZ");
+      assert.strictEqual(ediDocument.interchanges[0].meta.senderQualifier, "ZZ");
       assert.strictEqual(ediDocument.interchanges[0].meta.senderID, "SENDER         ");
-      assert.strictEqual(ediDocument.interchanges[0].meta.receiverQualifer, "ZZ");
+      assert.strictEqual(ediDocument.interchanges[0].meta.receiverQualifier, "ZZ");
       assert.strictEqual(ediDocument.interchanges[0].meta.receiverID, "RECEIVER       ");
       assert.strictEqual(ediDocument.interchanges[0].meta.date, "241111");
       assert.strictEqual(ediDocument.interchanges[0].meta.time, "0300");
@@ -60,9 +60,9 @@ suite("X12 Parser Test Suite", () => {
       const ediDocument = await parser.parse();
 
       const meta = ediDocument.interchanges[0].meta;
-      assert.strictEqual(meta.senderQualifer, "01");
+      assert.strictEqual(meta.senderQualifier, "01");
       assert.strictEqual(meta.senderID, "VENDOR123      ");
-      assert.strictEqual(meta.receiverQualifer, "01");
+      assert.strictEqual(meta.receiverQualifier, "01");
       assert.strictEqual(meta.receiverID, "CUSTOMER456    ");
     });
   });

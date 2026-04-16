@@ -26,9 +26,9 @@ IEA*1*000007080~// End Interchange`;
       
       // Verify metadata
       const interchange = ediDocument.interchanges[0];
-      assert.strictEqual(interchange.meta.senderQualifer, "ZZ");
+      assert.strictEqual(interchange.meta.senderQualifier, "ZZ");
       assert.strictEqual(interchange.meta.senderID, "DERICL         ");
-      assert.strictEqual(interchange.meta.receiverQualifer, "ZZ");
+      assert.strictEqual(interchange.meta.receiverQualifier, "ZZ");
       assert.strictEqual(interchange.meta.receiverID, "TEST01         ");
       
       // Verify segments were parsed
@@ -77,9 +77,9 @@ IEA*1*000007080~// 13
       
       // Verify interchange metadata
       const interchange = ediDocument.interchanges[0];
-      assert.strictEqual(interchange.meta.senderQualifer, "ZZ");
+      assert.strictEqual(interchange.meta.senderQualifier, "ZZ");
       assert.strictEqual(interchange.meta.senderID, "DERICL         ");
-      assert.strictEqual(interchange.meta.receiverQualifer, "ZZ");
+      assert.strictEqual(interchange.meta.receiverQualifier, "ZZ");
       assert.strictEqual(interchange.meta.receiverID, "TEST01         ");
       assert.strictEqual(interchange.meta.date, "210517");
       assert.strictEqual(interchange.meta.time, "0643");
@@ -148,9 +148,9 @@ UNZ+1+ORDER001'// End Interchange`;
       
       // Verify metadata
       const interchange = ediDocument.interchanges[0];
-      assert.strictEqual(interchange.meta.senderQualifer, "14");
+      assert.strictEqual(interchange.meta.senderQualifier, "14");
       assert.strictEqual(interchange.meta.senderID, "SUPPLIER");
-      assert.strictEqual(interchange.meta.receiverQualifer, "14");
+      assert.strictEqual(interchange.meta.receiverQualifier, "14");
       assert.strictEqual(interchange.meta.receiverID, "BUYER");
       
       // Verify core segments were parsed

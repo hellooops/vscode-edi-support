@@ -6,14 +6,14 @@ import { EdiDocument } from "@/entities";
 // - docs/4905.edi
 
 export default function useTestData(): EdiDocument {
-  const x12TestData: IEdiDocument =   {
+  const x12TestData: EdiDocumentObject =   {
     "interchanges": [
       {
         "nodeKey": "interchange:000007080:0:1127",
         "meta": {
-          "senderQualifer": "ZZ",
+          "senderQualifier": "ZZ",
           "senderID": "DERICL         ",
-          "receiverQualifer": "ZZ",
+          "receiverQualifier": "ZZ",
           "receiverID": "TEST01         ",
           "date": "210517",
           "time": "0643",
@@ -2406,15 +2406,15 @@ export default function useTestData(): EdiDocument {
     "ediType": "x12"
   };
 
-  const edifactTestData: IEdiDocument =   {
+  const edifactTestData: EdiDocumentObject =   {
     "interchanges": [
       {
         "nodeKey": "interchange:5:11:689",
         "meta": {
           "senderID": "<Sender GLN>",
-          "senderQualifer": "14",
+          "senderQualifier": "14",
           "receiverID": "<Receiver GLN>",
-          "receiverQualifer": "14",
+          "receiverQualifier": "14",
           "date": "140407",
           "time": "0910",
           "id": "5"
@@ -4752,7 +4752,7 @@ export default function useTestData(): EdiDocument {
     "ediType": "edifact"
   };
 
-  const vdaTestData: IEdiDocument =   {
+  const vdaTestData: EdiDocumentObject =   {
     "interchanges": [
       {
         "nodeKey": "interchange:none:0:778",

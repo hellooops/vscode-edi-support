@@ -23,12 +23,12 @@ const {
   VdaParser,
   X12Parser,
 } = root as typeof import("../dist");
-type IEdiDocument = import("../dist").IEdiDocument;
+type EdiDocumentObject = import("../dist").EdiDocumentObject;
 
 suite("edi-parser public api", () => {
   test("should export snapshot dto types and toObject-compatible documents", async () => {
     const document = await parseEdi(createX12PurchaseOrderDocument());
-    const snapshot: IEdiDocument = document!.toObject();
+    const snapshot: EdiDocumentObject = document!.toObject();
 
     assert.strictEqual(snapshot.ediType, "x12");
     assert.strictEqual(snapshot.interchanges.length, 1);

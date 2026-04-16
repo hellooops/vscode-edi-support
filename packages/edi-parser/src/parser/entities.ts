@@ -5,7 +5,7 @@ import MessageInfo from "../interfaces/messageInfo";
 import { type Conf_CustomSchema, type Conf_Supported_EdiType, Conf_Utils } from "../interfaces/configurations";
 import { type EdiTypeValue } from "../options";
 
-interface IEdiObjectConvertible<T> {
+interface EdiObjectConvertible<T> {
   toObject(): T;
 }
 
@@ -14,10 +14,10 @@ interface SegmentMaximumOccurrencesExceed {
   actual: number;
 }
 
-export interface IEdiElement {
+export interface EdiElementObject {
   type: ElementType;
   value?: string;
-  components?: IEdiElement[];
+  components?: EdiElementObject[];
   id?: string;
   desc?: string;
   dataType?: string;
@@ -30,44 +30,44 @@ export interface IEdiElement {
   designator: string;
 }
 
-export interface IEdiSegment {
+export interface EdiSegmentObject {
   id: string;
   segmentStr?: string;
-  elements: IEdiElement[];
+  elements: EdiElementObject[];
   desc?: string;
   purpose?: string;
-  Loop?: IEdiSegment[];
+  Loop?: EdiSegmentObject[];
 }
 
-export interface IEdiTransactionSet {
+export interface EdiTransactionSetObject {
   meta: EdiTransactionSetMeta;
   id?: string;
-  segments: IEdiSegment[];
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  segments: EdiSegmentObject[];
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-export interface IEdiFunctionalGroup {
+export interface EdiFunctionalGroupObject {
   meta: EdiFunctionalGroupMeta;
   id?: string;
-  transactionSets: IEdiTransactionSet[];
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  transactionSets: EdiTransactionSetObject[];
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-export interface IEdiInterchange {
+export interface EdiInterchangeObject {
   meta: EdiInterchangeMeta;
   id?: string;
-  functionalGroups: IEdiFunctionalGroup[];
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  functionalGroups: EdiFunctionalGroupObject[];
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-export interface IEdiDocument {
-  interchanges: IEdiInterchange[];
-  separatorsSegment?: IEdiSegment;
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+export interface EdiDocumentObject {
+  interchanges: EdiInterchangeObject[];
+  separatorsSegment?: EdiSegmentObject;
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
   ediType?: EdiTypeValue;
 }
 
@@ -91,7 +91,7 @@ export class EdiComment {
   }
 }
 
-export class EdiSegment implements IEdiObjectConvertible<IEdiSegment>, IDiagnosticErrorAble {
+export class EdiSegment implements EdiObjectConvertible<EdiSegmentObject>, IDiagnosticErrorAble {
   public id: string;
   public startIndex: number;
   public endIndex: number;
@@ -224,7 +224,7 @@ export class EdiSegment implements IEdiObjectConvertible<IEdiSegment>, IDiagnost
     return errors.concat(this.elements.flatMap(el => el.getErrors(options)));
   }
 
-  toObject(): IEdiSegment {
+  toObject(): EdiSegmentObject {
     return {
       id: this.id,
       segmentStr: this.segmentStr,
@@ -233,11 +233,6 @@ export class EdiSegment implements IEdiObjectConvertible<IEdiSegment>, IDiagnost
       elements: this.elements.map(e => e.toObject()),
       Loop: this.Loop?.map(i => i.toObject())
     };
-  }
-
-  /** @deprecated Use toObject() instead. */
-  getIResult(): IEdiSegment {
-    return this.toObject();
   }
 
   public isLoop(): boolean {
@@ -306,7 +301,7 @@ export namespace DiagnosticErrors {
   export const SEGMENT_MAXIMUM_OCCURRENCES_EXCEED = "Edi Support: Segment maximum occurrences exceed";
 }
 
-export class EdiElement implements IEdiObjectConvertible<IEdiElement>, IDiagnosticErrorAble {
+export class EdiElement implements EdiObjectConvertible<EdiElementObject>, IDiagnosticErrorAble {
   public type: ElementType;
   public value?: string;
   public startIndex: number;
@@ -399,7 +394,7 @@ export class EdiElement implements IEdiObjectConvertible<IEdiElement>, IDiagnost
         ?? getCustomQualifierCode(this.segment, release, this.ediReleaseSchemaElement.qualifierRef, value);
       if (!elementValueCode) {
         errors.push({
-          error: `Invalid code value '${value}' for qualifer '${this.ediReleaseSchemaElement.qualifierRef}'.`,
+          error: `Invalid code value '${value}' for qualifier '${this.ediReleaseSchemaElement.qualifierRef}'.`,
           code: DiagnosticErrors.QUALIFIER_INVALID_CODE,
           severity: DiagnosticErrorSeverity.ERROR,
           errorElement: this,
@@ -424,7 +419,7 @@ export class EdiElement implements IEdiObjectConvertible<IEdiElement>, IDiagnost
     return this.separator + this.value;
   }
 
-  toObject(): IEdiElement {
+  toObject(): EdiElementObject {
     let codeValue: string | undefined;
     if (this.ediReleaseSchemaElement?.qualifierRef && this.value) {
       const codes = this.ediReleaseSchemaElement.getCodes();
@@ -454,11 +449,6 @@ export class EdiElement implements IEdiObjectConvertible<IEdiElement>, IDiagnost
       designator: this.getDesignator()
     };
   }
-
-  /** @deprecated Use toObject() instead. */
-  getIResult(): IEdiElement {
-    return this.toObject();
-  }
 }
 
 export class EdiMessageSeparators {
@@ -482,7 +472,7 @@ export interface EdiTransactionSetMeta {
   messageInfo?: MessageInfo;
 }
 
-export class EdiTransactionSet implements IEdiObjectConvertible<IEdiTransactionSet>, IDiagnosticErrorAble {
+export class EdiTransactionSet implements EdiObjectConvertible<EdiTransactionSetObject>, IDiagnosticErrorAble {
   meta: EdiTransactionSetMeta;
 
   segments: EdiSegment[];
@@ -499,7 +489,7 @@ export class EdiTransactionSet implements IEdiObjectConvertible<IEdiTransactionS
     this.functionalGroup = functionalGroup;
   }
 
-  toObject(): IEdiTransactionSet {
+  toObject(): EdiTransactionSetObject {
     return {
       meta: this.meta,
       id: this.getId(),
@@ -509,11 +499,6 @@ export class EdiTransactionSet implements IEdiObjectConvertible<IEdiTransactionS
       startSegment: this.startSegment?.toObject(),
       endSegment: this.endSegment?.toObject(),
     };
-  }
-
-  /** @deprecated Use toObject() instead. */
-  getIResult(): IEdiTransactionSet {
-    return this.toObject();
   }
 
   getKey(): string {
@@ -671,7 +656,7 @@ export interface EdiFunctionalGroupMeta {
   id?: string;
 }
 
-export class EdiFunctionalGroup implements IEdiObjectConvertible<IEdiFunctionalGroup>, IDiagnosticErrorAble {
+export class EdiFunctionalGroup implements EdiObjectConvertible<EdiFunctionalGroupObject>, IDiagnosticErrorAble {
   meta: EdiFunctionalGroupMeta;
 
   transactionSets: EdiTransactionSet[];
@@ -690,7 +675,7 @@ export class EdiFunctionalGroup implements IEdiObjectConvertible<IEdiFunctionalG
     this.interchange = interchange;
   }
 
-  toObject(): IEdiFunctionalGroup {
+  toObject(): EdiFunctionalGroupObject {
     return {
       meta: this.meta,
       id: this.getId(),
@@ -700,11 +685,6 @@ export class EdiFunctionalGroup implements IEdiObjectConvertible<IEdiFunctionalG
       startSegment: this.startSegment?.toObject(),
       endSegment: this.endSegment?.toObject(),
     };
-  }
-
-  /** @deprecated Use toObject() instead. */
-  getIResult(): IEdiFunctionalGroup {
-    return this.toObject();
   }
 
   getActiveTransactionSet() {
@@ -873,16 +853,16 @@ export class EdiFunctionalGroup implements IEdiObjectConvertible<IEdiFunctionalG
 }
 
 export interface EdiInterchangeMeta {
-  senderQualifer?: string;
+  senderQualifier?: string;
   senderID?: string;
-  receiverQualifer?: string;
+  receiverQualifier?: string;
   receiverID?: string;
   date?: string;
   time?: string;
   id?: string;
 }
 
-export class EdiInterchange implements IEdiObjectConvertible<IEdiInterchange>, IDiagnosticErrorAble {
+export class EdiInterchange implements EdiObjectConvertible<EdiInterchangeObject>, IDiagnosticErrorAble {
   meta: EdiInterchangeMeta;
 
   // TODO(Deric): Meta info
@@ -905,7 +885,7 @@ export class EdiInterchange implements IEdiObjectConvertible<IEdiInterchange>, I
     return !this.startSegment;
   }
 
-  toObject(): IEdiInterchange {
+  toObject(): EdiInterchangeObject {
     return {
       meta: this.meta,
       id: this.getId(),
@@ -915,11 +895,6 @@ export class EdiInterchange implements IEdiObjectConvertible<IEdiInterchange>, I
       startSegment: this.startSegment?.toObject(),
       endSegment: this.endSegment?.toObject(),
     };
-  }
-
-  /** @deprecated Use toObject() instead. */
-  getIResult(): IEdiInterchange {
-    return this.toObject();
   }
 
   ensureActiveFunctionalGroup(): void {
@@ -1101,7 +1076,7 @@ export class EdiDocumentSeparators {
   public releaseCharacter?: string; // escape char
 }
 
-export class EdiDocument implements IEdiObjectConvertible<IEdiDocument>, IDiagnosticErrorAble {
+export class EdiDocument implements EdiObjectConvertible<EdiDocumentObject>, IDiagnosticErrorAble {
   separators: EdiDocumentSeparators;
   ediType: EdiTypeValue;
 
@@ -1130,7 +1105,7 @@ export class EdiDocument implements IEdiObjectConvertible<IEdiDocument>, IDiagno
     this.interchanges = [];
   }
 
-  toObject(): IEdiDocument {
+  toObject(): EdiDocumentObject {
     return {
       interchanges: this.interchanges.map(interchange => interchange.toObject()),
 
@@ -1139,11 +1114,6 @@ export class EdiDocument implements IEdiObjectConvertible<IEdiDocument>, IDiagno
       endSegment: this.endSegment?.toObject(),
       ediType: this.ediType,
     };
-  }
-
-  /** @deprecated Use toObject() instead. */
-  getIResult(): IEdiDocument {
-    return this.toObject();
   }
 
   ensureActiveInterchange(): void {

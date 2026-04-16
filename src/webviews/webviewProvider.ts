@@ -111,7 +111,7 @@ export default class WebviewProvider {
     this.ediDocument = ediDocument;
     const vcm: VcmDocument = {
       name: "fileChange",
-      data: buildPreviewDocument(ediDocument, ediType as IEdiType)
+      data: buildPreviewDocument(ediDocument, ediType as EdiTypeValue)
     };
     await this.postMessageWhenReady(vcm);
   }

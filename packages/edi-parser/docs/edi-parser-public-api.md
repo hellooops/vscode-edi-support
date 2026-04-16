@@ -248,6 +248,18 @@ const request: SchemaResolverRequest = {
 };
 ```
 
+### `EdiDocumentObject`
+
+```ts
+import type { EdiDocumentObject, parseEdi } from "edi-parser";
+
+const document = await parseEdi(x12Text);
+const snapshot: EdiDocumentObject | undefined = document?.toObject();
+
+console.log(snapshot?.ediType);
+console.log(snapshot?.interchanges[0]?.functionalGroups[0]?.transactionSets[0]?.segments[0]?.id);
+```
+
 ## Parser 类
 
 ### `EdiParserBase`

@@ -79,9 +79,9 @@ export class X12Parser extends EdiParserBase {
     // ISA*00*          *00*          *ZZ*DERICL         *ZZ*TEST01         *210517*0643*U*00401*000007080*0*P*>~
     const meta: EdiInterchangeMeta = {};
     if (!interchangeSegment) return meta;
-    if (interchangeSegment.elements.length > 4) meta.senderQualifer = interchangeSegment.elements[4].value;
+    if (interchangeSegment.elements.length > 4) meta.senderQualifier = interchangeSegment.elements[4].value;
     if (interchangeSegment.elements.length > 5) meta.senderID = interchangeSegment.elements[5].value;
-    if (interchangeSegment.elements.length > 6) meta.receiverQualifer = interchangeSegment.elements[6].value;
+    if (interchangeSegment.elements.length > 6) meta.receiverQualifier = interchangeSegment.elements[6].value;
     if (interchangeSegment.elements.length > 7) meta.receiverID = interchangeSegment.elements[7].value;
     if (interchangeSegment.elements.length > 8) meta.date = interchangeSegment.elements[8].value;
     if (interchangeSegment.elements.length > 9) meta.time = interchangeSegment.elements[9].value;
@@ -177,7 +177,7 @@ export class X12Parser extends EdiParserBase {
     return segment;
   }
 
-  protected getStardardOptions(): EdiStandardOptions {
+  protected getStandardOptions(): EdiStandardOptions {
     return {
       interchangeStartSegmentName: "ISA",
       interchangeEndSegmentName: "IEA",

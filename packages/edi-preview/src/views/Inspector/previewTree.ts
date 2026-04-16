@@ -78,20 +78,20 @@ function buildInterchangeEntries(interchange: EdiInterchange, stickyDepth: numbe
       kind: "interchange",
       title: `Interchange ID: ${interchangeId}`,
       subtitle: compactText([
-        formatPartner(interchange.meta.senderQualifer, interchange.meta.senderID),
-        formatPartner(interchange.meta.receiverQualifer, interchange.meta.receiverID)
+        formatPartner(interchange.meta.senderQualifier, interchange.meta.senderID),
+        formatPartner(interchange.meta.receiverQualifier, interchange.meta.receiverID)
       ]).join(" to "),
       badge: "Required",
       details: compactDetails([
         createDetail("Interchange ID", interchangeId, true),
         createDetail(
           "Sender",
-          formatPartner(interchange.meta.senderQualifer, interchange.meta.senderID),
+          formatPartner(interchange.meta.senderQualifier, interchange.meta.senderID),
           true
         ),
         createDetail(
           "Receiver",
-          formatPartner(interchange.meta.receiverQualifer, interchange.meta.receiverID),
+          formatPartner(interchange.meta.receiverQualifier, interchange.meta.receiverID),
           true
         ),
         createDetail(

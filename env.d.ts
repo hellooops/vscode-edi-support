@@ -10,14 +10,14 @@ type VcmFileChange = VcmTemplate<{
   text: string;
 }>;
 
-type IElementType = "Data Element" | "Component Element";
+type EdiElementType = "Data Element" | "Component Element";
 
-interface IEdiElement {
+interface EdiElementObject {
   nodeKey: string;
 
-  type: IElementType;
+  type: EdiElementType;
   value?: string;
-  components?: IEdiElement[];
+  components?: EdiElementObject[];
 
   // EdiReleaseSchemaElement
   id?: string;
@@ -34,92 +34,92 @@ interface IEdiElement {
   designator: string;
 }
 
-interface IEdiSegment {
+interface EdiSegmentObject {
   nodeKey: string;
 
   id: string;
   segmentStr?: string;
-  elements: Array<IEdiElement>;
+  elements: Array<EdiElementObject>;
   desc?: string;
   purpose?: string;
-  Loop?: IEdiSegment[];
+  Loop?: EdiSegmentObject[];
 }
 
-type IEdiType = "x12" | "edifact" | "vda" | "unknown";
+type EdiTypeValue = "x12" | "edifact" | "vda" | "unknown";
 
-interface IMessageInfo {
+interface EdiMessageInfo {
   version: string;
   name: string;
   introduction: string;
 }
 
-interface IEdiTransactionSetMeta {
+interface EdiTransactionSetMeta {
   release?: string;
   version?: string;
   id?: string;
-  messageInfo?: IMessageInfo;
+  messageInfo?: EdiMessageInfo;
 }
 
-interface IEdiTransactionSet {
+interface EdiTransactionSetObject {
   nodeKey: string;
-  meta: IEdiTransactionSetMeta;
+  meta: EdiTransactionSetMeta;
   id?: string;
 
-  segments: IEdiSegment[];
+  segments: EdiSegmentObject[];
 
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-interface IEdiFunctionalGroupMeta {
+interface EdiFunctionalGroupMeta {
   date?: string;
   time?: string;
   id?: string;
 }
 
-interface IEdiFunctionalGroup {
+interface EdiFunctionalGroupObject {
   nodeKey: string;
-  meta: IEdiFunctionalGroupMeta;
+  meta: EdiFunctionalGroupMeta;
   id?: string;
 
-  transactionSets: IEdiTransactionSet[];
+  transactionSets: EdiTransactionSetObject[];
 
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-interface IEdiInterchangeMeta {
-  senderQualifer?: string;
+interface EdiInterchangeMeta {
+  senderQualifier?: string;
   senderID?: string;
-  receiverQualifer?: string;
+  receiverQualifier?: string;
   receiverID?: string;
   date?: string;
   time?: string;
   id?: string;
 }
 
-interface IEdiInterchange {
+interface EdiInterchangeObject {
   nodeKey: string;
-  meta: IEdiInterchangeMeta;
+  meta: EdiInterchangeMeta;
   id?: string;
 
-  functionalGroups: IEdiFunctionalGroup[];
+  functionalGroups: EdiFunctionalGroupObject[];
 
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-interface IEdiDocument {
-  interchanges: IEdiInterchange[];
+interface EdiDocumentObject {
+  interchanges: EdiInterchangeObject[];
 
-  separatorsSegment?: IEdiSegment; // ISA
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  separatorsSegment?: EdiSegmentObject; // ISA
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 
-  ediType?: IEdiType;
+  ediType?: EdiTypeValue;
 }
 
-type VcmDocument = VcmTemplate<IEdiDocument>;
+type VcmDocument = VcmTemplate<EdiDocumentObject>;
 
 type IActiveContext = {
   segmentNodeKey: string | undefined;

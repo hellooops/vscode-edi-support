@@ -1,9 +1,9 @@
-type IElementType = "Data Element" | "Component Element";
+type EdiElementType = "Data Element" | "Component Element";
 
-interface IEdiElement {
-  type: IElementType;
+interface EdiElementObject {
+  type: EdiElementType;
   value?: string;
-  components?: IEdiElement[];
+  components?: EdiElementObject[];
   id?: string;
   desc?: string;
   dataType?: string;
@@ -16,74 +16,74 @@ interface IEdiElement {
   designator: string;
 }
 
-interface IEdiSegment {
+interface EdiSegmentObject {
   id: string;
   segmentStr?: string;
-  elements: Array<IEdiElement>;
+  elements: Array<EdiElementObject>;
   desc?: string;
   purpose?: string;
-  Loop?: IEdiSegment[];
+  Loop?: EdiSegmentObject[];
 }
 
-type IEdiType = "x12" | "edifact" | "vda" | "unknown";
+type EdiTypeValue = "x12" | "edifact" | "vda" | "unknown";
 
-interface IMessageInfo {
+interface EdiMessageInfo {
   version: string;
   name: string;
   introduction: string;
 }
 
-interface IEdiTransactionSetMeta {
+interface EdiTransactionSetMeta {
   release?: string;
   version?: string;
   id?: string;
-  messageInfo?: IMessageInfo;
+  messageInfo?: EdiMessageInfo;
 }
 
-interface IEdiTransactionSet {
-  meta: IEdiTransactionSetMeta;
+interface EdiTransactionSetObject {
+  meta: EdiTransactionSetMeta;
   id?: string;
-  segments: IEdiSegment[];
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  segments: EdiSegmentObject[];
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-interface IEdiFunctionalGroupMeta {
+interface EdiFunctionalGroupMeta {
   date?: string;
   time?: string;
   id?: string;
 }
 
-interface IEdiFunctionalGroup {
-  meta: IEdiFunctionalGroupMeta;
+interface EdiFunctionalGroupObject {
+  meta: EdiFunctionalGroupMeta;
   id?: string;
-  transactionSets: IEdiTransactionSet[];
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  transactionSets: EdiTransactionSetObject[];
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-interface IEdiInterchangeMeta {
-  senderQualifer?: string;
+interface EdiInterchangeMeta {
+  senderQualifier?: string;
   senderID?: string;
-  receiverQualifer?: string;
+  receiverQualifier?: string;
   receiverID?: string;
   date?: string;
   time?: string;
   id?: string;
 }
 
-interface IEdiInterchange {
-  meta: IEdiInterchangeMeta;
+interface EdiInterchangeObject {
+  meta: EdiInterchangeMeta;
   id?: string;
-  functionalGroups: IEdiFunctionalGroup[];
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
+  functionalGroups: EdiFunctionalGroupObject[];
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
 }
 
-interface IEdiDocument {
-  interchanges: IEdiInterchange[];
-  separatorsSegment?: IEdiSegment;
-  startSegment?: IEdiSegment;
-  endSegment?: IEdiSegment;
-  ediType?: IEdiType;
+interface EdiDocumentObject {
+  interchanges: EdiInterchangeObject[];
+  separatorsSegment?: EdiSegmentObject;
+  startSegment?: EdiSegmentObject;
+  endSegment?: EdiSegmentObject;
+  ediType?: EdiTypeValue;
 }

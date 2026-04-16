@@ -59,7 +59,7 @@ export abstract class EdiParserBase {
 
   private async parseDocumentInternal(): Promise<EdiDocument> {
     const separators = this.getMessageSeparators();
-    const standardOptions = this.getStardardOptions();
+    const standardOptions = this.getStandardOptions();
     const ediDocumentBuilder: EdiDocumentBuilder = new EdiDocumentBuilder(
       separators,
       this.ediType as "x12" | "edifact" | "vda" | "unknown",
@@ -394,5 +394,5 @@ export abstract class EdiParserBase {
     return nStr.length >= width ? nStr : new Array(width - nStr.length + 1).join(z) + nStr;
   }
 
-  protected abstract getStardardOptions(): EdiStandardOptions;
+  protected abstract getStandardOptions(): EdiStandardOptions;
 }

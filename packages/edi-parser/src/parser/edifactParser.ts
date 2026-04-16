@@ -106,14 +106,14 @@ export class EdifactParser extends EdiParserBase {
       const dataEle = interchangeSegment.elements[1];
       if (dataEle.components) {
         if (dataEle.components.length > 0) meta.senderID = dataEle.components[0].value;
-        if (dataEle.components.length > 1) meta.senderQualifer = dataEle.components[1].value;
+        if (dataEle.components.length > 1) meta.senderQualifier = dataEle.components[1].value;
       }
     }
     if (interchangeSegment.elements.length > 2) {
       const dataEle = interchangeSegment.elements[2];
       if (dataEle.components) {
         if (dataEle.components.length > 0) meta.receiverID = dataEle.components[0].value;
-        if (dataEle.components.length > 1) meta.receiverQualifer = dataEle.components[1].value;
+        if (dataEle.components.length > 1) meta.receiverQualifier = dataEle.components[1].value;
       }
     }
     if (interchangeSegment.elements.length > 3) {
@@ -187,7 +187,7 @@ export class EdifactParser extends EdiParserBase {
     return segment;
   }
 
-  protected getStardardOptions(): EdiStandardOptions {
+  protected getStandardOptions(): EdiStandardOptions {
     return {
       separatorsSegmentName: "UNA",
 

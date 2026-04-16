@@ -48,15 +48,15 @@ export {
 export type {
   DiagnosticError,
   DiagnosticError_QUALIFIER_INVALID_CODE,
-  IEdiDocument,
-  IEdiElement,
-  IEdiFunctionalGroup,
+  EdiDocumentObject,
+  EdiElementObject,
+  EdiFunctionalGroupObject,
   EdiFunctionalGroupMeta,
-  IEdiInterchange,
-  IEdiSegment,
-  IEdiTransactionSet,
+  EdiInterchangeObject,
   EdiInterchangeMeta,
+  EdiSegmentObject,
   EdiStandardOptions,
+  EdiTransactionSetObject,
   EdiTransactionSetMeta
 } from "./parser/entities";
 

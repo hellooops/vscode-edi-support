@@ -21,9 +21,9 @@ suite("EDIFACT Parser Test Suite", () => {
       // Verify Interchange Meta
       assert.strictEqual(ediDocument.interchanges.length, 1);
       assert.ok(ediDocument.interchanges[0].meta !== undefined);
-      assert.strictEqual(ediDocument.interchanges[0].meta.senderQualifer, "14");
+      assert.strictEqual(ediDocument.interchanges[0].meta.senderQualifier, "14");
       assert.strictEqual(ediDocument.interchanges[0].meta.senderID, "<Sender GLN>");
-      assert.strictEqual(ediDocument.interchanges[0].meta.receiverQualifer, "14");
+      assert.strictEqual(ediDocument.interchanges[0].meta.receiverQualifier, "14");
       assert.strictEqual(ediDocument.interchanges[0].meta.receiverID, "<Receiver GLN>");
       assert.strictEqual(ediDocument.interchanges[0].meta.date, "140407");
       assert.strictEqual(ediDocument.interchanges[0].meta.time, "0910");

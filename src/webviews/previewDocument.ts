@@ -16,7 +16,7 @@ import {
 
 export interface IPreviewEdiElement {
   nodeKey: string;
-  type: IElementType;
+  type: EdiElementType;
   value?: string;
   components?: IPreviewEdiElement[];
   id?: string;
@@ -43,7 +43,7 @@ export interface IPreviewEdiSegment {
 
 export interface IPreviewEdiTransactionSet {
   nodeKey: string;
-  meta: IEdiTransactionSetMeta;
+  meta: EdiTransactionSetMeta;
   id?: string;
   segments: IPreviewEdiSegment[];
   startSegment?: IPreviewEdiSegment;
@@ -52,7 +52,7 @@ export interface IPreviewEdiTransactionSet {
 
 export interface IPreviewEdiFunctionalGroup {
   nodeKey: string;
-  meta: IEdiFunctionalGroupMeta;
+  meta: EdiFunctionalGroupMeta;
   id?: string;
   transactionSets: IPreviewEdiTransactionSet[];
   startSegment?: IPreviewEdiSegment;
@@ -61,7 +61,7 @@ export interface IPreviewEdiFunctionalGroup {
 
 export interface IPreviewEdiInterchange {
   nodeKey: string;
-  meta: IEdiInterchangeMeta;
+  meta: EdiInterchangeMeta;
   id?: string;
   functionalGroups: IPreviewEdiFunctionalGroup[];
   startSegment?: IPreviewEdiSegment;
@@ -73,7 +73,7 @@ export interface IPreviewEdiDocument {
   separatorsSegment?: IPreviewEdiSegment;
   startSegment?: IPreviewEdiSegment;
   endSegment?: IPreviewEdiSegment;
-  ediType?: IEdiType;
+  ediType?: EdiTypeValue;
 }
 
 function toPreviewElement(segment: EdiSegment, element: EdiElement): IPreviewEdiElement {
@@ -140,7 +140,7 @@ function toPreviewInterchange(interchange: EdiInterchange): IPreviewEdiInterchan
   };
 }
 
-export function buildPreviewDocument(ediDocument: EdiDocument, ediType: IEdiType): IPreviewEdiDocument {
+export function buildPreviewDocument(ediDocument: EdiDocument, ediType: EdiTypeValue): IPreviewEdiDocument {
   return {
     interchanges: ediDocument.interchanges.map(interchange => toPreviewInterchange(interchange)),
     separatorsSegment: ediDocument.separatorsSegment ? toPreviewSegment(ediDocument.separatorsSegment) : undefined,

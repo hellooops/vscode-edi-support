@@ -93,7 +93,7 @@ export class VdaParser extends EdiParserBase {
     return "../schemas/vda";
   }
 
-  protected getStardardOptions(): EdiStandardOptions {
+  protected getStandardOptions(): EdiStandardOptions {
     return {
       transactionSetStartSegmentName: ["511", "711"],
       transactionSetEndSegmentName: ["519", "719"],
