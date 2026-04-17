@@ -91,28 +91,6 @@ if (parser) {
 }
 ```
 
-### `parseEdi`
-
-```ts
-import { parseEdi } from "edi-parser";
-
-const document = await parseEdi(edifactText, {
-  customSchemas: {
-    edifact: {
-      _service: {
-        qualifiers: {
-          "Identification code qualifier": {
-            ZZ: "Mutually agreed qualifier"
-          }
-        }
-      }
-    }
-  }
-});
-
-console.log(document?.interchanges.length);
-```
-
 ## 内置 Schema Helper
 
 ### `getBuiltInSchema`
@@ -179,26 +157,6 @@ const validationOptions: EdiValidationOptions = {
 };
 ```
 
-### `ParseOptions`
-
-```ts
-import type { ParseOptions } from "edi-parser";
-
-const parseOptions: ParseOptions = {
-  customSchemas: {
-    edifact: {
-      _service: {
-        qualifiers: {
-          "Identification code qualifier": {
-            ZZ: "Custom code"
-          }
-        }
-      }
-    }
-  }
-};
-```
-
 ### `ParserOptions`
 
 ```ts
@@ -251,9 +209,10 @@ const request: SchemaResolverRequest = {
 ### `EdiDocumentObject`
 
 ```ts
-import type { EdiDocumentObject, parseEdi } from "edi-parser";
+import { createParser } from "edi-parser";
+import type { EdiDocumentObject } from "edi-parser";
 
-const document = await parseEdi(x12Text);
+const document = await createParser(x12Text)?.parse();
 const snapshot: EdiDocumentObject | undefined = document?.toObject();
 
 console.log(snapshot?.ediType);
@@ -280,6 +239,7 @@ import { X12Parser } from "edi-parser";
 const parser = new X12Parser(x12Text);
 const document = await parser.parse();
 console.log(document.interchanges[0].functionalGroups[0].transactionSets[0].meta.version);
+console.log(parser.getMessageSeparators().segmentSeparator);
 ```
 
 ### `EdifactParser`

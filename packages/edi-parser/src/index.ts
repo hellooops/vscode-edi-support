@@ -3,8 +3,7 @@ export {
   isX12,
   isEdifact,
   isVda,
-  createParser,
-  parseEdi
+  createParser
 } from "./factory";
 
 export {
@@ -16,7 +15,6 @@ export type {
   EdiTypeValue,
   EdiErrorOptions,
   EdiValidationOptions,
-  ParseOptions,
   ParserOptions,
   SchemaLoadResult,
   SchemaResolver,

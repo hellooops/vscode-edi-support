@@ -10,12 +10,12 @@ import {
 } from "./helpers/fixtures";
 import { edifactParserModule, root } from "./helpers/runtime";
 
-const { createParser, DiagnosticErrors, loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
+const { DiagnosticErrors, loadBuiltInSchemaBundle } = root as typeof import("../dist");
 const { EdifactParser } = edifactParserModule as typeof import("../dist/parser/edifactParser");
 
 suite("edi-parser edifact parser", () => {
   test("ORDERS should parse base metadata, message info and UNH composite elements", async () => {
-    const document = await parseEdi(readFixture("sample-orders.edifact"));
+    const document = await parseEdifact(readFixture("sample-orders.edifact"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const unhSegment = transactionSet.startSegment!;
 
@@ -30,7 +30,7 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("DESADV should fit nested CPS structures and preserve parent relationships", async () => {
-    const document = await parseEdi(readFixture("DESADV.edifact"));
+    const document = await parseEdifact(readFixture("DESADV.edifact"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const cpsLoop = transactionSet.segments.filter((segment) => segment.id === "CPSLoop1")
       .find((segment) => segment.Loop!.some((child) => child.id === "LINLoop1"))!;
@@ -56,7 +56,7 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("should parse multiple interchanges and message types from fixture", async () => {
-    const document = await parseEdi(readFixture("EDIFACT-interchanges.edifact"));
+    const document = await parseEdifact(readFixture("EDIFACT-interchanges.edifact"));
 
     assert.strictEqual(document!.interchanges.length, 2);
     assert.deepStrictEqual(
@@ -78,7 +78,7 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("should parse grouped and repeated EDIFACT messages across multiple interchanges", async () => {
-    const document = await parseEdi(readFixture("multiple_transactions.edifact"));
+    const document = await parseEdifact(readFixture("multiple_transactions.edifact"));
 
     assert.strictEqual(document!.interchanges.length, 2);
     assert.deepStrictEqual(
@@ -97,7 +97,7 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("INVOIC should switch message type and message info", async () => {
-    const document = await parseEdi(createEdifactInvoicDocument());
+    const document = await parseEdifact(createEdifactInvoicDocument());
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
 
     assert.strictEqual(transactionSet.meta.release, "D96A");
@@ -106,7 +106,7 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("DELFOR should support service qualifier overrides on EDIFACT service scope", async () => {
-    const parser = createParser(createEdifactDelforDocument(), {
+    const parser = new EdifactParser(createEdifactDelforDocument(), {
       customSchemas: {
         edifact: {
           _service: {
@@ -127,8 +127,8 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("should parse ORDERS both with and without UNA without changing core metadata", async () => {
-    const withUnaDocument = await parseEdi(createEdifactOrdersDocument("\n", true));
-    const withoutUnaDocument = await parseEdi(createEdifactOrdersDocument("\n", false));
+    const withUnaDocument = await parseEdifact(createEdifactOrdersDocument("\n", true));
+    const withoutUnaDocument = await parseEdifact(createEdifactOrdersDocument("\n", false));
     const withUnaTransactionSet = withUnaDocument!.interchanges[0].functionalGroups[0].transactionSets[0];
     const withoutUnaTransactionSet = withoutUnaDocument!.interchanges[0].functionalGroups[0].transactionSets[0];
 
@@ -141,9 +141,9 @@ suite("edi-parser edifact parser", () => {
   });
 
   test("should parse UNA with LF, UNA with CRLF, and no-UNA documents without trailing newline", async () => {
-    const lfDocument = await parseEdi(createEdifactOrdersDocument("\n", true));
-    const crlfDocument = await parseEdi(createEdifactOrdersDocument("\r\n", true));
-    const noUnaNoTrailingNewline = await parseEdi(stripTrailingLineBreaks(createEdifactOrdersDocument("\n", false)));
+    const lfDocument = await parseEdifact(createEdifactOrdersDocument("\n", true));
+    const crlfDocument = await parseEdifact(createEdifactOrdersDocument("\r\n", true));
+    const noUnaNoTrailingNewline = await parseEdifact(stripTrailingLineBreaks(createEdifactOrdersDocument("\n", false)));
 
     assert.strictEqual(lfDocument!.interchanges.length, 1);
     assert.strictEqual(crlfDocument!.interchanges.length, 1);
@@ -193,7 +193,7 @@ suite("edi-parser edifact parser", () => {
     })! as any);
     delete partialBundle.releaseSchema.Segments.BGM;
 
-    const document = await parseEdi(createEdifactOrdersDocument(), {
+    const document = await parseEdifact(createEdifactOrdersDocument(), {
       schemaResolver: () => partialBundle,
     });
     const unhSegment = document!.getSegments(true).find((segment) => segment.id === "UNH")!;
@@ -204,3 +204,7 @@ suite("edi-parser edifact parser", () => {
     assert.strictEqual(bgmSegment.ediReleaseSchemaSegment, undefined);
   });
 });
+
+async function parseEdifact(text: string, options: ConstructorParameters<typeof EdifactParser>[1] = {}) {
+  return await new EdifactParser(text, options).parse();
+}

@@ -12,13 +12,13 @@ import {
 } from "./helpers/fixtures";
 import { parserEntities, root, x12ParserModule } from "./helpers/runtime";
 
-const { loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
+const { loadBuiltInSchemaBundle } = root as typeof import("../dist");
 const { X12Parser } = x12ParserModule as typeof import("../dist/parser/x12Parser");
 const { ElementType } = parserEntities as typeof import("../dist/parser/entities");
 
 suite("edi-parser x12 parser", () => {
   test("850 should parse base metadata, message info and schema-backed segments", async () => {
-    const document = await parseEdi(readFixture("850.x12"));
+    const document = await parseX12(readFixture("850.x12"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const begSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BEG");
 
@@ -31,7 +31,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("850 should fit N1 and PO1 loops and preserve nested loop structure", async () => {
-    const document = await parseEdi(readFixture("850-loop.edi"));
+    const document = await parseX12(readFixture("850-loop.edi"));
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const wrappedSegments = transactionSet.segments;
     const flattenedIds = transactionSet.getSegments(true).map((segment) => segment.id);
@@ -67,7 +67,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("should parse multiple transactions within one functional group from fixture", async () => {
-    const document = await parseEdi(readFixture("multiple_transactions.x12"));
+    const document = await parseX12(readFixture("multiple_transactions.x12"));
     const interchange = document!.interchanges[0];
     const functionalGroup = interchange.functionalGroups[0];
 
@@ -87,7 +87,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("should parse multiple functional groups from an interchange fixture", async () => {
-    const document = await parseEdi(readFixture("X12-interchanges.x12"));
+    const document = await parseX12(readFixture("X12-interchanges.x12"));
     const interchange = document!.interchanges[0];
 
     assert.strictEqual(document!.interchanges.length, 1);
@@ -107,7 +107,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("856 should fit HL loops with nested N1 loop and preserve flattened order", async () => {
-    const document = await parseEdi(createX12856Document());
+    const document = await parseX12(createX12856Document());
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const wrappedSegments = transactionSet.segments;
     const flattenedIds = transactionSet.getSegments(true).map((segment) => segment.id);
@@ -128,7 +128,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("810 should switch transaction set type and message info", async () => {
-    const document = await parseEdi(createX12810Document());
+    const document = await parseX12(createX12810Document());
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const bigSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BIG");
 
@@ -158,7 +158,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("should prefer GS08 release over ISA12 when both are present", async () => {
-    const document = await parseEdi([
+    const document = await parseX12([
       "ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00400*000000001*0*T*:~",
       "GS*PO*SENDER*RECEIVER*20241111*0300*1*X*004010~",
       "ST*850*0001~",
@@ -174,7 +174,7 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("should still parse unsupported releases without schema metadata", async () => {
-    const document = await parseEdi(createUnsupportedReleaseX12Document());
+    const document = await parseX12(createUnsupportedReleaseX12Document());
     const begSegment = document!.getSegments(true).find((segment) => segment.id === "BEG");
 
     assert.ok(begSegment);
@@ -236,7 +236,7 @@ suite("edi-parser x12 parser", () => {
     })! as any);
     delete partialBundle.releaseSchema.Segments.BEG;
 
-    const document = await parseEdi(createX12PurchaseOrderDocument(), {
+    const document = await parseX12(createX12PurchaseOrderDocument(), {
       schemaResolver: () => partialBundle,
     });
     const begSegment = document!.getSegments(true).find((segment) => segment.id === "BEG")!;
@@ -248,9 +248,9 @@ suite("edi-parser x12 parser", () => {
   });
 
   test("should parse documents with LF, CR and no trailing newline when segment separator remains tilde", async () => {
-    const lfDocument = await parseEdi(createX12PurchaseOrderDocument("\n"));
-    const crDocument = await parseEdi(createX12PurchaseOrderDocument("\r"));
-    const noTrailingNewlineDocument = await parseEdi(stripTrailingLineBreaks(createX12PurchaseOrderDocument("\n")));
+    const lfDocument = await parseX12(createX12PurchaseOrderDocument("\n"));
+    const crDocument = await parseX12(createX12PurchaseOrderDocument("\r"));
+    const noTrailingNewlineDocument = await parseX12(stripTrailingLineBreaks(createX12PurchaseOrderDocument("\n")));
 
     assert.strictEqual(lfDocument!.interchanges.length, 1);
     assert.strictEqual(crDocument!.interchanges.length, 1);
@@ -262,4 +262,8 @@ suite("edi-parser x12 parser", () => {
 
 function normalizeCommentContent(comment: { content: string }): string {
   return comment.content.replace(/\r/g, "");
+}
+
+async function parseX12(text: string, options: ConstructorParameters<typeof X12Parser>[1] = {}) {
+  return await new X12Parser(text, options).parse();
 }

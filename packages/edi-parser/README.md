@@ -6,7 +6,6 @@
 
 - `detectEdiType(text)`: detect whether a document is `x12`, `edifact`, `vda` or `unknown`.
 - `createParser(text, options)`: create the concrete parser instance.
-- `parseEdi(text, options)`: parse text directly and return an `EdiDocument`.
 - Built-in schema resources for X12, EDIFACT and VDA.
 - Optional `customSchemas` and `schemaResolver` hooks for caller-side overrides.
 
@@ -31,7 +30,7 @@ npm install D:\Dev\vscode-edi-support\packages\edi-parser
 ## Quick start
 
 ```js
-const { detectEdiType, parseEdi } = require("edi-parser");
+const { createParser, detectEdiType } = require("edi-parser");
 
 async function main() {
   const text = [
@@ -46,7 +45,8 @@ async function main() {
 
   console.log(detectEdiType(text));
 
-  const document = await parseEdi(text);
+  const parser = createParser(text);
+  const document = await parser?.parse();
   console.log(document?.interchanges.length);
   console.log(document?.getSegments().map(segment => segment.id));
 }
@@ -61,9 +61,9 @@ main().catch(console.error);
 Use `customSchemas` when you want to extend qualifier dictionaries without replacing the built-in schema bundle.
 
 ```js
-const { parseEdi } = require("edi-parser");
+const { X12Parser } = require("edi-parser");
 
-parseEdi(text, {
+new X12Parser(text, {
   customSchemas: {
     x12: {
       "00401": {
@@ -75,7 +75,7 @@ parseEdi(text, {
       },
     },
   },
-});
+}).parse();
 ```
 
 For EDIFACT control/service segments, use the `_service` scope:
@@ -104,9 +104,9 @@ Resolver strategy is:
 2. If it returns `undefined`, `edi-parser` falls back to its built-in schema resources.
 
 ```js
-const { loadBuiltInSchemaBundle, parseEdi } = require("edi-parser");
+const { createParser, loadBuiltInSchemaBundle } = require("edi-parser");
 
-parseEdi(text, {
+const parser = createParser(text, {
   schemaResolver: request => {
     if (request.ediType === "x12" && request.release === "99999") {
       return loadBuiltInSchemaBundle({
@@ -119,6 +119,23 @@ parseEdi(text, {
     return undefined;
   },
 });
+
+parser?.parse();
+```
+
+### `getMessageSeparators()`
+
+When the EDI type is already known and you only need the separators, instantiate the concrete parser directly:
+
+```js
+const { X12Parser } = require("edi-parser");
+
+const parser = new X12Parser(text);
+const separators = parser.getMessageSeparators();
+
+console.log(separators.segmentSeparator);
+console.log(separators.dataElementSeparator);
+console.log(separators.componentElementSeparator);
 ```
 
 ## Public exports
@@ -127,7 +144,6 @@ Main exports include:
 
 - `detectEdiType`
 - `createParser`
-- `parseEdi`
 - `X12Parser`
 - `EdifactParser`
 - `VdaParser`

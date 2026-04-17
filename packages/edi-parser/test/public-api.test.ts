@@ -19,7 +19,6 @@ const {
   EdifactParser,
   getBuiltInSchema,
   loadBuiltInSchemaBundle,
-  parseEdi,
   VdaParser,
   X12Parser,
 } = root as typeof import("../dist");
@@ -27,7 +26,7 @@ type EdiDocumentObject = import("../dist").EdiDocumentObject;
 
 suite("edi-parser public api", () => {
   test("should export snapshot dto types and toObject-compatible documents", async () => {
-    const document = await parseEdi(createX12PurchaseOrderDocument());
+    const document = await createParser(createX12PurchaseOrderDocument())?.parse();
     const snapshot: EdiDocumentObject = document!.toObject();
 
     assert.strictEqual(snapshot.ediType, "x12");
@@ -57,22 +56,20 @@ suite("edi-parser public api", () => {
     assert.strictEqual(createParser("NOT_AN_EDI_DOCUMENT"), undefined);
   });
 
-  test("should return undefined parsers and parse results for empty or whitespace-only input", async () => {
+  test("should not export parseEdi and should return undefined parsers for empty or whitespace-only input", async () => {
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(root, "parseEdi"), false);
     assert.strictEqual(createParser(""), undefined);
     assert.strictEqual(createParser("   \r\n\t"), undefined);
-    assert.strictEqual(await parseEdi(""), undefined);
-    assert.strictEqual(await parseEdi("   \r\n\t"), undefined);
   });
 
-  test("should return undefined parser and parse result for unknown text", async () => {
+  test("should return undefined parser for unknown text", async () => {
     assert.strictEqual(createParser("plain text only"), undefined);
-    assert.strictEqual(await parseEdi("plain text only"), undefined);
   });
 
   test("should detect and parse comment-prefixed x12 documents through the public factory helpers", async () => {
     const text = readFixture("850-comments.x12");
     const parser = createParser(text);
-    const document = await parseEdi(text);
+    const document = await parser?.parse();
 
     assert.ok(parser instanceof X12Parser);
     assert.ok(document);
@@ -80,10 +77,10 @@ suite("edi-parser public api", () => {
     assert.strictEqual(document!.interchanges[0].functionalGroups[0].transactionSets[0].meta.version, "850");
   });
 
-  test("should parse x12, edifact and vda documents through parseEdi", async () => {
-    const x12Document = await parseEdi(createX12PurchaseOrderDocument());
-    const edifactDocument = await parseEdi(createEdifactOrdersDocument());
-    const vdaDocument = await parseEdi(createVda511Document());
+  test("should parse x12, edifact and vda documents through exported parser classes", async () => {
+    const x12Document = await new X12Parser(createX12PurchaseOrderDocument()).parse();
+    const edifactDocument = await new EdifactParser(createEdifactOrdersDocument()).parse();
+    const vdaDocument = await new VdaParser(createVda511Document()).parse();
 
     assert.ok(x12Document);
     assert.strictEqual(x12Document.interchanges.length, 1);
@@ -162,7 +159,7 @@ suite("edi-parser public api", () => {
   });
 
   test("should honor parser-level custom schema qualifier overrides", async () => {
-    const document = await parseEdi(createX12PurchaseOrderWithCustomQualifier(), {
+    const document = await createParser(createX12PurchaseOrderWithCustomQualifier(), {
       customSchemas: {
         x12: {
           "00401": {
@@ -174,7 +171,7 @@ suite("edi-parser public api", () => {
           },
         },
       },
-    });
+    })?.parse();
 
     assert.ok(document);
 
@@ -186,10 +183,10 @@ suite("edi-parser public api", () => {
 
   test("should allow external schema resolvers to supply missing releases", async () => {
     const requests: Array<{ ediType: string; release: string; version?: string }> = [];
-    const withoutResolver = await parseEdi(createUnsupportedReleaseX12Document());
+    const withoutResolver = await createParser(createUnsupportedReleaseX12Document())?.parse();
     const withoutResolverBeg = withoutResolver!.getSegments().find((segment) => segment.id === "BEG");
 
-    const withResolver = await parseEdi(createUnsupportedReleaseX12Document(), {
+    const withResolver = await createParser(createUnsupportedReleaseX12Document(), {
       schemaResolver: (request) => {
         requests.push(request);
         return loadBuiltInSchemaBundle({
@@ -198,7 +195,7 @@ suite("edi-parser public api", () => {
           version: "850",
         });
       },
-    });
+    })?.parse();
     const withResolverBeg = withResolver!.getSegments().find((segment) => segment.id === "BEG");
 
     assert.ok(withoutResolverBeg);
@@ -221,9 +218,9 @@ suite("edi-parser public api", () => {
     })! as any);
     externalBundle.releaseSchema.Segments.BEG.Desc = "External BEG Description";
 
-    const document = await parseEdi(createX12PurchaseOrderDocument(), {
+    const document = await createParser(createX12PurchaseOrderDocument(), {
       schemaResolver: () => externalBundle,
-    });
+    })?.parse();
     const begSegment = document!.getSegments().find((segment) => segment.id === "BEG");
 
     assert.ok(begSegment);
@@ -231,9 +228,9 @@ suite("edi-parser public api", () => {
   });
 
   test("should fall back to the built-in schema when schemaResolver returns undefined", async () => {
-    const document = await parseEdi(createX12PurchaseOrderDocument(), {
+    const document = await createParser(createX12PurchaseOrderDocument(), {
       schemaResolver: () => undefined,
-    });
+    })?.parse();
     const begSegment = document!.getSegments().find((segment) => segment.id === "BEG");
 
     assert.ok(begSegment);

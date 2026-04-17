@@ -49,12 +49,12 @@ npm install ./packages/edi-parser
 ```
 
 ```js
-const { detectEdiType, parseEdi } = require("edi-parser");
+const { createParser, detectEdiType } = require("edi-parser");
 
 const text = "ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00401*000000001*0*T*:~\nGS*PO*SENDER*RECEIVER*20241111*0300*1*X*004010~\nST*850*0001~\nSE*2*0001~\nGE*1*1~\nIEA*1*000000001~";
 
 console.log(detectEdiType(text));
-parseEdi(text).then(document => {
+createParser(text)?.parse().then(document => {
   console.log(document?.interchanges.length);
 });
 ```

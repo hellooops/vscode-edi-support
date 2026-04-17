@@ -1,7 +1,6 @@
 import * as constants from "./constants";
-import { type ParseOptions, type ParserOptions, type EdiTypeValue } from "./options";
+import { type ParserOptions, type EdiTypeValue } from "./options";
 import { EdiParserBase } from "./parser/ediParserBase";
-import { type EdiDocument } from "./parser/entities";
 import { EdifactParser } from "./parser/edifactParser";
 import { VdaParser } from "./parser/vdaParser";
 import { X12Parser } from "./parser/x12Parser";
@@ -90,9 +89,4 @@ export function createParser(text: string, options: ParserOptions = {}): EdiPars
     default:
       return undefined;
   }
-}
-
-export async function parseEdi(text: string, options: ParseOptions = {}): Promise<EdiDocument | undefined> {
-  const parser = createParser(text, options);
-  return await parser?.parse();
 }

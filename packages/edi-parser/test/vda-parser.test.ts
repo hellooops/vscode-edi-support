@@ -8,13 +8,13 @@ import {
 } from "./helpers/fixtures";
 import { root, vdaParserModule } from "./helpers/runtime";
 
-const { loadBuiltInSchemaBundle, parseEdi } = root as typeof import("../dist");
+const { loadBuiltInSchemaBundle } = root as typeof import("../dist");
 const { VdaParser } = vdaParserModule as typeof import("../dist/parser/vdaParser");
 
 suite("edi-parser vda parser", () => {
   test("511 auto schema loading should match explicit schema loading for structure and fixed slices", async () => {
     const text = readFixture("4905.edi");
-    const autoDocument = await parseEdi(text);
+    const autoDocument = await parseVda(text);
     const explicitParser = new VdaParser(text);
     await explicitParser.loadSchema({ release: "02", version: "511" });
     const explicitDocument = await explicitParser.parse();
@@ -51,7 +51,7 @@ suite("edi-parser vda parser", () => {
   });
 
   test("511 should wrap repeated 512 loops and preserve flattened order", async () => {
-    const document = await parseEdi(createLongVda511Document());
+    const document = await parseVda(createLongVda511Document());
     const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
     const wrappedSegments = transactionSet.segments;
     const flattenedIds = transactionSet.getSegments(true).map((segment) => segment.id);
@@ -88,7 +88,7 @@ suite("edi-parser vda parser", () => {
 
   test("711 auto schema loading should match explicit schema loading for nested loop structure", async () => {
     const text = readFixture("4913.edi");
-    const autoDocument = await parseEdi(text);
+    const autoDocument = await parseVda(text);
     const explicitParser = new VdaParser(text);
     await explicitParser.loadSchema({ release: "03", version: "711" });
     const explicitDocument = await explicitParser.parse();
@@ -111,9 +111,9 @@ suite("edi-parser vda parser", () => {
 
   test("should parse LF, CR and no trailing newline VDA documents", async () => {
     const baseText = readFixture("4905.edi");
-    const lfDocument = await parseEdi(normalizeLineBreaks(baseText, "\n"));
-    const crDocument = await parseEdi(normalizeLineBreaks(baseText, "\r"));
-    const noTrailingNewlineDocument = await parseEdi(stripTrailingLineBreaks(baseText));
+    const lfDocument = await parseVda(normalizeLineBreaks(baseText, "\n"));
+    const crDocument = await parseVda(normalizeLineBreaks(baseText, "\r"));
+    const noTrailingNewlineDocument = await parseVda(stripTrailingLineBreaks(baseText));
 
     assert.strictEqual(lfDocument!.interchanges.length, 1);
     assert.strictEqual(crDocument!.interchanges.length, 1);
@@ -122,9 +122,9 @@ suite("edi-parser vda parser", () => {
   });
 
   test("should handle too short input, invalid separator position, and unknown releases without schema", async () => {
-    const tooShortDocument = await parseEdi("51102X".repeat(10));
-    const invalidSeparatorDocument = await parseEdi(`51102${"X".repeat(123)}Y`);
-    const unknownReleaseDocument = await parseEdi(`51199                  9999900001250124111231                                                                                   \n`);
+    const tooShortDocument = await parseVda("51102X".repeat(10));
+    const invalidSeparatorDocument = await parseVda(`51102${"X".repeat(123)}Y`);
+    const unknownReleaseDocument = await parseVda(`51199                  9999900001250124111231                                                                                   \n`);
     const unknownReleaseSegment = unknownReleaseDocument!.getSegments(true)[0];
 
     assert.strictEqual(tooShortDocument!.interchanges.length, 0);
@@ -142,7 +142,7 @@ suite("edi-parser vda parser", () => {
     })! as any);
     delete partialBundle.releaseSchema.Segments["512"];
 
-    const document = await parseEdi(readFixture("4905.edi"), {
+    const document = await parseVda(readFixture("4905.edi"), {
       schemaResolver: () => partialBundle,
     });
     const segments = document!.getSegments(true);
@@ -169,4 +169,8 @@ function createLongVda511Document(): string {
     "5180107-08140295/04                          23-09140029                                                                        ",
     "5190100000010000001000000100000000000000000000100000010000001                                                                   ",
   ].join("\n");
+}
+
+async function parseVda(text: string, options: ConstructorParameters<typeof VdaParser>[1] = {}) {
+  return await new VdaParser(text, options).parse();
 }
