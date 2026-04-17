@@ -1,4 +1,5 @@
 import { type Conf_CustomSchema } from "./interfaces/configurations";
+import type { RawReleaseSchema, RawVersionSchema } from "./schemas/rawTypes";
 
 export type EdiTypeValue = "x12" | "edifact" | "vda" | "unknown";
 
@@ -9,8 +10,8 @@ export interface SchemaResolverRequest {
 }
 
 export interface SchemaLoadResult {
-  releaseSchema: unknown;
-  versionSchema?: unknown;
+  releaseSchema: RawReleaseSchema;
+  versionSchema?: RawVersionSchema;
 }
 
 export type SchemaResolver =

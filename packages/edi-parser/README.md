@@ -123,6 +123,27 @@ const parser = createParser(text, {
 parser?.parse();
 ```
 
+If you want stronger typing for external schema bundles, use the exported raw schema types:
+
+```ts
+import type { RawReleaseSchema, RawVersionSchema, SchemaLoadResult } from "edi-parser";
+
+const releaseSchema: RawReleaseSchema = {
+  Release: "00401",
+  Qualifiers: {},
+  Segments: {},
+};
+
+const versionSchema: RawVersionSchema = {
+  TransactionSet: [],
+};
+
+const bundle: SchemaLoadResult = {
+  releaseSchema,
+  versionSchema,
+};
+```
+
 ### `getMessageSeparators()`
 
 When the EDI type is already known and you only need the separators, instantiate the concrete parser directly:

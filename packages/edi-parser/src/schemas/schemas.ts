@@ -1,12 +1,19 @@
 import MessageInfo from "../interfaces/messageInfo";
 import { d96a_message_infos } from "./edifact_d96a_meta";
 import { r00401_message_infos } from "./x12_00401_meta";
+import type {
+  RawReleaseSchema,
+  RawReleaseSchemaElement,
+  RawReleaseSchemaSegment,
+  RawVersionSchema,
+  RawVersionSchemaTransactionSet,
+} from "./rawTypes";
 
 export class EdiSchema {
   public ediReleaseSchema: EdiReleaseSchema;
   public ediVersionSchema?: EdiVersionSchema;
 
-  constructor(rawReleaseSchema: any, rawVersionSchema: any) {
+  constructor(rawReleaseSchema: RawReleaseSchema, rawVersionSchema?: RawVersionSchema) {
     this.ediReleaseSchema = new EdiReleaseSchema(rawReleaseSchema);
     if (rawVersionSchema) {
       this.ediVersionSchema = new EdiVersionSchema(rawVersionSchema);
@@ -29,12 +36,12 @@ export class EdiQualifier {
 }
 
 export class EdiReleaseSchema {
-  private _rawSchema: any;
+  private _rawSchema: RawReleaseSchema;
 
   public release: string;
   public qualifiers: Record<string, EdiQualifier[]>;
   public segments: Record<string, EdiReleaseSchemaSegment>;
-  constructor (raw: any) {
+  constructor (raw: RawReleaseSchema) {
     this._rawSchema = raw;
     this.release = raw.Release;
     this.qualifiers = {};
@@ -86,17 +93,17 @@ export class EdiReleaseSchemaElement {
 
   public mock: boolean;
 
-  constructor(raw: any, schema: EdiReleaseSchema | undefined) {
+  constructor(raw: RawReleaseSchemaElement, schema: EdiReleaseSchema | undefined) {
     this.id = raw.Id;
     this.desc = raw.Desc;
-    this.dataType = raw.DataType;
-    this.required = raw.Required;
-    this.minLength = raw.MinLength;
-    this.maxLength = raw.MaxLength;
-    this.qualifierRef = raw.QualifierRef;
-    this.definition = raw.Definition;
+    this.dataType = raw.DataType ?? "";
+    this.required = raw.Required ?? false;
+    this.minLength = raw.MinLength ?? 0;
+    this.maxLength = raw.MaxLength ?? 0;
+    this.qualifierRef = raw.QualifierRef ?? "";
+    this.definition = raw.Definition ?? "";
     this.length = raw.Length;
-    this.components = raw.Components?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
+    this.components = raw.Components?.map((e) => new EdiReleaseSchemaElement(e, schema)) ?? [];
     this._schema = schema;
     this.mock = !!raw.mock;
   }
@@ -161,7 +168,7 @@ export class EdiReleaseSchemaSegment {
   public desc: string;
   public purpose: string;
   public elements: EdiReleaseSchemaElement[];
-  public raw: any;
+  public raw: RawReleaseSchemaSegment;
 
   public mock: boolean;
   // EDIFACT
@@ -248,6 +255,7 @@ export class EdiReleaseSchemaSegment {
     Purpose: "To start, identify and specify an interchange.",
     mock: true
   }, new EdiReleaseSchema({
+    "Release": "_service",
     "Qualifiers": {
       "Syntax identifier": {
         "UNOA": "UN/ECE level A: As defined in the basic code table of ISO 646 with the exceptions of lower case letters, alternative graphic character allocations and national or application-oriented graphic character allocations.",
@@ -417,6 +425,7 @@ export class EdiReleaseSchemaSegment {
     Purpose: "To head, identify and specify a group of messages and/or packages, which may be used for internal routing and which may contain one or more message types and/or packages.",
     mock: true
   }, new EdiReleaseSchema({
+    "Release": "_service",
     "Qualifiers": {
       "Identification code qualifier": {
         "1": "DUNS (Data Universal Numbering System)",
@@ -657,10 +666,10 @@ export class EdiReleaseSchemaSegment {
     mock: true
   }, undefined);
 
-  constructor(raw: any, schema: EdiReleaseSchema | undefined) {
-    this.desc = raw.Desc;
-    this.purpose = raw.Purpose;
-    this.elements = raw.Elements?.map((e: any) => new EdiReleaseSchemaElement(e, schema));
+  constructor(raw: RawReleaseSchemaSegment, schema: EdiReleaseSchema | undefined) {
+    this.desc = raw.Desc ?? "";
+    this.purpose = raw.Purpose ?? "";
+    this.elements = raw.Elements?.map((e) => new EdiReleaseSchemaElement(e, schema)) ?? [];
     this._schema = schema;
     this.mock = !!raw.mock;
     this.raw = raw;
@@ -677,12 +686,12 @@ export class EdiVersionSegment {
   Max?: number | "unbounded";
   Loop?: EdiVersionSegment[];
 
-  constructor (raw: any) {
+  constructor (raw: RawVersionSchemaTransactionSet) {
     this.Id = raw.Id;
     this.Min = raw.Min;
     this.Max = raw.Max;
     if (raw.Loop) {
-      this.Loop = raw.Loop.map((i: any) => new EdiVersionSegment(i));
+      this.Loop = raw.Loop.map((i) => new EdiVersionSegment(i));
     }
   }
 
@@ -708,13 +717,13 @@ export class EdiVersionSchema {
   public name: string;
   public TransactionSet: EdiVersionSegment[];
 
-  constructor (raw: any) {
-    this.Release = raw.Release;
-    this.DocumentType = raw.DocumentType;
-    this.Introduction = raw.Introduction;
-    this.name = raw.name;
+  constructor (raw: RawVersionSchema) {
+    this.Release = raw.Release ?? "";
+    this.DocumentType = raw.DocumentType ?? "";
+    this.Introduction = raw.Introduction ?? "";
+    this.name = raw.name ?? "";
 
-    this.TransactionSet = raw.TransactionSet.map((i: any) => new EdiVersionSegment(i));
+    this.TransactionSet = raw.TransactionSet.map((i) => new EdiVersionSegment(i));
   }
 }
 
@@ -727,3 +736,11 @@ export function getMessageInfo(version: string | undefined): MessageInfo | undef
   if (!version) return undefined;
   return versionMessageInfos[version];
 }
+
+export type {
+  RawReleaseSchema,
+  RawReleaseSchemaElement,
+  RawReleaseSchemaSegment,
+  RawVersionSchema,
+  RawVersionSchemaTransactionSet,
+} from "./rawTypes";

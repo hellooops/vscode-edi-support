@@ -1,21 +1,22 @@
 import * as fs from "fs";
 import * as path from "path";
 import type { SchemaLoadResult, SchemaResolverRequest } from "./options";
+import type { RawReleaseSchema, RawVersionSchema, RawVersionSchemaIndex } from "./schemas/rawTypes";
 
-function readJsonFile(filePath: string): unknown | undefined {
+function readJsonFile<T>(filePath: string): T | undefined {
   if (!fs.existsSync(filePath)) {
     return undefined;
   }
 
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  return JSON.parse(fs.readFileSync(filePath, "utf8")) as T;
 }
 
-export function getBuiltInSchema(ediType: "x12" | "edifact" | "vda" | "unknown", release: string): unknown | undefined {
+export function getBuiltInSchema(ediType: "x12" | "edifact" | "vda" | "unknown", release: string): RawReleaseSchema | undefined {
   if (ediType === "unknown") {
     return undefined;
   }
 
-  return readJsonFile(path.resolve(__dirname, "schemas", ediType, release, `${release}.json`));
+  return readJsonFile<RawReleaseSchema>(path.resolve(__dirname, "schemas", ediType, release, `${release}.json`));
 }
 
 export function loadBuiltInSchemaBundle(request: SchemaResolverRequest): SchemaLoadResult | undefined {
@@ -24,7 +25,7 @@ export function loadBuiltInSchemaBundle(request: SchemaResolverRequest): SchemaL
   }
 
   const schemaDirectory = path.resolve(__dirname, "schemas", request.ediType, request.release);
-  const releaseSchema = readJsonFile(path.join(schemaDirectory, `${request.release}.json`));
+  const releaseSchema = readJsonFile<RawReleaseSchema>(path.join(schemaDirectory, `${request.release}.json`));
   if (!releaseSchema) {
     return undefined;
   }
@@ -35,11 +36,9 @@ export function loadBuiltInSchemaBundle(request: SchemaResolverRequest): SchemaL
     };
   }
 
-  const versionIndex = readJsonFile(path.join(schemaDirectory, `${request.release}_versions.json`)) as {
-    DocumentTypes?: Record<string, unknown>;
-  } | undefined;
+  const versionIndex = readJsonFile<RawVersionSchemaIndex>(path.join(schemaDirectory, `${request.release}_versions.json`));
   const versionKey = `${request.release}_${request.version}`;
-  const versionSchema = versionIndex?.DocumentTypes?.[versionKey];
+  const versionSchema: RawVersionSchema | undefined = versionIndex?.DocumentTypes?.[versionKey];
   if (!versionSchema) {
     return undefined;
   }

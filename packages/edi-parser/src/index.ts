@@ -67,3 +67,11 @@ export {
   EdiVersionSegment,
   getMessageInfo
 } from "./schemas/schemas";
+
+export type {
+  RawReleaseSchema,
+  RawReleaseSchemaElement,
+  RawReleaseSchemaSegment,
+  RawVersionSchema,
+  RawVersionSchemaTransactionSet
+} from "./schemas/rawTypes";
