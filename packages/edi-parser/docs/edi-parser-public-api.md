@@ -356,38 +356,6 @@ const document = new EdiDocument(
 console.log(document.getErrors());
 ```
 
-### `EdiDocumentBuilder`
-
-```ts
-import {
-  EdiDocumentBuilder,
-  EdiDocumentSeparators,
-  EdiSegment,
-  EdiType
-} from "edi-parser";
-
-const builder = new EdiDocumentBuilder(
-  new EdiDocumentSeparators(),
-  EdiType.X12,
-  {
-    transactionSetStartSegmentName: "ST",
-    transactionSetEndSegmentName: "SE"
-  }
-);
-
-builder.onParseTransactionSetMeta(() => ({
-  id: "0001",
-  release: "00401",
-  version: "850"
-}));
-
-await builder.addSegment(new EdiSegment("ST", 0, 9, 10, "~"));
-await builder.addSegment(new EdiSegment("SE", 10, 19, 10, "~"));
-
-const document = builder.buildEdiDocument();
-console.log(document.interchanges.length);
-```
-
 ### `EdiDocumentSeparators`
 
 ```ts

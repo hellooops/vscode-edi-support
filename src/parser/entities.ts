@@ -3,7 +3,6 @@ export {
   DiagnosticErrorSeverity,
   EdiComment,
   EdiDocument,
-  EdiDocumentBuilder,
   EdiDocumentSeparators,
   EdiElement,
   EdiFunctionalGroup,
