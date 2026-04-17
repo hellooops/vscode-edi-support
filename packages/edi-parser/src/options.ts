@@ -19,7 +19,6 @@ export type SchemaResolver =
 
 export interface ParserOptions {
   customSchemas?: Conf_CustomSchema;
-  qualifierOverrides?: Conf_CustomSchema;
   schemaResolver?: SchemaResolver;
 }
 
