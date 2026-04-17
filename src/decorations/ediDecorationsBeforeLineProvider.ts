@@ -22,7 +22,7 @@ export class EdiDecorationsBeforeLineProvider extends EdiDecorationsProviderBase
     }
 
     const { parser } = EdiUtils.getEdiParser(document);
-    const ediDocument = await parser?.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       this.clearDecorations();
       return;

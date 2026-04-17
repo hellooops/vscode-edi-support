@@ -174,6 +174,12 @@ Main exports include:
 
 See [`src/index.ts`](./src/index.ts) for the full public export surface.
 
+## Parse lifecycle
+
+- `parser.parse()` returns a fresh `EdiDocument` for each completed call.
+- Concurrent calls on the same parser instance are deduped while one parse is still in flight.
+- If you want to reuse parsed results across UI refreshes or repeated commands, cache them in the caller layer.
+
 ## Development
 
 Build the package:

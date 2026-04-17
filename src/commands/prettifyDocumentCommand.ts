@@ -19,7 +19,7 @@ export class PrettifyDocumentCommand implements ICommandable {
     const { parser, ediType } = EdiUtils.getEdiParser(document);
     if (!parser) return;
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return;
     }

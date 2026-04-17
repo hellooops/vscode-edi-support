@@ -107,7 +107,10 @@ export default class WebviewProvider {
       return [];
     }
   
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
+    if (!ediDocument) {
+      return [];
+    }
     this.ediDocument = ediDocument;
     const vcm: VcmDocument = {
       name: "fileChange",

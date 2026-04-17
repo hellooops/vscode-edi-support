@@ -10,7 +10,7 @@ export class CompletionItemEdiProvider implements vscode.CompletionItemProvider,
       return [];
     }
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return [];
     }

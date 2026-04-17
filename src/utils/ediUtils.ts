@@ -1,4 +1,5 @@
 import {
+  EdiDocument,
   EdiParserBase,
   EdifactParser,
   EdiComment,
@@ -20,6 +21,16 @@ import * as constants from "../constants";
 import { type Conf_CustomSchema } from "../interfaces/configurations";
 
 export class EdiUtils {
+  private static ediParserCache: {
+    cacheKey: string;
+    result: {
+      parser: EdiParserBase | undefined;
+      ediType: string,
+    };
+    parsedDocument?: EdiDocument;
+    parsingPromise?: Promise<EdiDocument | undefined>;
+  } | undefined = undefined;
+
   static icons = {
     interchange: new vscode.ThemeIcon(constants.themeIcons.notebookOpenAsText),
     functionalGroup: new vscode.ThemeIcon(constants.themeIcons.openEditorsViewIcon),
@@ -89,40 +100,50 @@ export class EdiUtils {
     return languageId === EdiType.X12 || languageId === EdiType.EDIFACT || languageId === EdiType.VDA;
   }
 
-  private static ediParserCache: {
-    document?: string;
-    result: {
-      parser: EdiParserBase | undefined;
-      ediType: string,
-    };
-  } | undefined = undefined;
-
   static clearCache(): void {
     EdiUtils.ediParserCache = undefined;
   }
 
   static getEdiParser(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
-    const documentContent = document.getText();
-    if (!EdiUtils.ediParserCache || documentContent !== EdiUtils.ediParserCache.document) {
-      EdiUtils.ediParserCache = {
-        document: documentContent,
-        result: EdiUtils.getEdiParserInternal(document)
-      };
-    }
+    const parserCache = EdiUtils.getOrCreateParserCache(document);
 
-    const ediType = EdiUtils.ediParserCache.result.ediType;
+    const ediType = parserCache.result.ediType;
     if (ediType !== EdiType.UNKNOWN && document.languageId !== ediType) {
       vscode.languages.setTextDocumentLanguage(document, ediType);
     }
 
-    return EdiUtils.ediParserCache.result!;
+    return parserCache.result;
   }
 
-  static getEdiParserInternal(document: vscode.TextDocument): { parser: EdiParserBase | undefined, ediType: string } {
+  static async getParsedEdiDocument(document: vscode.TextDocument): Promise<EdiDocument | undefined> {
+    const parserCache = EdiUtils.getOrCreateParserCache(document);
+    if (!parserCache.result.parser) {
+      return undefined;
+    }
+
+    if (parserCache.parsedDocument) {
+      return parserCache.parsedDocument;
+    }
+
+    if (parserCache.parsingPromise) {
+      return parserCache.parsingPromise;
+    }
+
+    parserCache.parsingPromise = parserCache.result.parser.parse()
+      .then((ediDocument) => {
+        parserCache.parsedDocument = ediDocument;
+        return ediDocument;
+      })
+      .finally(() => {
+        parserCache.parsingPromise = undefined;
+      });
+
+    return parserCache.parsingPromise;
+  }
+
+  static getEdiParserInternal(document: vscode.TextDocument, documentContent: string = document.getText(), parserOptions: ParserOptions = EdiUtils.getParserOptions()): { parser: EdiParserBase | undefined, ediType: string } {
     let ediType: string;
     let parser: EdiParserBase | undefined = undefined;
-    const documentContent = document.getText();
-    const parserOptions = EdiUtils.getParserOptions();
     if (EdiUtils.isX12(document)) {
       parser = new X12Parser(documentContent, parserOptions);
       ediType = EdiType.X12;
@@ -140,6 +161,29 @@ export class EdiUtils {
       parser,
       ediType
     };
+  }
+
+  private static getOrCreateParserCache(document: vscode.TextDocument): {
+    cacheKey: string;
+    result: {
+      parser: EdiParserBase | undefined;
+      ediType: string,
+    };
+    parsedDocument?: EdiDocument;
+    parsingPromise?: Promise<EdiDocument | undefined>;
+  } {
+    const documentContent = document.getText();
+    const parserOptions = EdiUtils.getParserOptions();
+    const parserOptionsKey = JSON.stringify(parserOptions);
+    const cacheKey = `${document.uri.toString()}::${document.version}::${documentContent}::${parserOptionsKey}`;
+    if (!EdiUtils.ediParserCache || EdiUtils.ediParserCache.cacheKey !== cacheKey) {
+      EdiUtils.ediParserCache = {
+        cacheKey,
+        result: EdiUtils.getEdiParserInternal(document, documentContent, parserOptions)
+      };
+    }
+
+    return EdiUtils.ediParserCache;
   }
 
   private static getParserOptions(): ParserOptions {

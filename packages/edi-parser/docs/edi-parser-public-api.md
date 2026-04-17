@@ -91,6 +91,8 @@ if (parser) {
 }
 ```
 
+`parse()` 每次完成后都会返回新的 `EdiDocument`。如果调用方需要跨多次 UI 刷新或命令复用结果，应在调用层自行缓存。
+
 ## 内置 Schema Helper
 
 ### `getBuiltInSchema`
@@ -174,7 +176,7 @@ import type { SchemaLoadResult } from "edi-parser";
 
 const result: SchemaLoadResult = {
   releaseSchema: { Release: "00401" },
-  versionSchema: { TransactionSet: {} }
+  versionSchema: { TransactionSet: [] }
 };
 ```
 
@@ -187,7 +189,7 @@ const resolver: SchemaResolver = async (request) => {
   if (request.ediType === "x12" && request.release === "00401") {
     return {
       releaseSchema: { Release: "00401" },
-      versionSchema: { TransactionSet: {} }
+      versionSchema: { TransactionSet: [] }
     };
   }
   return undefined;

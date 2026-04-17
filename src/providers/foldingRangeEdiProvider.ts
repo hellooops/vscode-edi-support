@@ -9,7 +9,7 @@ export class FoldingRangeEdiProvider implements vscode.FoldingRangeProvider, IPr
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return [];
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) return [];
 
     return ediDocument.interchanges.flatMap(i => this.getInterchangeFoldingRange(document, i));

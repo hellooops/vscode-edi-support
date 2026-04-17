@@ -18,7 +18,10 @@ export abstract class InlayHintsEdiProvider implements vscode.InlayHintsProvider
       return [];
     }
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
+    if (!ediDocument) {
+      return [];
+    }
     const segments = ediDocument.getSegments(true);
 
     let inlayHints: vscode.InlayHint[] = [];

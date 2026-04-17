@@ -7,7 +7,10 @@ export class HighlightEdiProvider implements vscode.DocumentHighlightProvider, I
   async provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.DocumentHighlight[] | null | undefined> {
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return;
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
+    if (!ediDocument) {
+      return;
+    }
     const segments = ediDocument.getSegments();
     const realPosition = document.offsetAt(new vscode.Position(position.line, position.character));
 

@@ -11,7 +11,6 @@ export abstract class EdiParserBase {
   document: string;
   schema?: EdiSchema;
   _separators?: EdiMessageSeparators | null;
-  private parseResult?: EdiDocument;
   private parsingPromise?: Promise<EdiDocument>;
   protected options: ParserOptions;
   protected abstract ediType: string;
@@ -26,22 +25,13 @@ export abstract class EdiParserBase {
       return this.parsingPromise;
     }
 
-    const parsingPromise = this.parseInternal();
+    const parsingPromise = this.parseDocument();
     this.parsingPromise = parsingPromise;
-    const that = this;
     parsingPromise.finally(() => {
-      that.parsingPromise = undefined;
+      this.parsingPromise = undefined;
     });
 
     return parsingPromise;
-  }
-
-  private async parseInternal(): Promise<EdiDocument> {
-    if (!this.parseResult) {
-      this.parseResult = await this.parseDocument();
-    }
-
-    return this.parseResult;
   }
 
   protected abstract parseInterchangeMeta(interchangeSegment: EdiSegment | undefined): EdiInterchangeMeta;
@@ -53,7 +43,7 @@ export abstract class EdiParserBase {
     return versionSegmentsContext.build(segments);
   }
 
-  private async parseDocument(force: boolean = false): Promise<EdiDocument> {
+  private async parseDocument(): Promise<EdiDocument> {
     return await this.parseDocumentInternal();
   }
 

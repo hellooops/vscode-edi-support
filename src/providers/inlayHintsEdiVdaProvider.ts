@@ -15,7 +15,10 @@ export class InlayHintsEdiVdaProvider extends InlayHintsEdiProvider {
       return [];
     }
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
+    if (!ediDocument) {
+      return [];
+    }
     const segments = ediDocument.getSegments(true);
 
     return segments.flatMap(segment => {

@@ -20,14 +20,17 @@ import { VdaParser } from "../../../parser/vdaParser";
 
 suite("EdiUtils Test Suite", () => {
   let originalSetTextDocumentLanguage: typeof vscode.languages.setTextDocumentLanguage;
+  let originalGetConfiguration: typeof vscode.workspace.getConfiguration;
 
   setup(() => {
     originalSetTextDocumentLanguage = vscode.languages.setTextDocumentLanguage;
+    originalGetConfiguration = vscode.workspace.getConfiguration;
     EdiUtils.clearCache();
   });
 
   teardown(() => {
     vscode.languages.setTextDocumentLanguage = originalSetTextDocumentLanguage;
+    vscode.workspace.getConfiguration = originalGetConfiguration;
     EdiUtils.clearCache();
   });
 
@@ -104,6 +107,69 @@ suite("EdiUtils Test Suite", () => {
       const afterClear = EdiUtils.getEdiParser(doc);
 
       assert.strictEqual(beforeClear.parser === afterClear.parser, false);
+    });
+
+    test("getParsedEdiDocument should cache parsed results for the same document version", async () => {
+      const doc = EdiMockFactory.createMockDocument("ST*850*0001~SE*2*0001~", "x12");
+
+      const firstDocument = await EdiUtils.getParsedEdiDocument(doc);
+      const secondDocument = await EdiUtils.getParsedEdiDocument(doc);
+
+      assert.ok(firstDocument);
+      assert.strictEqual(firstDocument, secondDocument);
+    });
+
+    test("getParsedEdiDocument should invalidate cache when document version changes", async () => {
+      const doc = EdiMockFactory.createMockDocument("ST*850*0001~SE*2*0001~", "x12");
+      const updatedDoc = {
+        ...doc,
+        version: doc.version + 1,
+      } as vscode.TextDocument;
+
+      const firstDocument = await EdiUtils.getParsedEdiDocument(doc);
+      const secondDocument = await EdiUtils.getParsedEdiDocument(updatedDoc);
+
+      assert.ok(firstDocument);
+      assert.ok(secondDocument);
+      assert.notStrictEqual(firstDocument, secondDocument);
+    });
+
+    test("getParsedEdiDocument should invalidate cache when parser options change", async () => {
+      const doc = EdiMockFactory.createMockDocument("ST*850*0001~SE*2*0001~", "x12");
+      let customSchemas: Record<string, any> = {};
+      vscode.workspace.getConfiguration = () => EdiMockFactory.createMockConfiguration({
+        customSchemas,
+      });
+
+      const firstDocument = await EdiUtils.getParsedEdiDocument(doc);
+      customSchemas = {
+        x12: {
+          "00401": {
+            qualifiers: {
+              "Date/Time Qualifier": {
+                ZZ: "Custom date qualifier",
+              },
+            },
+          },
+        },
+      };
+      const secondDocument = await EdiUtils.getParsedEdiDocument(doc);
+
+      assert.ok(firstDocument);
+      assert.ok(secondDocument);
+      assert.notStrictEqual(firstDocument, secondDocument);
+    });
+
+    test("clearCache should invalidate parsed document cache", async () => {
+      const doc = EdiMockFactory.createMockDocument("ST*850*0001~SE*2*0001~", "x12");
+
+      const beforeClear = await EdiUtils.getParsedEdiDocument(doc);
+      EdiUtils.clearCache();
+      const afterClear = await EdiUtils.getParsedEdiDocument(doc);
+
+      assert.ok(beforeClear);
+      assert.ok(afterClear);
+      assert.notStrictEqual(beforeClear, afterClear);
     });
 
     test("getEdiParser should keep unknown documents unchanged", () => {

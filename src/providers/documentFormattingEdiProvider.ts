@@ -8,7 +8,7 @@ export class DocumentFormattingEditEdiProvider implements vscode.DocumentFormatt
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return;
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return;
     }

@@ -75,7 +75,7 @@ export class TreeEdiProvider implements vscode.TreeDataProvider<TreeItemElement>
     }
 
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return result;
     }

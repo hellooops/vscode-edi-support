@@ -122,7 +122,7 @@ export class CodelensEdiProvider implements vscode.CodeLensProvider, IProvidable
       return [];
     }
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return [];
     }

@@ -8,7 +8,7 @@ export class DocumentSymbolsEdiProvider implements vscode.DocumentSymbolProvider
     const { parser } = EdiUtils.getEdiParser(document);
     if (!parser) return [];
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return [];
     }

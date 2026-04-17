@@ -96,6 +96,43 @@ suite("edi-parser public api", () => {
     assert.strictEqual(vdaDocument.interchanges[0].functionalGroups[0].transactionSets[0].meta.version, "511");
   });
 
+  test("should return a fresh document on each sequential parse call", async () => {
+    const parser = new X12Parser(createX12PurchaseOrderDocument());
+    const firstDocument = await parser.parse();
+    const originalInterchangeCount = firstDocument.interchanges.length;
+
+    firstDocument.interchanges.length = 0;
+
+    const secondDocument = await parser.parse();
+
+    assert.notStrictEqual(firstDocument, secondDocument);
+    assert.strictEqual(secondDocument.interchanges.length, originalInterchangeCount);
+    assert.strictEqual(secondDocument.getSegments().some((segment) => segment.id === "BEG"), true);
+  });
+
+  test("should dedupe concurrent parse calls but rebuild on a later parse", async () => {
+    const parser = new X12Parser(createX12PurchaseOrderDocument());
+    const originalParseSegment = parser.parseSegment.bind(parser);
+    let parseSegmentCallCount = 0;
+
+    parser.parseSegment = async (...args) => {
+      parseSegmentCallCount += 1;
+      return await originalParseSegment(...args);
+    };
+
+    const [firstDocument, secondDocument] = await Promise.all([
+      parser.parse(),
+      parser.parse(),
+    ]);
+    const concurrentParseSegmentCallCount = parseSegmentCallCount;
+    const laterDocument = await parser.parse();
+
+    assert.strictEqual(firstDocument, secondDocument);
+    assert.notStrictEqual(firstDocument, laterDocument);
+    assert.ok(concurrentParseSegmentCallCount > 0);
+    assert.strictEqual(parseSegmentCallCount, concurrentParseSegmentCallCount * 2);
+  });
+
   test("should load built-in schema resources from the distributed package", () => {
     const x12ReleaseSchema = getBuiltInSchema("x12", "00401") as any;
     const x12Bundle = loadBuiltInSchemaBundle({

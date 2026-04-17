@@ -23,7 +23,10 @@ export class EdiDiagnosticsMgr implements IDiagnosticsable {
       return;
     }
 
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
+    if (!ediDocument) {
+      return;
+    }
     const errors = ediDocument.getErrors({
       ignoreRequired: ediType === EdiType.VDA
     });

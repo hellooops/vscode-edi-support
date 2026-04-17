@@ -17,7 +17,7 @@ export abstract class HoverProviderBase implements vscode.HoverProvider, IProvid
       return null;
     }
     
-    const ediDocument = await parser.parse();
+    const ediDocument = await EdiUtils.getParsedEdiDocument(document);
     if (!ediDocument) {
       return;
     }
