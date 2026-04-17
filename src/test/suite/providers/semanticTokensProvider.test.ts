@@ -101,7 +101,7 @@ suite("SemanticTokensProvider Test Suite", () => {
         "edisupportcomment",
         "edisupportseparator",
         "edisupportseparator",
-        "edisupportvaluetypequalifer",
+        "edisupportvaluetypequalifier",
         "edisupportseparator",
         "edisupportvaluetypenumber",
         "edisupportseparator",

@@ -15017,7 +15017,7 @@
 					"Components": [
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15041,7 +15041,7 @@
 						},
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15079,7 +15079,7 @@
 					"Components": [
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15103,7 +15103,7 @@
 						},
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15141,7 +15141,7 @@
 					"Components": [
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15165,7 +15165,7 @@
 						},
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15203,7 +15203,7 @@
 					"Components": [
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,
@@ -15227,7 +15227,7 @@
 						},
 						{
 							"Id": "2005",
-							"Desc": "Date/Time/Period qualifer",
+							"Desc": "Date/Time/Period qualifier",
 							"DataType": "AN",
 							"Required": false,
 							"MinLength": 1,

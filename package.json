@@ -273,7 +273,7 @@
             "edisupportseparator": "#9CA3AF",
             "edisupportvaluetypenumber": "#15803D",
             "edisupportvaluetypedatetime": "#D16969",
-            "edisupportvaluetypequalifer": "#7E22CE"
+            "edisupportvaluetypequalifier": "#7E22CE"
           }
         },
         "[*Dark*]": {
@@ -281,7 +281,7 @@
             "edisupportseparator": "#6B7280",
             "edisupportvaluetypenumber": "#6A9955",
             "edisupportvaluetypedatetime": "#D16969",
-            "edisupportvaluetypequalifer": "#B267E6",
+            "edisupportvaluetypequalifier": "#B267E6",
             "edisupportvaluetypeother": "#9CDCFE"
           }
         }
@@ -305,7 +305,7 @@
           "edisupportvaluetypedatetime": [
             "string.regexp"
           ],
-          "edisupportvaluetypequalifer": [
+          "edisupportvaluetypequalifier": [
             "entity.name.operator"
           ],
           "edisupportvaluetypeother": [

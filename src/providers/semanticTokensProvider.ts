@@ -11,7 +11,7 @@ const TokenTypes = {
   EdiComment: "edisupportcomment",
   EdiValueTypeNumber: "edisupportvaluetypenumber",
   EdiValueTypeDatetime: "edisupportvaluetypedatetime",
-  EdiValueTypeQualifer: "edisupportvaluetypequalifer",
+  EdiValueTypeQualifier: "edisupportvaluetypequalifier",
   EdiValueTypeOther: "edisupportvaluetypeother",
 };
 
@@ -104,7 +104,7 @@ export class SemanticTokensProvider implements vscode.DocumentSemanticTokensProv
       if (element.value) {
         let tokenType: string;
         if (element?.ediReleaseSchemaElement?.qualifierRef) {
-          tokenType = TokenTypes.EdiValueTypeQualifer;
+          tokenType = TokenTypes.EdiValueTypeQualifier;
         } else if (element?.ediReleaseSchemaElement?.dataType === "N" || element?.ediReleaseSchemaElement?.dataType === "R" ) {
           tokenType = TokenTypes.EdiValueTypeNumber;
         } else if (element?.ediReleaseSchemaElement?.dataType === "DT") {
