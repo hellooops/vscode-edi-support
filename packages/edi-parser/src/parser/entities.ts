@@ -361,7 +361,7 @@ export class EdiElement implements EdiObjectConvertible<EdiElementObject>, IDiag
     const value = ediType === EdiType.VDA ? this.value?.trimEnd() : this.value;
     const idOrDesignator = this.getIdOrDesignator();
 
-    if (value && value.length > this.ediReleaseSchemaElement.maxLength) {
+    if (value && this.ediReleaseSchemaElement.maxLength !== undefined && value.length > this.ediReleaseSchemaElement.maxLength) {
       errors.push({
         error: `Element ${idOrDesignator} is too long. Max length is ${this.ediReleaseSchemaElement.maxLength}, got ${value.length}.`,
         code: DiagnosticErrors.VALUE_TOO_LONG,
@@ -370,7 +370,7 @@ export class EdiElement implements EdiObjectConvertible<EdiElementObject>, IDiag
       });
     }
 
-    if (value && value.length < this.ediReleaseSchemaElement.minLength) {
+    if (value && this.ediReleaseSchemaElement.minLength !== undefined && value.length < this.ediReleaseSchemaElement.minLength) {
       errors.push({
         error: `Element ${idOrDesignator} is too short. Min length is ${this.ediReleaseSchemaElement.minLength}, got ${value.length}.`,
         code: DiagnosticErrors.VALUE_TOO_SHORT,

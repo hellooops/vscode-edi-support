@@ -84,8 +84,8 @@ export class EdiReleaseSchemaElement {
   public desc: string;
   public dataType: string;
   public required: boolean;
-  public minLength: number;
-  public maxLength: number;
+  public minLength?: number;
+  public maxLength?: number;
   public qualifierRef: string;
   public definition: string;
   public components: EdiReleaseSchemaElement[];
@@ -98,8 +98,8 @@ export class EdiReleaseSchemaElement {
     this.desc = raw.Desc;
     this.dataType = raw.DataType ?? "";
     this.required = raw.Required ?? false;
-    this.minLength = raw.MinLength ?? 0;
-    this.maxLength = raw.MaxLength ?? 0;
+    this.minLength = raw.MinLength;
+    this.maxLength = raw.MaxLength;
     this.qualifierRef = raw.QualifierRef ?? "";
     this.definition = raw.Definition ?? "";
     this.length = raw.Length;
