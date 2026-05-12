@@ -110,7 +110,10 @@ export class X12Parser extends EdiParserBase {
     // Eg: ISA segment version is 00400 while GS segment version is 00401
     const meta: EdiTransactionSetMeta = {};
     if (functionalGroupSegment && functionalGroupSegment.elements.length > 7) {
-      meta.release = this.normalizeRelease(functionalGroupSegment.elements[7].value);
+      const functionalGroupRelease = this.normalizeRelease(functionalGroupSegment.elements[7].value);
+      if (functionalGroupRelease?.length === 5) {
+        meta.release = functionalGroupRelease;
+      }
     }
 
     if (!meta.release) {
@@ -192,6 +195,6 @@ export class X12Parser extends EdiParserBase {
 
   private normalizeRelease(value: string | undefined) {
     if (!value) return value;
-    return value.substring(0, 5);
+    return value.trim().substring(0, 5);
   }
 }

@@ -173,6 +173,30 @@ suite("edi-parser x12 parser", () => {
     assert.strictEqual(transactionSet.meta.version, "850");
   });
 
+  test("should parse 00200 release documents with 830 schema metadata", async () => {
+    const document = await parseX12([
+      "ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00200*000000001*0*T*:~",
+      "GS*PS*SENDER*RECEIVER*241111*0300*1*T*0020~",
+      "ST*830*0001~",
+      "BFR*00*PLAN001*20241111*20241111*20241111*DL~",
+      "LIN**BP*PART001~",
+      "UNT*EA~",
+      "SE*6*0001~",
+      "GE*1*1~",
+      "IEA*1*000000001~",
+    ].join("\n"));
+    const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
+    const flatSegments = transactionSet.getSegments(true);
+    const bfrSegment = flatSegments.find((segment) => segment.id === "BFR");
+    const untSegment = flatSegments.find((segment) => segment.id === "UNT");
+
+    assert.strictEqual(transactionSet.meta.release, "00200");
+    assert.strictEqual(transactionSet.meta.version, "830");
+    assert.ok(bfrSegment?.ediReleaseSchemaSegment);
+    assert.ok(untSegment?.ediReleaseSchemaSegment);
+    assert.strictEqual(untSegment?.getDesc(), "Unit Detail");
+  });
+
   test("should still parse unsupported releases without schema metadata", async () => {
     const document = await parseX12(createUnsupportedReleaseX12Document());
     const begSegment = document!.getSegments(true).find((segment) => segment.id === "BEG");
