@@ -1,3 +1,4 @@
+node_modules/edi-parser
 .vscode/**
 .vscode-test/**
 src/**
