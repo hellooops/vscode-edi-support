@@ -1,114 +1,125 @@
 <div align="center">
+  <img src="./docs/images/icon-600x600.png" alt="EDI Support logo" width="128" height="128" />
 
-  <img src="./docs/images/icon-600x600.png" alt="Project Icon" width="128" height="128" />
+  <h1>EDI Support for VS Code</h1>
 
-  <h1>EDI Support for VSCode</h1>
+  <p>
+    <strong>Read, format, inspect, and troubleshoot EDI documents directly in VS Code.</strong><br />
+    Built for X12, HIPAA, EDIFACT, and VDA workflows that need structure, clarity, and fast feedback.
+  </p>
 
-  [![Visual Studio Marketplace](https://img.shields.io/badge/Visual%20Studio-Marketplace-007acc.svg)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
-  [![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
-  [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
-  [![Visual Studio Marketplace Rating (Stars)](https://img.shields.io/visual-studio-marketplace/stars/DericLee.edi-edifact-support)](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
-  [![GitHub stars](https://img.shields.io/github/stars/hellooops/vscode-edi-support)](https://github.com/hellooops/vscode-edi-support)
-
-  [![GitHub stars](https://img.shields.io/badge/github-Report_A_Bug-blue?style=flat-square&logo=github)](https://github.com/hellooops/vscode-edi-support/issues/new)
-
+  <p>
+    <a href="https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support">
+      <img src="https://img.shields.io/visual-studio-marketplace/v/DericLee.edi-edifact-support?color=007acc&style=for-the-badge" alt="VS Marketplace Version" />
+    </a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support">
+      <img src="https://img.shields.io/visual-studio-marketplace/i/DericLee.edi-edifact-support?color=007acc&style=for-the-badge" alt="VS Marketplace Installs" />
+    </a>
+    <a href="./LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License" />
+    </a>
+    <a href="https://github.com/hellooops/vscode-edi-support/stargazers">
+      <img src="https://img.shields.io/github/stars/hellooops/vscode-edi-support?style=social" alt="GitHub stars" />
+    </a>
+  </p>
 </div>
 
-> ⚡This extension provides multiple supports for the ⚡X12 and ⚡EDIFACT document.
+## Overview
+
+EDI Support turns raw EDI text into something you can actually work with inside VS Code. It helps teams read transaction sets, understand segment meanings, navigate document structure, and clean up formatting without leaving the editor.
+
+If you work with supplier integrations, logistics messages, healthcare transactions, or legacy B2B payloads, this extension is designed to make those files easier to inspect and safer to edit.
+
+## ✨ Features
+
+| Feature | What it helps with |
+| :-- | :-- |
+| 📄 Preview panel | Open a structured view of the current EDI document inside VS Code. |
+| 🌈 Syntax highlighting | Make separators, segments, and document shape easier to scan. |
+| 🩺 Diagnostics | Catch malformed content and common document issues earlier. |
+| 💡 Inlay hints | Show segment names and qualifier details inline while reading. |
+| 🗂️ EDI Support Explorer | Navigate interchange, group, transaction, and segment structure from the sidebar. |
+| 🧹 Prettify and minify | Reformat dense payloads for readability or compact them again when needed. |
+| 🔍 Hover descriptions | Inspect segment and element definitions without switching context. |
+| 🔖 Document symbols | Jump quickly across large files with editor navigation support. |
+
+## ⚡ Quick Start
+
+### 1. Install from the VS Code Marketplace
+
+1. Open the Extensions view in VS Code.
+2. Search for `EDI Support`.
+3. Install the extension published by `DericLee`.
+4. Open an `.edi`, `.x12`, `.ansi`, `.edifact`, or `.vda` file.
+
+Marketplace page: [EDI Support](https://marketplace.visualstudio.com/items?itemName=DericLee.edi-edifact-support)
 
 
-## 👍 Features
+## 📚 Supported Formats
 
-- 💥Preview EDI files.
-- Basic syntax highlighting.
-- Document diagnostics.
-- Inlay hints for segments and elements.
-- Edi Explorer
-- Document formatting.
-- Document prettify.
-- Document minify.
-- Segment hover description.
-- Element hover description.
-- Document Symbols.
+- X12
+- HIPAA
+- EDIFACT
+- VDA
 
-## Repository structure
+## 🖼️ See It In Action
 
-- `src/`: VS Code extension runtime, providers, commands and host-specific adapters.
-- `packages/edi-parser/`: standalone parser package for X12, EDIFACT and VDA.
-- `src/parser/` and `src/schemas/`: compatibility re-export layer for the extension and legacy internal imports.
+### Preview panel
+<p><img src="./docs/images/edi-support-preview.png" alt="EDI document preview" /></p>
 
-## Reuse the parser core
+### Diagnostics
+<p><img src="./docs/images/diagnostics.png" alt="EDI diagnostics" /></p>
 
-The parser core has been extracted to [`packages/edi-parser`](./packages/edi-parser/README.md).
+### Inlay hints
+<p><img src="./docs/images/inlayHints.png" alt="EDI inlay hints" /></p>
 
-- Inside this repository, the extension consumes it through the local dependency `"edi-parser": "file:packages/edi-parser"`.
-- Outside this repository, you can install the package folder directly and use it in a plain Node.js process without VS Code APIs.
+### Explorer view
+<p><img src="./docs/images/edi-support-explorer.png" alt="EDI Support Explorer" /></p>
 
-```bash
-npm install ./packages/edi-parser
-```
+### Prettify
+<p><img src="./docs/images/document-prettify.gif" alt="EDI prettify action" /></p>
 
-```js
-const { createParser, detectEdiType } = require("edi-parser");
+### Minify
+<p><img src="./docs/images/document-minify.gif" alt="EDI minify action" /></p>
 
-const text = "ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*00401*000000001*0*T*:~\nGS*PO*SENDER*RECEIVER*20241111*0300*1*X*004010~\nST*850*0001~\nSE*2*0001~\nGE*1*1~\nIEA*1*000000001~";
+### Segment hover
+<p><img src="./docs/images/segment-hover.png" alt="Segment hover description" /></p>
 
-console.log(detectEdiType(text));
-createParser(text)?.parse().then(document => {
-  console.log(document?.interchanges.length);
-});
-```
-
-For more package-level details, see [`packages/edi-parser/README.md`](./packages/edi-parser/README.md).
+### Element hover
+<p><img src="./docs/images/element-hover.png" alt="Element hover description" /></p>
 
 
-### Document preview.
-<p><img src="./docs/images/edi-support-preview.png" alt="Document preview"/></p>
+## ⚙️ Extension Settings
 
-### Document diagnostics.
-<p><img src="./docs/images/diagnostics.png" alt="Document diagnostics"/></p>
+The extension works out of the box, but it also exposes a few useful settings:
 
-### Inlay hints for segments and elements.
-<p><img src="./docs/images/inlayHints.png" alt="Document diagnostics"/></p>
+### Display and editor assistance
 
-### Edi Explorer.
-<p><img src="./docs/images/edi-support-explorer.png" alt="Document diagnostics"/></p>
+- `ediSupport.enableTrailingAnnotations` (default: `true`): show trailing annotations.
+- `ediSupport.enableCodelens` (default: `true`): enable or disable EDI code lenses.
+- `ediSupport.enableLoopAnnotations` (default: `true`): enable or disable loop annotations.
+- `ediSupport.enableHover` (default: `true`): enable or disable hover descriptions.
+- `ediSupport.inlayHints.segmentNames` (default: `false`): show segment names as inlay hints.
+- `ediSupport.inlayHints.qualifierCodes` (default: `false`): show qualifier codes as inlay hints.
+- `ediSupport.vda.enableElementIndexAnnotation` (default: `true`): show VDA element indexes inline.
+- `ediSupport.menu.icon` (default: `true`): show action icons in the editor title for X12 and EDIFACT files.
 
-### Document prettify.
+### Formatting
 
-<p><img src="./docs/images/document-prettify.gif" alt="Document prettify"/></p>
+- `ediSupport.formatting.indentSegmentsInLoop` (default: `true`): indent segments inside loops when formatting.
 
-### Document minify.
+### Schema customization
 
-<p><img src="./docs/images/document-minify.gif" alt="Document prettify"/></p>
+- `ediSupport.customSchemas`: add custom qualifier definitions. For EDIFACT service segments such as `UNA`, `UNB`, `UNG`, `UNE`, and `UNZ`, use `edifact._service.qualifiers`.
 
-### Segment hover description.
+## 🤝 Feedback
 
-<p><img src="./docs/images/segment-hover.png" alt="Segment hover description"/></p>
+Issues and feature requests are welcome at [GitHub Issues](https://github.com/hellooops/vscode-edi-support/issues).
 
-### Element hover description.
+## 🚧 Known Issues
 
-<p><img src="./docs/images/element-hover.png" alt="Element hover description"/></p>
+No tracked issues are listed here right now. If you hit one, please open an issue with a sample document when possible.
 
-## Reference
-[知行软件 - kasoftware](https://www.kasoftware.com)
+## 📄 License
 
-## About
-
-GitHub: https://github.com/hellooops/vscode-edi-edifact-support
-
-## Requirements
-
-None right now.
-
-## Extension Settings
-
-Nothing at this point.
-
-## Known Issues
-
-None for now.
-
-## License
-
-Licensed under the [MIT](https://github.com/hellooops/vscode-edi-edifact-support/blob/main/LICENSE) License.
+Licensed under the [MIT License](./LICENSE).
