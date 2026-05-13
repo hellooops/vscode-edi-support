@@ -111,7 +111,7 @@ export class X12Parser extends EdiParserBase {
     const meta: EdiTransactionSetMeta = {};
     if (functionalGroupSegment && functionalGroupSegment.elements.length > 7) {
       const functionalGroupRelease = this.normalizeRelease(functionalGroupSegment.elements[7].value);
-      if (functionalGroupRelease?.length === 5) {
+      if (functionalGroupRelease) {
         meta.release = functionalGroupRelease;
       }
     }
@@ -200,8 +200,8 @@ export class X12Parser extends EdiParserBase {
       return trimmed;
     }
 
-    if (/^00200[123]$/.test(trimmed)) {
-      return trimmed;
+    if (/^00200[123]/.test(trimmed)) {
+      return trimmed.substring(0, 6);
     }
 
     return trimmed.substring(0, 5);

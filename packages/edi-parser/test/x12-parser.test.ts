@@ -174,6 +174,50 @@ suite("edi-parser x12 parser", () => {
     assert.strictEqual(transactionSet.meta.version, "850");
   });
 
+  test("should preserve legacy gs08 release prefixes with trading-partner suffixes and fit 830 loops", async () => {
+    const document = await parseX12([
+      "ISA*00*          *00*          *ZZ*TP             *ZZ*TEST           *050815*1824*U*00200*000000001*0*T*>~",
+      "GS*PS*TP*TEST*20050824*0554*1*X*002001ABC~",
+      "ST*830*00001~",
+      "BFR*05**501-1*SH*C*880801*890805*890304~",
+      "N1*ST**92*1602A~",
+      "N1*BY**92*BUYER01~",
+      "LIN**BP*E6SP 7E396 AA 040*PO*FE 4397~",
+      "SDP*Y*Y~",
+      "FST*56700*D*W*890304~",
+      "SHP*02*18300*011*880801**890214~",
+      "REF*SI*72396~",
+      "CTT*1*115200~",
+      "SE*10*00001~",
+      "GE*1*1~",
+      "IEA*1*000000001~",
+    ].join("\n"));
+    const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
+
+    assert.strictEqual(transactionSet.meta.release, "002001");
+    assert.strictEqual(transactionSet.meta.version, "830");
+    assert.deepStrictEqual(
+      transactionSet.segments.map((segment) => segment.id),
+      ["BFR", "N1Loop1", "N1Loop1", "LINLoop1", "CTT"],
+    );
+    assert.deepStrictEqual(
+      transactionSet.segments[1].Loop!.map((segment) => segment.id),
+      ["N1"],
+    );
+    assert.deepStrictEqual(
+      transactionSet.segments[3].Loop!.map((segment) => segment.id),
+      ["LIN", "SDPLoop1", "SHPLoop1"],
+    );
+    assert.deepStrictEqual(
+      transactionSet.segments[3].Loop!.find((segment) => segment.id === "SDPLoop1")!.Loop!.map((segment) => segment.id),
+      ["SDP", "FST"],
+    );
+    assert.deepStrictEqual(
+      transactionSet.segments[3].Loop!.find((segment) => segment.id === "SHPLoop1")!.Loop!.map((segment) => segment.id),
+      ["SHP", "REF"],
+    );
+  });
+
   test("should preserve 6-digit legacy x12 releases instead of collapsing them to 00200", async () => {
     for (const release of ["002001", "002002", "002003"] as const) {
       const document = await parseX12(createLegacyX12PurchaseOrderDocument(release));
