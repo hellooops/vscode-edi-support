@@ -6,6 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [3.0.0] - 2026-05-13
+
+### Added
+- Add a standalone `edi-parser` package and route the extension runtime through the shared parser module.
+- Add built-in schema coverage for early X12 releases including `002001`, `002002`, and `002003`.
+- Add parser regression coverage for standalone package behavior and cross-format parsing scenarios.
+
+### Changed
+- Promote the parser extraction and packaging refactor as a major release because the extension now depends on the packaged parser runtime.
+- Move built-in schema ownership to `packages/edi-parser` and remove the duplicate extension-side schema copy.
+- Package the extension with the parser runtime bundled under `out/node_modules/edi-parser` so published VSIX files resolve parser imports correctly.
+
+
 ## [2.2.0] - 2026-04-09
 
 ### Added
