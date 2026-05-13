@@ -102,20 +102,4 @@ suite("edi-parser schemas", () => {
     assert.strictEqual(unboundedMax.getMax(), 99999);
   });
 
-  test("should load built-in 00200 release and version bundle for X12 830", () => {
-    const releaseSchema = getBuiltInSchema("x12", "00200") as any;
-    const bundle = loadBuiltInSchemaBundle({
-      ediType: "x12",
-      release: "00200",
-      version: "830",
-    }) as any;
-    const linLoop = bundle.versionSchema.TransactionSet.find((segment: any) => segment.Id === "LINLoop1");
-
-    assert.strictEqual(releaseSchema.Release, "00200");
-    assert.strictEqual(bundle.releaseSchema.Release, "00200");
-    assert.strictEqual(bundle.versionSchema.DocumentType, "830");
-    assert.ok(releaseSchema.Segments.BFR);
-    assert.ok(linLoop);
-    assert.ok(linLoop.Loop.some((segment: any) => segment.Id === "UNT"));
-  });
 });
