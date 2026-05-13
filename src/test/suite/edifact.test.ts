@@ -2,7 +2,7 @@ import * as assert from "assert";
 
 import { EdifactParser } from "../../parser/edifactParser";
 import { EdiSegment, ElementType } from "../../parser/entities";
-import { EdiReleaseSchema } from "../../schemas/schemas";
+import { EdiReleaseSchema } from "edi-parser";
 
 suite("EDIFACT Parser Test Suite", () => {
   suite("Parse Meta", () => {

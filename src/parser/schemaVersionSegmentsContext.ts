@@ -1,5 +1,5 @@
 import { EdiSegment } from "./entities";
-import { EdiVersionSegment } from "../schemas/schemas";
+import { EdiVersionSegment } from "edi-parser";
 
 export class SchemaVersionSegmentsContext {
   ediVersionSegments: EdiVersionSegment[];

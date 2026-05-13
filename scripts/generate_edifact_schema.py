@@ -3,8 +3,8 @@
 Generate EDIFACT release schema files for this project format.
 
 Output files:
-- src/schemas/edifact/<RELEASE>/<RELEASE>.json
-- src/schemas/edifact/<RELEASE>/<RELEASE>_versions.json
+- packages/edi-parser/src/schemas/edifact/<RELEASE>/<RELEASE>.json
+- packages/edi-parser/src/schemas/edifact/<RELEASE>/<RELEASE>_versions.json
 """
 
 from __future__ import annotations

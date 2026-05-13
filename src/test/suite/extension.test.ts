@@ -2,7 +2,7 @@ import * as assert from "assert";
 
 import { EdifactParser } from "../../parser/edifactParser";
 import { X12Parser } from "../../parser/x12Parser";
-import { EdiReleaseSchema } from "../../schemas/schemas";
+import { EdiReleaseSchema } from "edi-parser";
 
 suite("Extension Integration Test Suite", () => {
   suite("Schema Integration", () => {
