@@ -12,4 +12,5 @@ vsc-extension-quickstart.md
 packages/**
 docs/*
 !docs/images/*
-
+coverage/**
+scripts/**
