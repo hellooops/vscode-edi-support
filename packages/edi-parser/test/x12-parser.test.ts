@@ -2,6 +2,7 @@ import * as assert from "assert";
 
 import {
   cloneJson,
+  createLegacyX12PurchaseOrderDocument,
   createUnsupportedReleaseX12Document,
   createX12810Document,
   createX12856Document,
@@ -195,6 +196,24 @@ suite("edi-parser x12 parser", () => {
     assert.ok(bfrSegment?.ediReleaseSchemaSegment);
     assert.ok(untSegment?.ediReleaseSchemaSegment);
     assert.strictEqual(untSegment?.getDesc(), "Unit Detail");
+  });
+
+  test("should preserve 6-digit legacy x12 releases instead of collapsing them to 00200", async () => {
+    for (const release of ["002001", "002002", "002003"] as const) {
+      const document = await parseX12(createLegacyX12PurchaseOrderDocument(release));
+      const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
+      const begSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BEG");
+      const expectedSchema = loadBuiltInSchemaBundle({
+        ediType: "x12",
+        release,
+        version: "850",
+      }) as any;
+
+      assert.strictEqual(transactionSet.meta.release, release);
+      assert.strictEqual(transactionSet.meta.version, "850");
+      assert.ok(begSegment?.ediReleaseSchemaSegment);
+      assert.strictEqual(begSegment?.getDesc(), expectedSchema.releaseSchema.Segments.BEG.Desc);
+    }
   });
 
   test("should still parse unsupported releases without schema metadata", async () => {

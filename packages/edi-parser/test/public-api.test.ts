@@ -2,6 +2,7 @@ import * as assert from "assert";
 
 import {
   cloneJson,
+  createLegacyX12PurchaseOrderDocument,
   createEdifactDelforDocument,
   createEdifactOrdersDocument,
   createUnsupportedReleaseX12Document,
@@ -195,6 +196,24 @@ suite("edi-parser public api", () => {
     }), undefined);
   });
 
+  test("should load built-in schema bundles for legacy x12 releases 002001-002003", () => {
+    for (const release of ["002001", "002002", "002003"] as const) {
+      const releaseSchema = getBuiltInSchema("x12", release) as any;
+      const bundle = loadBuiltInSchemaBundle({
+        ediType: "x12",
+        release,
+        version: "850",
+      }) as any;
+
+      assert.ok(releaseSchema);
+      assert.strictEqual(releaseSchema.Release, release);
+      assert.ok(releaseSchema.Segments.BEG);
+      assert.ok(bundle);
+      assert.strictEqual(bundle.releaseSchema.Release, release);
+      assert.strictEqual(bundle.versionSchema.DocumentType, "850");
+    }
+  });
+
   test("should honor parser-level custom schema qualifier overrides", async () => {
     const document = await createParser(createX12PurchaseOrderWithCustomQualifier(), {
       customSchemas: {
@@ -216,6 +235,18 @@ suite("edi-parser public api", () => {
       .filter(error => error.code === DiagnosticErrors.QUALIFIER_INVALID_CODE);
 
     assert.deepStrictEqual(qualifierErrors, []);
+  });
+
+  test("should parse legacy x12 purchase orders with matching built-in release schemas", async () => {
+    for (const release of ["002001", "002002", "002003"] as const) {
+      const document = await createParser(createLegacyX12PurchaseOrderDocument(release))?.parse();
+      const transactionSet = document!.interchanges[0].functionalGroups[0].transactionSets[0];
+      const begSegment = transactionSet.getSegments(true).find((segment) => segment.id === "BEG");
+
+      assert.strictEqual(transactionSet.meta.release, release);
+      assert.strictEqual(transactionSet.meta.version, "850");
+      assert.ok(begSegment?.ediReleaseSchemaSegment);
+    }
   });
 
   test("should allow external schema resolvers to supply missing releases", async () => {

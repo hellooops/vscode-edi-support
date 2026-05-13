@@ -103,6 +103,27 @@ export function createX12810Document(lineBreak = "\n"): string {
   ].join(lineBreak);
 }
 
+export function createLegacyX12PurchaseOrderDocument(
+  release: "002001" | "002002" | "002003",
+  lineBreak = "\n"
+): string {
+  const groupReleaseMap: Record<"002001" | "002002" | "002003", string> = {
+    "002001": "002001",
+    "002002": "002002",
+    "002003": "002003",
+  };
+
+  return [
+    `ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241111*0300*U*${release}*000000001*0*T*:~`,
+    `GS*PO*SENDER*RECEIVER*20241111*0300*1*X*${groupReleaseMap[release]}~`,
+    "ST*850*0001~",
+    "BEG*00*DS*PO1**20150708~",
+    "SE*3*0001~",
+    "GE*1*1~",
+    "IEA*1*000000001~",
+  ].join(lineBreak);
+}
+
 export function createEdifactOrdersDocument(lineBreak = "\n", includeUna = true): string {
   const segments = [
     "UNB+UNOA:2+SENDER:14+RECEIVER:14+140407:0910+0001'",

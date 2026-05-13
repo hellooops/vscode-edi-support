@@ -195,6 +195,15 @@ export class X12Parser extends EdiParserBase {
 
   private normalizeRelease(value: string | undefined) {
     if (!value) return value;
-    return value.trim().substring(0, 5);
+    const trimmed = value.trim();
+    if (trimmed.length <= 5) {
+      return trimmed;
+    }
+
+    if (/^00200[123]$/.test(trimmed)) {
+      return trimmed;
+    }
+
+    return trimmed.substring(0, 5);
   }
 }
