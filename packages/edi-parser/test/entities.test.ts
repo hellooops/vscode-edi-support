@@ -74,6 +74,50 @@ suite("edi-parser entities", () => {
     assert.strictEqual(regularSegment.toString(), "REF*ZZ~");
   });
 
+  test("EdiSegment should optionally indent segments inside loops when formatting", () => {
+    const rootLoop = new EdiSegment("ROOTLoop", 0, 0, 0, "");
+    const firstChild = createSegment("SAC", 0, "~");
+    const secondChild = createSegment("CUR", 0, "~");
+    const nestedLoop = new EdiSegment("N1Loop", 0, 0, 0, "");
+    const nestedFirstChild = createSegment("N1", 0, "~");
+    const nestedSecondChild = createSegment("N2", 0, "~");
+
+    firstChild.parentSegment = rootLoop;
+    secondChild.parentSegment = rootLoop;
+    nestedLoop.parentSegment = rootLoop;
+    nestedFirstChild.parentSegment = nestedLoop;
+    nestedSecondChild.parentSegment = nestedLoop;
+    nestedLoop.Loop = [nestedFirstChild, nestedSecondChild];
+    rootLoop.Loop = [firstChild, secondChild, nestedLoop];
+
+    assert.strictEqual(firstChild.getLevel(), 0);
+    assert.strictEqual(secondChild.getLevel(), 1);
+    assert.strictEqual(nestedFirstChild.getLevel(), 1);
+    assert.strictEqual(nestedSecondChild.getLevel(), 2);
+    assert.strictEqual(
+      rootLoop.getFormatString(),
+      [
+        "SAC~",
+        "CUR~",
+        "N1~",
+        "N2~",
+      ].join("\n"),
+    );
+    assert.strictEqual(
+      rootLoop.getFormatString({ indentSegmentsInLoop: true }),
+      [
+        "SAC~",
+        "  CUR~",
+        "  N1~",
+        "    N2~",
+      ].join("\n"),
+    );
+    assert.strictEqual(
+      rootLoop.getFormatString({ indentSegmentsInLoop: false }),
+      rootLoop.getFormatString(),
+    );
+  });
+
   test("EdiElement should validate values, delegate composite errors and render identifiers", () => {
     const segment = new EdiSegment("REF", 0, 8, 9, "~");
     const componentParent = createElement(segment, "01", "PARENT");

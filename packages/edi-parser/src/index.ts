@@ -47,6 +47,7 @@ export type {
   DiagnosticError_QUALIFIER_INVALID_CODE,
   EdiDocumentObject,
   EdiElementObject,
+  EdiFormatOptions,
   EdiFunctionalGroupObject,
   EdiFunctionalGroupMeta,
   EdiInterchangeObject,

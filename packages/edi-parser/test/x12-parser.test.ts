@@ -291,6 +291,22 @@ suite("edi-parser x12 parser", () => {
     assert.ok(formatted.includes("IEA*1*000007080~// 13"));
   });
 
+  test("should optionally indent formatted x12 segments inside loops", async () => {
+    const document = await parseX12(readFixture("850-loop.edi"));
+    const formatted = normalizeLineBreaks(document!.getFormatString({ indentSegmentsInLoop: true }), "\n");
+    const lines = formatted.split("\n");
+
+    assert.ok(lines.includes("SAC*A***100.00~"));
+    assert.ok(lines.includes("  CUR*LZ*USD**VN*USD~"));
+    assert.ok(lines.includes("N1*BT*Example.com Accounts Payable~"));
+    assert.ok(lines.includes("  N2*asde~"));
+    assert.ok(lines.includes("PO1*2*3*EA*12.3*PE*IN*123~"));
+    assert.ok(!lines.includes("  SAC*A***100.00~"));
+    assert.ok(!lines.includes("CUR*LZ*USD**VN*USD~"));
+    assert.ok(!lines.includes("  N1*BT*Example.com Accounts Payable~"));
+    assert.ok(!lines.includes("N2*asde~"));
+  });
+
   test("should keep parsing when x12 release schema is partially missing", async () => {
     const partialBundle = cloneJson(loadBuiltInSchemaBundle({
       ediType: "x12",

@@ -71,6 +71,10 @@ export interface EdiDocumentObject {
   ediType?: EdiTypeValue;
 }
 
+export interface EdiFormatOptions {
+  indentSegmentsInLoop?: boolean;
+}
+
 export class EdiComment {
   startIndex: number;
   endIndex: number;
@@ -82,7 +86,7 @@ export class EdiComment {
     this.content = content;
   }
 
-  getFormatString(): string {
+  getFormatString(options: EdiFormatOptions = {}): string {
     return this.content;
   }
 
@@ -156,16 +160,19 @@ export class EdiSegment implements EdiObjectConvertible<EdiSegmentObject>, IDiag
     return this.parentSegment.getLevel() + 1;
   }
 
-  getFormatString(): string {
+  getFormatString(options: EdiFormatOptions = {}): string {
     if (this.isLoop()) {
       return formatEdiDocumentPartsSegment({
         children: [...this.comments, ...this.Loop!],
+        options,
       });
     } else {
       const commentsStr = formatEdiDocumentPartsSegment({
         children: this.comments,
+        options,
       });
-      const segmentStr = `${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
+      const indent = options.indentSegmentsInLoop ? " ".repeat(this.getLevel() * 2) : "";
+      const segmentStr = `${indent}${this.id}${this.elements.join("")}${this.endingDelimiter ?? ""}`;
       const segmentWithTrailingComments = segmentStr + formatTrailingComments(this.trailingComments);
       return commentsStr ? commentsStr + constants.ediDocument.lineBreak + segmentWithTrailingComments : segmentWithTrailingComments;
     }
@@ -637,11 +644,12 @@ export class EdiTransactionSet implements EdiObjectConvertible<EdiTransactionSet
     }
   }
 
-  getFormatString(): string {
+  getFormatString(options: EdiFormatOptions = {}): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.segments,
+      options,
     });
   }
 
@@ -839,11 +847,12 @@ export class EdiFunctionalGroup implements EdiObjectConvertible<EdiFunctionalGro
     return errors.concat(this.transactionSets.flatMap((transactionSet) => transactionSet.getErrors(options)).filter(i => i));
   }
 
-  getFormatString(): string {
+  getFormatString(options: EdiFormatOptions = {}): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.transactionSets,
+      options,
     });
   }
 
@@ -1056,11 +1065,12 @@ export class EdiInterchange implements EdiObjectConvertible<EdiInterchangeObject
     return errors.concat(this.functionalGroups.flatMap((functionalGroup) => functionalGroup.getErrors(options)).filter(i => i));
   }
 
-  getFormatString(): string {
+  getFormatString(options: EdiFormatOptions = {}): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: this.functionalGroups,
+      options,
     });
   }
 
@@ -1198,12 +1208,13 @@ export class EdiDocument implements EdiObjectConvertible<EdiDocumentObject>, IDi
     return errors.concat(this.interchanges.flatMap((interchange) => interchange.getErrors(options)).filter(i => i));
   }
 
-  getFormatString(): string {
+  getFormatString(options: EdiFormatOptions = {}): string {
     return formatEdiDocumentPartsSegment({
       startSegment: this.startSegment,
       endSegment: this.endSegment,
       children: [...this.interchanges, ...this.commentsAfterDocument],
       separatorsSegment: this.separatorsSegment,
+      options,
     });
   }
 
@@ -1399,18 +1410,20 @@ function formatEdiDocumentPartsSegment<T extends EdiInterchange | EdiFunctionalG
   endSegment,
   children,
   separatorsSegment,
+  options = {},
 }: {
   startSegment?: EdiSegment,
   endSegment?: EdiSegment,
   children: T[],
-  separatorsSegment?: EdiSegment
+  separatorsSegment?: EdiSegment,
+  options?: EdiFormatOptions
 }): string {
   if (!children) children = [];
   return [
-    separatorsSegment,
-    startSegment,
-    ...children.map(i => i.getFormatString()),
-    endSegment,
+    separatorsSegment?.getFormatString(options),
+    startSegment?.getFormatString(options),
+    ...children.map(i => i.getFormatString(options)),
+    endSegment?.getFormatString(options),
   ].filter(i => i).join(constants.ediDocument.lineBreak);
 }
 
