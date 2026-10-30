@@ -14,8 +14,10 @@ function useEvent(eventName: string, func: (event: any) => void) {
 }
 
 export default function useVcm() {
+  const vscodeApi = typeof vscode === "undefined" ? undefined : vscode;
+
   function postMessage(name: string, data?: Vcm["data"]) {
-    vscode.postMessage({
+    vscodeApi?.postMessage({
       name,
       data
     });

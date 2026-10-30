@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 import * as constants from "../../constants";
 import { EdiType } from "../../parser/entities";
 import { EdiUtils } from "../../utils/ediUtils";
-import WebviewProvider from "../../webviews/webviewProvider";
+import WebviewProvider, { buildExportHtml } from "../../webviews/webviewProvider";
 import { createWebview, ensurePreviewEventsRegistered, previewWebviewTestHooks } from "../../webviews/ediPreviewWebview";
 import { EdiMockFactory } from "./mocks/ediMockFactory";
 
@@ -20,6 +20,19 @@ suite("EDI Preview Webview Test Suite", () => {
       configurable: true,
     });
     previewWebviewTestHooks.resetRegistrationState();
+  });
+
+  test("buildExportHtml should embed preview data, styles and interactive app script", () => {
+    const html = buildExportHtml({
+      interchanges: [],
+      ediType: EdiType.X12,
+      startSegment: { id: "<ST>", nodeKey: "segment:ST" } as any,
+    }, "body { color: red; }", "window.previewStarted = true;");
+
+    assert.ok(html.includes("body { color: red; }"));
+    assert.ok(html.includes("window.__EDI_PREVIEW_DATA__="));
+    assert.ok(html.includes("window.previewStarted = true;"));
+    assert.ok(html.includes("\\u003cST>"));
   });
 
   test("Preview events should only register once", () => {

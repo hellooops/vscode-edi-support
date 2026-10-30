@@ -1,10 +1,30 @@
 import * as vscode from "vscode";
 import * as constants from "../constants";
 import * as path from "path";
+import * as fs from "fs/promises";
 import { EdiUtils } from "../utils/ediUtils";
 import { EdiDocument } from "edi-parser";
-import { buildPreviewDocument } from "./previewDocument";
+import { buildPreviewDocument, IPreviewEdiDocument } from "./previewDocument";
 import { getElementNodeKey, getSegmentNodeKey } from "./previewNodeKeys";
+
+export function buildExportHtml(previewDocument: IPreviewEdiDocument, stylesheet: string, script: string) {
+  const previewData = JSON.stringify(previewDocument).replace(/</g, "\\u003c");
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDI Preview</title>
+  <style>${stylesheet}</style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>window.__EDI_PREVIEW_DATA__=${previewData};</script>
+  <script type="module">${script}</script>
+</body>
+</html>
+`;
+}
 
 export default class WebviewProvider {
   fileName: string;
@@ -12,6 +32,7 @@ export default class WebviewProvider {
   panel?: vscode.WebviewPanel;
   disposeCallback?: () => any;
   ediDocument?: EdiDocument;
+  private previewDocument?: IPreviewEdiDocument;
   private webviewReady: boolean = false;
   private pendingDocumentMessage?: VcmDocument;
   private pendingActiveMessage?: VcmActiveContext;
@@ -68,7 +89,9 @@ export default class WebviewProvider {
 
     panel.webview.onDidReceiveMessage(
       async ({ message }) => {
-        vscode.window.showInformationMessage(message);
+        if (typeof message === "string") {
+          await vscode.window.showInformationMessage(message);
+        }
       },
       undefined,
       this.extensionContext.subscriptions
@@ -112,9 +135,10 @@ export default class WebviewProvider {
       return [];
     }
     this.ediDocument = ediDocument;
+    this.previewDocument = buildPreviewDocument(ediDocument, ediType as EdiTypeValue);
     const vcm: VcmDocument = {
       name: "fileChange",
-      data: buildPreviewDocument(ediDocument, ediType as EdiTypeValue)
+      data: this.previewDocument
     };
     await this.postMessageWhenReady(vcm);
   }
@@ -162,5 +186,28 @@ export default class WebviewProvider {
       await this.panel.webview.postMessage(this.pendingActiveMessage);
       this.pendingActiveMessage = undefined;
     }
+  }
+
+  async exportHtml() {
+    if (!this.previewDocument) {
+      return;
+    }
+
+    const outputUri = await vscode.window.showSaveDialog({
+      defaultUri: vscode.Uri.file(`${this.fileName}.html`),
+      filters: { HTML: ["html"] },
+    });
+    if (!outputUri) {
+      return;
+    }
+
+    const assetsPath = path.join(this.extensionContext.extensionPath, "edi-preview-dist", "assets");
+    const [stylesheet, script] = await Promise.all([
+      fs.readFile(path.join(assetsPath, "index.css"), "utf8"),
+      fs.readFile(path.join(assetsPath, "index.js"), "utf8")
+    ]);
+    const html = buildExportHtml(this.previewDocument, stylesheet, script);
+    await fs.writeFile(outputUri.fsPath, html, "utf8");
+    await vscode.window.showInformationMessage(`Preview exported to ${outputUri.fsPath}`);
   }
 }

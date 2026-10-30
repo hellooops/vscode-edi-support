@@ -3,6 +3,7 @@ import { ICommandable } from "./interfaces/commandable";
 import { PrettifyDocumentCommand } from "./commands/prettifyDocumentCommand";
 import { MinifyDocumentCommand } from "./commands/minifyDocumentCommand";
 import { PreviewDocumentCommand } from "./commands/previewDocumentCommand";
+import { ExportPreviewHtmlCommand } from "./commands/exportPreviewHtmlCommand";
 import { ToggleInlayHintsCommand } from "./commands/toggleInlayHintsCommand";
 import { ToggleLoopAnnotationsCommand } from "./commands/toggleLoopAnnotationsCommand";
 import { ToggleElementIndexAnnotationCommand } from "./commands/toggleElementIndexAnnotationCommand";
@@ -35,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(context, new PrettifyDocumentCommand());
   registerCommand(context, new MinifyDocumentCommand());
   registerCommand(context, new PreviewDocumentCommand(context));
+  registerCommand(context, new ExportPreviewHtmlCommand());
   registerCommand(context, new ToggleInlayHintsCommand());
   registerCommand(context, new ToggleLoopAnnotationsCommand());
   registerCommand(context, new ToggleElementIndexAnnotationCommand());

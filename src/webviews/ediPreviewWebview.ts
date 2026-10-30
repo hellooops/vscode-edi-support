@@ -25,6 +25,18 @@ export function createWebview(context: vscode.ExtensionContext) {
   ensurePreviewEventsRegistered(context);
 }
 
+export async function exportPreviewHtml(panel?: vscode.WebviewPanel) {
+  const activePanel = panel ?? [...webviewsProvidersMap.values()].find(item => item.panel?.active)?.panel ?? (vscode.window.activeTextEditor
+    ? webviewsProvidersMap.get(vscode.window.activeTextEditor.document.fileName)?.panel
+    : undefined);
+  if (!activePanel) {
+    return;
+  }
+
+  const provider = [...webviewsProvidersMap.values()].find(item => item.panel === activePanel);
+  await provider?.exportHtml();
+}
+
 export function ensurePreviewEventsRegistered(context: vscode.ExtensionContext) {
   if (previewEventsRegistered) {
     return;

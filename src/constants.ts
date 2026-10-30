@@ -37,6 +37,10 @@ export namespace commands {
     name: "edi-support.preview",
     label: "Preview"
   };
+  export const exportPreviewHtmlCommand = {
+    name: "edi-support.exportPreviewHtml",
+    label: "Export as HTML"
+  };
   export const addCodeToQualifierCommand = {
     name: "edi-support.addCodeToQualifier",
     label: "Add code to qualifier"

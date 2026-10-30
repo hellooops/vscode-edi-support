@@ -15,7 +15,8 @@ import PreviewTreeView from "@/views/Inspector/PreviewTreeView.vue";
 
 const { onReceiveMessage, postMessage } = useVcm();
 
-const ediDocument = ref<EdiDocument>();
+const initialPreviewData = (window as Window & { __EDI_PREVIEW_DATA__?: EdiDocumentObject }).__EDI_PREVIEW_DATA__;
+const ediDocument = ref<EdiDocument | undefined>(initialPreviewData ? new EdiDocument(initialPreviewData) : undefined);
 const activeId = ref<string>();
 let scrollRequestId = 0;
 

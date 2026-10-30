@@ -115,6 +115,12 @@
         "icon": "$(open-preview)"
       },
       {
+        "command": "edi-support.exportPreviewHtml",
+        "title": "Export Preview as HTML",
+        "category": "EDI Support",
+        "icon": "$(file-code)"
+      },
+      {
         "command": "edi-support.toggleInlayHints",
         "title": "Toggle inlay hints of segments",
         "category": "EDI Support",
@@ -262,6 +268,13 @@
           "when": "view == edi-support-explorer",
           "command": "edi-support.toggleInlayHints",
           "group": "inlayHints"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "activeWebviewPanelId == 'edi-support-preview'",
+          "command": "edi-support.exportPreviewHtml",
+          "group": "navigation"
         }
       ]
     },
