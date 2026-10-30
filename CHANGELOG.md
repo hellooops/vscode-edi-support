@@ -6,6 +6,20 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [3.1.0] - 2026-10-30
+
+### Added
+- Add an overview header, search box, and expand/collapse actions to the EDI preview panel.
+- Add `EDI Support: Export Preview as HTML` to save the preview as a standalone interactive HTML file.
+- Add the `indentSegmentsInLoop` format option for the parser.
+
+### Changed
+- Redesign the EDI preview tree with sticky headers for interchange, functional group, transaction set, loop, and segment.
+- Rewrite the README with updated screenshots.
+
+### Fixed
+- Fix duplicated `editor/title` menu contributions and preview scrolling edge cases.
+
 ## [3.0.0] - 2026-05-13
 
 ### Added

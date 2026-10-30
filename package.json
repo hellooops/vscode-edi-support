@@ -2,7 +2,7 @@
   "name": "edi-edifact-support",
   "displayName": "EDI Support",
   "description": "Language support for X12/HIPAA, EDIFACT and VDA",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "publisher": "DericLee",
   "author": {
     "email": "slxs1415@163.com",
@@ -241,6 +241,11 @@
           "when": "config.ediSupport.menu.icon && (resourceLangId == x12 || resourceLangId == edifact)",
           "command": "edi-support.toggleInlayHints",
           "group": "navigation"
+        },
+        {
+          "when": "activeWebviewPanelId == 'edi-support-preview'",
+          "command": "edi-support.exportPreviewHtml",
+          "group": "navigation"
         }
       ],
       "view/title": [
@@ -268,13 +273,6 @@
           "when": "view == edi-support-explorer",
           "command": "edi-support.toggleInlayHints",
           "group": "inlayHints"
-        }
-      ],
-      "editor/title": [
-        {
-          "when": "activeWebviewPanelId == 'edi-support-preview'",
-          "command": "edi-support.exportPreviewHtml",
-          "group": "navigation"
         }
       ]
     },
