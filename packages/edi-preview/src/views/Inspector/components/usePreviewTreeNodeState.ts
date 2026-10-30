@@ -1,5 +1,6 @@
 import { computed, ref, shallowRef, watch } from "vue";
 import { nodeContainsNodeKey, type PreviewNode } from "@/views/Inspector/previewTree";
+import { usePreviewTreeControls } from "@/views/Inspector/components/previewTreeControls";
 
 export function usePreviewTreeNodeState(props: {
   node: PreviewNode;
@@ -8,17 +9,17 @@ export function usePreviewTreeNodeState(props: {
   const isOpen = ref(props.node.defaultExpanded);
   const childNodes = shallowRef<PreviewNode[]>([]);
   const hasLoadedChildren = ref(false);
+  const controls = usePreviewTreeControls();
 
-  const hasExpandableContent = computed(() => props.node.details.length > 0 || props.node.hasChildren);
+  const hasBodyContent = computed(() => props.node.kind === "element"
+    || Boolean(props.node.meta || props.node.purpose || props.node.hasChildren));
   const hasVisibleChildren = computed(() => childNodes.value.length > 0);
-  const visibleDetails = computed(() => props.node.details);
-  const hasBodyContent = computed(() => visibleDetails.value.length > 0 || props.node.hasChildren);
   const isActive = computed(() => props.node.nodeKey === props.activeId);
   const shouldAutoExpand = computed(() => props.node.kind !== "element" || props.node.hasChildren);
-  const headerStyle = computed(() => ({
-    top: `${props.node.stickyOffset}px`,
-    zIndex: `${props.node.stickyLayer}`
-  }));
+  const isFilteredOut = computed(() => {
+    const result = controls.searchResult.value;
+    return Boolean(result && !result.visible.has(props.node.nodeKey));
+  });
 
   watch(
     isOpen,
@@ -41,8 +42,30 @@ export function usePreviewTreeNodeState(props: {
     { immediate: true }
   );
 
+  watch(
+    () => controls.searchResult.value,
+    result => {
+      if (result?.expand.has(props.node.nodeKey)) {
+        isOpen.value = true;
+        ensureChildrenLoaded();
+      }
+    },
+    { immediate: true }
+  );
+
+  watch(controls.expandSignal, () => {
+    if (props.node.kind !== "element" && hasBodyContent.value) {
+      isOpen.value = true;
+      ensureChildrenLoaded();
+    }
+  });
+
+  watch(controls.collapseSignal, () => {
+    isOpen.value = false;
+  });
+
   function toggleOpen() {
-    if (!hasExpandableContent.value) {
+    if (!hasBodyContent.value) {
       return;
     }
 
@@ -61,12 +84,10 @@ export function usePreviewTreeNodeState(props: {
   return {
     isOpen,
     childNodes,
-    hasExpandableContent,
     hasVisibleChildren,
-    visibleDetails,
     hasBodyContent,
     isActive,
-    headerStyle,
+    isFilteredOut,
     toggleOpen
   };
 }

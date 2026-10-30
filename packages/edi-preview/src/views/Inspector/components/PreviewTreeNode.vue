@@ -1,20 +1,28 @@
 <template>
-  <component
-    :is="nodeComponent"
+  <PreviewTreeCard
     :node="node"
-    :active-id="activeId"
     :depth="depth"
-  />
+    :is-open="isOpen"
+    :has-body-content="hasBodyContent"
+    :has-visible-children="hasVisibleChildren"
+    :is-active="isActive"
+    :is-filtered-out="isFilteredOut"
+    @toggle="toggleOpen"
+  >
+    <PreviewTreeNode
+      v-for="child in childNodes"
+      :key="child.nodeKey"
+      :node="child"
+      :active-id="activeId"
+      :depth="depth + 1"
+    />
+  </PreviewTreeCard>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import type { PreviewNode } from "@/views/Inspector/previewTree";
-import PreviewTreeElement from "@/views/Inspector/components/PreviewTreeElement.vue";
-import PreviewTreeFunctionalGroup from "@/views/Inspector/components/PreviewTreeFunctionalGroup.vue";
-import PreviewTreeInterchange from "@/views/Inspector/components/PreviewTreeInterchange.vue";
-import PreviewTreeSegment from "@/views/Inspector/components/PreviewTreeSegment.vue";
-import PreviewTreeTransactionSet from "@/views/Inspector/components/PreviewTreeTransactionSet.vue";
+import PreviewTreeCard from "@/views/Inspector/components/PreviewTreeCard.vue";
+import { usePreviewTreeNodeState } from "@/views/Inspector/components/usePreviewTreeNodeState";
 
 const props = withDefaults(defineProps<{
   node: PreviewNode;
@@ -25,18 +33,13 @@ const props = withDefaults(defineProps<{
   depth: 0
 });
 
-const nodeComponent = computed(() => {
-  switch (props.node.kind) {
-    case "interchange":
-      return PreviewTreeInterchange;
-    case "functional-group":
-      return PreviewTreeFunctionalGroup;
-    case "transaction-set":
-      return PreviewTreeTransactionSet;
-    case "segment":
-      return PreviewTreeSegment;
-    default:
-      return PreviewTreeElement;
-  }
-});
+const {
+  isOpen,
+  childNodes,
+  hasVisibleChildren,
+  hasBodyContent,
+  isActive,
+  isFilteredOut,
+  toggleOpen
+} = usePreviewTreeNodeState(props);
 </script>

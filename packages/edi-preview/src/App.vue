@@ -46,7 +46,7 @@ onMounted(() => {
 async function scrollNodeIntoView(nodeKey: string) {
   const requestId = ++scrollRequestId;
 
-  for (let attempt = 0; attempt < 8; attempt++) {
+  for (let attempt = 0; attempt < 12; attempt++) {
     await nextTick();
 
     if (requestId !== scrollRequestId) {
@@ -54,21 +54,38 @@ async function scrollNodeIntoView(nodeKey: string) {
     }
 
     const nodeElement = document.getElementById(nodeKey);
-    if (nodeElement) {
-      nodeElement.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+    if (!nodeElement) {
+      await waitForAnimationFrame();
+      continue;
+    }
+
+    // Ancestors expand right after the click, so wait until the node stops moving
+    // before scrolling; otherwise the sticky header stack covers it.
+    const beforeTop = nodeElement.getBoundingClientRect().top;
+    await waitForAnimationFrame();
+    await waitForAnimationFrame();
+
+    if (requestId !== scrollRequestId) {
       return;
     }
 
-    await waitForAnimationFrame();
+    if (Math.abs(nodeElement.getBoundingClientRect().top - beforeTop) > 0.5) {
+      continue;
+    }
+
+    nodeElement.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+    return;
   }
 }
 
 function waitForAnimationFrame(): Promise<void> {
   return new Promise(resolve => {
+    // Hidden webviews stop firing requestAnimationFrame; fall back to a timer.
     window.requestAnimationFrame(() => resolve());
+    setTimeout(() => resolve(), 32);
   });
 }
 </script>
