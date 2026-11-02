@@ -116,9 +116,14 @@ export class EdiUtils {
   }
 
   static async getParsedEdiDocument(document: vscode.TextDocument): Promise<EdiDocument | undefined> {
-    const parserCache = EdiUtils.getOrCreateParserCache(document);
-    if (!parserCache.result.parser) {
+    const { parser } = EdiUtils.getEdiParser(document);
+    if (!parser) {
       return undefined;
+    }
+
+    const parserCache = EdiUtils.ediParserCache;
+    if (!parserCache || parserCache.result.parser !== parser) {
+      return parser.parse();
     }
 
     if (parserCache.parsedDocument) {

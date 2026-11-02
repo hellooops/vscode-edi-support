@@ -6,6 +6,7 @@ import { activate } from "../../extension";
 import { AddCodeToQualifierCommand } from "../../commands/addCodeToQualifierCommand";
 import { MinifyDocumentCommand } from "../../commands/minifyDocumentCommand";
 import { PreviewDocumentCommand } from "../../commands/previewDocumentCommand";
+import { ExportPreviewHtmlCommand } from "../../commands/exportPreviewHtmlCommand";
 import { PrettifyDocumentCommand } from "../../commands/prettifyDocumentCommand";
 import { SelectTextByPositionCommand } from "../../commands/selectTextByPositionCommand";
 import { ToggleElementIndexAnnotationCommand } from "../../commands/toggleElementIndexAnnotationCommand";
@@ -94,6 +95,7 @@ suite("Extension Activate Test Suite", () => {
         new PrettifyDocumentCommand().name,
         new MinifyDocumentCommand().name,
         new PreviewDocumentCommand(context).name,
+        new ExportPreviewHtmlCommand().name,
         new ToggleInlayHintsCommand().name,
         new ToggleLoopAnnotationsCommand().name,
         new ToggleElementIndexAnnotationCommand().name,
